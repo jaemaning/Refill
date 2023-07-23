@@ -2,7 +2,7 @@ package com.refill.hospital.entity;
 
 import com.refill.global.entity.UserInfo;
 import java.util.Collection;
-import java.util.stream.Collectors;
+import java.util.Collections;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import lombok.AccessLevel;
@@ -23,9 +23,7 @@ public class Hospital extends UserInfo {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getRoles().stream()
-                         .map(role -> new SimpleGrantedAuthority(role.name()))
-                         .collect(Collectors.toSet());
+        return Collections.singletonList(new SimpleGrantedAuthority(getRole().name()));
     }
 
     @Override

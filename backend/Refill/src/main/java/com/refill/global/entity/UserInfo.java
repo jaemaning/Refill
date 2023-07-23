@@ -1,12 +1,8 @@
 package com.refill.global.entity;
 
-import java.util.HashSet;
-import java.util.Set;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.MappedSuperclass;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -29,9 +25,8 @@ public abstract class UserInfo extends BaseEntity implements UserDetails {
     @Column
     private String name;
 
-    @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
-    private Set<Role> roles = new HashSet<>();
+    private Role role;
 
 }
 

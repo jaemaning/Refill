@@ -1,5 +1,6 @@
 package com.refill.member.service;
 
+import com.refill.global.entity.Role;
 import com.refill.global.exception.ErrorCode;
 import com.refill.member.dto.request.MemberLoginRequestDto;
 import com.refill.member.entity.Member;
@@ -27,6 +28,7 @@ public class MemberService {
         memberRepository.save(Member.builder()
                                     .loginId("member01")
                                     .name("귤민")
+                                    .role(Role.ROLE_ADMIN)
                                     .build());
     }
 
