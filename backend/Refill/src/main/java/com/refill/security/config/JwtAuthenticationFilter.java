@@ -12,22 +12,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
 @RequiredArgsConstructor
+@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final MemberRepository memberRepository;
     private final HospitalRepository hospitalRepository;
     private final JwtProvider jwtProvider;
-    private final String secretKey;
+
+    @Value("${jwt.token.secret}")
+    private String secretKey;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -55,13 +60,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String loginId = JwtProvider.getLoginId(token, secretKey);
             UserDetails userDetails = memberRepository.findByLoginId(loginId)
                                                       .map(UserDetails.class::cast)
-                                                      .orElse(hospitalRepository.findByLoginId(loginId)
-                                                                                .orElseThrow(
-                                                                                    () -> new MemberException(
-                                                                                        ErrorCode.USERNAME_NOT_FOUND.getCode(),
-                                                                                        ErrorCode.USERNAME_NOT_FOUND,
-                                                                                        ErrorCode.USERNAME_NOT_FOUND.getMessage()
-                                                                                    )));
+                                                      .orElseGet(() ->
+                                                          hospitalRepository.findByLoginId(loginId)
+                                                                            .orElseThrow(() -> new MemberException(
+                                                                                ErrorCode.USERNAME_NOT_FOUND.getCode(),
+                                                                                ErrorCode.USERNAME_NOT_FOUND,
+                                                                                ErrorCode.USERNAME_NOT_FOUND.getMessage()
+                                                                            ))
+                                                      );
+
             // 권한 부여하기
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities());
