@@ -2,6 +2,7 @@ package com.refill.member.entity;
 
 import com.refill.global.entity.UserInfo;
 import java.util.Collection;
+import java.util.stream.Collectors;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import lombok.AccessLevel;
@@ -9,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -21,8 +23,9 @@ public class Member extends UserInfo {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-
-        return null;
+        return getRoles().stream()
+            .map(role -> new SimpleGrantedAuthority(role.name()))
+            .collect(Collectors.toSet());
     }
 
     @Override
