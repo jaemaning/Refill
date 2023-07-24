@@ -49,6 +49,6 @@ public class MemberService {
                                                 ErrorCode.USERNAME_NOT_FOUND.getMessage()
                                             ));
 
-        return jwtProvider.createToken(member.getLoginId(), secretKey);
+        return jwtProvider.createToken(member.getLoginId(), member.getRole() ,secretKey);
     }
 }

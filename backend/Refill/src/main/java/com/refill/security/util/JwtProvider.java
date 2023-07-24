@@ -1,5 +1,6 @@
 package com.refill.security.util;
 
+import com.refill.global.entity.Role;
 import com.refill.global.exception.ErrorCode;
 import com.refill.security.exception.SecurityException;
 import io.jsonwebtoken.Claims;
@@ -41,9 +42,10 @@ public class JwtProvider {
                    .before(new Date());
     }
 
-    public String createToken(String loginId, String secretKey) {
+    public String createToken(String loginId, Role role, String secretKey) {
         Claims claims = Jwts.claims();
         claims.put("loginId", loginId);
+        claims.put("role", role);
 
         Date now = new Date();
         Date accessTokenExpiration = new Date(now.getTime() + accessTokenExpireTimeMs);
