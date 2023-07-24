@@ -8,4 +8,6 @@ public interface HospitalRepository extends JpaRepository<Hospital, Long> {
 
     Optional<Hospital> findByLoginId(String loginId);
 
+    boolean existsByLoginId(String loginId);
+
 }
