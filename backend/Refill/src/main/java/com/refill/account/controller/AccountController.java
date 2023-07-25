@@ -22,8 +22,11 @@ public class AccountController {
     @GetMapping("/member/join")
     public ResponseEntity<String> joinMember(@RequestBody @Valid final MemberJoinRequest memberJoinRequest) {
 
+        log.debug("'{}' member request memberJoin", memberJoinRequest.loginId());
+        accountService.memberJoin(memberJoinRequest);
 
-
-        return ResponseEntity.ok("hello");
+        return ResponseEntity.ok().body("SUCCESS");
     }
+
+
 }
