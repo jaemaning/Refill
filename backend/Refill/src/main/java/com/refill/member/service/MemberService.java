@@ -32,9 +32,19 @@ public class MemberService {
                                     .build());
     }
 
+    @Transactional
+    public Long save(Member member) {
+        return memberRepository.save(member).getId();
+    }
+
     @Transactional(readOnly = true)
     public boolean existsByLoginId(String loginId) {
         return memberRepository.existsByLoginId(loginId);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean existsByEmail(String email) {
+        return memberRepository.existsByEmail(email);
     }
 
     @Transactional(readOnly = true)

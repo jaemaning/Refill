@@ -26,9 +26,6 @@ public class Member extends UserInfo {
     @Column(nullable = false)
     private LocalDate birthDay;
 
-    @Column(unique = true, nullable = false)
-    private String email;
-
     @Column
     private String profileImg;
 

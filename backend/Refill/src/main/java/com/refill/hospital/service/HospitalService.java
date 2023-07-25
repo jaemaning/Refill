@@ -23,4 +23,9 @@ public class HospitalService {
     public boolean existsByLoginId(String loginId) {
         return hospitalRepository.existsByLoginId(loginId);
     }
+
+    @Transactional(readOnly = true)
+    public boolean existsByEmail(String email) {
+        return hospitalRepository.existsByEmail(email);
+    }
 }

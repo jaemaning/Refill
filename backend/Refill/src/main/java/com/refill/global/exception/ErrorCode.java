@@ -10,6 +10,7 @@ public enum ErrorCode {
 
     //AccountException
     LOGIN_ID_DUPLICATED("ACC01", HttpStatus.CONFLICT, "이미 존재하는 ID 입니다."),
+    EMAIL_DUPLICATED("ACC02", HttpStatus.CONFLICT, "이미 존재하는 EMAIL 입니다."),
 
     // MemberException
     INVALID_REFRESH_TOKEN("MEM01", HttpStatus.BAD_REQUEST, "유효한 토큰이 아닙니다."),

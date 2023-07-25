@@ -31,8 +31,15 @@ public abstract class UserInfo extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private String tel;
 
+    @Column(unique = true)
+    private String email;
+
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    public void encodePassword(String encodedPassword) {
+        this.loginPassword = encodedPassword;
+    }
 
 }
 

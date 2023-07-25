@@ -10,4 +10,5 @@ public interface HospitalRepository extends JpaRepository<Hospital, Long> {
 
     boolean existsByLoginId(String loginId);
 
+    boolean existsByEmail(String email);
 }
