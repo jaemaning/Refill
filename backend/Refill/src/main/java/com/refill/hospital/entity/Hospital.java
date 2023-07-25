@@ -1,6 +1,7 @@
 package com.refill.hospital.entity;
 
 import com.refill.account.dto.request.HospitalJoinRequest;
+import com.refill.global.entity.Role;
 import com.refill.global.entity.UserInfo;
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -42,6 +43,7 @@ public class Hospital extends UserInfo {
                        .loginId(hospitalJoinRequest.loginId())
                        .loginPassword(hospitalJoinRequest.loginPassword())
                        .name(hospitalJoinRequest.name())
+                       .address(hospitalJoinRequest.address())
                        .postalCode(hospitalJoinRequest.postalCode())
                        .latitude(hospitalJoinRequest.latitude())
                        .longitude(hospitalJoinRequest.longitude())
@@ -49,6 +51,7 @@ public class Hospital extends UserInfo {
                        .email(hospitalJoinRequest.email())
                        .hospitalProfileImg(hospitalJoinRequest.hospitalProfileImg())
                        .registrationImg(hospitalJoinRequest.registrationImg())
+                       .role(Role.ROLE_GUEST)
                        .build();
     }
 
