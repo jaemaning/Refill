@@ -1,6 +1,7 @@
 package com.refill.member.entity;
 
 import com.refill.account.dto.request.MemberJoinRequest;
+import com.refill.global.entity.Role;
 import com.refill.global.entity.UserInfo;
 import java.time.LocalDate;
 import java.util.Collection;
@@ -9,19 +10,20 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+@ToString(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @SuperBuilder
 @Entity
 public class Member extends UserInfo {
-
-    @Column(nullable = false)
-    private String name;
 
     @Column(nullable = false)
     private LocalDate birthDay;
@@ -42,6 +44,8 @@ public class Member extends UserInfo {
                      .birthDay(memberJoinRequest.birthDay())
                      .email(memberJoinRequest.email())
                      .profileImg(memberJoinRequest.profileImg())
+                     .name(memberJoinRequest.name())
+                     .role(Role.ROLE_MEMBER)
                      .build();
 
     }

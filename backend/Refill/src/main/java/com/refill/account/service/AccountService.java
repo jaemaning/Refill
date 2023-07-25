@@ -60,6 +60,7 @@ public class AccountService {
 
         Member member = Member.from(memberJoinRequest);
         member.encodePassword(passwordEncoder.encode(member.getPassword()));
+
         memberService.save(member);
 
     }
