@@ -1,8 +1,9 @@
 package com.refill.account.service;
 
 import com.refill.account.dto.request.MemberJoinRequest;
-import com.refill.hospital.repository.HospitalRepository;
-import com.refill.member.repository.MemberRepository;
+import com.refill.account.exception.AccountException;
+import com.refill.global.exception.ErrorCode;
+import com.refill.hospital.service.HospitalService;
 import com.refill.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,13 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class AccountService {
 
     private final MemberService memberService;
-    private final MemberRepository memberRepository;
-    private final HospitalRepository hospitalRepository;
+    private final HospitalService hospitalService;
 
     private boolean isLoginIdDuplicated(String loginId) {
 
-        boolean memberExists = memberRepository.existsByLoginId(loginId);
-        boolean hospitalExists = hospitalRepository.existsByLoginId(loginId);
+        boolean memberExists = memberService.existsByLoginId(loginId);
+        boolean hospitalExists = hospitalService.existsByLoginId(loginId);
 
         return memberExists || hospitalExists;
     }
@@ -29,11 +29,13 @@ public class AccountService {
     @Transactional
     public void memberJoin(MemberJoinRequest memberJoinRequest) {
 
-        if(isLoginIdDuplicated(memberJoinRequest.loginId())) {
-            throw new RuntimeException();
+        if (isLoginIdDuplicated(memberJoinRequest.loginId())) {
+            throw new AccountException(
+                ErrorCode.LOGIN_ID_DUPLICATED.getCode(),
+                ErrorCode.LOGIN_ID_DUPLICATED,
+                ErrorCode.LOGIN_ID_DUPLICATED.getMessage()
+            );
         }
-
-
 
 
     }

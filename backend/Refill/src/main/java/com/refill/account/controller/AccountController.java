@@ -2,6 +2,7 @@ package com.refill.account.controller;
 
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.service.AccountService;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,9 @@ public class AccountController {
     private final AccountService accountService;
 
     @GetMapping("/member/join")
-    public ResponseEntity<String> joinMember(@RequestBody MemberJoinRequest memberJoinRequest) {
+    public ResponseEntity<String> joinMember(@RequestBody @Valid final MemberJoinRequest memberJoinRequest) {
+
+
 
         return ResponseEntity.ok("hello");
     }

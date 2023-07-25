@@ -33,6 +33,11 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
+    public boolean existsByLoginId(String loginId) {
+        return memberRepository.existsByLoginId(loginId);
+    }
+
+    @Transactional(readOnly = true)
     public Member findByLoginId(String loginId) {
         return memberRepository.findByLoginId(loginId)
                                .orElseThrow();

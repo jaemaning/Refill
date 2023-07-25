@@ -19,11 +19,17 @@ public abstract class UserInfo extends BaseEntity implements UserDetails {
     @Column(unique = true, length = 20)
     private String loginId;
 
-    @Column(length = 25)
+    @Column(nullable = false)
     private String loginPassword;
 
-    @Column
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
+    private String address;
+
+    @Column(nullable = false)
+    private String tel;
 
     @Enumerated(EnumType.STRING)
     private Role role;
