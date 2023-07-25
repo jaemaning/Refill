@@ -1,5 +1,6 @@
 package com.refill.account.controller;
 
+import com.refill.account.dto.request.HospitalJoinRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.service.AccountService;
 import javax.validation.Valid;
@@ -25,7 +26,17 @@ public class AccountController {
         log.debug("'{}' member request memberJoin", memberJoinRequest.loginId());
         accountService.memberJoin(memberJoinRequest);
 
-        return ResponseEntity.ok().body("SUCCESS");
+        return ResponseEntity.ok()
+                             .body("SUCCESS");
+    }
+
+    @PostMapping("/hospital/join")
+    public ResponseEntity<String> joinHospital(@RequestBody @Valid final HospitalJoinRequest hospitalJoinRequest) {
+
+        log.debug("'{}' hospital request joinHospital", hospitalJoinRequest.loginId());
+
+        return ResponseEntity.ok()
+                             .body("SUCCESS");
     }
 
 

@@ -31,7 +31,7 @@ public class Member extends UserInfo {
     @Column
     private String profileImg;
 
-    @Column
+    @Column(nullable = false)
     private String nickname;
 
     public static Member from(MemberJoinRequest memberJoinRequest) {

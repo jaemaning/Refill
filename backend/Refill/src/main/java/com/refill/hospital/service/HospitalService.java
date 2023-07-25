@@ -28,4 +28,9 @@ public class HospitalService {
     public boolean existsByEmail(String email) {
         return hospitalRepository.existsByEmail(email);
     }
+
+    @Transactional
+    public Long save(Hospital hospital) {
+        return hospitalRepository.save(hospital).getId();
+    }
 }
