@@ -56,4 +56,14 @@ public class HospitalService {
                                      ErrorCode.USERNAME_NOT_FOUND.getMessage()
                                  ));
     }
+
+    @Transactional(readOnly = true)
+    public Hospital findByLoginIdAndEmail(String loginId, String email) {
+        return hospitalRepository.findByLoginIdAndEmail(loginId, email)
+                               .orElseThrow(() -> new MemberException(
+                                   ErrorCode.USERNAME_NOT_FOUND.getCode(),
+                                   ErrorCode.USERNAME_NOT_FOUND,
+                                   ErrorCode.USERNAME_NOT_FOUND.getMessage()
+                               ));
+    }
 }

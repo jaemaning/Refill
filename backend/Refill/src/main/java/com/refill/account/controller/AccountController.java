@@ -91,6 +91,18 @@ public class AccountController {
         log.debug("'{}' member request reset password", loginPasswordRequest.loginId());
 
         String message = accountService.findMemberPassword(loginPasswordRequest);
+
+        return ResponseEntity.ok().body(message);
+    }
+
+    @PostMapping("/hospital/find/password")
+    public ResponseEntity<String> findHospitalPassword(@RequestBody @Valid final LoginPasswordRequest loginPasswordRequest) {
+
+        log.debug("'{}' member request reset password", loginPasswordRequest.loginId());
+
+        String message = accountService.findHospitalPassword(loginPasswordRequest);
+
+        return ResponseEntity.ok().body(message);
     }
 
 

@@ -18,6 +18,7 @@ import com.refill.member.entity.Member;
 import com.refill.member.exception.MemberException;
 import com.refill.member.service.MemberService;
 import com.refill.security.util.JwtProvider;
+import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -171,6 +172,44 @@ public class AccountService {
     @Transactional
     public String findMemberPassword(LoginPasswordRequest loginPasswordRequest) {
 
-        Member member;
+        Member member = memberService.findByLoginIdAndEmail(loginPasswordRequest.loginId(), loginPasswordRequest.email());
+
+        String newPassword = getTempPassword();
+
+        amazonSESService.sendTempPassword(loginPasswordRequest.email(), newPassword);
+
+        member.encodePassword(passwordEncoder.encode(newPassword));
+
+        return Message.FIND_PASSWORD.getMessage();
+    }
+
+    @Transactional
+    public String findHospitalPassword(LoginPasswordRequest loginPasswordRequest) {
+
+        Hospital hospital = hospitalService.findByLoginIdAndEmail(loginPasswordRequest.loginId(), loginPasswordRequest.email());
+
+        String newPassword = getTempPassword();
+
+        amazonSESService.sendTempPassword(loginPasswordRequest.email(), newPassword);
+
+        hospital.encodePassword(passwordEncoder.encode(newPassword));
+
+        return Message.FIND_PASSWORD.getMessage();
+    }
+
+    private String getTempPassword() {
+        // 숫자 0
+        final int leftLimit = 48;
+        // 소문자 'z'
+        final int rightLimit = 122;
+        final int passwordLength = 10;
+
+        Random random = new Random();
+        return random.ints(leftLimit, rightLimit + 1)
+                     .filter(x -> (x <= 57 || x >= 65) && (x <= 90 || x >= 97))
+                     .limit(passwordLength)
+                     .collect(StringBuilder::new, StringBuilder::appendCodePoint,
+                         StringBuilder::append)
+                     .toString();
     }
 }
