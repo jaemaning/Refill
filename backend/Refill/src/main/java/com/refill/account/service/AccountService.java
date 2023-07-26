@@ -4,6 +4,7 @@ import com.refill.account.dto.request.HospitalJoinRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.exception.AccountException;
 import com.refill.global.exception.ErrorCode;
+import com.refill.global.service.AmazonS3Service;
 import com.refill.hospital.entity.Hospital;
 import com.refill.hospital.service.HospitalService;
 import com.refill.member.entity.Member;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -22,6 +24,7 @@ public class AccountService {
     private final MemberService memberService;
     private final HospitalService hospitalService;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final AmazonS3Service amazonS3Service;
 
     @Transactional(readOnly = true)
     public void isLoginIdDuplicated(String loginId) {
@@ -55,7 +58,7 @@ public class AccountService {
     }
 
     @Transactional
-    public void memberJoin(MemberJoinRequest memberJoinRequest) {
+    public void memberJoin(MemberJoinRequest memberJoinRequest, MultipartFile profileImg) {
 
         // 아이디 중복 검사
         isLoginIdDuplicated(memberJoinRequest.loginId());
@@ -64,6 +67,11 @@ public class AccountService {
 
         Member member = Member.from(memberJoinRequest);
         member.encodePassword(passwordEncoder.encode(member.getLoginPassword()));
+
+        if(profileImg != null) {
+            String fileAddress = amazonS3Service.uploadFile(profileImg);
+            member.updateFileAddress(fileAddress);
+        }
 
         memberService.save(member);
 

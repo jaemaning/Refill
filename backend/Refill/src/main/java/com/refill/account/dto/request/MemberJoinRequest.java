@@ -13,8 +13,7 @@ public record MemberJoinRequest(
     @NotNull String address,
     @NotNull String tel,
     @NotNull LocalDate birthDay,
-    @NotNull String email,
-    String profileImg
+    @NotNull String email
 
 
 ) {

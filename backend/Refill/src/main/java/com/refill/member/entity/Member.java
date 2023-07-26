@@ -43,11 +43,14 @@ public class Member extends UserInfo {
                      .tel(memberJoinRequest.tel())
                      .birthDay(memberJoinRequest.birthDay())
                      .email(memberJoinRequest.email())
-                     .profileImg(memberJoinRequest.profileImg())
                      .name(memberJoinRequest.name())
                      .role(Role.ROLE_MEMBER)
                      .build();
 
+    }
+
+    public void updateFileAddress(String address) {
+        this.profileImg = address;
     }
 
     @Override
