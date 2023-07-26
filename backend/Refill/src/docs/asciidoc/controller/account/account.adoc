@@ -1,0 +1,10 @@
+[[account-memberJoin]]
+=== 개인 회원 가입
+
+==== HTTP Request
+include::{snippets}/account/member/join/http-request.adoc[]
+include::{snippets}/account/member/join/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/account/member/join/http-response.adoc[]
+include::{snippets}/account/member/join/response-fields.adoc[]

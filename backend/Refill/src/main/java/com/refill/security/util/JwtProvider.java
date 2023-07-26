@@ -1,5 +1,6 @@
 package com.refill.security.util;
 
+import com.refill.global.entity.Role;
 import com.refill.global.exception.ErrorCode;
 import com.refill.security.exception.SecurityException;
 import io.jsonwebtoken.Claims;
@@ -41,9 +42,10 @@ public class JwtProvider {
                    .before(new Date());
     }
 
-    public String createToken(String loginId, String secretKey) {
+    public String createToken(String loginId, Role role, String secretKey) {
         Claims claims = Jwts.claims();
         claims.put("loginId", loginId);
+        claims.put("role", role);
 
         Date now = new Date();
         Date accessTokenExpiration = new Date(now.getTime() + accessTokenExpireTimeMs);
@@ -108,8 +110,7 @@ public class JwtProvider {
             String storedRefreshToken = redisTemplate.opsForValue()
                                                      .get(loginId);
             if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)) {
-                throw new SecurityException(ErrorCode.INVALID_REFRESH_TOKEN.getCode(),
-                    ErrorCode.INVALID_REFRESH_TOKEN, ErrorCode.INVALID_REFRESH_TOKEN.getMessage());
+                throw new SecurityException(ErrorCode.INVALID_REFRESH_TOKEN);
             }
 
             // 저장된 refreshToken이 유효하면, 새로운 Access Token을 발급
@@ -130,8 +131,7 @@ public class JwtProvider {
 
         } catch (Exception e) {
             // Refresh Token 검증 실패
-            throw new SecurityException(ErrorCode.INVALID_REFRESH_TOKEN.getCode(),
-                ErrorCode.INVALID_REFRESH_TOKEN, ErrorCode.INVALID_REFRESH_TOKEN.getMessage());
+            throw new SecurityException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
     }
 }

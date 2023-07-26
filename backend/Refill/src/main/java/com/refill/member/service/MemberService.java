@@ -1,7 +1,6 @@
 package com.refill.member.service;
 
 import com.refill.global.exception.ErrorCode;
-import com.refill.member.dto.request.MemberLoginRequestDto;
 import com.refill.member.entity.Member;
 import com.refill.member.exception.MemberException;
 import com.refill.member.repository.MemberRepository;
@@ -23,30 +22,38 @@ public class MemberService {
     @Value("${jwt.token.secret}")
     private String secretKey;
 
-    public void testCreate() {
-        memberRepository.save(Member.builder()
-                                    .loginId("member01")
-                                    .name("귤민")
-                                    .build());
+    @Transactional
+    public Long save(Member member) {
+        return memberRepository.save(member)
+                               .getId();
+    }
+
+    @Transactional(readOnly = true)
+    public boolean existsByLoginId(String loginId) {
+        return memberRepository.existsByLoginId(loginId);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean existsByEmail(String email) {
+        return memberRepository.existsByEmail(email);
     }
 
     @Transactional(readOnly = true)
     public Member findByLoginId(String loginId) {
         return memberRepository.findByLoginId(loginId)
-                               .orElseThrow();
+                               .orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
-    public String login(MemberLoginRequestDto memberLoginRequestDto) {
-
-        Member member = memberRepository.findByLoginId(memberLoginRequestDto.loginId())
-                                        .orElseThrow(() ->
-                                            new MemberException(
-                                                ErrorCode.USERNAME_NOT_FOUND.getCode(),
-                                                ErrorCode.USERNAME_NOT_FOUND,
-                                                ErrorCode.USERNAME_NOT_FOUND.getMessage()
-                                            ));
-
-        return jwtProvider.createToken(member.getLoginId(), secretKey);
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                               .orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND));
     }
+
+    @Transactional(readOnly = true)
+    public Member findByLoginIdAndEmail(String loginId, String email) {
+        return memberRepository.findByLoginIdAndEmail(loginId, email)
+                               .orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND));
+    }
+
 }

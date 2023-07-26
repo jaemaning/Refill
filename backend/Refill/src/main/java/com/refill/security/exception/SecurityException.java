@@ -8,8 +8,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class SecurityException extends RuntimeException{
 
-    private String code;
     private ErrorCode errorCode;
-    private String message;
 
 }
