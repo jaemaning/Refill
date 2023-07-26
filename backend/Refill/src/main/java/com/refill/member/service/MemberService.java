@@ -1,10 +1,7 @@
 package com.refill.member.service;
 
 import com.refill.global.entity.Role;
-import com.refill.global.exception.ErrorCode;
-import com.refill.member.dto.request.MemberLoginRequestDto;
 import com.refill.member.entity.Member;
-import com.refill.member.exception.MemberException;
 import com.refill.member.repository.MemberRepository;
 import com.refill.security.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
@@ -54,17 +51,4 @@ public class MemberService {
                                .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 아이디입니다."));
     }
 
-    @Transactional(readOnly = true)
-    public String login(MemberLoginRequestDto memberLoginRequestDto) {
-
-        Member member = memberRepository.findByLoginId(memberLoginRequestDto.loginId())
-                                        .orElseThrow(() ->
-                                            new MemberException(
-                                                ErrorCode.USERNAME_NOT_FOUND.getCode(),
-                                                ErrorCode.USERNAME_NOT_FOUND,
-                                                ErrorCode.USERNAME_NOT_FOUND.getMessage()
-                                            ));
-
-        return jwtProvider.createToken(member.getLoginId(), member.getRole() ,secretKey);
-    }
 }

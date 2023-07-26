@@ -1,7 +1,7 @@
 package com.refill.member.controller;
 
 import com.refill.global.entity.UserInfo;
-import com.refill.member.dto.request.MemberLoginRequestDto;
+import com.refill.account.dto.request.MemberLoginRequest;
 import com.refill.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,9 +27,9 @@ public class MemberController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<String> login(@RequestBody MemberLoginRequestDto memberLoginRequestDto) {
+    public ResponseEntity<String> login(@RequestBody MemberLoginRequest memberLoginRequest) {
 
-        String token = memberService.login(memberLoginRequestDto);
+        String token = memberService.login(memberLoginRequest);
 
         return ResponseEntity.ok()
                              .body(token);

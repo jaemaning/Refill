@@ -27,7 +27,7 @@ class AccountControllerTest extends ControllerTest {
     void t1() throws Exception {
 
         MemberJoinRequest memberJoinRequest = new MemberJoinRequest("member01", "pass01", "상원", "신상원", "hello", "01012345667",
-            LocalDate.of(1995, 9, 24), "sangwon01@ssafy.com", "sfar3fasdf");
+            LocalDate.of(1995, 9, 24), "sangwon01@ssafy.com");
 
         mockMvc.perform(post("/api/v1/account/member/join")
             .with(csrf())

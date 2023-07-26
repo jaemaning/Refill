@@ -2,12 +2,15 @@ package com.refill.account.controller;
 
 import com.refill.account.dto.request.HospitalJoinRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
+import com.refill.account.dto.request.MemberLoginRequest;
 import com.refill.account.service.AccountService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,6 +41,15 @@ public class AccountController {
         accountService.hospitalJoin(hospitalJoinRequest, profileImg, regImg);
         return ResponseEntity.ok()
                              .body("SUCCESS");
+    }
+
+    @GetMapping("/member/login")
+    public ResponseEntity<String> loginMember(@RequestBody MemberLoginRequest memberLoginRequest) {
+
+        log.debug("'{}' member request login", memberLoginRequest.loginId());
+        accountService.memberLogin(memberLoginRequest);
+
+        return ResponseEntity.ok().body("123");
     }
 
 

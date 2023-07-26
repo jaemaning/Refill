@@ -2,13 +2,16 @@ package com.refill.account.service;
 
 import com.refill.account.dto.request.HospitalJoinRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
+import com.refill.account.dto.request.MemberLoginRequest;
 import com.refill.account.exception.AccountException;
 import com.refill.global.exception.ErrorCode;
 import com.refill.global.service.AmazonS3Service;
 import com.refill.hospital.entity.Hospital;
 import com.refill.hospital.service.HospitalService;
 import com.refill.member.entity.Member;
+import com.refill.member.exception.MemberException;
 import com.refill.member.service.MemberService;
+import com.refill.security.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,6 +28,7 @@ public class AccountService {
     private final HospitalService hospitalService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final AmazonS3Service amazonS3Service;
+    private final JwtProvider jwtProvider;
 
     @Transactional(readOnly = true)
     public void isLoginIdDuplicated(String loginId) {
@@ -95,6 +99,22 @@ public class AccountService {
         hospital.updateRegAddress(regAddress);
 
         hospitalService.save(hospital);
+    }
+
+    @Transactional(readOnly = true)
+    public String loginMember(MemberLoginRequest memberLoginRequest) {
+
+        Member member = memberService.findByLoginId(memberLoginRequest.loginId());
+
+        // 1. id가 없는 경우는 findByLoginId 에서 처리
+        // 2. 패스워드가 일치하지 않음
+
+        if(!passwordEncoder.matches(memberLoginRequest.loginPassword(), member.getLoginPassword())) {
+            throw new MemberException(ErrorCode.INVALID_PASSWORD.getCode(), ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage());
+        }
+
+        return null;
+
     }
 
 }
