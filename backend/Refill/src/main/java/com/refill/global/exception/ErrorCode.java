@@ -16,6 +16,7 @@ public enum ErrorCode {
     INVALID_REFRESH_TOKEN("MEM01", HttpStatus.BAD_REQUEST, "유효한 토큰이 아닙니다."),
     USERNAME_NOT_FOUND("MEM02", HttpStatus.NOT_FOUND, "아이디가 존재하지 않습니다"),
     INVALID_PASSWORD("MEM03", HttpStatus.UNAUTHORIZED, "패스워드가 일치하지 않습니다."),
+    OUTSTANDING_AUTHORIZATION("MEM04", HttpStatus.UNAUTHORIZED, "승인 대기중인 병원입니다"),
 
     /* File Upload Exception*/
     FILE_UPLOAD_FAIL("AWS01", HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패하였습니다.");

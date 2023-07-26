@@ -5,6 +5,7 @@ import com.refill.account.dto.request.HospitalLoginRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.dto.request.MemberLoginRequest;
 import com.refill.account.exception.AccountException;
+import com.refill.global.entity.Role;
 import com.refill.global.exception.ErrorCode;
 import com.refill.global.service.AmazonS3Service;
 import com.refill.hospital.entity.Hospital;
@@ -131,6 +132,11 @@ public class AccountService {
 
         if(!passwordEncoder.matches(hospitalLoginRequest.loginPassword(), hospital.getLoginPassword())) {
             throw new MemberException(ErrorCode.INVALID_PASSWORD.getCode(), ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage());
+        }
+
+        // 3. 승인 대기중인 병원임
+        if(hospital.getRole() == Role.ROLE_GUEST) {
+            throw new MemberException(ErrorCode.OUTSTANDING_AUTHORIZATION.getCode(), ErrorCode.OUTSTANDING_AUTHORIZATION, ErrorCode.OUTSTANDING_AUTHORIZATION.getMessage());
         }
 
         return jwtProvider.createToken(hospital.getLoginId(), hospital.getRole(), secretKey);
