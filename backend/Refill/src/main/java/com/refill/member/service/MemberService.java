@@ -57,4 +57,14 @@ public class MemberService {
                                ));
     }
 
+    @Transactional(readOnly = true)
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                               .orElseThrow(() -> new MemberException(
+                                   ErrorCode.USERNAME_NOT_FOUND.getCode(),
+                                   ErrorCode.USERNAME_NOT_FOUND,
+                                   ErrorCode.USERNAME_NOT_FOUND.getMessage()
+                               ));
+    }
+
 }

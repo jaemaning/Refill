@@ -37,9 +37,19 @@ public class HospitalService {
                                  .getId();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Hospital findByLoginId(String loginId) {
         return hospitalRepository.findByLoginId(loginId)
+                                 .orElseThrow(() -> new MemberException(
+                                     ErrorCode.USERNAME_NOT_FOUND.getCode(),
+                                     ErrorCode.USERNAME_NOT_FOUND,
+                                     ErrorCode.USERNAME_NOT_FOUND.getMessage()
+                                 ));
+    }
+
+    @Transactional(readOnly = true)
+    public Hospital findByEmail(String email) {
+        return hospitalRepository.findByEmail(email)
                                  .orElseThrow(() -> new MemberException(
                                      ErrorCode.USERNAME_NOT_FOUND.getCode(),
                                      ErrorCode.USERNAME_NOT_FOUND,

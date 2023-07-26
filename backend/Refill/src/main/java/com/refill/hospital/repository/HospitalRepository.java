@@ -7,8 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface HospitalRepository extends JpaRepository<Hospital, Long> {
 
     Optional<Hospital> findByLoginId(String loginId);
-
+    Optional<Hospital> findByEmail(String email);
     boolean existsByLoginId(String loginId);
-
     boolean existsByEmail(String email);
 }

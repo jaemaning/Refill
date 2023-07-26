@@ -2,6 +2,7 @@ package com.refill.account.controller;
 
 import com.refill.account.dto.request.HospitalJoinRequest;
 import com.refill.account.dto.request.HospitalLoginRequest;
+import com.refill.account.dto.request.LoginIdFindRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.dto.request.MemberLoginRequest;
 import com.refill.account.service.AccountService;
@@ -45,7 +46,7 @@ public class AccountController {
     }
 
     @GetMapping("/member/login")
-    public ResponseEntity<String> loginMember(@RequestBody MemberLoginRequest memberLoginRequest) {
+    public ResponseEntity<String> loginMember(@RequestBody @Valid final MemberLoginRequest memberLoginRequest) {
 
         log.debug("'{}' member request login", memberLoginRequest.loginId());
         String token = accountService.memberLogin(memberLoginRequest);
@@ -54,13 +55,23 @@ public class AccountController {
     }
 
     @GetMapping("/hospital/login")
-    public ResponseEntity<String> loginHospital(@RequestBody HospitalLoginRequest hospitalLoginRequest) {
+    public ResponseEntity<String> loginHospital(@RequestBody @Valid final HospitalLoginRequest hospitalLoginRequest) {
 
         log.debug("'{}' member request login", hospitalLoginRequest.loginId());
 
         String token = accountService.hospitalLogin(hospitalLoginRequest);
 
         return ResponseEntity.ok().body(token);
+    }
+
+    @PostMapping("/find/id")
+    public ResponseEntity<String> findLoginId(@RequestBody @Valid final LoginIdFindRequest loginIdFindRequest) {
+
+        log.debug("'{}' email request find loginId", loginIdFindRequest.email());
+
+        String message = accountService.findLoginId(loginIdFindRequest);
+
+        return ResponseEntity.ok().body(message);
     }
 
 

@@ -2,12 +2,14 @@ package com.refill.account.service;
 
 import com.refill.account.dto.request.HospitalJoinRequest;
 import com.refill.account.dto.request.HospitalLoginRequest;
+import com.refill.account.dto.request.LoginIdFindRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.dto.request.MemberLoginRequest;
 import com.refill.account.exception.AccountException;
 import com.refill.global.entity.Role;
 import com.refill.global.exception.ErrorCode;
 import com.refill.global.service.AmazonS3Service;
+import com.refill.global.service.AmazonSESService;
 import com.refill.hospital.entity.Hospital;
 import com.refill.hospital.service.HospitalService;
 import com.refill.member.entity.Member;
@@ -29,8 +31,9 @@ public class AccountService {
 
     private final MemberService memberService;
     private final HospitalService hospitalService;
-    private final BCryptPasswordEncoder passwordEncoder;
     private final AmazonS3Service amazonS3Service;
+    private final AmazonSESService amazonSESService;
+    private final BCryptPasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     @Value("${jwt.token.secret}")
     private String secretKey;
@@ -140,5 +143,12 @@ public class AccountService {
         }
 
         return jwtProvider.createToken(hospital.getLoginId(), hospital.getRole(), secretKey);
+    }
+
+
+    @Transactional(readOnly = true)
+    public String findLoginId(LoginIdFindRequest loginIdFindRequest) {
+
+        return "id";
     }
 }

@@ -51,6 +51,9 @@ dependencies {
 
     // awsS3
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+    // awsSES
+    implementation 'com.amazonaws:aws-java-sdk-ses:1.12.468'
 }
 
 tasks.named('test') {
