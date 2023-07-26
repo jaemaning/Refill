@@ -13,9 +13,7 @@ public record HospitalJoinRequest(
     @NotNull BigDecimal latitude,
     @NotNull BigDecimal longitude,
     @NotNull String tel,
-    @NotNull String email,
-    @NotNull String hospitalProfileImg,
-    @NotNull String registrationImg
+    @NotNull String email
 ) {
 
 }

@@ -32,10 +32,10 @@ public class AccountController {
     }
 
     @PostMapping("/hospital/join")
-    public ResponseEntity<String> joinHospital(@RequestPart @Valid final HospitalJoinRequest hospitalJoinRequest, @RequestPart("profileImg") MultipartFile profileImg, @RequestPart("regImg") MultipartFile regImg) {
+    public ResponseEntity<String> joinHospital(@RequestPart("hospitalJoinRequest") @Valid final HospitalJoinRequest hospitalJoinRequest, @RequestPart("profileImg") MultipartFile profileImg, @RequestPart("regImg") MultipartFile regImg) {
 
         log.debug("'{}' hospital request joinHospital", hospitalJoinRequest.loginId());
-
+        accountService.hospitalJoin(hospitalJoinRequest, profileImg, regImg);
         return ResponseEntity.ok()
                              .body("SUCCESS");
     }

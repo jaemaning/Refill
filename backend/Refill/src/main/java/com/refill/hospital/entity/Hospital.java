@@ -49,8 +49,6 @@ public class Hospital extends UserInfo {
                        .longitude(hospitalJoinRequest.longitude())
                        .tel(hospitalJoinRequest.tel())
                        .email(hospitalJoinRequest.email())
-                       .hospitalProfileImg(hospitalJoinRequest.hospitalProfileImg())
-                       .registrationImg(hospitalJoinRequest.registrationImg())
                        .role(Role.ROLE_GUEST)
                        .build();
     }
@@ -58,6 +56,14 @@ public class Hospital extends UserInfo {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority(getRole().name()));
+    }
+
+    public void updateFileAddress(String address) {
+        this.hospitalProfileImg = address;
+    }
+
+    public void updateRegAddress(String address) {
+        this.registrationImg = address;
     }
 
     @Override

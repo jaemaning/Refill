@@ -69,8 +69,8 @@ public class AccountService {
         member.encodePassword(passwordEncoder.encode(member.getLoginPassword()));
 
         if(profileImg != null) {
-            String fileAddress = amazonS3Service.uploadFile(profileImg);
-            member.updateFileAddress(fileAddress);
+            String profileAddress = amazonS3Service.uploadFile(profileImg);
+            member.updateFileAddress(profileAddress);
         }
 
         memberService.save(member);
@@ -78,7 +78,7 @@ public class AccountService {
     }
 
     @Transactional
-    public void hospitalJoin(HospitalJoinRequest hospitalJoinRequest) {
+    public void hospitalJoin(HospitalJoinRequest hospitalJoinRequest, MultipartFile profileImg, MultipartFile regImg) {
 
         // 아이디 중복 검사
         isLoginIdDuplicated(hospitalJoinRequest.loginId());
@@ -87,6 +87,12 @@ public class AccountService {
 
         Hospital hospital = Hospital.from(hospitalJoinRequest);
         hospital.encodePassword(passwordEncoder.encode(hospital.getLoginPassword()));
+
+        String profileAddress = amazonS3Service.uploadFile(profileImg);
+        String regAddress = amazonS3Service.uploadFile(regImg);
+
+        hospital.updateFileAddress(profileAddress);
+        hospital.updateRegAddress(regAddress);
 
         hospitalService.save(hospital);
     }
