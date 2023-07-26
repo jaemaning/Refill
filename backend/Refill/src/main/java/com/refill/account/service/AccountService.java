@@ -14,6 +14,7 @@ import com.refill.member.service.MemberService;
 import com.refill.security.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,8 @@ public class AccountService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final AmazonS3Service amazonS3Service;
     private final JwtProvider jwtProvider;
+    @Value("${jwt.token.secret}")
+    private String secretKey;
 
     @Transactional(readOnly = true)
     public void isLoginIdDuplicated(String loginId) {
@@ -102,7 +105,7 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
-    public String loginMember(MemberLoginRequest memberLoginRequest) {
+    public String memberLogin(MemberLoginRequest memberLoginRequest) {
 
         Member member = memberService.findByLoginId(memberLoginRequest.loginId());
 
@@ -113,7 +116,7 @@ public class AccountService {
             throw new MemberException(ErrorCode.INVALID_PASSWORD.getCode(), ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage());
         }
 
-        return null;
+        return jwtProvider.createToken(member.getLoginId(), member.getRole(), secretKey);
 
     }
 

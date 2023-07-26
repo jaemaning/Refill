@@ -1,13 +1,14 @@
 package com.refill.member.service;
 
 import com.refill.global.entity.Role;
+import com.refill.global.exception.ErrorCode;
 import com.refill.member.entity.Member;
+import com.refill.member.exception.MemberException;
 import com.refill.member.repository.MemberRepository;
 import com.refill.security.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +33,8 @@ public class MemberService {
 
     @Transactional
     public Long save(Member member) {
-        return memberRepository.save(member).getId();
+        return memberRepository.save(member)
+                               .getId();
     }
 
     @Transactional(readOnly = true)
@@ -48,7 +50,11 @@ public class MemberService {
     @Transactional(readOnly = true)
     public Member findByLoginId(String loginId) {
         return memberRepository.findByLoginId(loginId)
-                               .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 아이디입니다."));
+                               .orElseThrow(() -> new MemberException(
+                                   ErrorCode.USERNAME_NOT_FOUND.getCode(),
+                                   ErrorCode.USERNAME_NOT_FOUND,
+                                   ErrorCode.USERNAME_NOT_FOUND.getMessage()
+                               ));
     }
 
 }

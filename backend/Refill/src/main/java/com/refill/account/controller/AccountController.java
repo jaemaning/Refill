@@ -47,9 +47,9 @@ public class AccountController {
     public ResponseEntity<String> loginMember(@RequestBody MemberLoginRequest memberLoginRequest) {
 
         log.debug("'{}' member request login", memberLoginRequest.loginId());
-        accountService.memberLogin(memberLoginRequest);
+        String token = accountService.memberLogin(memberLoginRequest);
 
-        return ResponseEntity.ok().body("123");
+        return ResponseEntity.ok().body(token);
     }
 
 

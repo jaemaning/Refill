@@ -1,14 +1,12 @@
 package com.refill.member.controller;
 
 import com.refill.global.entity.UserInfo;
-import com.refill.account.dto.request.MemberLoginRequest;
 import com.refill.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,15 +22,6 @@ public class MemberController {
     public ResponseEntity<String> sayHello() {
         memberService.testCreate();
         return ResponseEntity.ok().body("hello");
-    }
-
-    @GetMapping("/login")
-    public ResponseEntity<String> login(@RequestBody MemberLoginRequest memberLoginRequest) {
-
-        String token = memberService.login(memberLoginRequest);
-
-        return ResponseEntity.ok()
-                             .body(token);
     }
 
     @GetMapping("/security")
