@@ -40,9 +40,7 @@ public class AmazonS3Service {
                 new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
         } catch (IOException e) {
-            throw new AmazonS3Exception(ErrorCode.FILE_UPLOAD_FAIL.getCode(),
-                ErrorCode.FILE_UPLOAD_FAIL, ErrorCode.FILE_UPLOAD_FAIL.getMessage());
-
+            throw new AmazonS3Exception(ErrorCode.FILE_UPLOAD_FAIL);
         }
 
         return fileName;
@@ -64,8 +62,7 @@ public class AmazonS3Service {
                     new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
                         .withCannedAcl(CannedAccessControlList.PublicRead));
             } catch (IOException e) {
-                throw new AmazonS3Exception(ErrorCode.FILE_UPLOAD_FAIL.getCode(),
-                    ErrorCode.FILE_UPLOAD_FAIL, ErrorCode.FILE_UPLOAD_FAIL.getMessage());
+                throw new AmazonS3Exception(ErrorCode.FILE_UPLOAD_FAIL);
             }
 
             fileNameList.add(fileName);
@@ -90,8 +87,7 @@ public class AmazonS3Service {
         try {
             return fileName.substring(fileName.lastIndexOf("."));
         } catch (StringIndexOutOfBoundsException e) {
-            throw new AmazonS3Exception(ErrorCode.FILE_UPLOAD_FAIL.getCode(),
-                ErrorCode.FILE_UPLOAD_FAIL, ErrorCode.FILE_UPLOAD_FAIL.getMessage());
+            throw new AmazonS3Exception(ErrorCode.FILE_UPLOAD_FAIL);
         }
     }
 

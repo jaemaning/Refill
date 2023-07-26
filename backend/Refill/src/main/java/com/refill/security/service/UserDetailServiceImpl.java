@@ -23,11 +23,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
                                .map(UserDetails.class::cast)
                                .orElseGet(() ->
                                    hospitalRepository.findByLoginId(loginId)
-                                                     .orElseThrow(() -> new MemberException(
-                                                         ErrorCode.USERNAME_NOT_FOUND.getCode(),
-                                                         ErrorCode.USERNAME_NOT_FOUND,
-                                                         ErrorCode.USERNAME_NOT_FOUND.getMessage()
-                                                     ))
+                                                     .orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND))
                                );
 
     }

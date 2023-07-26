@@ -17,7 +17,6 @@ public class HospitalController {
     @GetMapping("/")
     public ResponseEntity<String> sayHello() {
 
-        hospitalService.testCreate();
         return ResponseEntity.ok().body("hello");
     }
 }

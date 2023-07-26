@@ -24,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
@@ -41,38 +40,30 @@ public class AccountService {
     @Value("${jwt.token.secret}")
     private String secretKey;
 
-    @Transactional(readOnly = true)
+    //@Transactional(readOnly = true)
     public void isLoginIdDuplicated(String loginId) {
 
         boolean memberExists = memberService.existsByLoginId(loginId);
         boolean hospitalExists = hospitalService.existsByLoginId(loginId);
 
-        if(memberExists || hospitalExists) {
-            throw new AccountException(
-                ErrorCode.LOGIN_ID_DUPLICATED.getCode(),
-                ErrorCode.LOGIN_ID_DUPLICATED,
-                ErrorCode.LOGIN_ID_DUPLICATED.getMessage()
-            );
+        if (memberExists || hospitalExists) {
+            throw new AccountException(ErrorCode.LOGIN_ID_DUPLICATED);
         }
 
     }
 
-    @Transactional(readOnly = true)
+    //@Transactional(readOnly = true)
     public void isEmailDuplicated(String email) {
 
         boolean memberExists = memberService.existsByEmail(email);
         boolean hospitalExists = hospitalService.existsByEmail(email);
 
-        if(memberExists || hospitalExists) {
-            throw new AccountException(
-                ErrorCode.EMAIL_DUPLICATED.getCode(),
-                ErrorCode.EMAIL_DUPLICATED,
-                ErrorCode.EMAIL_DUPLICATED.getMessage()
-            );
+        if (memberExists || hospitalExists) {
+            throw new AccountException(ErrorCode.EMAIL_DUPLICATED);
         }
     }
 
-    @Transactional
+    //@Transactional
     public void memberJoin(MemberJoinRequest memberJoinRequest, MultipartFile profileImg) {
 
         // 아이디 중복 검사
@@ -83,7 +74,7 @@ public class AccountService {
         Member member = Member.from(memberJoinRequest);
         member.encodePassword(passwordEncoder.encode(member.getLoginPassword()));
 
-        if(profileImg != null) {
+        if (profileImg != null) {
             String profileAddress = amazonS3Service.uploadFile(profileImg);
             member.updateFileAddress(profileAddress);
         }
@@ -92,7 +83,7 @@ public class AccountService {
 
     }
 
-    @Transactional
+    //@Transactional
     public void hospitalJoin(HospitalJoinRequest hospitalJoinRequest, MultipartFile profileImg, MultipartFile regImg) {
 
         // 아이디 중복 검사
@@ -112,7 +103,7 @@ public class AccountService {
         hospitalService.save(hospital);
     }
 
-    @Transactional(readOnly = true)
+    //@Transactional(readOnly = true)
     public String memberLogin(MemberLoginRequest memberLoginRequest) {
 
         Member member = memberService.findByLoginId(memberLoginRequest.loginId());
@@ -120,15 +111,16 @@ public class AccountService {
         // 1. id가 없는 경우는 findByLoginId 에서 처리
         // 2. 패스워드가 일치하지 않음
 
-        if(!passwordEncoder.matches(memberLoginRequest.loginPassword(), member.getLoginPassword())) {
-            throw new MemberException(ErrorCode.INVALID_PASSWORD.getCode(), ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage());
+        if (!passwordEncoder.matches(memberLoginRequest.loginPassword(),
+            member.getLoginPassword())) {
+            throw new MemberException(ErrorCode.INVALID_PASSWORD);
         }
 
         return jwtProvider.createToken(member.getLoginId(), member.getRole(), secretKey);
 
     }
 
-    @Transactional(readOnly = true)
+    //@Transactional(readOnly = true)
     public String hospitalLogin(HospitalLoginRequest hospitalLoginRequest) {
 
         Hospital hospital = hospitalService.findByLoginId(hospitalLoginRequest.loginId());
@@ -136,62 +128,57 @@ public class AccountService {
         // 1. id가 없는 경우는 findByLoginId 에서 처리
         // 2. 패스워드가 일치하지 않음
 
-        if(!passwordEncoder.matches(hospitalLoginRequest.loginPassword(), hospital.getLoginPassword())) {
-            throw new MemberException(ErrorCode.INVALID_PASSWORD.getCode(), ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage());
+        if (!passwordEncoder.matches(hospitalLoginRequest.loginPassword(),
+            hospital.getLoginPassword())) {
+            throw new MemberException(ErrorCode.INVALID_PASSWORD);
         }
 
         // 3. 승인 대기중인 병원임
-        if(hospital.getRole() == Role.ROLE_GUEST) {
-            throw new MemberException(ErrorCode.OUTSTANDING_AUTHORIZATION.getCode(), ErrorCode.OUTSTANDING_AUTHORIZATION, ErrorCode.OUTSTANDING_AUTHORIZATION.getMessage());
+        if (hospital.getRole() == Role.ROLE_GUEST) {
+            throw new MemberException(ErrorCode.OUTSTANDING_AUTHORIZATION);
         }
 
         return jwtProvider.createToken(hospital.getLoginId(), hospital.getRole(), secretKey);
     }
 
 
-    @Transactional(readOnly = true)
+    //@Transactional(readOnly = true)
     public String findMemberLoginId(LoginIdFindRequest loginIdFindRequest) {
 
         Member member = memberService.findByEmail(loginIdFindRequest.email());
-
         amazonSESService.sendLoginId(member.getEmail(), member.getLoginId());
 
         return Message.FIND_LOGIN_ID.getMessage();
     }
 
-    @Transactional(readOnly = true)
+    //@Transactional(readOnly = true)
     public String findHospitalLoginId(LoginIdFindRequest loginIdFindRequest) {
 
         Hospital hospital = hospitalService.findByEmail(loginIdFindRequest.email());
-
         amazonSESService.sendLoginId(hospital.getEmail(), hospital.getLoginId());
 
         return Message.FIND_LOGIN_ID.getMessage();
     }
 
-    @Transactional
+    //@Transactional
     public String findMemberPassword(LoginPasswordRequest loginPasswordRequest) {
 
-        Member member = memberService.findByLoginIdAndEmail(loginPasswordRequest.loginId(), loginPasswordRequest.email());
-
+        Member member = memberService.findByLoginIdAndEmail(loginPasswordRequest.loginId(),
+            loginPasswordRequest.email());
         String newPassword = getTempPassword();
-
         amazonSESService.sendTempPassword(loginPasswordRequest.email(), newPassword);
-
         member.encodePassword(passwordEncoder.encode(newPassword));
 
         return Message.FIND_PASSWORD.getMessage();
     }
 
-    @Transactional
+    //@Transactional
     public String findHospitalPassword(LoginPasswordRequest loginPasswordRequest) {
 
-        Hospital hospital = hospitalService.findByLoginIdAndEmail(loginPasswordRequest.loginId(), loginPasswordRequest.email());
-
+        Hospital hospital = hospitalService.findByLoginIdAndEmail(loginPasswordRequest.loginId(),
+            loginPasswordRequest.email());
         String newPassword = getTempPassword();
-
         amazonSESService.sendTempPassword(loginPasswordRequest.email(), newPassword);
-
         hospital.encodePassword(passwordEncoder.encode(newPassword));
 
         return Message.FIND_PASSWORD.getMessage();

@@ -110,8 +110,7 @@ public class JwtProvider {
             String storedRefreshToken = redisTemplate.opsForValue()
                                                      .get(loginId);
             if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)) {
-                throw new SecurityException(ErrorCode.INVALID_REFRESH_TOKEN.getCode(),
-                    ErrorCode.INVALID_REFRESH_TOKEN, ErrorCode.INVALID_REFRESH_TOKEN.getMessage());
+                throw new SecurityException(ErrorCode.INVALID_REFRESH_TOKEN);
             }
 
             // 저장된 refreshToken이 유효하면, 새로운 Access Token을 발급
@@ -132,8 +131,7 @@ public class JwtProvider {
 
         } catch (Exception e) {
             // Refresh Token 검증 실패
-            throw new SecurityException(ErrorCode.INVALID_REFRESH_TOKEN.getCode(),
-                ErrorCode.INVALID_REFRESH_TOKEN, ErrorCode.INVALID_REFRESH_TOKEN.getMessage());
+            throw new SecurityException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
     }
 }

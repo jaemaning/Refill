@@ -59,7 +59,6 @@ public class AccountController {
     public ResponseEntity<String> loginHospital(@RequestBody @Valid final HospitalLoginRequest hospitalLoginRequest) {
 
         log.debug("'{}' member request login", hospitalLoginRequest.loginId());
-
         String token = accountService.hospitalLogin(hospitalLoginRequest);
 
         return ResponseEntity.ok().body(token);
@@ -69,7 +68,6 @@ public class AccountController {
     public ResponseEntity<String> findMemberLoginId(@RequestBody @Valid final LoginIdFindRequest loginIdFindRequest) {
 
         log.debug("'{}' email request find loginId", loginIdFindRequest.email());
-
         String message = accountService.findMemberLoginId(loginIdFindRequest);
 
         return ResponseEntity.ok().body(message);
@@ -79,7 +77,6 @@ public class AccountController {
     public ResponseEntity<String> findHospitalLoginId(@RequestBody @Valid final LoginIdFindRequest loginIdFindRequest) {
 
         log.debug("'{}' email request find loginId", loginIdFindRequest.email());
-
         String message = accountService.findHospitalLoginId(loginIdFindRequest);
 
         return ResponseEntity.ok().body(message);
@@ -89,7 +86,6 @@ public class AccountController {
     public ResponseEntity<String> findMemberPassword(@RequestBody @Valid final LoginPasswordRequest loginPasswordRequest) {
 
         log.debug("'{}' member request reset password", loginPasswordRequest.loginId());
-
         String message = accountService.findMemberPassword(loginPasswordRequest);
 
         return ResponseEntity.ok().body(message);
@@ -99,7 +95,6 @@ public class AccountController {
     public ResponseEntity<String> findHospitalPassword(@RequestBody @Valid final LoginPasswordRequest loginPasswordRequest) {
 
         log.debug("'{}' member request reset password", loginPasswordRequest.loginId());
-
         String message = accountService.findHospitalPassword(loginPasswordRequest);
 
         return ResponseEntity.ok().body(message);

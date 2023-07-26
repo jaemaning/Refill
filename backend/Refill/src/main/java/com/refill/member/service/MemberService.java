@@ -1,6 +1,5 @@
 package com.refill.member.service;
 
-import com.refill.global.entity.Role;
 import com.refill.global.exception.ErrorCode;
 import com.refill.member.entity.Member;
 import com.refill.member.exception.MemberException;
@@ -23,14 +22,6 @@ public class MemberService {
     @Value("${jwt.token.secret}")
     private String secretKey;
 
-    public void testCreate() {
-        memberRepository.save(Member.builder()
-                                    .loginId("member01")
-                                    .name("귤민")
-                                    .role(Role.ROLE_ADMIN)
-                                    .build());
-    }
-
     @Transactional
     public Long save(Member member) {
         return memberRepository.save(member)
@@ -50,31 +41,19 @@ public class MemberService {
     @Transactional(readOnly = true)
     public Member findByLoginId(String loginId) {
         return memberRepository.findByLoginId(loginId)
-                               .orElseThrow(() -> new MemberException(
-                                   ErrorCode.USERNAME_NOT_FOUND.getCode(),
-                                   ErrorCode.USERNAME_NOT_FOUND,
-                                   ErrorCode.USERNAME_NOT_FOUND.getMessage()
-                               ));
+                               .orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
     public Member findByEmail(String email) {
         return memberRepository.findByEmail(email)
-                               .orElseThrow(() -> new MemberException(
-                                   ErrorCode.USERNAME_NOT_FOUND.getCode(),
-                                   ErrorCode.USERNAME_NOT_FOUND,
-                                   ErrorCode.USERNAME_NOT_FOUND.getMessage()
-                               ));
+                               .orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
     public Member findByLoginIdAndEmail(String loginId, String email) {
         return memberRepository.findByLoginIdAndEmail(loginId, email)
-                               .orElseThrow(() -> new MemberException(
-                                   ErrorCode.USERNAME_NOT_FOUND.getCode(),
-                                   ErrorCode.USERNAME_NOT_FOUND,
-                                   ErrorCode.USERNAME_NOT_FOUND.getMessage()
-                               ));
+                               .orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND));
     }
 
 }
