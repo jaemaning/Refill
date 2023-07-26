@@ -3,9 +3,11 @@ package com.refill.account.service;
 import com.refill.account.dto.request.HospitalJoinRequest;
 import com.refill.account.dto.request.HospitalLoginRequest;
 import com.refill.account.dto.request.LoginIdFindRequest;
+import com.refill.account.dto.request.LoginPasswordRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.dto.request.MemberLoginRequest;
 import com.refill.account.exception.AccountException;
+import com.refill.global.entity.Message;
 import com.refill.global.entity.Role;
 import com.refill.global.exception.ErrorCode;
 import com.refill.global.service.AmazonS3Service;
@@ -147,8 +149,28 @@ public class AccountService {
 
 
     @Transactional(readOnly = true)
-    public String findLoginId(LoginIdFindRequest loginIdFindRequest) {
+    public String findMemberLoginId(LoginIdFindRequest loginIdFindRequest) {
 
-        return "id";
+        Member member = memberService.findByEmail(loginIdFindRequest.email());
+
+        amazonSESService.sendLoginId(member.getEmail(), member.getLoginId());
+
+        return Message.FIND_LOGIN_ID.getMessage();
+    }
+
+    @Transactional(readOnly = true)
+    public String findHospitalLoginId(LoginIdFindRequest loginIdFindRequest) {
+
+        Hospital hospital = hospitalService.findByEmail(loginIdFindRequest.email());
+
+        amazonSESService.sendLoginId(hospital.getEmail(), hospital.getLoginId());
+
+        return Message.FIND_LOGIN_ID.getMessage();
+    }
+
+    @Transactional
+    public String findMemberPassword(LoginPasswordRequest loginPasswordRequest) {
+
+        Member member;
     }
 }

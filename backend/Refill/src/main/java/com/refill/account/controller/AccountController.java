@@ -3,6 +3,7 @@ package com.refill.account.controller;
 import com.refill.account.dto.request.HospitalJoinRequest;
 import com.refill.account.dto.request.HospitalLoginRequest;
 import com.refill.account.dto.request.LoginIdFindRequest;
+import com.refill.account.dto.request.LoginPasswordRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.dto.request.MemberLoginRequest;
 import com.refill.account.service.AccountService;
@@ -64,15 +65,35 @@ public class AccountController {
         return ResponseEntity.ok().body(token);
     }
 
-    @PostMapping("/find/id")
-    public ResponseEntity<String> findLoginId(@RequestBody @Valid final LoginIdFindRequest loginIdFindRequest) {
+    @PostMapping("/member/find/id")
+    public ResponseEntity<String> findMemberLoginId(@RequestBody @Valid final LoginIdFindRequest loginIdFindRequest) {
 
         log.debug("'{}' email request find loginId", loginIdFindRequest.email());
 
-        String message = accountService.findLoginId(loginIdFindRequest);
+        String message = accountService.findMemberLoginId(loginIdFindRequest);
 
         return ResponseEntity.ok().body(message);
     }
+
+    @PostMapping("/hospital/find/id")
+    public ResponseEntity<String> findHospitalLoginId(@RequestBody @Valid final LoginIdFindRequest loginIdFindRequest) {
+
+        log.debug("'{}' email request find loginId", loginIdFindRequest.email());
+
+        String message = accountService.findHospitalLoginId(loginIdFindRequest);
+
+        return ResponseEntity.ok().body(message);
+    }
+
+    @PostMapping("/member/find/password")
+    public ResponseEntity<String> findMemberPassword(@RequestBody @Valid final LoginPasswordRequest loginPasswordRequest) {
+
+        log.debug("'{}' member request reset password", loginPasswordRequest.loginId());
+
+        String message = accountService.findMemberPassword(loginPasswordRequest);
+    }
+
+
 
 
 }
