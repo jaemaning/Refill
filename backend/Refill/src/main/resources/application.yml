@@ -22,3 +22,10 @@ cloud:
 jwt:
   token:
     secret: ${JWT_SECRET_KEY}
+
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
