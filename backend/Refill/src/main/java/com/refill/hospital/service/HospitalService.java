@@ -1,9 +1,10 @@
 package com.refill.hospital.service;
 
+import com.refill.global.exception.ErrorCode;
 import com.refill.hospital.entity.Hospital;
 import com.refill.hospital.repository.HospitalRepository;
+import com.refill.member.exception.MemberException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,7 +40,10 @@ public class HospitalService {
     @Transactional
     public Hospital findByLoginId(String loginId) {
         return hospitalRepository.findByLoginId(loginId)
-                                 .orElseThrow(
-                                     () -> new UsernameNotFoundException("존재하지 않는 아이디입니다."));
+                                 .orElseThrow(() -> new MemberException(
+                                     ErrorCode.USERNAME_NOT_FOUND.getCode(),
+                                     ErrorCode.USERNAME_NOT_FOUND,
+                                     ErrorCode.USERNAME_NOT_FOUND.getMessage()
+                                 ));
     }
 }

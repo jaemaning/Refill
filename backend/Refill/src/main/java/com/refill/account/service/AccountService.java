@@ -1,6 +1,7 @@
 package com.refill.account.service;
 
 import com.refill.account.dto.request.HospitalJoinRequest;
+import com.refill.account.dto.request.HospitalLoginRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.dto.request.MemberLoginRequest;
 import com.refill.account.exception.AccountException;
@@ -120,4 +121,18 @@ public class AccountService {
 
     }
 
+    @Transactional(readOnly = true)
+    public String hospitalLogin(HospitalLoginRequest hospitalLoginRequest) {
+
+        Hospital hospital = hospitalService.findByLoginId(hospitalLoginRequest.loginId());
+
+        // 1. id가 없는 경우는 findByLoginId 에서 처리
+        // 2. 패스워드가 일치하지 않음
+
+        if(!passwordEncoder.matches(hospitalLoginRequest.loginPassword(), hospital.getLoginPassword())) {
+            throw new MemberException(ErrorCode.INVALID_PASSWORD.getCode(), ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage());
+        }
+
+        return jwtProvider.createToken(hospital.getLoginId(), hospital.getRole(), secretKey);
+    }
 }

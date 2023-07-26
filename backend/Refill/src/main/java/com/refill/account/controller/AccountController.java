@@ -1,6 +1,7 @@
 package com.refill.account.controller;
 
 import com.refill.account.dto.request.HospitalJoinRequest;
+import com.refill.account.dto.request.HospitalLoginRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.dto.request.MemberLoginRequest;
 import com.refill.account.service.AccountService;
@@ -48,6 +49,16 @@ public class AccountController {
 
         log.debug("'{}' member request login", memberLoginRequest.loginId());
         String token = accountService.memberLogin(memberLoginRequest);
+
+        return ResponseEntity.ok().body(token);
+    }
+
+    @GetMapping("/hospital/login")
+    public ResponseEntity<String> loginHospital(@RequestBody HospitalLoginRequest hospitalLoginRequest) {
+
+        log.debug("'{}' member request login", hospitalLoginRequest.loginId());
+
+        String token = accountService.hospitalLogin(hospitalLoginRequest);
 
         return ResponseEntity.ok().body(token);
     }
