@@ -52,5 +52,6 @@
     "build": [
       "npx tailwindcss-cli@latest build -i ./src/styles/tailwind.css -o ./src/styles/styles.css"
     ]
-  }
+  },
+  "proxy" : "http://localhost:80/"
 }

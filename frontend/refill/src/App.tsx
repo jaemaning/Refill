@@ -3,6 +3,7 @@ import './App.css';
 import Counter from './components/Counter';
 import nav_logo from './assets/logo_final.png';
 import LoginForm from './LoginForm'
+import MemberJoin from './MemberJoin'
 
 const App: React.FC = () => {
   return (
@@ -17,9 +18,10 @@ const App: React.FC = () => {
         </div>
       </nav>
       <div className="App-body">
-        <h1>Hello Refill!</h1>
-        <h3>test for redux ! </h3>
-        <LoginForm />
+        {/* <h1>Hello Refill!</h1>
+        <h3>test for redux ! </h3> */}
+        {/* <LoginForm /> */}
+        <MemberJoin />
         <Counter />
       </div>
     </div>

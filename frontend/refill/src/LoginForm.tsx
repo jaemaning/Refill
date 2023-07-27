@@ -16,18 +16,18 @@ const LoginForm: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    try {
-      const response = await axios.get("/account/member/login", {
-        params: {
-          loginId: username,
-          loginPassword: password,
-        },
-      });
+    const MemberLoginRequest = {
+      loginId : username,
+      loginPassword : password
+    };
 
-      console.log("Login successful:", response.data);
-    } catch (error) {
-      console.error(error);
-    }
+    axios
+      .post("api/v1/account/member/login", MemberLoginRequest)
+      .then(response => {
+        console.log(response.data)
+      }).catch(err => {
+        console.log(err.response.data)
+      })
   };
 
   return (
@@ -38,6 +38,7 @@ const LoginForm: React.FC = () => {
           <input type="text" value={username} onChange={handleUsernameChange} />
         </label>
       </div>
+      <br />
       <div>
         <label>
           Password:
@@ -48,6 +49,7 @@ const LoginForm: React.FC = () => {
           />
         </label>
       </div>
+      <br />
       <div>
         <button type="submit">Login</button>
       </div>
