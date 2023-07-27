@@ -15,4 +15,6 @@ public class ServiceTest {
     @Autowired protected HospitalService hospitalService;
     @Autowired protected AccountService accountService;
 
+
+
 }
