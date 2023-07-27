@@ -43,5 +43,9 @@ public abstract class UserInfo extends BaseEntity implements UserDetails {
         this.loginPassword = encodedPassword;
     }
 
+    public void acceptHospital() {
+        this.role = Role.ROLE_HOSPITAL;
+    }
+
 }
 
