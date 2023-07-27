@@ -32,14 +32,16 @@ public class AdminController {
     @GetMapping("/hospitals/accept/{id}")
     public ResponseEntity<String> acceptHospital(@PathVariable("id") Long hospitalId) {
 
+        log.debug("'{}' hospital accepted by admin", hospitalId);
         adminService.acceptHospital(hospitalId);
 
         return ResponseEntity.ok().body(Message.ACCEPT_HOSPITAL.getMessage());
     }
 
-    @GetMapping("/hospitals/rejcet/{id}")
+    @GetMapping("/hospitals/reject/{id}")
     public ResponseEntity<String> rejectHospital(@PathVariable("id") Long hospitalId) {
 
+        log.debug("'{}' hospital rejected by admin", hospitalId);
         adminService.rejectHospital(hospitalId);
 
         return ResponseEntity.ok().body(Message.REJECT_HOSPITAL.getMessage());
