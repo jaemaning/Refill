@@ -20,6 +20,19 @@ spring:
       host: localhost
       port: 6379
 
+cloud:
+  aws:
+    credentials:
+      access-key: test
+      secret-key: test
+    region:
+      static: ap-northeast-2
+      auto: false
+    s3:
+      bucket: test
+    stack:
+      auto: false
+
 jwt:
   token:
     secret: "testTesttestTesttestTesttestTesttestTesttestTesttestTesttestTesttestTesttestTesttestTesttestTest"

@@ -11,7 +11,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.userdetails.UserDetails;
 
-@ToString
+@ToString(callSuper = true)
 @Getter
 @SuperBuilder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -41,6 +41,11 @@ public abstract class UserInfo extends BaseEntity implements UserDetails {
 
     public void encodePassword(String encodedPassword) {
         this.loginPassword = encodedPassword;
+    }
+
+
+    public void acceptHospital() {
+        this.role = Role.ROLE_HOSPITAL;
     }
 
 }
