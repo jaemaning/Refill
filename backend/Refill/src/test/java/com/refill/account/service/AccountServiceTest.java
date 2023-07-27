@@ -1,13 +1,22 @@
 package com.refill.account.service;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.refill.account.dto.request.HospitalJoinRequest;
 import com.refill.account.dto.request.HospitalLoginRequest;
+import com.refill.account.dto.request.LoginIdFindRequest;
+import com.refill.account.dto.request.LoginPasswordRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.dto.request.MemberLoginRequest;
+import com.refill.global.entity.Message;
 import com.refill.global.entity.Role;
 import com.refill.global.exception.ErrorCode;
 import com.refill.hospital.entity.Hospital;
@@ -143,6 +152,51 @@ class AccountServiceTest extends ServiceTest {
 
         assertEquals(exception.getErrorCode(), ErrorCode.OUTSTANDING_AUTHORIZATION);
 
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("아이디_찾기_요청하면_가입한_이메일로_메일_전송한다")
+    void t7() throws Exception {
+        //given
+        MemberJoinRequest memberJoinRequest = new MemberJoinRequest("member01", "pass01", "상원", "신상원", "hello", "01012345667",
+            LocalDate.of(1995, 9, 24), "sangwon01@ssafy.com");
+
+        accountService.memberJoin(memberJoinRequest, null);
+
+        Member member = memberService.findByEmail(memberJoinRequest.email());
+        assertNotNull(member);
+
+        doNothing().when(amazonSESService).sendLoginId(any(String.class), any(String.class));
+
+        LoginIdFindRequest loginIdFindRequest = new LoginIdFindRequest(member.getEmail());
+
+        String msg = accountService.findMemberLoginId(loginIdFindRequest);
+        verify(amazonSESService, times(1)).sendLoginId(any(String.class), any(String.class));
+        assertEquals(msg, Message.FIND_LOGIN_ID.getMessage());
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("비밀번호_찾기_요청하면_가입한_이메일로_메일_전송한다")
+    void t8() throws Exception {
+        //given
+        MemberJoinRequest memberJoinRequest = new MemberJoinRequest("member01", "pass01", "상원", "신상원", "hello", "01012345667",
+            LocalDate.of(1995, 9, 24), "sangwon01@ssafy.com");
+
+        accountService.memberJoin(memberJoinRequest, null);
+
+        Member member = memberService.findByEmail(memberJoinRequest.email());
+        assertNotNull(member);
+
+        doNothing().when(amazonSESService).sendTempPassword(any(String.class), any(String.class));
+
+        LoginPasswordRequest loginIdFindRequest = new LoginPasswordRequest(member.getLoginId(), member.getEmail());
+
+        String msg = accountService.findMemberPassword(loginIdFindRequest);
+
+        verify(amazonSESService, times(1)).sendTempPassword(any(String.class), any(String.class));
+        assertEquals(msg, Message.FIND_PASSWORD.getMessage());
     }
 
 

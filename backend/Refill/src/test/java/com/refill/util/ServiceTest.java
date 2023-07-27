@@ -2,6 +2,7 @@ package com.refill.util;
 
 import com.refill.account.service.AccountService;
 import com.refill.global.service.AmazonS3Service;
+import com.refill.global.service.AmazonSESService;
 import com.refill.hospital.service.HospitalService;
 import com.refill.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ public class ServiceTest {
     @Autowired protected AccountService accountService;
 
     @MockBean protected AmazonS3Service amazonS3Service;
+    @MockBean protected AmazonSESService amazonSESService;
 
 
 }
