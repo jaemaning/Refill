@@ -46,7 +46,7 @@ public class AccountController {
                              .body("SUCCESS");
     }
 
-    @GetMapping("/member/login")
+    @PostMapping("/member/login")
     public ResponseEntity<String> loginMember(@RequestBody @Valid final MemberLoginRequest memberLoginRequest) {
 
         log.debug("'{}' member request login", memberLoginRequest.loginId());
@@ -55,7 +55,7 @@ public class AccountController {
         return ResponseEntity.ok().body(token);
     }
 
-    @GetMapping("/hospital/login")
+    @PostMapping("/hospital/login")
     public ResponseEntity<String> loginHospital(@RequestBody @Valid final HospitalLoginRequest hospitalLoginRequest) {
 
         log.debug("'{}' member request login", hospitalLoginRequest.loginId());
