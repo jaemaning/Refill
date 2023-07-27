@@ -25,6 +25,7 @@ public class SecurityConfig{
             .authorizeHttpRequests()
             .antMatchers("/h2-console/**").permitAll()
             .antMatchers("/api/v1/**/join", "/api/v1/**/login", "/api/v1/account/**/find/**").permitAll()
+            .antMatchers("/api/v1/admin/**").hasRole("ADMIN")
             .anyRequest().authenticated()
             .and()
             .sessionManagement()
