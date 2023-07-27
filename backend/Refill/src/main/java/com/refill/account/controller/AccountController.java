@@ -11,7 +11,6 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,7 +45,7 @@ public class AccountController {
                              .body("SUCCESS");
     }
 
-    @GetMapping("/member/login")
+    @PostMapping("/member/login")
     public ResponseEntity<String> loginMember(@RequestBody @Valid final MemberLoginRequest memberLoginRequest) {
 
         log.debug("'{}' member request login", memberLoginRequest.loginId());
@@ -55,7 +54,7 @@ public class AccountController {
         return ResponseEntity.ok().body(token);
     }
 
-    @GetMapping("/hospital/login")
+    @PostMapping("/hospital/login")
     public ResponseEntity<String> loginHospital(@RequestBody @Valid final HospitalLoginRequest hospitalLoginRequest) {
 
         log.debug("'{}' member request login", hospitalLoginRequest.loginId());
