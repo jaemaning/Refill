@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import com.refill.account.dto.request.HospitalJoinRequest;
+import com.refill.account.dto.request.HospitalLoginRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.dto.request.MemberLoginRequest;
 import com.refill.global.entity.Role;
@@ -120,5 +121,29 @@ class AccountServiceTest extends ServiceTest {
         assertEquals(exception.getErrorCode(), ErrorCode.INVALID_PASSWORD);
 
     }
+
+    @Test
+    @Transactional
+    @DisplayName("승인_대기중인_병원이_로그인하면_OUTSTANDING_AUTHORIZATION_반환한다")
+    void t6() throws Exception {
+        //given
+        HospitalJoinRequest hospitalJoinRequest = new HospitalJoinRequest("hospital01", "pass01", "상원병원", "광산구", "12345", new BigDecimal(
+            "12.12345"), new BigDecimal("14.12452"), "031-123-4253", "hospital@ssafy.com");
+
+        MockMultipartFile profileImg1 = new MockMultipartFile("profileImg", "test.jpg", "image/jpeg", "test image".getBytes());
+        MockMultipartFile regImg1 = new MockMultipartFile("regImg", "test.jpg", "image/jpeg", "test image".getBytes());
+
+        when(amazonS3Service.uploadFile(any(MockMultipartFile.class))).thenReturn("SUCCESS");
+        accountService.hospitalJoin(hospitalJoinRequest, profileImg1, regImg1);
+
+        // when
+        HospitalLoginRequest hospitalLoginRequest = new HospitalLoginRequest("hospital01", "pass01");
+
+        MemberException exception = assertThrows(MemberException.class, () -> accountService.hospitalLogin(hospitalLoginRequest));
+
+        assertEquals(exception.getErrorCode(), ErrorCode.OUTSTANDING_AUTHORIZATION);
+
+    }
+
 
 }
