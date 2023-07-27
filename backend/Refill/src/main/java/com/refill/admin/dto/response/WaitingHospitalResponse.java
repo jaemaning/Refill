@@ -3,7 +3,7 @@ package com.refill.admin.dto.response;
 import com.refill.hospital.entity.Hospital;
 
 public record WaitingHospitalResponse (
-
+    Long id,
     String loginId,
     String name,
     String address,
@@ -16,6 +16,7 @@ public record WaitingHospitalResponse (
 
     public WaitingHospitalResponse(Hospital hospital) {
         this(
+            hospital.getId(),
             hospital.getLoginId(),
             hospital.getName(),
             hospital.getAddress(),
