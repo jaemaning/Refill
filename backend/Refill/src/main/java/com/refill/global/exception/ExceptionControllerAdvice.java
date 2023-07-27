@@ -17,7 +17,7 @@ public class ExceptionControllerAdvice {
         log.error("MemberException occurred: '{}'", e.getMessage(), e);
         return ResponseEntity.status(e.getErrorCode()
                                       .getHttpStatus())
-            .body(e.getCode() + " : " + e.getErrorCode().name() + " " + e.getMessage());
+            .body(e.getErrorCode().getCode() + " : " + e.getErrorCode().name() + " " + e.getErrorCode().getMessage());
     }
 
     @ExceptionHandler(AccountException.class)
@@ -25,7 +25,7 @@ public class ExceptionControllerAdvice {
         log.error("MemberException occurred: '{}'", e.getMessage(), e);
         return ResponseEntity.status(e.getErrorCode()
                                       .getHttpStatus())
-                             .body(e.getCode() + " : " + e.getErrorCode().name() + " " + e.getMessage());
+                             .body(e.getErrorCode().getCode() + " : " + e.getErrorCode().name() + " " + e.getErrorCode().getMessage());
     }
 
     @ExceptionHandler(SecurityException.class)
@@ -33,6 +33,6 @@ public class ExceptionControllerAdvice {
         log.error("MemberException occurred: '{}'", e.getMessage(), e);
         return ResponseEntity.status(e.getErrorCode()
                                       .getHttpStatus())
-                             .body(e.getCode() + " : " + e.getErrorCode().name() + " " + e.getMessage());
+                             .body(e.getErrorCode().getCode() + " : " + e.getErrorCode().name() + " " + e.getErrorCode().getMessage());
     }
 }

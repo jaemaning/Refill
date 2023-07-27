@@ -7,7 +7,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class AmazonS3Exception extends RuntimeException{
 
-    private String code;
     private ErrorCode errorCode;
-    private String message;
 }

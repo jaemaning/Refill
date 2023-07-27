@@ -24,7 +24,7 @@ public class SecurityConfig{
             .and()
             .authorizeHttpRequests()
             .antMatchers("/h2-console/**").permitAll()
-            .antMatchers("/api/v1/**/join", "/api/v1/**/login").permitAll()
+            .antMatchers("/api/v1/**/join", "/api/v1/**/login", "/api/v1/account/**/find/**").permitAll()
             .anyRequest().authenticated()
             .and()
             .sessionManagement()

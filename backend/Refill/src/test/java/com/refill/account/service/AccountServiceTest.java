@@ -43,7 +43,7 @@ class AccountServiceTest extends ServiceTest {
     void t2() throws Exception {
 
         HospitalJoinRequest hospitalJoinRequest = new HospitalJoinRequest("hospital01", "pass01", "상원병원", "광산구", "12345", new BigDecimal(
-            "12.12345"), new BigDecimal("14.12452"), "031-123-4253", "hospital@ssafy.com", "s3address12341", "registration1234");
+            "12.12345"), new BigDecimal("14.12452"), "031-123-4253", "hospital@ssafy.com");
 
         accountService.hospitalJoin(hospitalJoinRequest, null, null);
 

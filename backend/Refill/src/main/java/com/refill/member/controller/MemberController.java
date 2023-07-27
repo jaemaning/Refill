@@ -20,7 +20,7 @@ public class MemberController {
 
     @GetMapping("/join")
     public ResponseEntity<String> sayHello() {
-        memberService.testCreate();
+
         return ResponseEntity.ok().body("hello");
     }
 

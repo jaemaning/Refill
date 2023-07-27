@@ -44,8 +44,7 @@ class AccountControllerTest extends ControllerTest {
                     fieldWithPath("address").type(JsonFieldType.STRING).description("주소"),
                     fieldWithPath("tel").type(JsonFieldType.STRING).description("핸드폰번호"),
                     fieldWithPath("birthDay").type(JsonFieldType.STRING).description("생일"),
-                    fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
-                    fieldWithPath("profileImg").type(JsonFieldType.STRING).description("프로필사진").optional()
+                    fieldWithPath("email").type(JsonFieldType.STRING).description("이메일")
                 )
             )
         ).andExpect(status().isOk());

@@ -19,8 +19,8 @@ import org.springframework.stereotype.Component;
 public class JwtProvider {
 
     private final RedisTemplate<String, String> redisTemplate;
-    private static final Long accessTokenExpireTimeMs = 3600000L; // 1시간
-    private static final Long refreshTokenExpireTimeMs = 1209600000L; // 2주일
+    private final Long accessTokenExpireTimeMs = 3600000L; // 1시간
+    private final Long refreshTokenExpireTimeMs = 1209600000L; // 2주일
 
     public static String getLoginId(String token, String secretKey) {
 
@@ -110,8 +110,7 @@ public class JwtProvider {
             String storedRefreshToken = redisTemplate.opsForValue()
                                                      .get(loginId);
             if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)) {
-                throw new SecurityException(ErrorCode.INVALID_REFRESH_TOKEN.getCode(),
-                    ErrorCode.INVALID_REFRESH_TOKEN, ErrorCode.INVALID_REFRESH_TOKEN.getMessage());
+                throw new SecurityException(ErrorCode.INVALID_REFRESH_TOKEN);
             }
 
             // 저장된 refreshToken이 유효하면, 새로운 Access Token을 발급
@@ -132,8 +131,7 @@ public class JwtProvider {
 
         } catch (Exception e) {
             // Refresh Token 검증 실패
-            throw new SecurityException(ErrorCode.INVALID_REFRESH_TOKEN.getCode(),
-                ErrorCode.INVALID_REFRESH_TOKEN, ErrorCode.INVALID_REFRESH_TOKEN.getMessage());
+            throw new SecurityException(ErrorCode.INVALID_REFRESH_TOKEN);
         }
     }
 }
