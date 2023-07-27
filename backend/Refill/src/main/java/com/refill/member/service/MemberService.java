@@ -52,6 +52,7 @@ public class MemberService {
 
     @Transactional(readOnly = true)
     public Member findByLoginIdAndEmail(String loginId, String email) {
+
         return memberRepository.findByLoginIdAndEmail(loginId, email)
                                .orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND));
     }
