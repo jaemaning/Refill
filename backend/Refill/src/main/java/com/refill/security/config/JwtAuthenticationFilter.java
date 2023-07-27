@@ -1,7 +1,9 @@
 package com.refill.security.config;
 
-import com.refill.member.entity.Member;
-import com.refill.member.service.MemberService;
+import com.refill.global.exception.ErrorCode;
+import com.refill.hospital.repository.HospitalRepository;
+import com.refill.member.exception.MemberException;
+import com.refill.member.repository.MemberRepository;
 import com.refill.security.util.JwtProvider;
 import java.io.IOException;
 import javax.servlet.FilterChain;
@@ -10,20 +12,27 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Slf4j
 @RequiredArgsConstructor
+@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
+    private final HospitalRepository hospitalRepository;
     private final JwtProvider jwtProvider;
-    private final String secretKey;
+
+    @Value("${jwt.token.secret}")
+    private String secretKey;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -49,11 +58,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
             String loginId = JwtProvider.getLoginId(token, secretKey);
-            Member member = memberService.findByLoginId(loginId);
+            UserDetails userDetails = memberRepository.findByLoginId(loginId)
+                                                      .map(UserDetails.class::cast)
+                                                      .orElseGet(() ->
+                                                          hospitalRepository.findByLoginId(loginId)
+                                                                            .orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND))
+                                                      );
 
             // 권한 부여하기
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                member, null, member.getAuthorities());
+                userDetails, null, userDetails.getAuthorities());
 
             // Detail
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

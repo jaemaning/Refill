@@ -20,6 +20,4 @@ spring:
       host: localhost
       port: 6379
 
-jwt:
-  token:
-    secret: "testSecretKeytestSecretKeytestSecretKeytestSecretKeytestSecretKeytestSecretKeytestSecretKey"
+
