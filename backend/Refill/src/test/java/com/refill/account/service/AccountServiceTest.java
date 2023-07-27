@@ -8,8 +8,10 @@ import com.refill.account.dto.request.HospitalJoinRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.dto.request.MemberLoginRequest;
 import com.refill.global.entity.Role;
+import com.refill.global.exception.ErrorCode;
 import com.refill.hospital.entity.Hospital;
 import com.refill.member.entity.Member;
+import com.refill.member.exception.MemberException;
 import com.refill.util.ServiceTest;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -78,6 +80,44 @@ class AccountServiceTest extends ServiceTest {
         String token = accountService.memberLogin(memberLoginRequest);
 
         assertNotNull(token);
+
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("개인회원_로그인_아이디가_없으면_USERNAME_NOT_FOUND_에러를_반환한다")
+    void t4() throws Exception {
+        //given
+        MemberJoinRequest memberJoinRequest = new MemberJoinRequest("member01", "pass01", "상원", "신상원", "hello", "01012345667",
+            LocalDate.of(1995, 9, 24), "sangwon01@ssafy.com");
+
+        accountService.memberJoin(memberJoinRequest, null);
+
+        // when
+        MemberLoginRequest memberLoginRequest = new MemberLoginRequest("member02", "pass01");
+
+        MemberException exception = assertThrows(MemberException.class, () -> accountService.memberLogin(memberLoginRequest));
+
+        assertEquals(exception.getErrorCode(), ErrorCode.USERNAME_NOT_FOUND);
+
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("개인회원_로그인_비밀번호가_다르면_INVALID_PASSWORD_에러를_반환한다")
+    void t5() throws Exception {
+        //given
+        MemberJoinRequest memberJoinRequest = new MemberJoinRequest("member01", "pass01", "상원", "신상원", "hello", "01012345667",
+            LocalDate.of(1995, 9, 24), "sangwon01@ssafy.com");
+
+        accountService.memberJoin(memberJoinRequest, null);
+
+        // when
+        MemberLoginRequest memberLoginRequest = new MemberLoginRequest("member01", "pass02");
+
+        MemberException exception = assertThrows(MemberException.class, () -> accountService.memberLogin(memberLoginRequest));
+
+        assertEquals(exception.getErrorCode(), ErrorCode.INVALID_PASSWORD);
 
     }
 
