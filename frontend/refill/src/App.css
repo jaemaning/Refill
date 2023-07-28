@@ -32,7 +32,9 @@ html body .App {
   color: black;
 }
 
-
+button:hover {
+  border: #ffffff
+}
 
 .App-link {
   color: #61dafb;

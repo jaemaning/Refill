@@ -2,8 +2,9 @@ import React from 'react';
 import './App.css';
 import Counter from './components/Counter';
 import nav_logo from './assets/logo_final.png';
-import LoginForm from './LoginForm'
+// import LoginForm from './LoginForm'
 import MemberJoin from './MemberJoin'
+import ButtonTest from './components/ButtonTest'
 
 const App: React.FC = () => {
   return (
@@ -11,10 +12,10 @@ const App: React.FC = () => {
       <nav className="App-navbar flex">
         <img src={nav_logo} alt="nav_log" />
         <div className="flex align-items-center">
-          <a href="">예약</a>
-          <a href="">서비스</a>
-          <a href="">로그인</a>
-          <a href="">회원가입</a>
+          <a href="/">예약</a>
+          <a href="/">서비스</a>
+          <a href="/">로그인</a>
+          <a href="/">회원가입</a>
         </div>
       </nav>
       <div className="App-body">
@@ -23,6 +24,7 @@ const App: React.FC = () => {
         {/* <LoginForm /> */}
         <MemberJoin />
         <Counter />
+        <ButtonTest/>
       </div>
     </div>
   );
