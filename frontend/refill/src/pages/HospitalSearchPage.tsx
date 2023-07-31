@@ -2,11 +2,9 @@
 // import { useState, ChangeEvent, FC } from 'react';
 import RadioDiv from "../components/elements/RadioButton";
 
-export interface HospitalSearchProps {
-}
+export interface HospitalSearchProps {}
 
-export function HospitalSearch (props:  HospitalSearchProps) {
-
+export function HospitalSearch(props: HospitalSearchProps) {
   // const [option, setOption] = useState(radioOption);
 
   // const handleChange = (e :ChangeEvent<HTMLInputElement>) => {
@@ -15,7 +13,7 @@ export function HospitalSearch (props:  HospitalSearchProps) {
 
   return (
     <div>
-      <RadioDiv/>
+      <RadioDiv />
     </div>
   );
 }
