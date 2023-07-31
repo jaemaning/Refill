@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.member.dto.request.MemberInfoUpdateRequest;
+import com.refill.member.dto.request.MemberPasswordUpdateRequest;
 import com.refill.member.dto.response.MemberInfoResponse;
 import com.refill.member.entity.Member;
 import com.refill.member.exception.MemberException;
@@ -15,11 +16,16 @@ import java.time.LocalDate;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
 class MemberServiceTest extends ServiceTest {
 
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
     @BeforeEach
     void tearUp() throws Exception {
         //given
@@ -112,10 +118,10 @@ class MemberServiceTest extends ServiceTest {
         final String loginId = "member01";
         MemberInfoResponse memberInfoResponse = memberService.getMemberByLoginId(loginId);
 
-        Assertions.assertThat(memberInfoResponse).satisfies(member -> {
-            Assertions.assertThat(member).isNotNull();
-            Assertions.assertThat(member.name()).isEqualTo("신상원");
-        });
+        Assertions.assertThat(memberInfoResponse).satisfies(
+            member -> Assertions.assertThat(member).isNotNull(),
+            member -> Assertions.assertThat(member.name()).isEqualTo("신상원")
+        );
     }
 
     @Test
@@ -130,12 +136,53 @@ class MemberServiceTest extends ServiceTest {
         member.update(memberInfoUpdateRequest);
 
         Member member1 = memberService.findByLoginId(loginId);
-        Assertions.assertThat(member1).satisfies(m -> {
-            Assertions.assertThat(m.getName()).isNotEqualTo("신상원");
-            Assertions.assertThat(m.getName()).isEqualTo("신호인");
-            Assertions.assertThat(m.getNickname()).isNotEqualTo("상원");
-            Assertions.assertThat(m.getNickname()).isEqualTo("시그널만");
-        });
+        Assertions.assertThat(member1).satisfies(
+            m -> Assertions.assertThat(m.getName()).isNotEqualTo("신상원"),
+            m ->Assertions.assertThat(m.getName()).isEqualTo("신호인"),
+            m ->Assertions.assertThat(m.getNickname()).isNotEqualTo("상원"),
+            m ->Assertions.assertThat(m.getNickname()).isEqualTo("시그널만")
+        );
+    }
+
+    @Nested
+    @DisplayName("회원_비밀번호_수정할_때")
+    class when_member_modify_password {
+
+        final String loginId = "member01";
+        final String oldPassword = "pass01";
+        final String newPassword = "newPass";
+        @Transactional
+        @DisplayName("올바른_정보가_입력되면_수정된다")
+        @Test
+        void do_modify_password_with_exactly_information() throws Exception{
+
+
+            Member member = memberService.findByLoginId(loginId);
+
+            MemberPasswordUpdateRequest memberPasswordUpdateRequest = new MemberPasswordUpdateRequest(oldPassword, newPassword);
+            memberService.modifyPassword(loginId, memberPasswordUpdateRequest);
+
+            member = memberService.findByLoginId(loginId);
+
+            Assertions.assertThat(member).satisfies(
+                m -> Assertions.assertThat(passwordEncoder.matches(oldPassword, m.getLoginPassword())).isFalse(),
+                m -> Assertions.assertThat(passwordEncoder.matches(newPassword, m.getLoginPassword())).isTrue()
+            );
+
+        }
+
+        @Transactional
+        @DisplayName("다른_비밀번호가_입력_되면_memberException_던진다")
+        @Test
+        void throw_member_exception_with_wrong_information() throws Exception {
+
+            Member member = memberService.findByLoginId(loginId);
+            MemberPasswordUpdateRequest memberPasswordUpdateRequest = new MemberPasswordUpdateRequest("wrong", newPassword);
+
+            Assertions.assertThatExceptionOfType(MemberException.class).isThrownBy(() -> {
+                memberService.modifyPassword(loginId, memberPasswordUpdateRequest);
+            });
+        }
     }
 
 }
