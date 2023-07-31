@@ -31,7 +31,7 @@ public class HospitalController {
     }
 
     /* 현 지도에서 검색, 위도/경도 */
-    @GetMapping("/search")
+    @GetMapping("/search/location")
     public ResponseEntity<List<HospitalSearchByLocationResponse>> searchByLocation(
         @AuthenticationPrincipal UserInfo userInfo,
         @RequestParam BigDecimal latitude,
@@ -45,7 +45,7 @@ public class HospitalController {
     }
 
     /* 병원명, 주소 등 키워드로 검색 */
-    @GetMapping("/search")
+    @GetMapping("/search/keyword")
     public ResponseEntity<List<HospitalResponse>> searchByKeyword(
         @RequestParam String hospitalName,
         @RequestParam String address) {
