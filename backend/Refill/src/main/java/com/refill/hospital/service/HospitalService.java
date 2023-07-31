@@ -1,10 +1,15 @@
 package com.refill.hospital.service;
 
+import static com.refill.hospital.util.DistanceCalculator.calculateDistance;
+
 import com.refill.global.exception.ErrorCode;
+import com.refill.hospital.dto.response.SearchHospitalResponse;
 import com.refill.hospital.entity.Hospital;
 import com.refill.hospital.repository.HospitalRepository;
 import com.refill.member.exception.MemberException;
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,5 +74,19 @@ public class HospitalService {
     public void delete(Long id) {
         Hospital hospital = findById(id);
         hospitalRepository.delete(hospital);
+    }
+
+    public Double zoomLevelToRadius(Integer zoomLevel){
+        /* todo: zoomLevel을 적절하게 Radius로 바꾸는 로직 */
+        return 5.0;
+    }
+    @Transactional
+    public List<SearchHospitalResponse> searchByLocation(BigDecimal latitude, BigDecimal longitude, Integer zoomLevel) {
+        Double radius = zoomLevelToRadius(zoomLevel);
+        List<Hospital> nearByHospitals = hospitalRepository.findNearByHospitals(latitude, longitude, radius);
+        List<SearchHospitalResponse> searchHospitalResponses = nearByHospitals.stream()
+                                                                              .map(nearByHospital -> new SearchHospitalResponse(nearByHospital, calculateDistance(latitude, longitude, nearByHospital.getLatitude(), nearByHospital.getLongitude())))
+                                                                              .collect(Collectors.toList());
+        return searchHospitalResponses;
     }
 }
