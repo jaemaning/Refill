@@ -3,7 +3,8 @@ package com.refill.hospital.service;
 import static com.refill.hospital.util.DistanceCalculator.calculateDistance;
 
 import com.refill.global.exception.ErrorCode;
-import com.refill.hospital.dto.response.SearchHospitalResponse;
+import com.refill.hospital.dto.response.HospitalResponse;
+import com.refill.hospital.dto.response.HospitalSearchByLocationResponse;
 import com.refill.hospital.entity.Hospital;
 import com.refill.hospital.repository.HospitalRepository;
 import com.refill.member.exception.MemberException;
@@ -76,17 +77,28 @@ public class HospitalService {
         hospitalRepository.delete(hospital);
     }
 
-    public Double zoomLevelToRadius(Integer zoomLevel){
+    @Transactional
+    public List<HospitalSearchByLocationResponse> searchByLocation(BigDecimal latitude,
+        BigDecimal longitude, Integer zoomLevel) {
+        Double radius = zoomLevelToRadius(zoomLevel);
+        return hospitalRepository.findNearByHospitals(latitude, longitude, radius)
+                                 .stream()
+                                 .map(nearByHospital -> new HospitalSearchByLocationResponse(
+                                     nearByHospital, calculateDistance(latitude, longitude,
+                                     nearByHospital.getLatitude(), nearByHospital.getLongitude())))
+                                 .collect(Collectors.toList());
+    }
+
+    public List<HospitalResponse> searchByKeyword(String hospitalName, String address) {
+        List<Hospital> containingHospital = hospitalRepository.findByNameContainingOrAddressContaining(
+            hospitalName, address);
+        return containingHospital.stream()
+                                 .map(hospital -> new HospitalResponse(hospital))
+                                 .collect(Collectors.toList());
+    }
+
+    private Double zoomLevelToRadius(Integer zoomLevel) {
         /* todo: zoomLevel을 적절하게 Radius로 바꾸는 로직 */
         return 5.0;
-    }
-    @Transactional
-    public List<SearchHospitalResponse> searchByLocation(BigDecimal latitude, BigDecimal longitude, Integer zoomLevel) {
-        Double radius = zoomLevelToRadius(zoomLevel);
-        List<Hospital> nearByHospitals = hospitalRepository.findNearByHospitals(latitude, longitude, radius);
-        List<SearchHospitalResponse> searchHospitalResponses = nearByHospitals.stream()
-                                                                              .map(nearByHospital -> new SearchHospitalResponse(nearByHospital, calculateDistance(latitude, longitude, nearByHospital.getLatitude(), nearByHospital.getLongitude())))
-                                                                              .collect(Collectors.toList());
-        return searchHospitalResponses;
     }
 }
