@@ -1,6 +1,7 @@
 package com.refill.member.controller;
 
 import com.refill.member.dto.request.MemberInfoUpdateRequest;
+import com.refill.member.dto.request.MemberPasswordUpdateRequest;
 import com.refill.member.dto.response.MemberInfoResponse;
 import com.refill.member.service.MemberService;
 import javax.validation.Valid;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +39,15 @@ public class MemberController {
 
         log.debug("'{}' member request information update", loginId);
         memberService.modifyMember(loginId, memberInfoUpdateRequest, profileImg);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/mypage/password")
+    public ResponseEntity<String> modifyMemberPassword(@AuthenticationPrincipal String loginId, @RequestBody MemberPasswordUpdateRequest memberPasswordUpdateRequest) {
+
+        log.debug("'{}' member request password update", loginId);
+        memberService.modifyPassword(loginId, memberPasswordUpdateRequest);
 
         return ResponseEntity.noContent().build();
     }

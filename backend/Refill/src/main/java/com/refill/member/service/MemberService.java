@@ -3,6 +3,7 @@ package com.refill.member.service;
 import com.refill.global.exception.ErrorCode;
 import com.refill.global.service.AmazonS3Service;
 import com.refill.member.dto.request.MemberInfoUpdateRequest;
+import com.refill.member.dto.request.MemberPasswordUpdateRequest;
 import com.refill.member.dto.response.MemberInfoResponse;
 import com.refill.member.entity.Member;
 import com.refill.member.exception.MemberException;
@@ -11,6 +12,7 @@ import com.refill.security.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +24,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final AmazonS3Service amazonS3Service;
+    private final BCryptPasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
     @Value("${jwt.token.secret}")
@@ -79,6 +82,18 @@ public class MemberService {
             String profileAddress = amazonS3Service.uploadFile(profileImg);
             member.updateFileAddress(profileAddress);
         }
+
+    }
+
+    @Transactional
+    public void modifyPassword(String loginId, MemberPasswordUpdateRequest memberPasswordUpdateRequest) {
+
+        Member member = findByLoginId(loginId);
+        if(!passwordEncoder.matches(memberPasswordUpdateRequest.oldPassword(), member.getLoginPassword())) {
+            throw new MemberException(ErrorCode.INVALID_PASSWORD);
+        }
+
+        member.encodePassword(passwordEncoder.encode(memberPasswordUpdateRequest.newPassword()));
 
     }
 }
