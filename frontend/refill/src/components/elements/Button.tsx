@@ -1,17 +1,18 @@
-import * as React from 'react';
 import { REFILL_COLORS } from '../../assets/getColors'
 import { ButtonHTMLAttributes } from 'react';
-import { jsx, css } from '@emotion/react'
+import { CSSObject, jsx, css } from '@emotion/react'
 
 interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   content: string;
   variant? : 'success' | 'warning' | 'disable' | 'danger' | 'normal'; // success : 긍정적 성공 파랑 , warning : 경고 노랑, disable : 사용할 수 없음 회색, dnager : 위험 빨강 
   size? : 'small' | 'medium' | 'large'; // 폰트 사이즈가 줄고 좌우 여백이 축소
   width? : string;
+  customStyles? : CSSObject
   onClick?: () => void;
 }
 
-export default function Button ({content, variant = 'success', size, width = '100px', onClick}: IButtonProps) {
+// content : 버튼 안에 들어갈 내용, size 크기정하기, width 넓이 직접설정 가능, customstyles : 위 적용후 후 커스텀스타일, onclick 이벤트연결
+export default function Button ({content, variant = 'success', size, width = '100px', onClick, customStyles}: IButtonProps) {
   return jsx(
     'button',
     {
@@ -26,9 +27,15 @@ export default function Button ({content, variant = 'success', size, width = '10
         lineHeight: '26px',
         fontSize: '15px',
         padding: '11px',
+        boxShadow:' 4px 4px 5px rgba(0, 0, 0, 0.3)',
         width: size ? SIZE_VARIANTS[size] : width,
         ...TYPE_VARIANTS[variant],
-      }),
+        ...customStyles,
+        ':active': {
+          // boxShadow:'inset 4px 4px 5px rgba(0, 0, 0, 0.3)',
+          boxShadow: 'none'
+        } 
+      })
     },
     content
   );

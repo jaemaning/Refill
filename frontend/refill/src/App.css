@@ -1,11 +1,6 @@
-html body .App {
+html body .MainApp {
   text-align: center;
   padding: 0; margin: 0;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -14,7 +9,7 @@ html body .App {
   }
 }
 
-.App-body {
+.MainApp-body {
   background-color: #2e5077;
   min-height: 100vh;
   display: flex;
@@ -40,11 +35,3 @@ button:hover {
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
