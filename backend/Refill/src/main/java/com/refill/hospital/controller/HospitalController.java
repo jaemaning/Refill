@@ -34,9 +34,10 @@ public class HospitalController {
     @GetMapping("/search/location")
     public ResponseEntity<List<HospitalSearchByLocationResponse>> searchByLocation(
         @AuthenticationPrincipal UserInfo userInfo,
-        @RequestParam BigDecimal latitude,
-        @RequestParam BigDecimal longitude,
-        @RequestParam Integer zoomLevel) {
+        @RequestParam(name = "lat") BigDecimal latitude,
+        @RequestParam(name = "lng") BigDecimal longitude,
+        @RequestParam(name = "z") Integer zoomLevel) {
+        log.info("{}, {}, {}", latitude, longitude, zoomLevel);
         List<HospitalSearchByLocationResponse> searchHospitalResponses = hospitalService.searchByLocation(
             latitude, longitude, zoomLevel);
         log.info("searchHospitalResponses: {}", searchHospitalResponses);
@@ -47,8 +48,10 @@ public class HospitalController {
     /* 병원명, 주소 등 키워드로 검색 */
     @GetMapping("/search/keyword")
     public ResponseEntity<List<HospitalResponse>> searchByKeyword(
-        @RequestParam String hospitalName,
-        @RequestParam String address) {
+        @RequestParam(name = "name", required = false) String hospitalName,
+        @RequestParam(name = "addr", required = false) String address) {
+        log.info(hospitalName);
+        log.info(address);
         List<HospitalResponse> hospitalResponses = hospitalService.searchByKeyword(hospitalName, address);
         return ResponseEntity.ok().body(hospitalResponses);
     }
