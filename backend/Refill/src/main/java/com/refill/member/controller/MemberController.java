@@ -1,6 +1,5 @@
 package com.refill.member.controller;
 
-import com.refill.global.entity.UserInfo;
 import com.refill.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,16 +17,11 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @GetMapping("/join")
-    public ResponseEntity<String> sayHello() {
+    @GetMapping("/")
+    public ResponseEntity<String> testCode(@AuthenticationPrincipal String loginId) {
 
-        return ResponseEntity.ok().body("hello");
+        return ResponseEntity.ok().body(loginId);
     }
 
-    @GetMapping("/security")
-    public void testMethod(@AuthenticationPrincipal UserInfo userInfo) {
-
-        log.info("########### {} ##########", userInfo.getAuthorities());
-    }
 
 }
