@@ -1,5 +1,6 @@
 // import { REFILL_COLORS } from '../assets/getColors.js';
 // import { useState, ChangeEvent, FC } from 'react';
+import RadioDiv from "../components/elements/RadioButton";
 
 export interface HospitalSearchProps {
 }
@@ -14,9 +15,7 @@ export function HospitalSearch (props:  HospitalSearchProps) {
 
   return (
     <div>
-      <section>
-
-      </section>
+      <RadioDiv/>
     </div>
   );
 }
