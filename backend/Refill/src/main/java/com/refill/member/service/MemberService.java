@@ -1,6 +1,8 @@
 package com.refill.member.service;
 
 import com.refill.global.exception.ErrorCode;
+import com.refill.global.service.AmazonS3Service;
+import com.refill.member.dto.request.MemberInfoUpdateRequest;
 import com.refill.member.dto.response.MemberInfoResponse;
 import com.refill.member.entity.Member;
 import com.refill.member.exception.MemberException;
@@ -11,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -18,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final AmazonS3Service amazonS3Service;
     private final JwtProvider jwtProvider;
 
     @Value("${jwt.token.secret}")
@@ -58,12 +62,23 @@ public class MemberService {
                                .orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public MemberInfoResponse getMemberByLoginId(String loginId) {
 
         Member member = findByLoginId(loginId);
 
         return new MemberInfoResponse(member);
     }
+    @Transactional
+    public void modifyMember(String loginId, MemberInfoUpdateRequest memberInfoUpdateRequest, MultipartFile profileImg) {
 
+        Member member = findByLoginId(loginId);
+        member.update(memberInfoUpdateRequest);
+
+        if(profileImg != null) {
+            String profileAddress = amazonS3Service.uploadFile(profileImg);
+            member.updateFileAddress(profileAddress);
+        }
+
+    }
 }
