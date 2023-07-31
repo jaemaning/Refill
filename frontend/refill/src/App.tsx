@@ -1,14 +1,17 @@
-import React from 'react';
-import './App.css';
-import MainApp from './pages/MainPage';
-import { Routes, Route } from 'react-router-dom';
+import React from "react";
+import "./App.css";
+import MainApp from "./pages/MainPage";
+import { Routes, Route } from "react-router-dom";
+import LoginForm from "pages/LoginForm";
 
 const App: React.FC = () => {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<MainApp/>} />
-        <Route 
+        <Route path="/" element={<MainApp />} />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/hos_login" />
+        <Route
           path="*"
           element={
             <div>
@@ -21,6 +24,6 @@ const App: React.FC = () => {
       </Routes>
     </div>
   );
-}
+};
 
 export default App;
