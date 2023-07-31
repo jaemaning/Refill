@@ -1,12 +1,12 @@
-import React from 'react';
-import '../App.css';
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
-import Counter from '../components/Counter';
+import React from "react";
+import "../App.css";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import Counter from "../components/Counter";
 
 // import LoginForm from './LoginForm'
-import MemberJoin from '../MemberJoin'
-import ButtonTest from '../components/ButtonTest'
+import MemberJoin from "../MemberJoin";
+import ButtonTest from "../components/ButtonTest";
 
 const MainApp: React.FC = () => {
   return (
@@ -18,12 +18,11 @@ const MainApp: React.FC = () => {
         {/* <LoginForm /> */}
         <MemberJoin />
         <Counter />
-        <ButtonTest/>
-        
+        <ButtonTest />
       </div>
       <Footer />
     </div>
   );
-}
+};
 
 export default MainApp;
