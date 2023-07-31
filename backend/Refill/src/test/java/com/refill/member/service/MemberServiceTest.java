@@ -6,10 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.refill.account.dto.request.MemberJoinRequest;
+import com.refill.member.dto.response.MemberInfoResponse;
 import com.refill.member.entity.Member;
 import com.refill.member.exception.MemberException;
 import com.refill.util.ServiceTest;
 import java.time.LocalDate;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -99,6 +101,20 @@ class MemberServiceTest extends ServiceTest {
 
         assertThrows(MemberException.class, () -> memberService.findByLoginIdAndEmail("nothing", "nothing"));
 
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("회원_마이페이지_조회_된다")
+    void t7() throws Exception {
+
+        final String loginId = "member01";
+        MemberInfoResponse memberInfoResponse = memberService.getMemberByLoginId(loginId);
+
+        Assertions.assertThat(memberInfoResponse).satisfies(member -> {
+            Assertions.assertThat(member).isNotNull();
+            Assertions.assertThat(member.name()).isEqualTo("신상원");
+        });
     }
 
 }
