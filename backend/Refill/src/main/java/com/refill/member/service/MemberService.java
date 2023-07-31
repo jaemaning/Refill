@@ -1,6 +1,7 @@
 package com.refill.member.service;
 
 import com.refill.global.exception.ErrorCode;
+import com.refill.member.dto.response.MemberInfoResponse;
 import com.refill.member.entity.Member;
 import com.refill.member.exception.MemberException;
 import com.refill.member.repository.MemberRepository;
@@ -55,6 +56,14 @@ public class MemberService {
 
         return memberRepository.findByLoginIdAndEmail(loginId, email)
                                .orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND));
+    }
+
+    @Transactional
+    public MemberInfoResponse getMemberByLoginId(String loginId) {
+
+        Member member = findByLoginId(loginId);
+
+        return new MemberInfoResponse(member);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.refill.member.controller;
 
+import com.refill.member.dto.response.MemberInfoResponse;
 import com.refill.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,10 +18,13 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @GetMapping("/")
-    public ResponseEntity<String> testCode(@AuthenticationPrincipal String loginId) {
+    @GetMapping("/mypage")
+    public ResponseEntity<MemberInfoResponse> getMemberInfo(@AuthenticationPrincipal String loginId) {
 
-        return ResponseEntity.ok().body(loginId);
+        log.debug("'{}' member request mypage", loginId);
+        MemberInfoResponse memberInfoResponse = memberService.getMemberByLoginId(loginId);
+
+        return ResponseEntity.ok().body(memberInfoResponse);
     }
 
 
