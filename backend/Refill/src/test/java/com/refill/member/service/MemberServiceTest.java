@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.refill.account.dto.request.MemberJoinRequest;
+import com.refill.member.dto.request.MemberInfoUpdateRequest;
 import com.refill.member.dto.response.MemberInfoResponse;
 import com.refill.member.entity.Member;
 import com.refill.member.exception.MemberException;
@@ -114,6 +115,26 @@ class MemberServiceTest extends ServiceTest {
         Assertions.assertThat(memberInfoResponse).satisfies(member -> {
             Assertions.assertThat(member).isNotNull();
             Assertions.assertThat(member.name()).isEqualTo("신상원");
+        });
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("회원_정보_수정된다")
+    void t8() throws Exception {
+
+        final String loginId = "member01";
+        Member member = memberService.findByLoginId(loginId);
+
+        MemberInfoUpdateRequest memberInfoUpdateRequest = new MemberInfoUpdateRequest("신호인", member.getAddress(), member.getBirthDay(), member.getTel(), "시그널만", member.getEmail());
+        member.update(memberInfoUpdateRequest);
+
+        Member member1 = memberService.findByLoginId(loginId);
+        Assertions.assertThat(member1).satisfies(m -> {
+            Assertions.assertThat(m.getName()).isNotEqualTo("신상원");
+            Assertions.assertThat(m.getName()).isEqualTo("신호인");
+            Assertions.assertThat(m.getNickname()).isNotEqualTo("상원");
+            Assertions.assertThat(m.getNickname()).isEqualTo("시그널만");
         });
     }
 
