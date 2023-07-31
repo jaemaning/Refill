@@ -3,11 +3,14 @@ package com.refill.hospital.entity;
 import com.refill.account.dto.request.HospitalJoinRequest;
 import com.refill.global.entity.Role;
 import com.refill.global.entity.UserInfo;
+import com.refill.review.entity.Review;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,6 +42,9 @@ public class Hospital extends UserInfo {
 
     @Column(nullable = false)
     String registrationImg;
+
+    @OneToMany(mappedBy = "hospital")
+    List<Review> reviews;
 
     public static Hospital from(HospitalJoinRequest hospitalJoinRequest) {
         return Hospital.builder()
