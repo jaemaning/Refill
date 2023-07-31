@@ -3,6 +3,7 @@ package com.refill.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.refill.account.controller.AccountController;
 import com.refill.account.service.AccountService;
+import com.refill.hospital.controller.HospitalController;
 import com.refill.hospital.repository.HospitalRepository;
 import com.refill.hospital.service.HospitalService;
 import com.refill.member.controller.MemberController;
@@ -31,7 +32,8 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest({
     AccountController.class,
-    MemberController.class
+    MemberController.class,
+    HospitalController.class
 })
 public class ControllerTest {
 
