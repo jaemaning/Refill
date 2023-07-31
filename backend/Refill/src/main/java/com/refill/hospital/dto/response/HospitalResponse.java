@@ -5,7 +5,7 @@ import com.refill.review.entity.Review;
 import java.math.BigDecimal;
 import javax.validation.constraints.NotNull;
 
-public record SearchHospitalResponse(
+public record HospitalResponse(
     @NotNull Long id,
     @NotNull String name,
     @NotNull BigDecimal longitude,
@@ -13,12 +13,10 @@ public record SearchHospitalResponse(
     @NotNull String hospitalProfileImg,
     @NotNull String address,
     @NotNull String tel,
-    @NotNull Double score,
-    @NotNull Double dist
-    ){
-    public SearchHospitalResponse(Hospital hospital, Double dist){
-        this(
-            hospital.getId(),
+    @NotNull Double score
+) {
+    public HospitalResponse(Hospital hospital){
+        this(hospital.getId(),
             hospital.getName(),
             hospital.getLongitude(),
             hospital.getLatitude(),
@@ -26,10 +24,9 @@ public record SearchHospitalResponse(
             hospital.getAddress(),
             hospital.getTel(),
             hospital.getReviews().stream()
-                   .mapToInt(Review::getScore)
-                   .average()
-                   .orElse(0.0),
-            dist
-        );
+                    .mapToInt(Review::getScore)
+                    .average()
+                    .orElse(0.0));
     }
+
 }
