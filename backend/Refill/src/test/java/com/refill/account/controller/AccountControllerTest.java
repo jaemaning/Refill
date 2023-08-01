@@ -2,6 +2,7 @@ package com.refill.account.controller;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -20,11 +21,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.refill.account.dto.request.HospitalJoinRequest;
 import com.refill.account.dto.request.HospitalLoginRequest;
+import com.refill.account.dto.request.LoginIdFindRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.dto.request.MemberLoginRequest;
+import com.refill.global.entity.Message;
 import com.refill.global.entity.Role;
 import com.refill.global.exception.ErrorCode;
+import com.refill.global.service.AmazonSESService;
 import com.refill.hospital.entity.Hospital;
+import com.refill.member.entity.Member;
 import com.refill.member.exception.MemberException;
 import com.refill.util.ControllerTest;
 import java.math.BigDecimal;
@@ -42,6 +47,8 @@ class AccountControllerTest extends ControllerTest {
 
     @MockBean
     BCryptPasswordEncoder passwordEncoder;
+    @MockBean
+    AmazonSESService amazonSESService;
     @Test
     @DisplayName("멤버_회원가입_성공한다")
     void joinMemberTest() throws Exception {
@@ -206,6 +213,7 @@ class AccountControllerTest extends ControllerTest {
         postman으로 위의 method 실행 시 정상적으로 에러를 반환하고 있음
          */
         when(accountService.hospitalLogin(any())).thenThrow(new MemberException(ErrorCode.OUTSTANDING_AUTHORIZATION));
+
         mockMvc.perform(
                    post("/api/v1/account/hospital/login")
                        .contentType(MediaType.APPLICATION_JSON)
@@ -213,6 +221,75 @@ class AccountControllerTest extends ControllerTest {
                )
                .andExpect(status().is4xxClientError())
                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MemberException));
+
+
+    }
+
+    @DisplayName("회원_아이디_찾기_가입한_메일로_아이디_전송한다")
+    @Test
+    void send_member_loginId_with_correct_email() throws Exception {
+
+        LoginIdFindRequest loginIdFindRequest = new LoginIdFindRequest("correct email");
+
+        Member mockMember = mock(Member.class);
+        when(memberService.findByEmail(any())).thenReturn(mockMember);
+        doNothing().when(amazonSESService).sendLoginId(any(String.class), any(String.class));
+        when(accountService.findMemberLoginId(any())).thenReturn("{\"message\":\"%s\"}".formatted(Message.FIND_LOGIN_ID.getMessage()));
+
+        mockMvc.perform(
+            post("/api/v1/account/member/find/id")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(loginIdFindRequest))
+        )
+            .andExpect(status().isOk())
+            .andDo(
+                document("account/member/id",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    requestFields(
+                        fieldWithPath("email").description("가입 시 작성한 이메일")
+                    ),
+                    responseFields(
+                        fieldWithPath("message").description("결과 메세지")
+                    )
+                )
+            );
+
+        //verify(amazonSESService, times(1)).sendLoginId(any(String.class), any(String.class));
+
+    }
+
+    @DisplayName("병원_아이디_찾기_가입한_메일로_아이디_전송한다")
+    @Test
+    void send_hospital_loginId_with_correct_email() throws Exception {
+
+        LoginIdFindRequest loginIdFindRequest = new LoginIdFindRequest("correct email");
+
+        Hospital mockHospital = mock(Hospital.class);
+        when(hospitalService.findByEmail(any())).thenReturn(mockHospital);
+        doNothing().when(amazonSESService).sendLoginId(any(), any());
+        when(accountService.findHospitalLoginId(any())).thenReturn("{\"message\":\"%s\"}".formatted(Message.FIND_LOGIN_ID.getMessage()));
+
+        mockMvc.perform(
+                   post("/api/v1/account/hospital/find/id")
+                       .contentType(MediaType.APPLICATION_JSON)
+                       .content(objectMapper.writeValueAsBytes(loginIdFindRequest))
+               )
+               .andExpect(status().isOk())
+               .andDo(
+                   document("account/hospital/id",
+                       preprocessRequest(prettyPrint()),
+                       preprocessResponse(prettyPrint()),
+                       requestFields(
+                           fieldWithPath("email").description("가입 시 작성한 이메일")
+                       ),
+                       responseFields(
+                           fieldWithPath("message").description("결과 메세지")
+                       )
+                   )
+               );
+
+        //verify(amazonSESService, times(1)).sendLoginId(any(), any());
 
     }
 
