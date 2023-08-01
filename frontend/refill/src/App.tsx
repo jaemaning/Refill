@@ -9,7 +9,6 @@ import SignUp from "pages/SignUp";
 import { useKakaoMapScript } from "./hooks/UseKakaoMap";
 
 const App: React.FC = () => {
-  
   useKakaoMapScript();
 
   return (
