@@ -45,10 +45,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 class AccountControllerTest extends ControllerTest {
 
-    @MockBean
-    BCryptPasswordEncoder passwordEncoder;
-    @MockBean
-    AmazonSESService amazonSESService;
+    @MockBean BCryptPasswordEncoder passwordEncoder;
+    @MockBean AmazonSESService amazonSESService;
+    private final String baseUrl = "/api/v1/account";
     @Test
     @DisplayName("멤버_회원가입_성공한다")
     void joinMemberTest() throws Exception {
@@ -65,7 +64,7 @@ class AccountControllerTest extends ControllerTest {
         //doNothing().when(accountService).memberJoin(any(), any()); 이게 없어도 되는건가 ...
 
         mockMvc.perform(
-            multipart("/api/v1/account/member/join")
+            multipart(baseUrl + "/member/join")
                 .file(memberJoinRequestPart)
                 .file(profileImgPart)
         ).andExpect(status().isNoContent())
@@ -109,7 +108,7 @@ class AccountControllerTest extends ControllerTest {
         //doNothing().when(accountService).memberJoin(any(), any()); 이게 없어도 되는건가 ...
 
         mockMvc.perform(
-                   multipart("/api/v1/account/hospital/join")
+                   multipart(baseUrl + "/hospital/join")
                        .file(hospitalJoinRequestPart)
                        .file(profileImgPart)
                        .file(regImgPart)
@@ -146,7 +145,7 @@ class AccountControllerTest extends ControllerTest {
         when(accountService.memberLogin(any())).thenReturn("{\"token\":\"access Token\"}");
 
         mockMvc.perform(
-            post("/api/v1/account/member/login")
+            post(baseUrl + "/member/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(memberLoginRequest))
         ).andExpect(status().isOk())
@@ -173,7 +172,7 @@ class AccountControllerTest extends ControllerTest {
         when(accountService.hospitalLogin(any())).thenReturn("{\"token\":\"access Token\"}");
 
         mockMvc.perform(
-                   post("/api/v1/account/hospital/login")
+                   post(baseUrl + "/hospital/login")
                        .contentType(MediaType.APPLICATION_JSON)
                        .content(objectMapper.writeValueAsBytes(hospitalLoginRequest))
                ).andExpect(status().isOk())
@@ -215,7 +214,7 @@ class AccountControllerTest extends ControllerTest {
         when(accountService.hospitalLogin(any())).thenThrow(new MemberException(ErrorCode.OUTSTANDING_AUTHORIZATION));
 
         mockMvc.perform(
-                   post("/api/v1/account/hospital/login")
+                   post(baseUrl + "/hospital/login")
                        .contentType(MediaType.APPLICATION_JSON)
                        .content(objectMapper.writeValueAsBytes(hospitalLoginRequest))
                )
@@ -237,7 +236,7 @@ class AccountControllerTest extends ControllerTest {
         when(accountService.findMemberLoginId(any())).thenReturn("{\"message\":\"%s\"}".formatted(Message.FIND_LOGIN_ID.getMessage()));
 
         mockMvc.perform(
-            post("/api/v1/account/member/find/id")
+            post(baseUrl + "/member/find/id")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(loginIdFindRequest))
         )
@@ -271,7 +270,7 @@ class AccountControllerTest extends ControllerTest {
         when(accountService.findHospitalLoginId(any())).thenReturn("{\"message\":\"%s\"}".formatted(Message.FIND_LOGIN_ID.getMessage()));
 
         mockMvc.perform(
-                   post("/api/v1/account/hospital/find/id")
+                   post(baseUrl + "/hospital/find/id")
                        .contentType(MediaType.APPLICATION_JSON)
                        .content(objectMapper.writeValueAsBytes(loginIdFindRequest))
                )
