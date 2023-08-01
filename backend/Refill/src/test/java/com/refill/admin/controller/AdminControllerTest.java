@@ -86,4 +86,30 @@ class AdminControllerTest extends ControllerTest {
                        ))
                );
     }
+
+    @Test
+    @WithMockUser(username = "admin", roles = "ADMIN")
+    @DisplayName("병원_관리자에_의해_거절된다")
+    void hospital_rejected_by_admin() throws Exception {
+
+        Long hospitalId = 1L;
+
+        when(adminService.rejectHospital(any(Long.class))).thenReturn("{\"message\":\"%s\"}".formatted(Message.REJECT_HOSPITAL.getMessage()));
+
+        mockMvc.perform(
+                   get(baseUrl + "/hospitals/reject/{id}", hospitalId)
+                       .contentType(MediaType.APPLICATION_JSON)
+               )
+               .andExpect(status().isOk())
+               .andDo(
+                   document("admin/hospitals/reject",
+                       preprocessResponse(prettyPrint()),
+                       pathParameters(
+                           parameterWithName("id").description("거절할 병원의 ID")
+                       ),
+                       responseFields(
+                           fieldWithPath("message").description("결과 메세지")
+                       ))
+               );
+    }
 }
