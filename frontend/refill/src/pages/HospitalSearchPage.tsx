@@ -1,8 +1,21 @@
 // import { REFILL_COLORS } from '../assets/getColors.js';
 // import { useState, ChangeEvent, FC } from 'react';
-import RadioDiv from "../components/elements/RadioButton";
+// import RadioDiv from "../components/elements/RadioButton";
+import styled from "@emotion/styled";
+import { REFILL_COLORS } from "../assets/getColors";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
-export interface HospitalSearchProps {}
+// export interface HospitalSearchProps {
+// }
+
+export function HospitalSearch() {
+  const Container = styled.div`
+    border 0;
+    background-color: ${REFILL_COLORS["rf-2"]};
+    min-width: 100vw;
+    min-height: 100vh;
+  `;
 
 export function HospitalSearch(props: HospitalSearchProps) {
   // const [option, setOption] = useState(radioOption);
@@ -13,7 +26,9 @@ export function HospitalSearch(props: HospitalSearchProps) {
 
   return (
     <div>
-      <RadioDiv />
+      <Navbar />
+      <Container></Container>
+      <Footer />
     </div>
   );
 }

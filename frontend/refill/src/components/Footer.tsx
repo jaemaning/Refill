@@ -5,7 +5,7 @@ import "../styles/Navbar.css";
 export default function Footer() {
   return (
     <div>
-      <footer className="bg-neutral-100 text-center text-neutral-600 dark:bg-neutral-600 dark:text-neutral-200 lg:text-left">
+      <footer className="bg-white text-center text-neutral-600 dark:bg-neutral-600 dark:text-neutral-200 lg:text-left">
         <div className="flex items-center justify-center border-b-2 border-neutral-200 p-6 dark:border-neutral-500 lg:justify-between">
           <div className="mr-12 hidden lg:block">
             <span>Get connected with us on social networks:</span>
@@ -94,10 +94,10 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mx-6 py-10 text-center md:text-left">
-          <div className="grid-1 grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+        <div className="mx-6 py-10 text-center lg:text-left">
+          <div className="grid-1 grid gap-8 lg:grid-cols-2 lg:grid-cols-3">
             <div className="">
-              <h6 className="mb-4 flex items-center justify-center font-semibold uppercase md:justify-start">
+              <h6 className="mb-4 flex items-center justify-center font-semibold uppercase lg:justify-start">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -116,7 +116,7 @@ export default function Footer() {
             </div>
 
             <div className="">
-              <h6 className="mb-4 flex justify-center font-semibold uppercase md:justify-start">
+              <h6 className="mb-4 flex justify-center font-semibold uppercase lg:justify-start">
                 Products
               </h6>
               <p className="mb-4">
@@ -141,37 +141,38 @@ export default function Footer() {
               </p>
             </div>
 
-            <div className="">
-              <h6 className="mb-4 flex justify-center font-semibold uppercase md:justify-start">
-                Useful links
-              </h6>
-              <p className="mb-4">
-                <a href="#!" className="text-neutral-600 dark:text-neutral-200">
-                  Pricing
-                </a>
-              </p>
-              <p className="mb-4">
-                <a href="#!" className="text-neutral-600 dark:text-neutral-200">
-                  Settings
-                </a>
-              </p>
-              <p className="mb-4">
-                <a href="#!" className="text-neutral-600 dark:text-neutral-200">
-                  Orders
-                </a>
-              </p>
-              <p>
-                <a href="#!" className="text-neutral-600 dark:text-neutral-200">
-                  Help
-                </a>
-              </p>
-            </div>
+            {/* <div className="">
+                    <h6
+                    className="mb-4 flex justify-center font-semibold uppercase lg:justify-start">
+                    Useful links
+                    </h6>
+                    <p className="mb-4">
+                    <a href="#!" className="text-neutral-600 dark:text-neutral-200"
+                        >Pricing</a
+                    >
+                    </p>
+                    <p className="mb-4">
+                    <a href="#!" className="text-neutral-600 dark:text-neutral-200"
+                        >Settings</a
+                    >
+                    </p>
+                    <p className="mb-4">
+                    <a href="#!" className="text-neutral-600 dark:text-neutral-200"
+                        >Orders</a
+                    >
+                    </p>
+                    <p>
+                    <a href="#!" className="text-neutral-600 dark:text-neutral-200"
+                        >Help</a
+                    >
+                    </p>
+                </div> */}
 
             <div>
-              <h6 className="mb-4 flex justify-center font-semibold uppercase md:justify-start">
+              <h6 className="mb-4 flex justify-center font-semibold uppercase lg:justify-start">
                 Contact
               </h6>
-              <p className="mb-4 flex items-center justify-center md:justify-start">
+              <p className="mb-4 flex items-center justify-center lg:justify-start">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -183,7 +184,7 @@ export default function Footer() {
                 </svg>
                 New York, NY 10012, US
               </p>
-              <p className="mb-4 flex items-center justify-center md:justify-start">
+              <p className="mb-4 flex items-center justify-center lg:justify-start">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -195,7 +196,7 @@ export default function Footer() {
                 </svg>
                 info@example.com
               </p>
-              <p className="mb-4 flex items-center justify-center md:justify-start">
+              <p className="mb-4 flex items-center justify-center lg:justify-start">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -210,7 +211,7 @@ export default function Footer() {
                 </svg>
                 + 01 234 567 88
               </p>
-              <p className="flex items-center justify-center md:justify-start">
+              <p className="flex items-center justify-center lg:justify-start">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -229,7 +230,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="bg-neutral-200 p-6 text-center dark:bg-neutral-700">
+        <div className="bg-white p-6 text-center dark:bg-neutral-700">
           <span>© 2023 Copyright:</span>
           <a
             className="font-semibold text-neutral-600 dark:text-neutral-400"

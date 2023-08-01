@@ -3,6 +3,9 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      margin: {
+        '70': '17.5rem', // 70px
+      },
       colors: {
         'rf-1' : '#142CF9',
         'rf-2' : '#AADAFF',

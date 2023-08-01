@@ -45,13 +45,6 @@ const RadioDiv = () => {
         onChange={setSelected}
         label="Option 2"
       />
-
-      <RadioButton
-        value="option3"
-        checked={selected === "option3"}
-        onChange={setSelected}
-        label="Option 3"
-      />
     </div>
   );
 };
