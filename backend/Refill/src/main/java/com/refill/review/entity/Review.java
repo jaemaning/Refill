@@ -1,10 +1,12 @@
 package com.refill.review.entity;
 
+import com.refill.doctor.entity.Doctor;
 import com.refill.global.entity.BaseEntity;
 import com.refill.hospital.entity.Hospital;
 import com.refill.member.entity.Member;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
@@ -22,13 +24,17 @@ import lombok.ToString;
 @Entity
 public class Review extends BaseEntity {
 
-    @ManyToOne
-    @JoinColumn(name = "hospital_id")
-    Hospital hospital;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "doctor_id")
+    Doctor doctor;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hospital_id")
+    Hospital hospital;
 
     @Column(name = "score")
     Integer score;
