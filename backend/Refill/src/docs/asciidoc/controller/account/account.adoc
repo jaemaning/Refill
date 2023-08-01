@@ -1,10 +1,81 @@
-[[account-memberJoin]]
-=== 개인 회원 가입
+=== 병원 아이디 찾기
+
+==== HTTP Request
+include::{snippets}/account/hospital/id/http-request.adoc[]
+include::{snippets}/account/hospital/id/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/account/hospital/id/http-response.adoc[]
+include::{snippets}/account/hospital/id/response-fields.adoc[]
+
+=== 병원 비밀번호 찾기
+
+==== HTTP Request
+include::{snippets}/account/hospital/password/http-request.adoc[]
+include::{snippets}/account/hospital/password/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/account/hospital/password/http-response.adoc[]
+include::{snippets}/account/hospital/password/response-fields.adoc[]
+
+=== 병원 회원가입
+
+==== HTTP Request
+include::{snippets}/account/hospital/join/http-request.adoc[]
+include::{snippets}/account/hospital/join/request-parts.adoc[]
+include::{snippets}/account/hospital/join/request-part-hospitalJoinRequest-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/account/hospital/join/http-response.adoc[]
+include::{snippets}/account/hospital/join/response-body.adoc[]
+
+=== 병원 로그인
+
+==== HTTP Request
+include::{snippets}/account/hospital/login/http-request.adoc[]
+include::{snippets}/account/hospital/login/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/account/hospital/login/http-response.adoc[]
+include::{snippets}/account/hospital/login/response-fields.adoc[]
+
+=== 회원 아이디 찾기
+
+==== HTTP Request
+include::{snippets}/account/member/id/http-request.adoc[]
+include::{snippets}/account/member/id/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/account/member/id/http-response.adoc[]
+include::{snippets}/account/member/id/response-fields.adoc[]
+
+=== 회원 비밀번호 찾기
+
+==== HTTP Request
+include::{snippets}/account/member/password/http-request.adoc[]
+include::{snippets}/account/member/password/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/account/member/password/http-response.adoc[]
+include::{snippets}/account/member/password/response-fields.adoc[]
+
+=== 회원 회원가입
 
 ==== HTTP Request
 include::{snippets}/account/member/join/http-request.adoc[]
-include::{snippets}/account/member/join/request-fields.adoc[]
+include::{snippets}/account/member/join/request-parts.adoc[]
+include::{snippets}/account/member/join/request-part-memberJoinRequest-fields.adoc[]
 
 ==== HTTP Response
 include::{snippets}/account/member/join/http-response.adoc[]
-include::{snippets}/account/member/join/response-fields.adoc[]
+include::{snippets}/account/member/join/response-body.adoc[]
+
+=== 회원 로그인
+
+==== HTTP Request
+include::{snippets}/account/member/login/http-request.adoc[]
+include::{snippets}/account/member/login/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/account/member/login/http-response.adoc[]
+include::{snippets}/account/member/login/response-fields.adoc[]
