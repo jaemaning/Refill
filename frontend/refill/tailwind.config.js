@@ -18,7 +18,7 @@ module.exports = {
         'grey-2' : '#888888',
         'white' : '#FFFFFF',
         'black' : '#000000'
-      }
+      },
     },
   },
   variants: {
