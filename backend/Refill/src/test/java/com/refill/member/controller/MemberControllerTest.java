@@ -26,18 +26,16 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
 
-@AutoConfigureMockMvc(addFilters = false)
 class MemberControllerTest extends ControllerTest {
 
+    @Test
     @WithMockUser(username = "testUser", roles = "MEMBER")
     @DisplayName("회원_마이페이지_조회된다")
-    @Test
     public void getMemberInfoTest() throws Exception {
         // Given
         String loginId = "testUser";
@@ -70,9 +68,9 @@ class MemberControllerTest extends ControllerTest {
                    ));
     }
 
+    @Test
     @WithMockUser(username = "testUser", roles = "MEMBER")
     @DisplayName("회원_정보_수정된다")
-    @Test
     public void modifyMemberInfoTest() throws Exception {
         // Given
         String loginId = "testUser";
@@ -122,9 +120,9 @@ class MemberControllerTest extends ControllerTest {
                );
     }
 
+    @Test
     @WithMockUser(username = "testUser", roles = "MEMBER")
     @DisplayName("회원_비밀번호_수정된다")
-    @Test
     public void modifyMemberPasswordTest() throws Exception {
         // Given
         String loginId = "testUser";

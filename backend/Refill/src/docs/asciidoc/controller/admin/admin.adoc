@@ -1,0 +1,28 @@
+=== 승인 대기 병원 조회
+
+==== HTTP Request
+include::{snippets}/admin/hospitals/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/admin/hospitals/http-response.adoc[]
+include::{snippets}/admin/hospitals/response-fields.adoc[]
+
+=== 병원 승인
+
+==== HTTP Request
+include::{snippets}/admin/hospitals/accept/path-parameters.adoc[]
+include::{snippets}/admin/hospitals/accept/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/admin/hospitals/accept/http-response.adoc[]
+include::{snippets}/admin/hospitals/accept/response-fields.adoc[]
+
+=== 병원 거절
+
+==== HTTP Request
+include::{snippets}/admin/hospitals/reject/path-parameters.adoc[]
+include::{snippets}/admin/hospitals/reject/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/admin/hospitals/reject/http-response.adoc[]
+include::{snippets}/admin/hospitals/reject/response-fields.adoc[]
