@@ -1,6 +1,7 @@
 package com.refill.hospital.entity;
 
 import com.refill.account.dto.request.HospitalJoinRequest;
+import com.refill.doctor.entity.Doctor;
 import com.refill.global.entity.Role;
 import com.refill.global.entity.UserInfo;
 import com.refill.review.entity.Review;
@@ -17,6 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -26,6 +28,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@DynamicUpdate
 public class Hospital extends UserInfo {
 
     @Column(nullable = false)
@@ -42,6 +45,9 @@ public class Hospital extends UserInfo {
 
     @Column(nullable = false)
     String registrationImg;
+
+    @OneToMany(mappedBy = "hospital")
+    List<Doctor> doctors;
 
     @OneToMany(mappedBy = "hospital")
     List<Review> reviews;

@@ -1,5 +1,6 @@
 package com.refill.hospital.controller;
 
+import com.refill.hospital.dto.response.HospitalDetailResponse;
 import com.refill.hospital.dto.response.HospitalResponse;
 import com.refill.hospital.dto.response.HospitalSearchByLocationResponse;
 import com.refill.hospital.service.HospitalService;
@@ -9,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,9 +51,17 @@ public class HospitalController {
         @RequestParam(name = "addr", required = false) String address) {
         log.info(hospitalName);
         log.info(address);
-        List<HospitalResponse> hospitalResponses = hospitalService.searchByKeyword(hospitalName, address);
-        return ResponseEntity.ok().body(hospitalResponses);
+        List<HospitalResponse> hospitalResponses = hospitalService.searchByKeyword(hospitalName,
+            address);
+        return ResponseEntity.ok()
+                             .body(hospitalResponses);
     }
 
+    /* 병원 상세 조회 */
+    @GetMapping("/{hospitalId}")
+    public ResponseEntity<HospitalDetailResponse> getHospitalDetail(@PathVariable Long hospitalId){
+        HospitalDetailResponse hospitalDetailResponse = hospitalService.getHospitalDetail(hospitalId);
+        return ResponseEntity.ok().body(hospitalDetailResponse);
+    }
 
 }

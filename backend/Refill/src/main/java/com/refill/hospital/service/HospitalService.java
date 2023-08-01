@@ -3,6 +3,7 @@ package com.refill.hospital.service;
 import static com.refill.hospital.util.DistanceCalculator.calculateDistance;
 
 import com.refill.global.exception.ErrorCode;
+import com.refill.hospital.dto.response.HospitalDetailResponse;
 import com.refill.hospital.dto.response.HospitalResponse;
 import com.refill.hospital.dto.response.HospitalSearchByLocationResponse;
 import com.refill.hospital.entity.Hospital;
@@ -89,12 +90,18 @@ public class HospitalService {
                                  .collect(Collectors.toList());
     }
 
+    @Transactional
     public List<HospitalResponse> searchByKeyword(String hospitalName, String address) {
         List<Hospital> containingHospital = hospitalRepository.findByNameContainingOrAddressContaining(
             hospitalName, address);
         return containingHospital.stream()
                                  .map(hospital -> new HospitalResponse(hospital))
                                  .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public HospitalDetailResponse getHospitalDetail(Long id) {
+        return new HospitalDetailResponse(findById(id));
     }
 
     private Double zoomLevelToRadius(Integer zoomLevel) {
