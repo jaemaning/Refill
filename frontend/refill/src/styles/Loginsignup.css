@@ -1,0 +1,54 @@
+body {
+  width: 100%;
+  height: 100%;
+}
+
+.HospitalForm{
+  background-color: #f2981f;
+  width:100%;
+  display:flex;
+}
+
+.MemberForm {
+  background-color: #2e5077;
+  width: 100%;
+  display: flex;
+}
+
+.text-whiteblue {
+  color: #aadaff;
+}
+
+.Common_Left {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+.Common_Right {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+}
+
+.select_LoginOrSignUp {
+  width: 200px;
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.Logo_img {
+  width: 300px;
+  height: 300px;
+}
+
+.MLogin {
+  background-color: white;
+  height: 500px;
+  width: 400px;
+}

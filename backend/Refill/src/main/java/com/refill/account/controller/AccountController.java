@@ -32,8 +32,7 @@ public class AccountController {
         log.debug("'{}' member request memberJoin", memberJoinRequest.loginId());
         accountService.memberJoin(memberJoinRequest, profileImg);
 
-        return ResponseEntity.ok()
-                             .body("SUCCESS");
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/hospital/join")
@@ -41,8 +40,7 @@ public class AccountController {
 
         log.debug("'{}' hospital request joinHospital", hospitalJoinRequest.loginId());
         accountService.hospitalJoin(hospitalJoinRequest, profileImg, regImg);
-        return ResponseEntity.ok()
-                             .body("SUCCESS");
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/member/login")
