@@ -12,8 +12,8 @@ export default function Navbar() {
     ["예약", "#"],
     ["병원검색", "/search"],
     ["AI자가진단", "#"],
-    ["로그인", "#"],
-    ["회원가입", "#"],
+    ["로그인", "/login"],
+    ["회원가입", "/signup"],
   ];
 
   const handleMenuToggle = () => {
@@ -88,4 +88,4 @@ export default function Navbar() {
     //   </nav>
     // </div>
   );
-}
+            }

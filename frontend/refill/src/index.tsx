@@ -11,6 +11,11 @@ import { BrowserRouter } from "react-router-dom";
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
 );
+
+const address_script = document.createElement('script');
+address_script.src = "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
+document.body.appendChild(address_script);
+
 root.render(
   <React.StrictMode>
     <Provider store={store}>

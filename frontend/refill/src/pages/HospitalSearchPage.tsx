@@ -6,8 +6,7 @@ import { REFILL_COLORS } from "../assets/getColors";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
-// export interface HospitalSearchProps {
-// }
+
 
 export function HospitalSearch() {
   const Container = styled.div`
@@ -16,8 +15,6 @@ export function HospitalSearch() {
     min-width: 100vw;
     min-height: 100vh;
   `;
-
-export function HospitalSearch(props: HospitalSearchProps) {
   // const [option, setOption] = useState(radioOption);
 
   // const handleChange = (e :ChangeEvent<HTMLInputElement>) => {
@@ -27,8 +24,9 @@ export function HospitalSearch(props: HospitalSearchProps) {
   return (
     <div>
       <Navbar />
-      <Container></Container>
+        <Container></Container>
       <Footer />
     </div>
   );
 }
+
