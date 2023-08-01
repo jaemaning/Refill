@@ -17,6 +17,7 @@ export function HospitalSearch() {
     min-height: 100vh;
   `;
 
+export function HospitalSearch(props: HospitalSearchProps) {
   // const [option, setOption] = useState(radioOption);
 
   // const handleChange = (e :ChangeEvent<HTMLInputElement>) => {

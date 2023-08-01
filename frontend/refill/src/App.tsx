@@ -3,6 +3,8 @@ import "./App.css";
 import MainApp from "./pages/MainPage";
 import { Routes, Route } from "react-router-dom";
 import { HospitalSearch } from "./pages/HospitalSearchPage";
+import LoginForm from "pages/LoginForm";
+
 
 const App: React.FC = () => {
   return (
@@ -10,6 +12,8 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<MainApp />} />
         <Route path="/search" element={<HospitalSearch />} />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/hos_login" />
         <Route
           path="*"
           element={
