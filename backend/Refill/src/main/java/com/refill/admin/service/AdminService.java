@@ -1,6 +1,7 @@
 package com.refill.admin.service;
 
 import com.refill.admin.dto.response.WaitingHospitalResponse;
+import com.refill.global.entity.Message;
 import com.refill.global.entity.Role;
 import com.refill.global.exception.ErrorCode;
 import com.refill.hospital.entity.Hospital;
@@ -24,7 +25,7 @@ public class AdminService {
                               .toList();
     }
 
-    public void acceptHospital(Long hospitalId) {
+    public String acceptHospital(Long hospitalId) {
 
         Hospital hospital = hospitalService.findById(hospitalId);
 
@@ -33,9 +34,11 @@ public class AdminService {
         }
 
         hospital.acceptHospital();
+
+        return Message.ACCEPT_HOSPITAL.getMessage();
     }
 
-    public void rejectHospital(Long hospitalId) {
+    public String rejectHospital(Long hospitalId) {
 
         Hospital hospital = hospitalService.findById(hospitalId);
 
@@ -44,6 +47,8 @@ public class AdminService {
         }
 
         hospitalService.delete(hospitalId);
+
+        return Message.REJECT_HOSPITAL.getMessage();
 
     }
 }

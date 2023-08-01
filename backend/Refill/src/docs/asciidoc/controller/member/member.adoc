@@ -1,0 +1,29 @@
+=== 마이페이지 조회
+
+==== HTTP Request
+include::{snippets}/member/get-mypage/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/member/get-mypage/http-response.adoc[]
+include::{snippets}/member/get-mypage/response-fields.adoc[]
+
+=== 마이페이지 수정
+
+==== HTTP Request
+include::{snippets}/member/put-mypage/http-request.adoc[]
+include::{snippets}/member/put-mypage/request-parts.adoc[]
+include::{snippets}/member/put-mypage/request-part-memberInfoUpdateRequest-fields.adoc[]
+
+
+==== HTTP Response
+include::{snippets}/member/put-mypage/http-response.adoc[]
+include::{snippets}/member/put-mypage/response-body.adoc[]
+
+=== 비밀번호 수정
+
+==== HTTP Request
+include::{snippets}/member/mypage/password/http-request.adoc[]
+include::{snippets}/member/mypage/password/request-body.adoc[]
+
+==== HTTP Response
+include::{snippets}/member/mypage/password/http-response.adoc[]

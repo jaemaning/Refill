@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { REFILL_COLORS } from "../../assets/getColors.js";
+import styled from "@emotion/styled";
 
 type RadioButtonProps = {
   value: string;
@@ -7,45 +9,69 @@ type RadioButtonProps = {
   label: string;
 };
 
+type RadioDivProps = {
+  selected: string;
+  setSelected: (value: string) => void;
+}
+
 const RadioButton: React.FC<RadioButtonProps> = ({
   value,
   checked,
   onChange,
   label,
 }) => {
+  const handleClick = () => {
+    onChange(value);
+  };
+
+  const baseStyle = {
+    width : '470px',
+    height : '60px',
+    display : 'flex',
+    justifyContent : 'center' as const,
+    alignItems : 'center' as const,
+    borderRadius: '5px',
+    cursor: 'pointer',
+  };
+
+  const selectStyle = checked
+    ? { background: REFILL_COLORS['rf-3'], color: REFILL_COLORS['white'] }
+    : { background: "white", color: "black" };
+  
+  const divStyle = {...baseStyle, ...selectStyle}
+
   return (
-    <label className="inline-flex items-center">
-      <input
-        type="radio"
-        className="form-radio text-blue-500 h-5 w-5"
-        value={value}
-        checked={checked}
-        onChange={() => onChange(value)}
-      />
-      <span className="ml-2">{label}</span>
-    </label>
+    <div style={divStyle} onClick={handleClick} className="button">
+      {label}
+    </div>
   );
 };
 
-const RadioDiv = () => {
-  const [selected, setSelected] = useState("option1");
+const RadioDiv : React.FC<RadioDivProps> = ({selected, setSelected}) => {
+
+  const Container = styled.div`
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 1000px;
+    margin-bottom: 20px;
+  `
 
   return (
-    <div className="space-y-2">
+    <Container>
       <RadioButton
         value="option1"
         checked={selected === "option1"}
         onChange={setSelected}
-        label="Option 1"
+        label="지도로 찾기"
       />
-
       <RadioButton
         value="option2"
         checked={selected === "option2"}
         onChange={setSelected}
-        label="Option 2"
+        label="검색으로 찾기"
       />
-    </div>
+    </Container>
   );
 };
 
