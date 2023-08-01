@@ -6,8 +6,6 @@ import { REFILL_COLORS } from "../assets/getColors";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
-
-
 export function HospitalSearch() {
   const Container = styled.div`
     border 0;
@@ -24,9 +22,8 @@ export function HospitalSearch() {
   return (
     <div>
       <Navbar />
-        <Container></Container>
+      <Container></Container>
       <Footer />
     </div>
   );
 }
-

@@ -7,7 +7,6 @@ import LoginForm from "pages/LoginForm";
 import HLoginForm from "pages/HLoginForm";
 import SignUp from "pages/SignUp";
 
-
 const App: React.FC = () => {
   return (
     <div className="App">
@@ -15,8 +14,8 @@ const App: React.FC = () => {
         <Route path="/" element={<MainApp />} />
         <Route path="/search" element={<HospitalSearch />} />
         <Route path="/login" element={<LoginForm />} />
-        <Route path="/hos_login" element={<HLoginForm />}/>
-        <Route path="/signup" element={<SignUp />}/>
+        <Route path="/hos_login" element={<HLoginForm />} />
+        <Route path="/signup" element={<SignUp />} />
         <Route
           path="*"
           element={

@@ -5,11 +5,11 @@ import Kakao from "../assets/Kakao_logo.png";
 import Naver from "../assets/Naver_logo.png";
 import Google from "../assets/Google_logo.png";
 import Button from "../components/elements/Button";
-import "../styles/Loginsignup.css"
+import "../styles/Loginsignup.css";
 
 declare global {
   interface Window {
-    daum : any;
+    daum: any;
   }
 }
 
@@ -18,73 +18,74 @@ interface Addr {
 }
 
 const SingUp: React.FC = () => {
+  // 회원가입 할 때 필요한 데이터
+  const [inputData, setInputData] = useState({
+    loginId: "",
+    loginPassword: "",
+    nickname: "",
+    name: "",
+    address: "",
+    tel: "",
+    birthDay: "",
+    email: "",
+  });
 
-      // 회원가입 할 때 필요한 데이터
-      const [inputData, setInputData] = useState({
-        loginId: "",
-        loginPassword: "",
-        nickname: "",
-        name: "",
-        address: "",
-        tel: "",
-        birthDay: "",
-        email: "",
+  const changeInput = (e: ChangeEvent<HTMLInputElement>) => {
+    setInputData({
+      ...inputData,
+      [e.target.name]: e.target.value,
+    });
+    // console.log(e.target.name)
+    // console.log(e.target.value)
+  };
+
+  const onClickAddr = () => {
+    new window.daum.Postcode({
+      oncomplete: function (data: Addr) {
+        (document.getElementById("addr") as HTMLInputElement).value =
+          data.address;
+        document.getElementById("addrDetail")?.focus();
+      },
+    }).open();
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const memberJoinRequest = {
+      loginId: inputData.loginId,
+      loginPassword: inputData.loginPassword,
+      nickname: inputData.nickname,
+      name: inputData.name,
+      address:
+        (document.getElementById("addr") as HTMLInputElement).value +
+        ", " +
+        inputData.address,
+      tel: inputData.tel,
+      birthDay: inputData.birthDay,
+      email: inputData.email,
+    };
+
+    const json = JSON.stringify(memberJoinRequest);
+    const jsonBlob = new Blob([json], { type: "application/json" });
+
+    const formData = new FormData();
+    formData.append("memberJoinRequest", jsonBlob);
+
+    axios
+      .post("api/v1/account/member/join", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((err) => {
+        console.log(memberJoinRequest);
+        console.log(err.response.data);
       });
-      
-      const changeInput = (e: ChangeEvent<HTMLInputElement>) => {
-        setInputData({
-          ...inputData,
-          [e.target.name]: e.target.value,
-        });      
-        // console.log(e.target.name)
-        // console.log(e.target.value)
-      };
-      
-      
-      const onClickAddr = () => {
-        new window.daum.Postcode({
-          oncomplete : function (data: Addr) {
-            (document.getElementById("addr") as HTMLInputElement).value = data.address;
-            document.getElementById("addrDetail")?.focus();
-          },
-        }).open();
-      };
-      
-    
-      const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-    
-        const memberJoinRequest = {
-          loginId: inputData.loginId,
-          loginPassword: inputData.loginPassword,
-          nickname: inputData.nickname,
-          name: inputData.name,
-          address: (document.getElementById("addr") as HTMLInputElement).value + ', ' +inputData.address,
-          tel: inputData.tel,
-          birthDay: inputData.birthDay,
-          email: inputData.email,
-        };
-    
-        const json = JSON.stringify(memberJoinRequest);
-        const jsonBlob = new Blob([json], { type: "application/json" });
-    
-        const formData = new FormData();
-        formData.append("memberJoinRequest", jsonBlob);
-    
-        axios
-          .post("api/v1/account/member/join", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
-          .then((response) => {
-            console.log(response.data);
-          })
-          .catch((err) => {
-            console.log(memberJoinRequest);
-            console.log(err.response.data);
-          });
-      };
+  };
 
   const middle = "flex justify-center items-center";
 
@@ -136,10 +137,10 @@ const SingUp: React.FC = () => {
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                 placeholder="이름을 입력해주세요"
                 onChange={(e) => {
-                    changeInput(e);
+                  changeInput(e);
                 }}
-                name= "name"
-                value = {inputData.name}
+                name="name"
+                value={inputData.name}
               ></input>
             </div>
             <br />
@@ -153,14 +154,12 @@ const SingUp: React.FC = () => {
                 type="text"
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                 placeholder="아이디를 입력해주세요"
-                name = "loginId"
-                value = { inputData.loginId }
+                name="loginId"
+                value={inputData.loginId}
                 onChange={(e) => {
-                    changeInput(e);
+                  changeInput(e);
                 }}
-                
-              >
-              </input>
+              ></input>
             </div>
             <br />
             <div>
@@ -174,12 +173,11 @@ const SingUp: React.FC = () => {
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                 placeholder="영문자, 숫자, 특수문자 포함 최소 8~20자"
                 onChange={(e) => {
-                    changeInput(e);
+                  changeInput(e);
                 }}
-                name = "loginPassword"
-                value = { inputData.loginPassword }
-              >
-              </input>
+                name="loginPassword"
+                value={inputData.loginPassword}
+              ></input>
               <br />
               {/* 비밀번호 입력 확인 Logic구성해서 적용해야함 */}
               <input
@@ -190,8 +188,7 @@ const SingUp: React.FC = () => {
                 //     changeInput(e);
                 // }}
                 // value={inputData.loginPassword}
-              >
-              </input>
+              ></input>
             </div>
             <br />
             <div>
@@ -201,16 +198,15 @@ const SingUp: React.FC = () => {
                 </label>
               </div>
               <input
-                type = "text"
+                type="text"
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                 placeholder="닉네임을 입력해주세요"
-                name = "nickname"
-                value = { inputData.nickname }
+                name="nickname"
+                value={inputData.nickname}
                 onChange={(e) => {
-                    changeInput(e);
+                  changeInput(e);
                 }}
-                >
-              </input>
+              ></input>
             </div>
             <br />
             <div>
@@ -224,12 +220,11 @@ const SingUp: React.FC = () => {
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                 placeholder="아이디를 입력해주세요"
                 onChange={(e) => {
-                    changeInput(e);
+                  changeInput(e);
                 }}
-                name = "birthDay"
-                value = { inputData.birthDay }
-                >
-              </input>
+                name="birthDay"
+                value={inputData.birthDay}
+              ></input>
             </div>
             <br />
             <div>
@@ -242,13 +237,12 @@ const SingUp: React.FC = () => {
                 type="text"
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                 placeholder="이메일을 입력해주세요"
-                name = "email"
-                value = { inputData.email }               
+                name="email"
+                value={inputData.email}
                 onChange={(e) => {
-                    changeInput(e);
+                  changeInput(e);
                 }}
-              >
-              </input>
+              ></input>
             </div>
             <br />
             <div>
@@ -257,36 +251,34 @@ const SingUp: React.FC = () => {
                   Address
                 </label>
               </div>
-              <div className = "flex justify-between mb-2">
+              <div className="flex justify-between mb-2">
                 <input
-                  id = "addr"
+                  id="addr"
                   readOnly
                   type="text"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                   placeholder="조회를 눌러주세요"
-                  style = {{width : "65%"}}
-                >
-                </input>
+                  style={{ width: "65%" }}
+                ></input>
                 <Button
-                content="조회하기"
-                variant="success"
-                type="submit"
-                customStyles={{ height : "41.6px" , width: "30%" }}
-                onClick = {onClickAddr}
+                  content="조회하기"
+                  variant="success"
+                  type="submit"
+                  customStyles={{ height: "41.6px", width: "30%" }}
+                  onClick={onClickAddr}
                 />
               </div>
               <input
-                  id = "addrDetail"
-                  type="text"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                  placeholder="상세주소 입력란입니다"
-                  name = "address"
-                  value = { inputData.address } 
-                  onChange={(e) => {
-                    changeInput(e);
-                  }}
-                >   
-              </input>
+                id="addrDetail"
+                type="text"
+                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                placeholder="상세주소 입력란입니다"
+                name="address"
+                value={inputData.address}
+                onChange={(e) => {
+                  changeInput(e);
+                }}
+              ></input>
             </div>
             <br />
             <div>
@@ -299,13 +291,12 @@ const SingUp: React.FC = () => {
                 type="text"
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                 placeholder="전화번호를 입력해주세요"
-                name = "tel"
-                value = { inputData.tel } 
+                name="tel"
+                value={inputData.tel}
                 onChange={(e) => {
-                    changeInput(e);
+                  changeInput(e);
                 }}
-              >
-              </input>
+              ></input>
             </div>
             <br />
             <div className="my-3">
@@ -320,10 +311,12 @@ const SingUp: React.FC = () => {
               <span className="text-lg">병원을 등록하고 싶으신가요?</span>
               <div>
                 <span>위에 버튼을 누르시거나 </span>
-                <a href="" className="text-red">여기</a>
+                <a href="" className="text-red">
+                  여기
+                </a>
                 <span>를 클릭하세요</span>
               </div>
-              <div className = "my-4">
+              <div className="my-4">
                 <span className="">다른 계정으로 로그인하기</span>
               </div>
             </div>
