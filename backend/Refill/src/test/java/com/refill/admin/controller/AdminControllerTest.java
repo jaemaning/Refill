@@ -1,5 +1,6 @@
 package com.refill.admin.controller;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -7,9 +8,12 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.refill.admin.dto.response.WaitingHospitalResponse;
+import com.refill.global.entity.Message;
 import com.refill.util.ControllerTest;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,4 +61,29 @@ class AdminControllerTest extends ControllerTest {
             );
     }
 
+    @Test
+    @WithMockUser(username = "admin", roles = "ADMIN")
+    @DisplayName("병원_관리자에_의해_승인된다")
+    void hospital_accepted_by_admin() throws Exception {
+
+        Long hospitalId = 1L;
+
+        when(adminService.acceptHospital(any(Long.class))).thenReturn("{\"message\":\"%s\"}".formatted(Message.ACCEPT_HOSPITAL.getMessage()));
+
+        mockMvc.perform(
+                   get(baseUrl + "/hospitals/accept/{id}", hospitalId)
+                       .contentType(MediaType.APPLICATION_JSON)
+               )
+               .andExpect(status().isOk())
+               .andDo(
+                   document("admin/hospitals/accept",
+                       preprocessResponse(prettyPrint()),
+                       pathParameters(
+                           parameterWithName("id").description("승인할 병원의 ID")
+                       ),
+                       responseFields(
+                           fieldWithPath("message").description("결과 메세지")
+                       ))
+               );
+    }
 }

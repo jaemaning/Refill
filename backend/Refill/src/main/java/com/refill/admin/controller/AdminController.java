@@ -2,7 +2,6 @@ package com.refill.admin.controller;
 
 import com.refill.admin.dto.response.WaitingHospitalResponse;
 import com.refill.admin.service.AdminService;
-import com.refill.global.entity.Message;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,17 +32,17 @@ public class AdminController {
     public ResponseEntity<String> acceptHospital(@PathVariable("id") Long hospitalId) {
 
         log.debug("'{}' hospital accepted by admin", hospitalId);
-        adminService.acceptHospital(hospitalId);
+        String message = adminService.acceptHospital(hospitalId);
 
-        return ResponseEntity.ok().body(Message.ACCEPT_HOSPITAL.getMessage());
+        return ResponseEntity.ok().body(message);
     }
 
     @GetMapping("/hospitals/reject/{id}")
     public ResponseEntity<String> rejectHospital(@PathVariable("id") Long hospitalId) {
 
         log.debug("'{}' hospital rejected by admin", hospitalId);
-        adminService.rejectHospital(hospitalId);
+        String message = adminService.rejectHospital(hospitalId);
 
-        return ResponseEntity.ok().body(Message.REJECT_HOSPITAL.getMessage());
+        return ResponseEntity.ok().body(message);
     }
 }
