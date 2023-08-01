@@ -18,7 +18,7 @@ const MainApp: React.FC = () => {
     justify-content: center;
     border 0;
     background: linear-gradient(to bottom, ${REFILL_COLORS["rf-2"]}, white);
-    min-width: 100vw;
+    min-width: 100%;
     min-height: 700px;
     flex-direction: column;
   `;

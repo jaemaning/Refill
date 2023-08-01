@@ -6,9 +6,13 @@ import { HospitalSearch } from "./pages/HospitalSearchPage";
 import LoginForm from "pages/LoginForm";
 import HLoginForm from "pages/HLoginForm";
 import SignUp from "pages/SignUp";
+import { useKakaoMapScript } from "./hooks/UseKakaoMap";
 
 
 const App: React.FC = () => {
+  
+  useKakaoMapScript();
+
   return (
     <div className="App">
       <Routes>
