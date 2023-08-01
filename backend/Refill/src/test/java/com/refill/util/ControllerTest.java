@@ -3,6 +3,8 @@ package com.refill.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.refill.account.controller.AccountController;
 import com.refill.account.service.AccountService;
+import com.refill.admin.controller.AdminController;
+import com.refill.admin.service.AdminService;
 import com.refill.hospital.controller.HospitalController;
 import com.refill.hospital.repository.HospitalRepository;
 import com.refill.hospital.service.HospitalService;
@@ -33,7 +35,8 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest({
     AccountController.class,
     MemberController.class,
-    HospitalController.class
+    HospitalController.class,
+    AdminController.class
 })
 public class ControllerTest {
 
@@ -50,6 +53,7 @@ public class ControllerTest {
     @MockBean protected AccountService accountService;
     @MockBean protected MemberService memberService;
     @MockBean protected HospitalService hospitalService;
+    @MockBean protected AdminService adminService;
 
     // Repository
     @MockBean protected MemberRepository memberRepository;
