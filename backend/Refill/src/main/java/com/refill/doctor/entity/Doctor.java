@@ -15,6 +15,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.DynamicUpdate;
 
 @Getter
@@ -30,9 +32,11 @@ public class Doctor extends BaseEntity {
     @JoinColumn(name = "hospital_id")
     Hospital hospital;
 
+    @Cascade(CascadeType.ALL)
     @OneToMany(mappedBy = "doctor")
     List<MajorArea> majorAreas;
 
+    @Cascade(CascadeType.ALL)
     @OneToMany(mappedBy = "doctor")
     List<EducationBackground> educationBackgrounds;
 
