@@ -4,6 +4,7 @@ import com.refill.account.dto.request.HospitalJoinRequest;
 import com.refill.doctor.entity.Doctor;
 import com.refill.global.entity.Role;
 import com.refill.global.entity.UserInfo;
+import com.refill.hospital.dto.request.HospitalInfoUpdateRequest;
 import com.refill.review.entity.Review;
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -44,6 +45,9 @@ public class Hospital extends UserInfo {
     String hospitalProfileImg;
 
     @Column(nullable = false)
+    String hospitalBannerImg;
+
+    @Column(nullable = false)
     String registrationImg;
 
     @OneToMany(mappedBy = "hospital")
@@ -72,8 +76,14 @@ public class Hospital extends UserInfo {
         return Collections.singletonList(new SimpleGrantedAuthority(getRole().name()));
     }
 
-    public void updateFileAddress(String address) {
+    public void updateProfileAddress(String address) {
         this.hospitalProfileImg = address;
+    }
+    public void updateBannerAddress(String address) {
+        this.hospitalBannerImg = address;
+    }
+    public void updateRegistrationImg(String address) {
+        this.registrationImg = address;
     }
 
     public void updateRegAddress(String address) {
@@ -108,6 +118,14 @@ public class Hospital extends UserInfo {
     @Override
     public boolean isEnabled() {
         return false;
+    }
+
+    public void update(HospitalInfoUpdateRequest hospitalInfoUpdateRequest) {
+        super.updateHospital(hospitalInfoUpdateRequest);
+        this.latitude = hospitalInfoUpdateRequest.latitude();
+        this.longitude = hospitalInfoUpdateRequest.longitude();
+        this.postalCode = hospitalInfoUpdateRequest.postalCode();
+
     }
 
 

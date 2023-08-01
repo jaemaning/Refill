@@ -2,7 +2,10 @@ package com.refill.hospital.service;
 
 import static com.refill.hospital.util.DistanceCalculator.calculateDistance;
 
+import com.refill.doctor.repository.DoctorRepository;
 import com.refill.global.exception.ErrorCode;
+import com.refill.global.service.AmazonS3Service;
+import com.refill.hospital.dto.request.HospitalInfoUpdateRequest;
 import com.refill.hospital.dto.response.HospitalDetailResponse;
 import com.refill.hospital.dto.response.HospitalResponse;
 import com.refill.hospital.dto.response.HospitalSearchByLocationResponse;
@@ -15,12 +18,15 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @Service
 public class HospitalService {
 
     private final HospitalRepository hospitalRepository;
+    private final AmazonS3Service amazonS3Service;
+    private final DoctorRepository doctorRepository;
 
     @Transactional(readOnly = true)
     public boolean existsByLoginId(String loginId) {
@@ -107,5 +113,41 @@ public class HospitalService {
     private Double zoomLevelToRadius(Integer zoomLevel) {
         /* todo: zoomLevel을 적절하게 Radius로 바꾸는 로직 */
         return 5.0;
+    }
+    private Hospital checkAccessHospital(String loginId, Long hospitalId) {
+        Hospital hospital = findByLoginId(loginId);
+        if (!hospital.getId()
+                     .equals(hospitalId)) {
+            throw new MemberException(ErrorCode.ACCESSE_DENIED);
+        }
+        return hospital;
+    }
+
+    @Transactional
+    public void modifyHospitalInfo(Long hospitalId, String loginId,
+        HospitalInfoUpdateRequest hospitalInfoUpdateRequest, MultipartFile profileImg,
+        MultipartFile bannerImg, MultipartFile registrationImg) {
+
+        Hospital hospital = checkAccessHospital(loginId, hospitalId);
+        hospital.update(hospitalInfoUpdateRequest);
+        if (profileImg != null) {
+            String profileAddress = amazonS3Service.uploadFile(profileImg);
+            hospital.updateProfileAddress(profileAddress);
+        }
+        if (bannerImg != null) {
+            String bannerAddress = amazonS3Service.uploadFile(bannerImg);
+            hospital.updateBannerAddress(bannerAddress);
+        }
+        if (registrationImg != null) {
+            String registrationAddress = amazonS3Service.uploadFile(registrationImg);
+            hospital.updateRegistrationImg(registrationAddress);
+        }
+    }
+
+
+    @Transactional
+    public void deleteDoctorById(String loginId, Long hospitalId, Long doctorId) {
+        Hospital hospital = checkAccessHospital(loginId, hospitalId);
+        doctorRepository.deleteById(doctorId);
     }
 }
