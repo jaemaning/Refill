@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.refill.account.dto.request.HospitalJoinRequest;
 import com.refill.account.dto.request.HospitalLoginRequest;
 import com.refill.account.dto.request.LoginIdFindRequest;
+import com.refill.account.dto.request.LoginPasswordRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.dto.request.MemberLoginRequest;
 import com.refill.global.entity.Message;
@@ -289,6 +290,68 @@ class AccountControllerTest extends ControllerTest {
                );
 
         //verify(amazonSESService, times(1)).sendLoginId(any(), any());
+
+    }
+
+    @DisplayName("회원_비밀번호_찾기_바뀐_비밀번호_전송된다")
+    @Test
+    void send_member_change_password_with_correct_information() throws Exception {
+
+        LoginPasswordRequest loginPasswordRequest = new LoginPasswordRequest("loginId", "email");
+
+        doNothing().when(amazonSESService).sendTempPassword(any(), any());
+        when(accountService.findMemberPassword(any())).thenReturn("{\"message\":\"%s\"}".formatted(Message.FIND_PASSWORD.getMessage()));
+
+        mockMvc.perform(
+            post(baseUrl + "/member/find/password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(loginPasswordRequest))
+        )
+            .andExpect(status().isOk())
+            .andDo(
+                document("account/member/password",
+                    preprocessRequest(prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    requestFields(
+                        fieldWithPath("loginId").description("로그인 아이디"),
+                        fieldWithPath("email").description("가입 시 작성한 이메일")
+                    ),
+                    responseFields(
+                        fieldWithPath("message").description("결과 메세지")
+                    ))
+            );
+
+
+    }
+
+    @DisplayName("병원_비밀번호_찾기_바뀐_비밀번호_전송된다")
+    @Test
+    void send_hospital_change_password_with_correct_information() throws Exception {
+
+        LoginPasswordRequest loginPasswordRequest = new LoginPasswordRequest("loginId", "email");
+
+        doNothing().when(amazonSESService).sendTempPassword(any(), any());
+        when(accountService.findHospitalPassword(any())).thenReturn("{\"message\":\"%s\"}".formatted(Message.FIND_PASSWORD.getMessage()));
+
+        mockMvc.perform(
+                   post(baseUrl + "/hospital/find/password")
+                       .contentType(MediaType.APPLICATION_JSON)
+                       .content(objectMapper.writeValueAsBytes(loginPasswordRequest))
+               )
+               .andExpect(status().isOk())
+               .andDo(
+                   document("account/hospital/password",
+                       preprocessRequest(prettyPrint()),
+                       preprocessResponse(prettyPrint()),
+                       requestFields(
+                           fieldWithPath("loginId").description("로그인 아이디"),
+                           fieldWithPath("email").description("가입 시 작성한 이메일")
+                       ),
+                       responseFields(
+                           fieldWithPath("message").description("결과 메세지")
+                       ))
+               );
+
 
     }
 
