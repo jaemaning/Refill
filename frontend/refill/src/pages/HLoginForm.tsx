@@ -7,7 +7,7 @@ import Google from "../assets/Google_logo.png";
 import Button from "../components/elements/Button";
 import "../styles/Loginsignup.css";
 
-const LoginForm: React.FC = () => {
+const HLoginForm: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -40,7 +40,7 @@ const LoginForm: React.FC = () => {
   const middle = "flex justify-center items-center";
 
   return (
-    <div className="MemberForm">
+    <div className="HospitalForm">
       {" "}
       {/* 버튼의 useState값에 따라 배경색 및 페이지 렌더링 진행 */}
       <div className="Common_Left text-3xl" style={{ margin: "200px 0px" }}>
@@ -63,7 +63,7 @@ const LoginForm: React.FC = () => {
       <div className={`Common_Right ${middle}`}>
         <div className="flex justify-between">
           <span className="text-white text-2xl font-bold my-4">
-            일반 로그인
+            병원 로그인
           </span>
         </div>
         <div className="flex">
@@ -115,15 +115,15 @@ const LoginForm: React.FC = () => {
             <div className="my-3">
               <Button
                 content="로그인"
-                variant="success"
+                variant="warning"
                 width="200px"
                 type="submit"
                 customStyles={{ width: "100%" }}
               />
             </div>
             <div className="text-sm flex justify-center mt-4">
-              <span className="mx-2">일반 회원이 아니십니까?</span>
-              <a href="">병원회원으로 로그인 하기</a>
+              <span className="mx-2">병원회원이 아니십니까?</span>
+              <a href="">일반회원으로 로그인 하기</a>
             </div>
             <div className="flex justify-around my-5">
               <div className="flex justify-center flex-col text-center">
@@ -158,4 +158,4 @@ const LoginForm: React.FC = () => {
   );
 };
 
-export default LoginForm;
+export default HLoginForm;

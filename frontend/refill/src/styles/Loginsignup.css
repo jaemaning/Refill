@@ -3,7 +3,13 @@ body {
   height: 100%;
 }
 
-.LoginForm {
+.HospitalForm {
+  background-color: #f2981f;
+  width: 100%;
+  display: flex;
+}
+
+.MemberForm {
   background-color: #2e5077;
   width: 100%;
   display: flex;
@@ -13,7 +19,7 @@ body {
   color: #aadaff;
 }
 
-.Login_Left {
+.Common_Left {
   width: 50%;
   display: flex;
   flex-direction: column;
@@ -22,7 +28,7 @@ body {
   font-weight: bold;
 }
 
-.Login_Right {
+.Common_Right {
   width: 50%;
   display: flex;
   flex-direction: column;
@@ -35,6 +41,7 @@ body {
   justify-content: center;
   font-weight: bold;
 }
+
 .Logo_img {
   width: 300px;
   height: 300px;
@@ -44,4 +51,11 @@ body {
   background-color: white;
   height: 500px;
   width: 400px;
+}
+
+.MSignup {
+  background-color: white;
+  height: 1200px;
+  width: 400px;
+  margin-bottom: 100px;
 }
