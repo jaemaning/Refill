@@ -12,8 +12,8 @@ export default function Navbar() {
     ["예약", "#"],
     ["병원검색", "/search"],
     ["AI자가진단", "#"],
-    ["로그인", "#"],
-    ["회원가입", "#"],
+    ["로그인", "/login"],
+    ["회원가입", "/signup"],
   ];
 
   const handleMenuToggle = () => {
@@ -21,7 +21,7 @@ export default function Navbar() {
   };
 
   return (
-    <div className="w-100">
+    <div className="w-100 mx-auto lg:w-[1024px]">
       <nav className="bg-white border-gray-200 w-full mx-auto">
         <div className="flex flex-wrap items-center dark:bg-gray-900 justify-between p-6 w-full mx-auto">
           <Link to="/" className="flex items-center">
