@@ -33,4 +33,5 @@ public class ExceptionControllerAdvice {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus())
                              .body(new ApiErrorResponse(e.getErrorCode().getCode(), e.getErrorCode(), e.getErrorCode().getMessage()));
     }
+
 }

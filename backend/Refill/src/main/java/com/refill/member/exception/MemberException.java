@@ -6,8 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class MemberException extends RuntimeException{
+public class MemberException extends RuntimeException {
 
     private ErrorCode errorCode;
-
 }
