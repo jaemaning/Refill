@@ -9,9 +9,9 @@ import javax.validation.constraints.NotNull;
 public record DoctorResponse(
     @NotNull Long id,
     @NotNull String name,
-    @NotNull String photo,
+    @NotNull String profileImg,
     @NotNull String licenseNumber,
-    @NotNull String licensePhoto,
+    @NotNull String licenseImg,
     @NotNull String description,
     @NotNull List<MajorArea> majorAreas,
     @NotNull List<EducationBackground> educationBackgrounds
@@ -20,9 +20,9 @@ public record DoctorResponse(
     public DoctorResponse(Doctor doctor) {
         this(doctor.getId(),
             doctor.getName(),
-            doctor.getPhoto(),
+            doctor.getProfileImg(),
             doctor.getLicenseNumber(),
-            doctor.getLicensePhoto(),
+            doctor.getLicenseImg(),
             doctor.getDescription(),
             doctor.getMajorAreas(),
             doctor.getEducationBackgrounds()

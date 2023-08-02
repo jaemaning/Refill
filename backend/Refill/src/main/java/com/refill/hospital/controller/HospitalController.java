@@ -1,5 +1,6 @@
 package com.refill.hospital.controller;
 
+import com.refill.doctor.dto.request.DoctorUpdateRequest;
 import com.refill.hospital.dto.request.HospitalInfoUpdateRequest;
 import com.refill.hospital.dto.response.HospitalDetailResponse;
 import com.refill.hospital.dto.response.HospitalResponse;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -74,7 +76,6 @@ public class HospitalController {
                              .body(hospitalDetailResponse);
     }
 
-    //todo - @AuthenticationPrincipal -> LoginUser로 만들어서 권한 검증
     @GetMapping("/mypage")
     public ResponseEntity<HospitalDetailResponse> getHospitalDetail(
         @AuthenticationPrincipal String loginId) {
@@ -106,8 +107,12 @@ public class HospitalController {
     public ResponseEntity<?> modifyHospitalDoctor(
         @AuthenticationPrincipal String loginId,
         @PathVariable Long hospitalId,
-        @PathVariable Long doctorId
+        @PathVariable Long doctorId,
+        @RequestBody DoctorUpdateRequest doctorUpdateRequest,
+        @RequestPart(value = "profileImg") MultipartFile profileImg
     ) {
+        /* 의사 수정 로직 */
+        hospitalService.modifyHospitalDoctor(loginId, hospitalId, doctorId, doctorUpdateRequest, profileImg);
         return ResponseEntity.ok()
                              .build();
     }

@@ -1,9 +1,11 @@
 package com.refill.doctor.entity;
 
+import com.refill.doctor.dto.request.DoctorUpdateRequest;
 import com.refill.global.entity.BaseEntity;
 import com.refill.hospital.entity.Hospital;
 import com.refill.review.entity.Review;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -47,15 +49,29 @@ public class Doctor extends BaseEntity {
     String name;
 
     @Column
-    String photo;
+    String profileImg;
 
     @Column(nullable = false)
     String licenseNumber;
 
     @Column(nullable = false)
-    String licensePhoto;
+    String licenseImg;
 
     @Column(nullable = false)
     String description;
 
+    public void update(DoctorUpdateRequest doctorUpdateRequest) {
+        this.description = doctorUpdateRequest.description();
+        this.educationBackgrounds = doctorUpdateRequest.educationBackgrounds()
+            .stream().map(educationBackground -> new EducationBackground(this, educationBackground))
+            .collect(Collectors.toList());
+        this.majorAreas = doctorUpdateRequest.majorAreas()
+                                             .stream()
+                                             .map(majorArea -> new MajorArea(this, majorArea))
+                                             .collect(Collectors.toList());
+    }
+
+    public void updateProfileAddress(String profileAddress) {
+        this.profileImg = profileAddress;
+    }
 }

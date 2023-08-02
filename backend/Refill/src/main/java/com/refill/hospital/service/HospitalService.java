@@ -2,7 +2,9 @@ package com.refill.hospital.service;
 
 import static com.refill.hospital.util.DistanceCalculator.calculateDistance;
 
-import com.refill.doctor.repository.DoctorRepository;
+import com.refill.doctor.dto.request.DoctorUpdateRequest;
+import com.refill.doctor.entity.Doctor;
+import com.refill.doctor.service.DoctorService;
 import com.refill.global.exception.ErrorCode;
 import com.refill.global.service.AmazonS3Service;
 import com.refill.hospital.dto.request.HospitalInfoUpdateRequest;
@@ -26,7 +28,7 @@ public class HospitalService {
 
     private final HospitalRepository hospitalRepository;
     private final AmazonS3Service amazonS3Service;
-    private final DoctorRepository doctorRepository;
+    private final DoctorService doctorService;
 
     @Transactional(readOnly = true)
     public boolean existsByLoginId(String loginId) {
@@ -148,6 +150,19 @@ public class HospitalService {
     @Transactional
     public void deleteDoctorById(String loginId, Long hospitalId, Long doctorId) {
         Hospital hospital = checkAccessHospital(loginId, hospitalId);
-        doctorRepository.deleteById(doctorId);
+        doctorService.deleteById(doctorId);
+    }
+
+    @Transactional
+    public void modifyHospitalDoctor(String loginId, Long hospitalId, Long doctorId,
+        DoctorUpdateRequest doctorUpdateRequest, MultipartFile profileImg) {
+        Hospital hospital = checkAccessHospital(loginId, hospitalId);
+        Doctor doctor = doctorService.findById(doctorId);
+        doctor.update(doctorUpdateRequest);
+        if(profileImg != null){
+            String profileAddress = amazonS3Service.uploadFile(profileImg);
+            doctor.updateProfileAddress(profileAddress);
+        }
+
     }
 }
