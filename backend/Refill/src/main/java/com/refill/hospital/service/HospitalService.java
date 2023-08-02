@@ -7,6 +7,7 @@ import com.refill.doctor.dto.request.DoctorUpdateRequest;
 import com.refill.doctor.entity.Doctor;
 import com.refill.doctor.entity.EducationBackground;
 import com.refill.doctor.entity.MajorArea;
+import com.refill.doctor.repository.EducationBackgroundRepository;
 import com.refill.doctor.repository.MajorAreaRepository;
 import com.refill.doctor.service.DoctorService;
 import com.refill.global.exception.ErrorCode;
@@ -16,11 +17,11 @@ import com.refill.hospital.dto.response.HospitalDetailResponse;
 import com.refill.hospital.dto.response.HospitalResponse;
 import com.refill.hospital.dto.response.HospitalSearchByLocationResponse;
 import com.refill.hospital.entity.Hospital;
-import com.refill.doctor.repository.EducationBackgroundRepository;
 import com.refill.hospital.repository.HospitalRepository;
 import com.refill.member.exception.MemberException;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -83,7 +84,6 @@ public class HospitalService {
 
     @Transactional(readOnly = true)
     public Hospital findById(Long id) {
-        log.info("findById");
         return hospitalRepository.findById(id)
                                  .orElseThrow(
                                      () -> new MemberException(ErrorCode.USERNAME_NOT_FOUND));
@@ -118,7 +118,6 @@ public class HospitalService {
 
     @Transactional
     public HospitalDetailResponse getHospitalDetail(Long id) {
-        log.info("서비스단 들어옴");
         return new HospitalDetailResponse(findById(id));
     }
 
@@ -142,20 +141,17 @@ public class HospitalService {
 
         Hospital hospital = checkAccessHospital(loginId, hospitalId);
         hospital.update(hospitalInfoUpdateRequest);
-        if (profileImg != null) {
-            String profileAddress = amazonS3Service.uploadFile(profileImg);
-            hospital.updateProfileAddress(profileAddress);
-        }
-        if (bannerImg != null) {
-            String bannerAddress = amazonS3Service.uploadFile(bannerImg);
-            hospital.updateBannerAddress(bannerAddress);
-        }
-        if (registrationImg != null) {
-            String registrationAddress = amazonS3Service.uploadFile(registrationImg);
-            hospital.updateRegistrationImg(registrationAddress);
-        }
+        uploadFileAndUpdateAddress(profileImg, hospital::updateProfileAddress);
+        uploadFileAndUpdateAddress(bannerImg, hospital::updateBannerAddress);
+        uploadFileAndUpdateAddress(registrationImg, hospital::updateRegistrationImg);
     }
 
+    private void uploadFileAndUpdateAddress(MultipartFile file, Consumer<String> addressUpdater) {
+        if (file != null && !file.isEmpty()) {
+            String address = amazonS3Service.uploadFile(file);
+            addressUpdater.accept(address);
+        }
+    }
 
     @Transactional
     public void deleteDoctorById(String loginId, Long hospitalId, Long doctorId) {
