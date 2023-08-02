@@ -17,11 +17,10 @@ declare global {
 
 interface DivProps {
   bgcolor?: string;
-  selected? : boolean;
+  selected?: boolean;
 }
 
-export const HospitalSearch : React.FC = () => {
-
+export const HospitalSearch: React.FC = () => {
   const [selected, setSelected] = useState("option1");
 
   const Container = styled.div`
@@ -36,11 +35,12 @@ export const HospitalSearch : React.FC = () => {
   `;
 
   const MapBox = styled.div`
-    background-color: ${(props : DivProps) => props.bgcolor ? props.bgcolor : "white"};
+    background-color: ${(props: DivProps) =>
+      props.bgcolor ? props.bgcolor : "white"};
     width: 1000px;
     height: 600px;
-    display: ${(props: DivProps) => props.selected ? 'block' : 'none'};
-  `
+    display: ${(props: DivProps) => (props.selected ? "block" : "none")};
+  `;
 
   const kakaoMapBox = useRef<HTMLDivElement>(null); // 지도를 담을 div element를 위한 ref
 
@@ -48,7 +48,8 @@ export const HospitalSearch : React.FC = () => {
     if (selected === "option1") {
       window.kakao.maps.load(() => {
         // v3가 모두 로드된 후, 이 콜백 함수가 실행됩니다.
-        const options = { // 지도를 생성할 때 필요한 기본 옵션
+        const options = {
+          // 지도를 생성할 때 필요한 기본 옵션
           center: new window.kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
           level: 3, // 지도의 레벨 (확대, 축소 정도)
         };
@@ -62,17 +63,15 @@ export const HospitalSearch : React.FC = () => {
     <div>
       <Navbar />
       <Container>
-        <h1 style={{fontSize:"40px", fontWeight:"bold", width:"1000px"}}>병원 검색하기</h1>
+        <h1 style={{ fontSize: "40px", fontWeight: "bold", width: "1000px" }}>
+          병원 검색하기
+        </h1>
         <hr />
         <RadioDiv selected={selected} setSelected={setSelected}></RadioDiv>
-        <MapBox ref={kakaoMapBox} selected={selected === "option1"}>
-
-        </MapBox>
-        <MapBox bgcolor="white" selected={selected === "option2"}>
-
-        </MapBox>
+        <MapBox ref={kakaoMapBox} selected={selected === "option1"}></MapBox>
+        <MapBox bgcolor="white" selected={selected === "option2"}></MapBox>
       </Container>
       <Footer />
     </div>
   );
-}
+};
