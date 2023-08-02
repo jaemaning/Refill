@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { REFILL_COLORS } from "../../assets/getColors.js";
 import styled from "@emotion/styled";
 

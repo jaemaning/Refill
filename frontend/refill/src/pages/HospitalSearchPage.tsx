@@ -55,6 +55,7 @@ export const HospitalSearch: React.FC = () => {
         };
         // 지도 생성 및 객체 리턴
         const map = new window.kakao.maps.Map(kakaoMapBox.current, options);
+        console.log(map);
       });
     }
   }, [selected]);
