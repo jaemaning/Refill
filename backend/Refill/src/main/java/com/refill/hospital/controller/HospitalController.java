@@ -59,8 +59,6 @@ public class HospitalController {
     public ResponseEntity<List<HospitalResponse>> searchByKeyword(
         @RequestParam(name = "name", required = false) String hospitalName,
         @RequestParam(name = "addr", required = false) String address) {
-        log.info(hospitalName);
-        log.info(address);
         List<HospitalResponse> hospitalResponses = hospitalService.searchByKeyword(hospitalName,
             address);
         return ResponseEntity.ok()
@@ -72,7 +70,6 @@ public class HospitalController {
     public ResponseEntity<HospitalDetailResponse> getHospitalDetail(@PathVariable Long hospitalId) {
         HospitalDetailResponse hospitalDetailResponse = hospitalService.getHospitalDetail(
             hospitalId);
-        log.info("컨트롤러 반환직전");
         return ResponseEntity.ok()
                              .body(hospitalDetailResponse);
     }
