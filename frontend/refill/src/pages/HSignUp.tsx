@@ -17,19 +17,50 @@ interface Addr {
   address: string;
 }
 
-const SingUp: React.FC = () => {
+interface InputImageState {
+  profileImg: File | null;
+  regImg: File | null;
+}
+
+const HSingUp: React.FC = () => {
   // 회원가입 할 때 필요한 데이터
   const [inputData, setInputData] = useState({
     loginId: "",
     loginPassword: "",
-    nickname: "",
     name: "",
     address: "",
+    postalCode: "",
     tel: "",
-    birthDay: "",
     email: "",
+    latitude: "",
+    longitude: "",
   });
 
+  // 이미지 올리기
+  const [inputImage, setInputImage] = useState<InputImageState>({
+    profileImg: null,
+    regImg: null,
+  });
+
+  const handleImgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null; // 선택한 파일을 가져옵니다. 없으면 null로 설정합니다.
+
+    setInputImage((prevInputImage) => ({
+      ...prevInputImage,
+      [e.target.name]: file,
+    }));
+    if (file) {
+      if (e.target.name === "profileImg") {
+        (document.getElementById("profilename") as HTMLInputElement).value =
+          file.name;
+      } else if (e.target.name === "regImg") {
+        (document.getElementById("regname") as HTMLInputElement).value =
+          file.name;
+      }
+    }
+  };
+
+  // 패스워드 확인 체크 로직
   const [checkPassword, setCheckPassword] = useState("");
 
   const handleCheckPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,6 +70,7 @@ const SingUp: React.FC = () => {
   const passwordError =
     checkPassword.length > 0 && inputData.loginPassword !== checkPassword;
 
+  // 입력값 바뀌는거 확인 로직
   const changeInput = (e: ChangeEvent<HTMLInputElement>) => {
     setInputData({
       ...inputData,
@@ -48,6 +80,7 @@ const SingUp: React.FC = () => {
     // console.log(e.target.value)
   };
 
+  // 도로명 주소 API 로직
   const onClickAddr = () => {
     new window.daum.Postcode({
       oncomplete: function (data: Addr) {
@@ -58,31 +91,42 @@ const SingUp: React.FC = () => {
     }).open();
   };
 
+  // 병원 회원가입 axios요청 부분
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const memberJoinRequest = {
+    const hospitalJoinRequest = {
       loginId: inputData.loginId,
       loginPassword: inputData.loginPassword,
-      nickname: inputData.nickname,
       name: inputData.name,
+      postalCode: "55055",
+      // address값은 바뀔 예정
       address:
         (document.getElementById("addr") as HTMLInputElement).value +
         ", " +
         inputData.address,
       tel: inputData.tel,
-      birthDay: inputData.birthDay,
       email: inputData.email,
+      latitude: "33.3",
+      longitude: "55.5",
     };
 
-    const json = JSON.stringify(memberJoinRequest);
+    const json = JSON.stringify(hospitalJoinRequest);
     const jsonBlob = new Blob([json], { type: "application/json" });
 
     const formData = new FormData();
-    formData.append("memberJoinRequest", jsonBlob);
+    formData.append("hospitalJoinRequest", jsonBlob);
+
+    if (inputImage.profileImg) {
+      formData.append("profileImg", inputImage.profileImg);
+    }
+
+    if (inputImage.regImg) {
+      formData.append("regImg", inputImage.regImg);
+    }
 
     axios
-      .post("api/v1/account/member/join", formData, {
+      .post("api/v1/account/hospital/join", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -91,7 +135,7 @@ const SingUp: React.FC = () => {
         console.log(response.data);
       })
       .catch((err) => {
-        console.log(memberJoinRequest);
+        console.log(hospitalJoinRequest);
         console.log(err.response.data);
       });
   };
@@ -99,7 +143,7 @@ const SingUp: React.FC = () => {
   const middle = "flex justify-center items-center";
 
   return (
-    <div className="MemberForm">
+    <div className="HospitalForm">
       {" "}
       {/* 버튼의 useState값에 따라 배경색 및 페이지 렌더링 진행 */}
       <div className="Common_Left text-3xl" style={{ margin: "200px 0px" }}>
@@ -122,7 +166,7 @@ const SingUp: React.FC = () => {
       <div className={`Common_Right ${middle}`}>
         <div className="flex justify-between mt-10">
           <span className="text-white text-2xl font-bold my-4">
-            일반 회원가입
+            병원 회원가입
           </span>
         </div>
         <div className="flex">
@@ -138,7 +182,7 @@ const SingUp: React.FC = () => {
             <div>
               <div className="flex justify-start">
                 <label className="block mb-2 text-sm font-medium text-gray-900 ">
-                  이름
+                  병원 이름
                 </label>
               </div>
               <input
@@ -206,37 +250,59 @@ const SingUp: React.FC = () => {
             <div>
               <div className="flex justify-start">
                 <label className="block mb-2 text-sm font-medium text-gray-900 ">
-                  NICKNAME
+                  병원 프로필 사진 등록 (선택)
                 </label>
               </div>
-              <input
-                type="text"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                placeholder="닉네임을 입력해주세요"
-                name="nickname"
-                value={inputData.nickname}
-                onChange={(e) => {
-                  changeInput(e);
-                }}
-              ></input>
+              <div className="flex justify-between">
+                <input
+                  id="profilename"
+                  readOnly
+                  type="text"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                  placeholder="업로드를 눌러주세요"
+                  style={{ width: "70%" }}
+                ></input>
+                <label htmlFor="profileImg" className="file-input-btn">
+                  업로드
+                  <input
+                    type="file"
+                    accept="image/*"
+                    id="profileImg"
+                    name="profileImg"
+                    className="file-input"
+                    onChange={handleImgChange}
+                  />
+                </label>
+              </div>
             </div>
             <br />
             <div>
               <div className="flex justify-start">
                 <label className="block mb-2 text-sm font-medium text-gray-900 ">
-                  생년월일
+                  병원 등록증 (필수)
                 </label>
               </div>
-              <input
-                type="text"
-                className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                placeholder="아이디를 입력해주세요"
-                onChange={(e) => {
-                  changeInput(e);
-                }}
-                name="birthDay"
-                value={inputData.birthDay}
-              ></input>
+              <div className="flex justify-between">
+                <input
+                  id="regname"
+                  readOnly
+                  type="text"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                  placeholder="업로드를 눌러주세요"
+                  style={{ width: "70%" }}
+                ></input>
+                <label htmlFor="regImg" className="file-input-btn">
+                  업로드
+                  <input
+                    type="file"
+                    accept="image/*"
+                    id="regImg"
+                    name="regImg"
+                    className="file-input"
+                    onChange={handleImgChange}
+                  />
+                </label>
+              </div>
             </div>
             <br />
             <div>
@@ -320,7 +386,7 @@ const SingUp: React.FC = () => {
               />
             </div>
             <div className="mt-4 font-bold flex-col text-center">
-              <span className="text-lg">병원을 등록하고 싶으신가요?</span>
+              <span className="text-lg">일반 회원 이신가요?</span>
               <div>
                 <span>위에 버튼을 누르시거나 </span>
                 <a href="" className="text-red">
@@ -365,4 +431,4 @@ const SingUp: React.FC = () => {
   );
 };
 
-export default SingUp;
+export default HSingUp;

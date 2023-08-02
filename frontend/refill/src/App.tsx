@@ -7,9 +7,9 @@ import LoginForm from "pages/LoginForm";
 import HLoginForm from "pages/HLoginForm";
 import SignUp from "pages/SignUp";
 import { useKakaoMapScript } from "./hooks/UseKakaoMap";
+import HSingUp from "pages/HSignUp";
 
 const App: React.FC = () => {
-  
   useKakaoMapScript();
 
   return (
@@ -20,6 +20,7 @@ const App: React.FC = () => {
         <Route path="/login" element={<LoginForm />} />
         <Route path="/hos_login" element={<HLoginForm />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/hos_signup" element={<HSingUp />} />
         <Route
           path="*"
           element={
