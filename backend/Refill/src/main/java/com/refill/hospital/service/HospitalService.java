@@ -23,12 +23,14 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class HospitalService {
 
     private final HospitalRepository hospitalRepository;
@@ -81,10 +83,10 @@ public class HospitalService {
 
     @Transactional(readOnly = true)
     public Hospital findById(Long id) {
+        log.info("findById");
         return hospitalRepository.findById(id)
                                  .orElseThrow(
                                      () -> new MemberException(ErrorCode.USERNAME_NOT_FOUND));
-
     }
 
     @Transactional
@@ -116,6 +118,7 @@ public class HospitalService {
 
     @Transactional
     public HospitalDetailResponse getHospitalDetail(Long id) {
+        log.info("서비스단 들어옴");
         return new HospitalDetailResponse(findById(id));
     }
 
@@ -156,14 +159,14 @@ public class HospitalService {
 
     @Transactional
     public void deleteDoctorById(String loginId, Long hospitalId, Long doctorId) {
-        Hospital hospital = checkAccessHospital(loginId, hospitalId);
+        checkAccessHospital(loginId, hospitalId);
         doctorService.deleteById(doctorId);
     }
 
     @Transactional
     public void modifyHospitalDoctor(String loginId, Long hospitalId, Long doctorId,
         DoctorUpdateRequest doctorUpdateRequest, MultipartFile profileImg) {
-        Hospital hospital = checkAccessHospital(loginId, hospitalId);
+        checkAccessHospital(loginId, hospitalId);
         Doctor doctor = doctorService.findById(doctorId);
         doctor.update(doctorUpdateRequest);
         if(profileImg != null){
@@ -172,18 +175,34 @@ public class HospitalService {
         }
 
     }
+
     @Transactional
     public void registHospitalDoctor(String loginId, Long hospitalId,
-        DoctorJoinRequest doctorJoinRequest, MultipartFile profileImg) {
+        DoctorJoinRequest doctorJoinRequest, MultipartFile profileImg, MultipartFile licenseImg) {
         Hospital hospital = checkAccessHospital(loginId, hospitalId);
+        log.info("1111111111111");
+
         Doctor doctor = Doctor.from(doctorJoinRequest, hospital);
+        log.info("2222222222222");
         if (profileImg != null) {
+            log.info("33333333333333");
             String profileAddress = amazonS3Service.uploadFile(profileImg);
             doctor.registProfileAddress(profileAddress);
+            log.info("44444444444444");
         }
+        if (licenseImg != null) {
+            log.info("55555555555555");
+            String licenseAddress = amazonS3Service.uploadFile(licenseImg);
+            doctor.registLicenseAddress(licenseAddress);
+            log.info("66666666666666");
+        }
+        log.info("777777777777777");
         doctorService.save(doctor);
+        log.info("8888888888888");
         registEducationBackground(doctorJoinRequest, doctor);
+        log.info("999999999999");
         registMajor(doctorJoinRequest, doctor);
+        log.info("1239084710239847");
     }
 
     private void registEducationBackground(DoctorJoinRequest doctorJoinRequest, Doctor doctor) {

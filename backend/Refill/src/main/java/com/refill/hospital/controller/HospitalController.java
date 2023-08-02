@@ -72,6 +72,7 @@ public class HospitalController {
     public ResponseEntity<HospitalDetailResponse> getHospitalDetail(@PathVariable Long hospitalId) {
         HospitalDetailResponse hospitalDetailResponse = hospitalService.getHospitalDetail(
             hospitalId);
+        log.info("컨트롤러 반환직전");
         return ResponseEntity.ok()
                              .body(hospitalDetailResponse);
     }
@@ -93,21 +94,21 @@ public class HospitalController {
     
     /* 의사 등록 */
     @PostMapping("/{hospitalId}/doctor")
-    public ResponseEntity<?> registerHospitalDoctor(
+    public ResponseEntity<String> registerHospitalDoctor(
         @AuthenticationPrincipal String loginId,
         @PathVariable Long hospitalId,
-        @RequestPart(name = "doctorJoinRequest") DoctorJoinRequest doctorJoinRequest,
-        @RequestPart(name = "profileImg") MultipartFile profileImg
+        @RequestPart("doctorJoinRequest") @Valid final DoctorJoinRequest doctorJoinRequest,
+        @RequestPart(value = "profileImg", required = false) MultipartFile profileImg,
+        @RequestPart(value = "licenseImg") MultipartFile licenseImg
     ){
-        hospitalService.registHospitalDoctor(loginId, hospitalId, doctorJoinRequest, profileImg);
+        hospitalService.registHospitalDoctor(loginId, hospitalId, doctorJoinRequest, profileImg, licenseImg);
         return ResponseEntity.ok().build();
     }
     
 
     /* 의사 정보 수정 */
-    // todo
     @PutMapping("/{hospitalId}/doctor/{doctorId}")
-    public ResponseEntity<?> modifyHospitalDoctor(
+    public ResponseEntity<String> modifyHospitalDoctor(
         @AuthenticationPrincipal String loginId,
         @PathVariable Long hospitalId,
         @PathVariable Long doctorId,

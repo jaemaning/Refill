@@ -1,5 +1,6 @@
 package com.refill.hospital.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.refill.account.dto.request.HospitalJoinRequest;
 import com.refill.doctor.entity.Doctor;
 import com.refill.global.entity.Role;
@@ -51,6 +52,7 @@ public class Hospital extends UserInfo {
     String registrationImg;
 
     @OneToMany(mappedBy = "hospital")
+    @JsonManagedReference
     List<Doctor> doctors;
 
     @OneToMany(mappedBy = "hospital")
