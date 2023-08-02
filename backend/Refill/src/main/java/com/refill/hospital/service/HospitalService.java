@@ -2,8 +2,12 @@ package com.refill.hospital.service;
 
 import static com.refill.hospital.util.DistanceCalculator.calculateDistance;
 
+import com.refill.doctor.dto.request.DoctorJoinRequest;
 import com.refill.doctor.dto.request.DoctorUpdateRequest;
 import com.refill.doctor.entity.Doctor;
+import com.refill.doctor.entity.EducationBackground;
+import com.refill.doctor.entity.MajorArea;
+import com.refill.doctor.repository.MajorAreaRepository;
 import com.refill.doctor.service.DoctorService;
 import com.refill.global.exception.ErrorCode;
 import com.refill.global.service.AmazonS3Service;
@@ -12,6 +16,7 @@ import com.refill.hospital.dto.response.HospitalDetailResponse;
 import com.refill.hospital.dto.response.HospitalResponse;
 import com.refill.hospital.dto.response.HospitalSearchByLocationResponse;
 import com.refill.hospital.entity.Hospital;
+import com.refill.doctor.repository.EducationBackgroundRepository;
 import com.refill.hospital.repository.HospitalRepository;
 import com.refill.member.exception.MemberException;
 import java.math.BigDecimal;
@@ -29,6 +34,8 @@ public class HospitalService {
     private final HospitalRepository hospitalRepository;
     private final AmazonS3Service amazonS3Service;
     private final DoctorService doctorService;
+    private final EducationBackgroundRepository educationBackgroundRepository;
+    private final MajorAreaRepository majorAreaRepository;
 
     @Transactional(readOnly = true)
     public boolean existsByLoginId(String loginId) {
@@ -164,5 +171,30 @@ public class HospitalService {
             doctor.updateProfileAddress(profileAddress);
         }
 
+    }
+    @Transactional
+    public void registHospitalDoctor(String loginId, Long hospitalId,
+        DoctorJoinRequest doctorJoinRequest, MultipartFile profileImg) {
+        Hospital hospital = checkAccessHospital(loginId, hospitalId);
+        Doctor doctor = Doctor.from(doctorJoinRequest, hospital);
+        if (profileImg != null) {
+            String profileAddress = amazonS3Service.uploadFile(profileImg);
+            doctor.registProfileAddress(profileAddress);
+        }
+        doctorService.save(doctor);
+        registEducationBackground(doctorJoinRequest, doctor);
+        registMajor(doctorJoinRequest, doctor);
+    }
+
+    private void registEducationBackground(DoctorJoinRequest doctorJoinRequest, Doctor doctor) {
+        doctorJoinRequest.educationBackgrounds().stream()
+                         .map(content -> new EducationBackground(doctor, content))
+                         .forEach(educationBackgroundRepository::save);
+    }
+
+    private void registMajor(DoctorJoinRequest doctorJoinRequest, Doctor doctor) {
+        doctorJoinRequest.majorAreas().stream()
+                         .map(major -> new MajorArea(doctor, major))
+                         .forEach(majorAreaRepository::save);
     }
 }

@@ -44,7 +44,7 @@ public class Hospital extends UserInfo {
     @Column(nullable = false)
     String hospitalProfileImg;
 
-    @Column(nullable = false)
+    @Column
     String hospitalBannerImg;
 
     @Column(nullable = false)

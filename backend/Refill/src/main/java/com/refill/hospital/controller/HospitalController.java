@@ -1,11 +1,11 @@
 package com.refill.hospital.controller;
 
+import com.refill.doctor.dto.request.DoctorJoinRequest;
 import com.refill.doctor.dto.request.DoctorUpdateRequest;
 import com.refill.hospital.dto.request.HospitalInfoUpdateRequest;
 import com.refill.hospital.dto.response.HospitalDetailResponse;
 import com.refill.hospital.dto.response.HospitalResponse;
 import com.refill.hospital.dto.response.HospitalSearchByLocationResponse;
-import com.refill.hospital.entity.Hospital;
 import com.refill.hospital.service.HospitalService;
 import java.math.BigDecimal;
 import java.util.List;
@@ -17,8 +17,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -76,16 +76,6 @@ public class HospitalController {
                              .body(hospitalDetailResponse);
     }
 
-    @GetMapping("/mypage")
-    public ResponseEntity<HospitalDetailResponse> getHospitalDetail(
-        @AuthenticationPrincipal String loginId) {
-        Hospital hospital = hospitalService.findByLoginId(loginId);
-        HospitalDetailResponse hospitalDetailResponse = hospitalService.getHospitalDetail(
-            hospital.getId());
-        return ResponseEntity.ok()
-                             .body(hospitalDetailResponse);
-    }
-
     /* 병원 정보 수정 */
     @PutMapping("/{hospitalId}")
     public ResponseEntity<String> modifyHospitalInfo(
@@ -100,6 +90,19 @@ public class HospitalController {
         return ResponseEntity.ok()
                              .build();
     }
+    
+    /* 의사 등록 */
+    @PostMapping("/{hospitalId}/doctor")
+    public ResponseEntity<?> registerHospitalDoctor(
+        @AuthenticationPrincipal String loginId,
+        @PathVariable Long hospitalId,
+        @RequestPart(name = "doctorJoinRequest") DoctorJoinRequest doctorJoinRequest,
+        @RequestPart(name = "profileImg") MultipartFile profileImg
+    ){
+        hospitalService.registHospitalDoctor(loginId, hospitalId, doctorJoinRequest, profileImg);
+        return ResponseEntity.ok().build();
+    }
+    
 
     /* 의사 정보 수정 */
     // todo
@@ -108,10 +111,9 @@ public class HospitalController {
         @AuthenticationPrincipal String loginId,
         @PathVariable Long hospitalId,
         @PathVariable Long doctorId,
-        @RequestBody DoctorUpdateRequest doctorUpdateRequest,
-        @RequestPart(value = "profileImg") MultipartFile profileImg
+        @RequestPart DoctorUpdateRequest doctorUpdateRequest,
+        @RequestPart(name = "profileImg") MultipartFile profileImg
     ) {
-        /* 의사 수정 로직 */
         hospitalService.modifyHospitalDoctor(loginId, hospitalId, doctorId, doctorUpdateRequest, profileImg);
         return ResponseEntity.ok()
                              .build();
