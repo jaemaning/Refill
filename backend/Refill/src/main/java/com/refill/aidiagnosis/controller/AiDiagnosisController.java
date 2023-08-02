@@ -39,5 +39,17 @@ public class AiDiagnosisController {
         return ResponseEntity.ok().body(aiDiagnosisResponse);
     }
 
+    /*
+    TODO
+     1. front에서 survey 결과, 머리 사진으로 post 요청 받기(RequestPart)
+     2. 파라미터들 가지고 그대로 service로 이동
+     3. 서비스에서, flask로 사진 전송해서 결과 return받기
+     4. return된 결과로, entity 생성하기
+     5. 서베이, 결과를 합쳐서 탈모 진행도 계산하기
+     6. 결과값을 front로 dto로 보내주기
+     7.
+     */
+
+
 
 }

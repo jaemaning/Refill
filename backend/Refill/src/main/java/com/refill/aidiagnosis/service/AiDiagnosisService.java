@@ -9,6 +9,7 @@ import com.refill.member.exception.MemberException;
 import com.refill.member.service.MemberService;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,11 +34,12 @@ public class AiDiagnosisService {
 
     public AiDiagnosisResponse findById(Long id, String loginId) {
 
-        AiDiagnosis aiDiagnosis = aiDiagnosisRepository.findById(id).orElseGet(null);
+        AiDiagnosis aiDiagnosis = aiDiagnosisRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 
         if(!aiDiagnosis.getMember().getLoginId().equals(loginId)) {
             throw new MemberException(ErrorCode.UNAUTHORIZED_REQUEST);
         }
+
         return new AiDiagnosisResponse(aiDiagnosis);
     }
 }
