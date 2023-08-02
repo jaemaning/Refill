@@ -18,6 +18,7 @@ public enum ErrorCode {
     INVALID_PASSWORD("MEM03", HttpStatus.UNAUTHORIZED, "패스워드가 일치하지 않습니다."),
     OUTSTANDING_AUTHORIZATION("MEM04", HttpStatus.UNAUTHORIZED, "승인 대기중인 병원입니다"),
     ALREADY_ACCEPT("MEM05", HttpStatus.BAD_REQUEST, "이미 승인된 병원입니다."),
+    UNAUTHORIZED_REQUEST("MEM06", HttpStatus.UNAUTHORIZED, "권한이 없습니다."),
 
     /* File Upload Exception*/
     FILE_UPLOAD_FAIL("AWS01", HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패하였습니다.");

@@ -1,8 +1,11 @@
 package com.refill.aidiagnosis.service;
 
 import com.refill.aidiagnosis.dto.response.AiDiagnosisResponse;
+import com.refill.aidiagnosis.entity.AiDiagnosis;
 import com.refill.aidiagnosis.repository.AiDiagnosisRepository;
+import com.refill.global.exception.ErrorCode;
 import com.refill.member.entity.Member;
+import com.refill.member.exception.MemberException;
 import com.refill.member.service.MemberService;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,5 +29,15 @@ public class AiDiagnosisService {
                                     .stream()
                                     .map(AiDiagnosisResponse::new)
                                     .collect(Collectors.toList());
+    }
+
+    public AiDiagnosisResponse findById(Long id, String loginId) {
+
+        AiDiagnosis aiDiagnosis = aiDiagnosisRepository.findById(id).orElseGet(null);
+
+        if(!aiDiagnosis.getMember().getLoginId().equals(loginId)) {
+            throw new MemberException(ErrorCode.UNAUTHORIZED_REQUEST);
+        }
+        return new AiDiagnosisResponse(aiDiagnosis);
     }
 }

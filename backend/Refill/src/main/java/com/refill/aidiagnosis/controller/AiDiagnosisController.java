@@ -33,7 +33,10 @@ public class AiDiagnosisController {
     @GetMapping("/{id}")
     public ResponseEntity<AiDiagnosisResponse> getDetailAiDiagnosis(@AuthenticationPrincipal LoginInfo loginInfo, @PathVariable Long id) {
 
-        return ResponseEntity.ok().build();
+        log.debug("'{}' member request AiDiagnosisHistory", loginInfo.loginId());
+        AiDiagnosisResponse aiDiagnosisResponse = aiDiagnosisService.findById(id, loginInfo.loginId());
+
+        return ResponseEntity.ok().body(aiDiagnosisResponse);
     }
 
 
