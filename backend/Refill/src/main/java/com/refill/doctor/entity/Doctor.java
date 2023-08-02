@@ -1,5 +1,6 @@
 package com.refill.doctor.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.refill.doctor.dto.request.DoctorJoinRequest;
 import com.refill.doctor.dto.request.DoctorUpdateRequest;
 import com.refill.global.entity.BaseEntity;
@@ -33,6 +34,7 @@ public class Doctor extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hospital_id")
+    @JsonBackReference
     Hospital hospital;
 
     @Cascade(CascadeType.ALL)
@@ -73,8 +75,11 @@ public class Doctor extends BaseEntity {
     public void update(DoctorUpdateRequest doctorUpdateRequest) {
         this.description = doctorUpdateRequest.description();
         this.educationBackgrounds = doctorUpdateRequest.educationBackgrounds()
-            .stream().map(educationBackground -> new EducationBackground(this, educationBackground))
-            .collect(Collectors.toList());
+                                                       .stream()
+                                                       .map(
+                                                           educationBackground -> new EducationBackground(
+                                                               this, educationBackground))
+                                                       .collect(Collectors.toList());
         this.majorAreas = doctorUpdateRequest.majorAreas()
                                              .stream()
                                              .map(majorArea -> new MajorArea(this, majorArea))
@@ -87,5 +92,9 @@ public class Doctor extends BaseEntity {
 
     public void registProfileAddress(String profileAddress) {
         this.profileImg = profileAddress;
+    }
+
+    public void registLicenseAddress(String licenseAddress) {
+        this.licenseImg = licenseAddress;
     }
 }

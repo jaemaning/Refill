@@ -1,9 +1,8 @@
 package com.refill.doctor.dto.response;
 
 import com.refill.doctor.entity.Doctor;
-import com.refill.doctor.entity.EducationBackground;
-import com.refill.doctor.entity.MajorArea;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 
 public record DoctorResponse(
@@ -13,8 +12,8 @@ public record DoctorResponse(
     @NotNull String licenseNumber,
     @NotNull String licenseImg,
     @NotNull String description,
-    @NotNull List<MajorArea> majorAreas,
-    @NotNull List<EducationBackground> educationBackgrounds
+    @NotNull List<String> majorAreas,
+    @NotNull List<String> educationBackgrounds
 ) {
 
     public DoctorResponse(Doctor doctor) {
@@ -24,8 +23,15 @@ public record DoctorResponse(
             doctor.getLicenseNumber(),
             doctor.getLicenseImg(),
             doctor.getDescription(),
-            doctor.getMajorAreas(),
+            doctor.getMajorAreas()
+                  .stream()
+                  .map(majorArea -> majorArea.getContent())
+                  .collect(
+                      Collectors.toList()),
             doctor.getEducationBackgrounds()
+                  .stream()
+                  .map(educationBackground -> educationBackground.getContent())
+                  .collect(Collectors.toList())
         );
     }
 }
