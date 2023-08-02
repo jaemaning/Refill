@@ -1,8 +1,5 @@
 server:
   port: 8090
-  ssl:
-    enabled-protocols:
-      - TLSv1.2
 spring:
   datasource:
     url: jdbc:mariadb://mariadb:3306/refill
