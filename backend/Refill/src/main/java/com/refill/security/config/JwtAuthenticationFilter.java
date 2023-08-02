@@ -39,10 +39,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         FilterChain filterChain) throws ServletException, IOException, UsernameNotFoundException {
 
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
-        log.info("authorization : '{}'", authorization);
 
         if (authorization == null || !(authorization.startsWith("Bearer ") || authorization.startsWith("Refresh "))) {
-            log.error("authentication is null");
             filterChain.doFilter(request, response);
             return;
         }
