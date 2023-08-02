@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { REFILL_COLORS } from "../../assets/getColors.js";
 import styled from "@emotion/styled";
 
@@ -12,7 +12,7 @@ type RadioButtonProps = {
 type RadioDivProps = {
   selected: string;
   setSelected: (value: string) => void;
-}
+};
 
 const RadioButton: React.FC<RadioButtonProps> = ({
   value,
@@ -25,20 +25,20 @@ const RadioButton: React.FC<RadioButtonProps> = ({
   };
 
   const baseStyle = {
-    width : '470px',
-    height : '60px',
-    display : 'flex',
-    justifyContent : 'center' as const,
-    alignItems : 'center' as const,
-    borderRadius: '5px',
-    cursor: 'pointer',
+    width: "470px",
+    height: "60px",
+    display: "flex",
+    justifyContent: "center" as const,
+    alignItems: "center" as const,
+    borderRadius: "5px",
+    cursor: "pointer",
   };
 
   const selectStyle = checked
-    ? { background: REFILL_COLORS['rf-3'], color: REFILL_COLORS['white'] }
+    ? { background: REFILL_COLORS["rf-3"], color: REFILL_COLORS["white"] }
     : { background: "white", color: "black" };
-  
-  const divStyle = {...baseStyle, ...selectStyle}
+
+  const divStyle = { ...baseStyle, ...selectStyle };
 
   return (
     <div style={divStyle} onClick={handleClick} className="button">
@@ -47,15 +47,14 @@ const RadioButton: React.FC<RadioButtonProps> = ({
   );
 };
 
-const RadioDiv : React.FC<RadioDivProps> = ({selected, setSelected}) => {
-
+const RadioDiv: React.FC<RadioDivProps> = ({ selected, setSelected }) => {
   const Container = styled.div`
     display: flex;
     justify-content: space-between;
     flex-direction: row;
     width: 1000px;
     margin-bottom: 20px;
-  `
+  `;
 
   return (
     <Container>
