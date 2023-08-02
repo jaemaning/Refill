@@ -46,6 +46,7 @@ public class AiDiagnosis extends BaseEntity {
         this.hairLossScore = hairLossScore;
         this.surveyResult = surveyResult;
     }
+
     public void updateFileAddress(String address) {
         this.diagnosisImage = address;
     }

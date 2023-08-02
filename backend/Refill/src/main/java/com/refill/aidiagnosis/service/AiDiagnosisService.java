@@ -1,6 +1,7 @@
 package com.refill.aidiagnosis.service;
 
 import com.refill.aidiagnosis.dto.request.AiDiagnosisRequest;
+import com.refill.aidiagnosis.dto.response.AiDiagnosisListResponse;
 import com.refill.aidiagnosis.dto.response.AiDiagnosisResponse;
 import com.refill.aidiagnosis.dto.response.AiServerResponse;
 import com.refill.aidiagnosis.entity.AiDiagnosis;
@@ -38,13 +39,13 @@ public class AiDiagnosisService {
     private final AmazonS3Service amazonS3Service;
     private final String url = "localhost:5000/predict";
 
-    public List<AiDiagnosisResponse> findAllByMember(String loginId) {
+    public List<AiDiagnosisListResponse> findAllByMember(String loginId) {
 
         Member member = memberService.findByLoginId(loginId);
 
         return aiDiagnosisRepository.findAllByMember(member)
                                     .stream()
-                                    .map(AiDiagnosisResponse::new)
+                                    .map(AiDiagnosisListResponse::from)
                                     .collect(Collectors.toList());
     }
 
@@ -53,9 +54,7 @@ public class AiDiagnosisService {
         AiDiagnosis aiDiagnosis = aiDiagnosisRepository.findById(id)
                                                        .orElseThrow(EntityNotFoundException::new);
 
-        if (!aiDiagnosis.getMember()
-                        .getLoginId()
-                        .equals(loginId)) {
+        if (!aiDiagnosis.getMember().getLoginId().equals(loginId)) {
             throw new MemberException(ErrorCode.UNAUTHORIZED_REQUEST);
         }
 
@@ -63,7 +62,7 @@ public class AiDiagnosisService {
     }
 
     @Transactional
-    public String doAiDiagnosis(LoginInfo loginInfo, AiDiagnosisRequest aiDiagnosisRequest, MultipartFile hairImg) {
+    public AiDiagnosisResponse doAiDiagnosis(LoginInfo loginInfo, AiDiagnosisRequest aiDiagnosisRequest, MultipartFile hairImg) {
 
         Member member = memberService.findByLoginId(loginInfo.loginId());
         String result = imageSendToAiServer(hairImg);
@@ -83,7 +82,7 @@ public class AiDiagnosisService {
         aiDiagnosis.updateFileAddress(address);
         aiDiagnosisRepository.save(aiDiagnosis);
 
-        return imageSendToAiServer(hairImg);
+        return new AiDiagnosisResponse(aiDiagnosis);
 
     }
 
