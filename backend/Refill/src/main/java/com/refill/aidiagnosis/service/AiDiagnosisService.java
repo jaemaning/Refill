@@ -4,8 +4,10 @@ import com.refill.aidiagnosis.dto.request.AiDiagnosisRequest;
 import com.refill.aidiagnosis.dto.response.AiDiagnosisResponse;
 import com.refill.aidiagnosis.dto.response.AiServerResponse;
 import com.refill.aidiagnosis.entity.AiDiagnosis;
+import com.refill.aidiagnosis.entity.HairLossType;
 import com.refill.aidiagnosis.repository.AiDiagnosisRepository;
 import com.refill.global.exception.ErrorCode;
+import com.refill.global.service.AmazonS3Service;
 import com.refill.member.entity.Member;
 import com.refill.member.exception.MemberException;
 import com.refill.member.service.MemberService;
@@ -33,6 +35,7 @@ public class AiDiagnosisService {
 
     private final AiDiagnosisRepository aiDiagnosisRepository;
     private final MemberService memberService;
+    private final AmazonS3Service amazonS3Service;
     private final String url = "localhost:5000/predict";
 
     public List<AiDiagnosisResponse> findAllByMember(String loginId) {
@@ -47,9 +50,12 @@ public class AiDiagnosisService {
 
     public AiDiagnosisResponse findById(Long id, String loginId) {
 
-        AiDiagnosis aiDiagnosis = aiDiagnosisRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        AiDiagnosis aiDiagnosis = aiDiagnosisRepository.findById(id)
+                                                       .orElseThrow(EntityNotFoundException::new);
 
-        if(!aiDiagnosis.getMember().getLoginId().equals(loginId)) {
+        if (!aiDiagnosis.getMember()
+                        .getLoginId()
+                        .equals(loginId)) {
             throw new MemberException(ErrorCode.UNAUTHORIZED_REQUEST);
         }
 
@@ -60,6 +66,22 @@ public class AiDiagnosisService {
     public String doAiDiagnosis(LoginInfo loginInfo, AiDiagnosisRequest aiDiagnosisRequest, MultipartFile hairImg) {
 
         Member member = memberService.findByLoginId(loginInfo.loginId());
+        String result = imageSendToAiServer(hairImg);
+
+        HairLossType hairLossType = HairLossType.getType(result);
+        Integer hairLossScore = HairLossType.scoreGenerator(hairLossType, aiDiagnosisRequest.surveyResult());
+
+        AiDiagnosis aiDiagnosis = AiDiagnosis.builder()
+                                             .member(member)
+                                             .hairLossScore(hairLossScore)
+                                             .hairLossType(hairLossType)
+                                             .surveyResult(aiDiagnosisRequest.surveyResult())
+                                             .build();
+
+
+        String address = amazonS3Service.uploadFile(hairImg);
+        aiDiagnosis.updateFileAddress(address);
+        aiDiagnosisRepository.save(aiDiagnosis);
 
         return imageSendToAiServer(hairImg);
 
@@ -67,12 +89,13 @@ public class AiDiagnosisService {
 
     private String imageSendToAiServer(MultipartFile hairImg) {
 
-        WebClient webClient = WebClient.builder().build();
+        WebClient webClient = WebClient.builder()
+                                       .build();
 
         MultipartBodyBuilder builder = new MultipartBodyBuilder();
         builder.part("image", hairImg.getResource(), MediaType.IMAGE_JPEG);
 
-        MultiValueMap<String , HttpEntity<?>> body = builder.build();
+        MultiValueMap<String, HttpEntity<?>> body = builder.build();
 
         URI uri = URI.create(url);
 
@@ -86,5 +109,6 @@ public class AiDiagnosisService {
 
         return aiServerResponse.result();
     }
+
 
 }

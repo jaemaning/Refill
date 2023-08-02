@@ -59,7 +59,7 @@ public class AiDiagnosisController {
     public ResponseEntity<String> doAiDiagnosis(@AuthenticationPrincipal LoginInfo loginInfo, @RequestPart @Valid final AiDiagnosisRequest aiDiagnosisRequest, @RequestPart MultipartFile hairImg) {
 
         String res = aiDiagnosisService.doAiDiagnosis(loginInfo, aiDiagnosisRequest, hairImg);
-        log.info("################## {} ###############", aiDiagnosisRequest.surveyResult());
+
 
         return ResponseEntity.ok().body(res);
     }
