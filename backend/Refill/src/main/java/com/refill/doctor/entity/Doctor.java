@@ -1,5 +1,6 @@
 package com.refill.doctor.entity;
 
+import com.refill.doctor.dto.request.DoctorJoinRequest;
 import com.refill.doctor.dto.request.DoctorUpdateRequest;
 import com.refill.global.entity.BaseEntity;
 import com.refill.hospital.entity.Hospital;
@@ -60,6 +61,15 @@ public class Doctor extends BaseEntity {
     @Column(nullable = false)
     String description;
 
+    public static Doctor from(DoctorJoinRequest doctorJoinRequest, Hospital hospital) {
+        return Doctor.builder()
+                     .hospital(hospital)
+                     .name(doctorJoinRequest.name())
+                     .description(doctorJoinRequest.description())
+                     .licenseNumber(doctorJoinRequest.licenseNumber())
+                     .build();
+    }
+
     public void update(DoctorUpdateRequest doctorUpdateRequest) {
         this.description = doctorUpdateRequest.description();
         this.educationBackgrounds = doctorUpdateRequest.educationBackgrounds()
@@ -72,6 +82,10 @@ public class Doctor extends BaseEntity {
     }
 
     public void updateProfileAddress(String profileAddress) {
+        this.profileImg = profileAddress;
+    }
+
+    public void registProfileAddress(String profileAddress) {
         this.profileImg = profileAddress;
     }
 }

@@ -20,4 +20,8 @@ public class DoctorService {
         return doctorRepository.findById(doctorId)
                            .orElseThrow(()->new MemberException(ErrorCode.USERNAME_NOT_FOUND));
     }
+
+    public Doctor save(Doctor doctor) {
+        return doctorRepository.save(doctor);
+    }
 }
