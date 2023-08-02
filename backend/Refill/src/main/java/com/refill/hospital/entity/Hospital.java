@@ -52,7 +52,6 @@ public class Hospital extends UserInfo {
     String registrationImg;
 
     @OneToMany(mappedBy = "hospital")
-    @JsonManagedReference
     List<Doctor> doctors;
 
     @OneToMany(mappedBy = "hospital")

@@ -1,6 +1,5 @@
 package com.refill.doctor.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.refill.doctor.dto.request.DoctorJoinRequest;
 import com.refill.doctor.dto.request.DoctorUpdateRequest;
 import com.refill.global.entity.BaseEntity;
@@ -34,15 +33,14 @@ public class Doctor extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hospital_id")
-    @JsonBackReference
     Hospital hospital;
 
     @Cascade(CascadeType.ALL)
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor", orphanRemoval = true)
     List<MajorArea> majorAreas;
 
     @Cascade(CascadeType.ALL)
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor", orphanRemoval = true)
     List<EducationBackground> educationBackgrounds;
 
     @OneToMany(mappedBy = "doctor")
@@ -74,16 +72,18 @@ public class Doctor extends BaseEntity {
 
     public void update(DoctorUpdateRequest doctorUpdateRequest) {
         this.description = doctorUpdateRequest.description();
-        this.educationBackgrounds = doctorUpdateRequest.educationBackgrounds()
+        this.educationBackgrounds.clear();
+        this.educationBackgrounds.addAll(doctorUpdateRequest.educationBackgrounds()
                                                        .stream()
                                                        .map(
                                                            educationBackground -> new EducationBackground(
                                                                this, educationBackground))
-                                                       .collect(Collectors.toList());
-        this.majorAreas = doctorUpdateRequest.majorAreas()
+                                                       .collect(Collectors.toList()));
+        this.majorAreas.clear();
+        this.majorAreas.addAll(doctorUpdateRequest.majorAreas()
                                              .stream()
                                              .map(majorArea -> new MajorArea(this, majorArea))
-                                             .collect(Collectors.toList());
+                                             .collect(Collectors.toList()));
     }
 
     public void updateProfileAddress(String profileAddress) {
