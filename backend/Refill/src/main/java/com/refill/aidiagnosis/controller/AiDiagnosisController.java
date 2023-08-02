@@ -1,17 +1,22 @@
 package com.refill.aidiagnosis.controller;
 
+import com.refill.aidiagnosis.dto.request.AiDiagnosisRequest;
 import com.refill.aidiagnosis.dto.response.AiDiagnosisResponse;
 import com.refill.aidiagnosis.service.AiDiagnosisService;
 import com.refill.security.util.LoginInfo;
 import java.util.List;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -50,6 +55,14 @@ public class AiDiagnosisController {
      7.
      */
 
+    @PostMapping("/")
+    public ResponseEntity<String> doAiDiagnosis(@AuthenticationPrincipal LoginInfo loginInfo, @RequestPart @Valid final AiDiagnosisRequest aiDiagnosisRequest, @RequestPart MultipartFile hairImg) {
+
+        String res = aiDiagnosisService.doAiDiagnosis(loginInfo, aiDiagnosisRequest, hairImg);
+        log.info("################## {} ###############", aiDiagnosisRequest.surveyResult());
+
+        return ResponseEntity.ok().body(res);
+    }
 
 
 }

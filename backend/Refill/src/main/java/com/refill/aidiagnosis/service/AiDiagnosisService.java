@@ -1,18 +1,30 @@
 package com.refill.aidiagnosis.service;
 
+import com.refill.aidiagnosis.dto.request.AiDiagnosisRequest;
 import com.refill.aidiagnosis.dto.response.AiDiagnosisResponse;
+import com.refill.aidiagnosis.dto.response.AiServerResponse;
 import com.refill.aidiagnosis.entity.AiDiagnosis;
 import com.refill.aidiagnosis.repository.AiDiagnosisRepository;
 import com.refill.global.exception.ErrorCode;
 import com.refill.member.entity.Member;
 import com.refill.member.exception.MemberException;
 import com.refill.member.service.MemberService;
+import com.refill.security.util.LoginInfo;
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.BodyInserters;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -21,6 +33,7 @@ public class AiDiagnosisService {
 
     private final AiDiagnosisRepository aiDiagnosisRepository;
     private final MemberService memberService;
+    private final String url = "localhost:5000/predict";
 
     public List<AiDiagnosisResponse> findAllByMember(String loginId) {
 
@@ -42,4 +55,36 @@ public class AiDiagnosisService {
 
         return new AiDiagnosisResponse(aiDiagnosis);
     }
+
+    @Transactional
+    public String doAiDiagnosis(LoginInfo loginInfo, AiDiagnosisRequest aiDiagnosisRequest, MultipartFile hairImg) {
+
+        Member member = memberService.findByLoginId(loginInfo.loginId());
+
+        return imageSendToAiServer(hairImg);
+
+    }
+
+    private String imageSendToAiServer(MultipartFile hairImg) {
+
+        WebClient webClient = WebClient.builder().build();
+
+        MultipartBodyBuilder builder = new MultipartBodyBuilder();
+        builder.part("image", hairImg.getResource(), MediaType.IMAGE_JPEG);
+
+        MultiValueMap<String , HttpEntity<?>> body = builder.build();
+
+        URI uri = URI.create(url);
+
+        AiServerResponse aiServerResponse = webClient.post()
+                                                     .uri(uri)
+                                                     .contentType(MediaType.MULTIPART_FORM_DATA)
+                                                     .body(BodyInserters.fromMultipartData(body))
+                                                     .retrieve()
+                                                     .bodyToMono(AiServerResponse.class)
+                                                     .block();
+
+        return aiServerResponse.result();
+    }
+
 }
