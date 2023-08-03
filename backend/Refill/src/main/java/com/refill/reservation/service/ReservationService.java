@@ -5,6 +5,7 @@ import com.refill.doctor.service.DoctorService;
 import com.refill.global.exception.ErrorCode;
 import com.refill.global.service.AmazonS3Service;
 import com.refill.member.entity.Member;
+import com.refill.member.exception.MemberException;
 import com.refill.member.service.MemberService;
 import com.refill.reservation.dto.request.ReservationRequest;
 import com.refill.reservation.dto.response.DisabledReservationTimeResponse;
@@ -15,6 +16,8 @@ import com.refill.reservation.exception.ReservationException;
 import com.refill.reservation.repository.ReservationRepository;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
+import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,5 +88,19 @@ public class ReservationService {
         if (isAvailable == true) {
             throw new ReservationException(ErrorCode.ALREADY_RESERVED);
         }
+    }
+
+    @Transactional
+    public void deleteReservation(String loginId, Long reservationId) {
+
+        Member member = memberService.findByLoginId(loginId);
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(() -> new EntityNotFoundException());
+
+        if(!Objects.equals(member, reservation.getMember())) {
+            throw new MemberException(ErrorCode.UNAUTHORIZED_REQUEST);
+        }
+
+        reservationRepository.delete(reservation);
+
     }
 }

@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,23 +47,6 @@ public class ReservationController {
         return ResponseEntity.ok().body(disabledReservationTimeResponses);
     }
 
-    /*
-    TODO
-    예약할 때 필요한거
-
-    1. 날짜 / 시간
-    2. 의사
-    3. 유저
-    4. 상담 시 요구사항
-
-    리턴 값
-
-    1. 유저이름
-    2. 신청일시
-    3. 상담 병원
-    4. 담당 의사
-     */
-
     @PostMapping("/")
     public ResponseEntity<ReservationResultResponse> makeReservation(@AuthenticationPrincipal LoginInfo loginInfo, @RequestPart("reservationRequest") final ReservationRequest reservationRequest, @RequestPart(value = "image", required = false) MultipartFile hairImage) {
 
@@ -70,5 +54,14 @@ public class ReservationController {
         ReservationResultResponse reservationResultResponse = reservationService.makeReservation(loginInfo.loginId(), reservationRequest, hairImage);
 
         return ResponseEntity.ok().body(reservationResultResponse);
+    }
+
+    @DeleteMapping("/{reservationId}")
+    public ResponseEntity<String> deleteReservation(@AuthenticationPrincipal LoginInfo loginInfo, @PathVariable Long reservationId){
+
+        log.debug("'{}' member request delete '{}' Reservation", loginInfo.loginId(), reservationId);
+        reservationService.deleteReservation(loginInfo.loginId(), reservationId);
+
+        return ResponseEntity.noContent().build();
     }
 }
