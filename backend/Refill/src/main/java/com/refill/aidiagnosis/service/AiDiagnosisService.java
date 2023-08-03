@@ -6,6 +6,7 @@ import com.refill.aidiagnosis.dto.response.AiDiagnosisResponse;
 import com.refill.aidiagnosis.dto.response.AiServerResponse;
 import com.refill.aidiagnosis.entity.AiDiagnosis;
 import com.refill.aidiagnosis.entity.HairLossType;
+import com.refill.aidiagnosis.exception.AiDiagnosisException;
 import com.refill.aidiagnosis.repository.AiDiagnosisRepository;
 import com.refill.global.exception.ErrorCode;
 import com.refill.global.service.AmazonS3Service;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -39,7 +41,8 @@ public class AiDiagnosisService {
     private final AiDiagnosisRepository aiDiagnosisRepository;
     private final MemberService memberService;
     private final AmazonS3Service amazonS3Service;
-    private final String url = "localhost:5000/predict";
+    @Value("${flask.server.url}")
+    private String url;
 
     public List<AiDiagnosisListResponse> findAllByMember(String loginId) {
 
@@ -110,21 +113,21 @@ public class AiDiagnosisService {
                                                      .onStatus(HttpStatus::is4xxClientError,
                                                          response ->
                                                              Mono.error(
-                                                                 new MemberException(
-                                                                     ErrorCode.UNAUTHORIZED_REQUEST)
+                                                                 new AiDiagnosisException(
+                                                                     ErrorCode.AI_SERVER_CLIENT_ERROR)
                                                              )
                                                      )
                                                      .onStatus(HttpStatus::is5xxServerError,
                                                          response ->
                                                              Mono.error(
-                                                                 new MemberException(
-                                                                     ErrorCode.UNAUTHORIZED_REQUEST)
+                                                                 new AiDiagnosisException(
+                                                                     ErrorCode.AI_SERVER_ERROR)
                                                              ))
                                                      .bodyToMono(AiServerResponse.class)
                                                      .block();
 
         if (aiServerResponse == null) {
-            throw new EntityNotFoundException();
+            throw new AiDiagnosisException(ErrorCode.AI_SERVER_ERROR);
         }
 
         return aiServerResponse;
