@@ -3,10 +3,10 @@ body {
   height: 100%;
 }
 
-.HospitalForm{
+.HospitalForm {
   background-color: #f2981f;
-  width:100%;
-  display:flex;
+  width: 100%;
+  display: flex;
 }
 
 .MemberForm {
@@ -51,4 +51,35 @@ body {
   background-color: white;
   height: 500px;
   width: 400px;
+}
+
+.MSignup {
+  background-color: white;
+  height: 1200px;
+  width: 400px;
+  margin-bottom: 100px;
+}
+
+.file-input-btn {
+  /* 버튼의 스타일을 설정합니다. */
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #142cf9;
+  color: #fff;
+  border: 1 solid transparent;
+  border-radius: 7px;
+  cursor: pointer;
+  outline: none;
+  font-weight: 600;
+  transition:
+    background 0.2s ease,
+    color 0.1s ease;
+  line-height: 26px;
+  font-size: 15px;
+  box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* input[type="file"]을 숨깁니다. */
+.file-input {
+  display: none;
 }

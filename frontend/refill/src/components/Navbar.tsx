@@ -4,7 +4,7 @@ import nav_logo from "../assets/logo_final.png";
 import { Link } from "react-router-dom";
 
 export default function Navbar() {
-  const middle = "flex justify-between items-center";
+  // const middle = "flex justify-between items-center";
   const [isMenuOpen, setMenuOpen] = useState(false);
 
   //. 이쪽에서 router 설정 해주시면 됩니다.

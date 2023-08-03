@@ -1,10 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
+import { REFILL_COLORS } from "../../assets/getColors.js";
+import styled from "@emotion/styled";
 
 type RadioButtonProps = {
   value: string;
   checked: boolean;
   onChange: (value: string) => void;
   label: string;
+};
+
+type RadioDivProps = {
+  selected: string;
+  setSelected: (value: string) => void;
 };
 
 const RadioButton: React.FC<RadioButtonProps> = ({
@@ -17,9 +24,21 @@ const RadioButton: React.FC<RadioButtonProps> = ({
     onChange(value);
   };
 
-  const divStyle = checked
-    ? { background: "blue", color: "white" }
+  const baseStyle = {
+    width: "470px",
+    height: "60px",
+    display: "flex",
+    justifyContent: "center" as const,
+    alignItems: "center" as const,
+    borderRadius: "5px",
+    cursor: "pointer",
+  };
+
+  const selectStyle = checked
+    ? { background: REFILL_COLORS["rf-3"], color: REFILL_COLORS["white"] }
     : { background: "white", color: "black" };
+
+  const divStyle = { ...baseStyle, ...selectStyle };
 
   return (
     <div style={divStyle} onClick={handleClick} className="button">
@@ -28,25 +47,30 @@ const RadioButton: React.FC<RadioButtonProps> = ({
   );
 };
 
-const RadioDiv = () => {
-  const [selected, setSelected] = useState("option1");
+const RadioDiv: React.FC<RadioDivProps> = ({ selected, setSelected }) => {
+  const Container = styled.div`
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 1000px;
+    margin-bottom: 20px;
+  `;
 
   return (
-    <div className="space-y-2">
+    <Container>
       <RadioButton
         value="option1"
         checked={selected === "option1"}
         onChange={setSelected}
-        label="Option 1"
+        label="지도로 찾기"
       />
-
       <RadioButton
         value="option2"
         checked={selected === "option2"}
         onChange={setSelected}
-        label="Option 2"
+        label="검색으로 찾기"
       />
-    </div>
+    </Container>
   );
 };
 

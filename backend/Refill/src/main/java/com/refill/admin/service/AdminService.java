@@ -26,6 +26,7 @@ public class AdminService {
                               .toList();
     }
 
+
     @Transactional
     public String acceptHospital(Long hospitalId) {
 
