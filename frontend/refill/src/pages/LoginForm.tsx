@@ -5,7 +5,7 @@ import Kakao from "../assets/Kakao_logo.png";
 import Naver from "../assets/Naver_logo.png";
 import Google from "../assets/Google_logo.png";
 import Button from "../components/elements/Button";
-import "../styles/Loginsignup.css"
+import "../styles/Loginsignup.css";
 
 const LoginForm: React.FC = () => {
   const [username, setUsername] = useState("");
