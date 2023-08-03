@@ -28,8 +28,9 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     /* 리뷰 전체 조회 */
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<ReviewResponse>> getReviews() {
+        log.debug("여기까지들어왔음");
         List<ReviewResponse> reviews = reviewService.getReviews();
         return ResponseEntity.ok()
                              .body(reviews);
@@ -38,15 +39,17 @@ public class ReviewController {
     /* 리뷰 단건 조회 */
     @GetMapping("/{reviewId}")
     public ResponseEntity<ReviewResponse> getReviewById(@PathVariable Long reviewId) {
+        log.debug("여기까지들어왔음");
         ReviewResponse reviewResponse = reviewService.getReviewById(reviewId);
         return ResponseEntity.ok()
                              .body(reviewResponse);
     }
 
     /* 리뷰 생성 */
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<String> createReview(
         @RequestBody ReviewCreateRequest reviewCreateRequest) {
+        log.debug("여기까지들어왔음");
         reviewService.createReview(reviewCreateRequest);
         return ResponseEntity.ok().build();
     }
@@ -58,6 +61,7 @@ public class ReviewController {
         @RequestBody ReviewModifyRequest reviewModifyRequest,
         @AuthenticationPrincipal LoginInfo loginInfo)
     {
+        log.debug("여기까지들어왔음");
         reviewService.modifyReview(reviewId, reviewModifyRequest, loginInfo.loginId());
         return ResponseEntity.noContent()
                              .build();
@@ -66,7 +70,8 @@ public class ReviewController {
     /* 리뷰 삭제 - 작성자와 관리자 가능 */
     @DeleteMapping("/{reviewId}")
     public ResponseEntity<String> deleteReviewById(@PathVariable Long reviewId, @AuthenticationPrincipal LoginInfo loginInfo){
-        reviewService.deleteReviewById(reviewId, loginInfo.role());
+        log.debug("여기까지들어왔음");
+        reviewService.deleteReviewById(reviewId, loginInfo);
         return ResponseEntity.noContent()
                              .build();
     }
