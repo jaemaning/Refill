@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect } from "react";
 // import RadioDiv from "../components/elements/RadioButton";
 import styled from "@emotion/styled";
 import { REFILL_COLORS } from "assets/getColors";
@@ -212,47 +212,6 @@ export const HospitalSearch: React.FC = () => {
     }
   };
 
-  // 지도 현재 위치 정보 가져오기
-  const getInfo = () => {
-    // 지도의 현재 중심좌표를 얻어옵니다
-    const center = map.current.getCenter();
-
-    // 지도의 현재 영역을 얻어옵니다
-    const bounds = map.current.getBounds();
-
-    // 영역의 남서쪽 좌표를 얻어옵니다
-    const swLatLng = bounds.getSouthWest();
-
-    // 영역의 북동쪽 좌표를 얻어옵니다
-    const neLatLng = bounds.getNorthEast();
-
-    // 지도의 현재 레벨을 얻어옵니다
-    // const level = map.getLevel();
-
-    // 영역정보를 문자열로 얻어옵니다. ((남,서), (북,동)) 형식입니다
-    // const boundsStr = bounds.toString();
-
-    let message = "지도 중심좌표는 위도 " + center.getLat() + ", <br>";
-    message += "경도 " + center.getLng() + " 이고 <br>";
-    // message += '지도 레벨은 ' + level + ' 입니다 <br> <br>';
-    // message += '지도 타입은 ' + mapTypeId + ' 이고 <br> ';
-    message +=
-      "지도의 남서쪽 좌표는 " +
-      swLatLng.getLat() +
-      ", " +
-      swLatLng.getLng() +
-      " 이고 <br>";
-    message +=
-      "북동쪽 좌표는 " +
-      neLatLng.getLat() +
-      ", " +
-      neLatLng.getLng() +
-      " 입니다";
-    // message += '마지막영역 문자열은' + boundsStr + '입니다';
-
-    console.log(message);
-  };
-
   // 집위치로 이동 하는 코드
   const toHome = () => {
     // 집 위치 map 새로 생성
@@ -318,7 +277,7 @@ export const HospitalSearch: React.FC = () => {
               content=">"
               variant="disable"
               width="30px"
-              onClick={handleMapLevelPlus}
+              // onClick={handleMapLevelPlus}
               customStyles={{
                 zIndex: 999,
                 position: "absolute",
@@ -329,6 +288,8 @@ export const HospitalSearch: React.FC = () => {
                 boxShadow: "none",
                 borderRadius: "0px",
                 backgroundColor: REFILL_COLORS["grey-2"],
+                borderTopLeftRadius: '7px',
+                borderBottomLeftRadius: '7px',
               }}
             />
             <Button
