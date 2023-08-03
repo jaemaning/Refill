@@ -13,7 +13,7 @@ const DiagnosisItem: React.FC<DiagnosisItemProps> = ({ title }) => {
 
   return (
     <div className="flex justify-center">
-      <div className="diagnosis-item sm:min-w-full sm:h-12 md:w-11/12 md:h-14 lg:w-5/6 lg:h-20 px-10 grid grid-cols-2 gap-4">
+      <div className="diagnosis-item sm:min-w-full sm:h-16 md:w-11/12 md:h-20 lg:w-5/6 lg:h-20 px-10 grid grid-cols-2 gap-4">
         <div className="flex items-center">
           <span className="font-black sm:text-lg md:text-xl lg:text-2xl">{title}</span>
         </div>

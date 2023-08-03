@@ -1,21 +1,21 @@
-import React from "react";
+import React, {useEffect} from "react";
 import "../../styles/AIDiagnosis.css";
 import DiagnosisItem from "components/aidiagnosis/DiagnosisItem";
 import Navbar from "components/Navbar";
 import Footer from "components/Footer";
 import CautionBox from "components/aidiagnosis/CautionBox";
 import NextPrevButtons from "components/aidiagnosis/NextPrevButtons";
+import HeadAID from "components/aidiagnosis/HeadAID";
 
 const AIDiagnosis: React.FC = () => {
+  useEffect(() => {
+    window.scrollTo(0, 106);
+  }, []);
+
   return (
     <div>
       <Navbar />
-      <div className="title-large-box flex items-center justify-center">
-        <h1 className="ai-diagnosis-title text-6xl">사전진단 (문항형)</h1>
-      </div>
-      <div className="flex justify-center">
-        <hr className="title-hr sm:min-w-full md:w-11/12 lg:w-5/6" />
-      </div>
+      <HeadAID title="사전진단 (문항형)"/>
       <div className="content-large-box flex-col ">
         <DiagnosisItem title="1. 이마가 점점 넓어지는 느낌이 든다." />
         <DiagnosisItem title="2. 가늘고 힘없는 머리가 많이 빠진다." />
@@ -28,7 +28,7 @@ const AIDiagnosis: React.FC = () => {
         <DiagnosisItem title="9. 이마와 정수리 부분이 유난히 번들거린다." />
         <DiagnosisItem title="10. 두피에 피지량이 갑자기 늘어난 것 같다." />
         <CautionBox />
-        <NextPrevButtons PrevLink="/" NextLink="/" />
+        <NextPrevButtons NextLink="/diagnosis/second" />
       </div>
       
       <Footer />

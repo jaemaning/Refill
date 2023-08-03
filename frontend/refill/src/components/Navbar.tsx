@@ -10,7 +10,7 @@ export default function Navbar() {
   const menuList = [
     ["예약", "#"],
     ["병원검색", "/search"],
-    ["AI자가진단", "/#"],
+    ["AI자가진단", "/diagnosis"],
     ["로그인", "/login"],
     ["회원가입", "/signup"],
   ];
