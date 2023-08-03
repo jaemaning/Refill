@@ -79,11 +79,10 @@ public class ReservationService {
         return new ReservationResultResponse(reservation);
 
     }
-
+    // TODO : 병원 운영 시간이 아닐 때 처리도 해야함
     private void availableReservationCheck(Doctor doctor, LocalDateTime startDateTime) {
 
-        boolean isAvailable = reservationRepository.existsByDoctorAndStartDateTime(doctor,
-            startDateTime);
+        boolean isAvailable = reservationRepository.existsByDoctorAndStartDateTime(doctor, startDateTime);
 
         if (isAvailable == true) {
             throw new ReservationException(ErrorCode.ALREADY_RESERVED);
