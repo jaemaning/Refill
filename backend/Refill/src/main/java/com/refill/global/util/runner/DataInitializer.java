@@ -110,35 +110,35 @@ public class DataInitializer implements CommandLineRunner {
             String[] firstName = {"김", "이", "박", "신", "유", "최"};
             
             /* 의사 생성 */
-            Doctor doctor = Doctor.builder()
-                                  .name(firstName[i % firstName.length] + "의사")
-                                  .profileImg("DOCTOR_PROFILE_IMG_ADDRESS")
-                                  .licenseImg("DOCTOR_LICENSE_IMG_ADDRESS")
-                                  .licenseNumber("DOC-LN-2123-" + i)
-                                  .description("한국 미용 성형학회 자문의원\nIBCS\n모발이식의 대가")
-                                  .hospital(hospital)
-                                  .build();
-            doctorRepository.save(doctor);
+            for(int j=0; j<3; j++){
+                Doctor doctor = Doctor.builder()
+                                      .name(firstName[(i + j) % firstName.length] + "의사")
+                                      .profileImg("DOCTOR_PROFILE_IMG_ADDRESS")
+                                      .licenseImg("DOCTOR_LICENSE_IMG_ADDRESS")
+                                      .licenseNumber("DOC-LN-2123-" + i)
+                                      .description("한국 미용 성형학회 자문의원\nIBCS\n모발이식의 대가")
+                                      .hospital(hospital)
+                                      .build();
+                doctorRepository.save(doctor);
+                /* 주요 진료 분야 */
+                String[] major = {"탈모 진단 및 진행 추적", "줄기세포 모발 이식 시술", "컨설팅"};
+                for(int k=0; k<major.length; k++){
+                    MajorArea majorArea = MajorArea.builder()
+                                                   .doctor(doctor)
+                                                   .content(major[k])
+                                                   .build();
+                    majorAreaRepository.save(majorArea);
+                }
 
-
-            /* 주요 진료 분야 */
-            String[] major = {"탈모 진단 및 진행 추적", "줄기세포 모발 이식 시술", "컨설팅"};
-            for(int j=0; j<major.length; j++){
-                MajorArea majorArea = MajorArea.builder()
-                                               .doctor(doctor)
-                                               .content(major[j])
-                                               .build();
-                majorAreaRepository.save(majorArea);
-            }
-
-            /* 학력 */
-            String[] edu = {"서울대학교 대학원 졸업", "경희대학교 의과대학 졸업"};
-            for(int j=0; j<edu.length; j++){
-                EducationBackground educationBackground = EducationBackground.builder()
-                                                                             .doctor(doctor)
-                                                                             .content(edu[j])
-                                                                             .build();
-                educationBackgroundRepository.save(educationBackground);
+                /* 학력 */
+                String[] edu = {"서울대학교 대학원 졸업", "경희대학교 의과대학 졸업"};
+                for(int k=0; k<edu.length; k++){
+                    EducationBackground educationBackground = EducationBackground.builder()
+                                                                                 .doctor(doctor)
+                                                                                 .content(edu[k])
+                                                                                 .build();
+                    educationBackgroundRepository.save(educationBackground);
+                }
             }
         }
     }
