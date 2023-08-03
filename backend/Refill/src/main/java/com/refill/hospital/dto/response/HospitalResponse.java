@@ -11,6 +11,7 @@ public record HospitalResponse(
     @NotNull BigDecimal longitude,
     @NotNull BigDecimal latitude,
     @NotNull String hospitalProfileImg,
+    @NotNull String bannerProfileImg,
     @NotNull String address,
     @NotNull String tel,
     @NotNull Double score
@@ -21,6 +22,7 @@ public record HospitalResponse(
             hospital.getLongitude(),
             hospital.getLatitude(),
             hospital.getHospitalProfileImg(),
+            hospital.getHospitalBannerImg(),
             hospital.getAddress(),
             hospital.getTel(),
             hospital.getReviews().stream()
