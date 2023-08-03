@@ -58,7 +58,7 @@ public class Hospital extends UserInfo {
     List<Review> reviews;
 
     @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<HospitalOperatingHours> operatingHours;
+    private List<HospitalOperatingHour> operatingHours;
 
     public static Hospital from(HospitalJoinRequest hospitalJoinRequest) {
         return Hospital.builder()

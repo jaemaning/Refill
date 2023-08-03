@@ -7,6 +7,7 @@ import com.refill.hospital.dto.request.HospitalOperatingHoursRequest;
 import com.refill.hospital.dto.response.HospitalDetailResponse;
 import com.refill.hospital.dto.response.HospitalResponse;
 import com.refill.hospital.dto.response.HospitalSearchByLocationResponse;
+import com.refill.hospital.service.HospitalOperatingHourService;
 import com.refill.hospital.service.HospitalService;
 import com.refill.security.util.LoginInfo;
 import java.math.BigDecimal;
@@ -35,13 +36,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class HospitalController {
 
     private final HospitalService hospitalService;
-
-    @GetMapping("/")
-    public ResponseEntity<String> sayHello() {
-
-        return ResponseEntity.ok()
-                             .body("hello");
-    }
+    private final HospitalOperatingHourService hospitalOperatingHourService;
 
     /* 현 지도에서 검색, 위도/경도 */
     @GetMapping("/search/location")
@@ -148,7 +143,7 @@ public class HospitalController {
         @RequestBody final List<HospitalOperatingHoursRequest> hospitalOperatingHoursRequest
     ) {
 
-
+        hospitalOperatingHourService.saveOperatingHours(hospitalOperatingHoursRequest, loginInfo);
 
         return ResponseEntity.ok().build();
     }

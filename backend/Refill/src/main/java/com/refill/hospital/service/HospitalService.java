@@ -10,15 +10,18 @@ import com.refill.doctor.entity.MajorArea;
 import com.refill.doctor.repository.EducationBackgroundRepository;
 import com.refill.doctor.repository.MajorAreaRepository;
 import com.refill.doctor.service.DoctorService;
+import com.refill.global.entity.Role;
 import com.refill.global.exception.ErrorCode;
 import com.refill.global.service.AmazonS3Service;
 import com.refill.hospital.dto.request.HospitalInfoUpdateRequest;
+import com.refill.hospital.dto.request.HospitalOperatingHoursRequest;
 import com.refill.hospital.dto.response.HospitalDetailResponse;
 import com.refill.hospital.dto.response.HospitalResponse;
 import com.refill.hospital.dto.response.HospitalSearchByLocationResponse;
 import com.refill.hospital.entity.Hospital;
 import com.refill.hospital.repository.HospitalRepository;
 import com.refill.member.exception.MemberException;
+import com.refill.security.util.LoginInfo;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.Consumer;
@@ -203,4 +206,6 @@ public class HospitalService {
                          .map(major -> new MajorArea(doctor, major))
                          .forEach(majorAreaRepository::save);
     }
+
+
 }
