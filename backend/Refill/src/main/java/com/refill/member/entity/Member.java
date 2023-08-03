@@ -51,7 +51,7 @@ public class Member extends UserInfo {
     List<Review> reviews;
 
     @OneToMany(mappedBy = "member")
-    private List<Reservation> reservationList;
+    private List<Reservation> reservationList = new ArrayList<>();
 
     public static Member from(MemberJoinRequest memberJoinRequest) {
         return Member.builder()
