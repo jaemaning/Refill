@@ -97,7 +97,7 @@ public class AccountService {
         String profileAddress = amazonS3Service.uploadFile(profileImg);
         String regAddress = amazonS3Service.uploadFile(regImg);
 
-        hospital.updateFileAddress(profileAddress);
+        hospital.updateProfileAddress(profileAddress);
         hospital.updateRegAddress(regAddress);
 
         hospitalService.save(hospital);
