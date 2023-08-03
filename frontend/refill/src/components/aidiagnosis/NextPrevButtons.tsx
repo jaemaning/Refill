@@ -7,7 +7,7 @@ interface LinkProps {
 }
 
 
-const NextPrevButtons: React.FC<LinkProps> = ({ NextLink}) => {
+const NextPrevButtons: React.FC<LinkProps> = ({NextLink}) => {
     const navigate = useNavigate();
 
     const ConnectPrevLink = () => {

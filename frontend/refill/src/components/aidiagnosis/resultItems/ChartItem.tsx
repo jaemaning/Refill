@@ -6,7 +6,7 @@ interface ChartItemProps {
   title: string;
   colStart: string;
   colEnd: string;
-  content?: string
+  content?: string;
 }
 
 const ChartItem: React.FC<ChartItemProps> = ({
@@ -70,7 +70,7 @@ const ChartItem: React.FC<ChartItemProps> = ({
             },
             value: {
               formatter: function (val) {
-                return parseInt(val.toString()).toString()+"%"; // Change this line
+                return parseInt(val.toString()).toString() + "%"; // Change this line
               },
               color: "#111",
               fontSize: "36px",
@@ -106,15 +106,14 @@ const ChartItem: React.FC<ChartItemProps> = ({
   }, [result]);
 
   return (
-    <div className={`${colStart} ${colEnd} font-black text-white`}>
+    <div className={`${colStart} ${colEnd} font-black `}>
       <div className="mb-2">
-        <p className="p-2 text-3xl">{title}</p>
+        <p className="p-2 text-3xl text-white">{title}</p>
       </div>
       <div className="w-full aspect-square bg-black rounded-lg">
         <div ref={chartRef}></div>
       </div>
-            <p className="p-2">{content}</p>
-      
+      <p className="p-2 text-white">{content}</p>
     </div>
   );
 };
