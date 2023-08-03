@@ -29,7 +29,6 @@ public class AmazonS3Service {
 
     private final AmazonS3 amazonS3;
 
-    @Transactional
     public String uploadFile(MultipartFile file) {
 
         String fileName = createFileName(file.getOriginalFilename());
