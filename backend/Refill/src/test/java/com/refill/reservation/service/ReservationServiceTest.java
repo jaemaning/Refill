@@ -6,6 +6,7 @@ import com.refill.hospital.entity.Hospital;
 import com.refill.util.ServiceTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.transaction.annotation.Transactional;
 
 class ReservationServiceTest extends ServiceTest {
 
@@ -14,10 +15,11 @@ class ReservationServiceTest extends ServiceTest {
         hospitalInfoGenerator();
     }
 
+    @Transactional
     @Test
     void t1() {
         Hospital hospital = hospitalService.findById(1L);
 
-        System.out.println(hospital.toString());
+        System.out.println(hospital.getId());
     }
 }
