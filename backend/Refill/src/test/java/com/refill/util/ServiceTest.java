@@ -62,6 +62,8 @@ public class ServiceTest {
                                     .build();
         hospitalService.save(hospital);
         Hospital savedHospital = hospitalService.findByLoginId("hospital01");
+
+
         // 의사
         Doctor doctor = Doctor.builder()
                               .name("신호인")

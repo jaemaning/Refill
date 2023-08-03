@@ -88,8 +88,9 @@ public class AiDiagnosisService {
         String address = amazonS3Service.uploadFile(hairImg);
         aiDiagnosis.updateFileAddress(address);
 
+        member.addAiDiagnosis(aiDiagnosis);
         aiDiagnosisRepository.save(aiDiagnosis);
-        member.getAiDiagnosisList().add(aiDiagnosis);
+
 
         return new AiDiagnosisResponse(aiDiagnosis);
 

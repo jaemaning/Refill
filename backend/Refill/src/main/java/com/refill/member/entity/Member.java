@@ -72,6 +72,13 @@ public class Member extends UserInfo {
         this.profileImg = address;
     }
 
+    public void addReservation(Reservation reservation) {
+        this.reservationList.add(reservation);
+    }
+
+    public void addAiDiagnosis(AiDiagnosis aiDiagnosis) {
+        this.getAiDiagnosisList().add(aiDiagnosis);
+    }
     public void update(MemberInfoUpdateRequest memberInfoUpdateRequest) {
         super.updateMember(memberInfoUpdateRequest);
         this.birthDay = memberInfoUpdateRequest.birthDay();
