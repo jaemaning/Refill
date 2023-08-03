@@ -4,7 +4,14 @@ import { CSSObject, jsx, css } from "@emotion/react";
 
 interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   content: string;
-  variant?: "success" | "warning" | "disable" | "danger" | "normal"; // success : 긍정적 성공 파랑 , warning : 경고 노랑, disable : 사용할 수 없음 회색, dnager : 위험 빨강
+  variant?:
+    | "success"
+    | "warning"
+    | "disable"
+    | "danger"
+    | "normal"
+    | "selected"
+    | "unselected"; // success : 긍정적 성공 파랑 , warning : 경고 노랑, disable : 사용할 수 없음 회색, dnager : 위험 빨강
   size?: "small" | "medium" | "large"; // 폰트 사이즈가 줄고 좌우 여백이 축소
   width?: string;
   customStyles?: CSSObject;
@@ -82,6 +89,19 @@ const TYPE_VARIANTS = {
     color: REFILL_COLORS["white"],
     ":hover": {
       backgroundColor: REFILL_COLORS["dangerChange"],
+    },
+  },
+  selected: {
+    // define styles for danger variant
+    backgroundColor: REFILL_COLORS["rf-1"],
+    color: REFILL_COLORS["white"],
+  },
+  unselected: {
+    // define styles for danger variant
+    backgroundColor: REFILL_COLORS["grey-1"],
+    color: REFILL_COLORS["black"],
+    ":hover": {
+      backgroundColor: REFILL_COLORS["grey-2"],
     },
   },
 };

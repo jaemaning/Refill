@@ -10,6 +10,7 @@ import com.refill.member.exception.MemberException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -25,6 +26,8 @@ public class AdminService {
                               .toList();
     }
 
+
+    @Transactional
     public String acceptHospital(Long hospitalId) {
 
         Hospital hospital = hospitalService.findById(hospitalId);
@@ -38,6 +41,7 @@ public class AdminService {
         return Message.ACCEPT_HOSPITAL.getMessage();
     }
 
+    @Transactional
     public String rejectHospital(Long hospitalId) {
 
         Hospital hospital = hospitalService.findById(hospitalId);
