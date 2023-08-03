@@ -1,4 +1,4 @@
-package com.refill.reservation.reservation;
+package com.refill.reservation.repository;
 
 import com.refill.member.entity.Member;
 import com.refill.reservation.entity.Reservation;

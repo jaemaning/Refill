@@ -37,7 +37,7 @@ public class HospitalOperatingHourService {
 
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<HospitalOperatingHourResponse> getOperatingHours(String loginId) {
 
         Hospital hospital = hospitalService.findByLoginId(loginId);
