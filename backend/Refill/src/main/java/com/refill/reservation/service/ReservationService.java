@@ -9,6 +9,8 @@ import com.refill.member.service.MemberService;
 import com.refill.reservation.dto.request.ReservationRequest;
 import com.refill.reservation.dto.response.DisabledReservationTimeResponse;
 import com.refill.reservation.dto.response.ReservationListResponse;
+import com.refill.reservation.dto.response.ReservationResultResponse;
+import com.refill.reservation.entity.Reservation;
 import com.refill.reservation.exception.ReservationException;
 import com.refill.reservation.repository.ReservationRepository;
 import java.time.LocalDateTime;
@@ -26,6 +28,7 @@ public class ReservationService {
     private final DoctorService doctorService;
     private final MemberService memberService;
     private final AmazonS3Service amazonS3Service;
+    private static final int CONSULTING_TIME = 30;
 
     @Transactional(readOnly = true)
     public List<ReservationListResponse> findAllByMember(String loginId) {
@@ -48,20 +51,38 @@ public class ReservationService {
     }
 
     @Transactional
-    public void makeReservation(String loginId, ReservationRequest reservationRequest, MultipartFile hairImage) {
+    public ReservationResultResponse makeReservation(String loginId, ReservationRequest reservationRequest, MultipartFile hairImage) {
 
         Member member = memberService.findByLoginId(loginId);
         Doctor doctor = doctorService.findById(reservationRequest.doctorId());
 
         availableReservationCheck(doctor, reservationRequest.startDateTime());
 
+        Reservation reservation = Reservation.builder()
+                                             .member(member)
+                                             .doctor(doctor)
+                                             .startDateTime(reservationRequest.startDateTime())
+                                             .endDateTime(reservationRequest.startDateTime().plusMinutes(CONSULTING_TIME))
+                                             .counselingDemands(reservationRequest.counselingDemands())
+                                             .build();
+
+        if(hairImage != null) {
+            String address = amazonS3Service.uploadFile(hairImage);
+            reservation.updateFileAddress(address);
+        }
+
+        reservationRepository.save(reservation);
+
+        return new ReservationResultResponse(reservation);
+
     }
 
     private void availableReservationCheck(Doctor doctor, LocalDateTime startDateTime) {
 
-        boolean isAvailable = reservationRepository.existsByDoctorAndStartDateTime(doctor, startDateTime);
+        boolean isAvailable = reservationRepository.existsByDoctorAndStartDateTime(doctor,
+            startDateTime);
 
-        if(isAvailable == true) {
+        if (isAvailable == true) {
             throw new ReservationException(ErrorCode.ALREADY_RESERVED);
         }
     }

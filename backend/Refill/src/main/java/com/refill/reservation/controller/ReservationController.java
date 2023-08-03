@@ -3,6 +3,7 @@ package com.refill.reservation.controller;
 import com.refill.reservation.dto.request.ReservationRequest;
 import com.refill.reservation.dto.response.DisabledReservationTimeResponse;
 import com.refill.reservation.dto.response.ReservationListResponse;
+import com.refill.reservation.dto.response.ReservationResultResponse;
 import com.refill.reservation.service.ReservationService;
 import com.refill.security.util.LoginInfo;
 import java.util.List;
@@ -42,7 +43,7 @@ public class ReservationController {
         log.debug("disabled time reserved");
         List<DisabledReservationTimeResponse> disabledReservationTimeResponses = reservationService.findDisabledTimeByDoctor(doctorId);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(disabledReservationTimeResponses);
     }
 
     /*
@@ -63,11 +64,11 @@ public class ReservationController {
      */
 
     @PostMapping("/")
-    public ResponseEntity<String> makeReservation(@AuthenticationPrincipal LoginInfo loginInfo, @RequestPart("reservationRequest") final ReservationRequest reservationRequest, @RequestPart(value = "image", required = false) MultipartFile hairImage) {
+    public ResponseEntity<ReservationResultResponse> makeReservation(@AuthenticationPrincipal LoginInfo loginInfo, @RequestPart("reservationRequest") final ReservationRequest reservationRequest, @RequestPart(value = "image", required = false) MultipartFile hairImage) {
 
         log.debug("'{}' member request reservation to '{}' doctor", loginInfo.loginId(), reservationRequest.doctorId());
-        reservationService.makeReservation(loginInfo.loginId(), reservationRequest, hairImage);
+        ReservationResultResponse reservationResultResponse = reservationService.makeReservation(loginInfo.loginId(), reservationRequest, hairImage);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(reservationResultResponse);
     }
 }

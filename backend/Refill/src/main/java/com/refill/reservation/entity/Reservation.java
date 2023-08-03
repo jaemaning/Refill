@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -42,4 +43,17 @@ public class Reservation extends BaseEntity {
 
     @Column(columnDefinition = "TEXT")
     private String counselingDemands;
+
+    @Builder
+    public Reservation(Member member, Doctor doctor, LocalDateTime startDateTime, LocalDateTime endDateTime, String counselingDemands) {
+        this.member = member;
+        this.doctor = doctor;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+        this.counselingDemands = counselingDemands;
+        this.isCanceled = false;
+    }
+    public void updateFileAddress(String address) {
+        this.hairImage = address;
+    }
 }
