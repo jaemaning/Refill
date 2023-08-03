@@ -96,4 +96,10 @@ public class MemberService {
         member.encodePassword(passwordEncoder.encode(memberPasswordUpdateRequest.newPassword()));
 
     }
+
+    @Transactional(readOnly = true)
+    public Member findById(Long memberId) {
+        return memberRepository.findById(memberId)
+                               .orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND));
+    }
 }

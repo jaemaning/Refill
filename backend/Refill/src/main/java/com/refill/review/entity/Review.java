@@ -44,4 +44,8 @@ public class Review extends BaseEntity {
 
     @Column(name = "is_blocked")
     Boolean isBlocked;
+
+    public static Review from(Member member, Doctor doctor, Hospital hospital) {
+        return Review.builder();
+    }
 }

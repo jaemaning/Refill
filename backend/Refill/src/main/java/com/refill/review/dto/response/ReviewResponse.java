@@ -10,7 +10,9 @@ public record ReviewResponse(
     @NotNull Long memberId,
     @NotNull String nickname,
     @NotNull Long doctorId,
-    @NotNull String doctorName
+    @NotNull String doctorName,
+    @NotNull Long hospitalId,
+    @NotNull String hospitalName
     ) {
 
     public ReviewResponse(Review review) {
@@ -22,7 +24,9 @@ public record ReviewResponse(
             review.getMember()
                   .getNickname(),
             review.getDoctor().getId(),
-            review.getDoctor().getName()
+            review.getDoctor().getName(),
+            review.getHospital().getId(),
+            review.getHospital().getName()
         );
     }
 
