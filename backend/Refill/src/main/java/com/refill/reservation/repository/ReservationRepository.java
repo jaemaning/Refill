@@ -17,4 +17,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findFutureStartTimesByDoctor(@Param("doctorId") Long doctorId, @Param("today") LocalDateTime today);
 
     boolean existsByDoctorAndStartDateTime(Doctor doctor, LocalDateTime startDateTime);
+
+    boolean existsByMemberAndStartDateTime(Member member, LocalDateTime startDateTime);
 }

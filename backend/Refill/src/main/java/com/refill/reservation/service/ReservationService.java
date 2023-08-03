@@ -60,6 +60,7 @@ public class ReservationService {
         Doctor doctor = doctorService.findById(reservationRequest.doctorId());
 
         availableReservationCheck(doctor, reservationRequest.startDateTime());
+        duplicatedTimeReservationCheck(member, reservationRequest.startDateTime());
 
         Reservation reservation = Reservation.builder()
                                              .member(member)
@@ -82,14 +83,26 @@ public class ReservationService {
 
     }
     // TODO : 병원 운영 시간이 아닐 때 처리도 해야함
+
     private void availableReservationCheck(Doctor doctor, LocalDateTime startDateTime) {
 
         boolean isAvailable = reservationRepository.existsByDoctorAndStartDateTime(doctor, startDateTime);
 
-        if (isAvailable == true) {
+        if (isAvailable) {
             throw new ReservationException(ErrorCode.ALREADY_RESERVED);
         }
     }
+
+    private void duplicatedTimeReservationCheck(Member member, LocalDateTime startDateTime) {
+
+        boolean isDuplicated = reservationRepository.existsByMemberAndStartDateTime(member, startDateTime);
+
+        if(isDuplicated) {
+            throw new ReservationException(ErrorCode.MEMBER_RESERVATION_DUPLICATED);
+        }
+    }
+
+
 
     @Transactional
     public void deleteReservation(String loginId, Long reservationId) {

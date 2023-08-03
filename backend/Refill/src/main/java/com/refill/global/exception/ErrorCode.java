@@ -29,7 +29,8 @@ public enum ErrorCode {
     AI_SERVER_ERROR("AI02", HttpStatus.INTERNAL_SERVER_ERROR, "AI 서버 에러입니다."),
 
     /* Reservation Exception */
-    ALREADY_RESERVED("RES01", HttpStatus.BAD_REQUEST, "이미 예약된 시간입니다.");
+    ALREADY_RESERVED("RES01", HttpStatus.BAD_REQUEST, "이미 예약된 시간입니다."),
+    MEMBER_RESERVATION_DUPLICATED("RES02", HttpStatus.BAD_REQUEST, "이미 같은 시간에 예약하셨습니다.");
 
     private final String code;
     private final HttpStatus httpStatus;
