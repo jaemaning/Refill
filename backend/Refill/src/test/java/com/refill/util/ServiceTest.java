@@ -21,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -40,6 +41,7 @@ public class ServiceTest {
     @MockBean protected AmazonS3Service amazonS3Service;
     @MockBean protected AmazonSESService amazonSESService;
 
+    @Transactional
     protected void hospitalInfoGenerator() {
         // 병원 생성
         Hospital hospital = Hospital.builder()
@@ -71,7 +73,8 @@ public class ServiceTest {
                               .build();
 
         doctorService.save(doctor);
-
+        savedHospital.getDoctors().add(doctor);
+        hospitalService.save(savedHospital);
         // 진료분야
         MajorArea majorArea = MajorArea.builder()
                                        .doctor(doctor)

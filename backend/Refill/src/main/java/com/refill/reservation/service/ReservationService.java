@@ -75,6 +75,7 @@ public class ReservationService {
         }
 
         reservationRepository.save(reservation);
+        member.getReservationList().add(reservation);
 
         return new ReservationResultResponse(reservation);
 
@@ -100,6 +101,6 @@ public class ReservationService {
         }
 
         reservationRepository.delete(reservation);
-
+        member.getReservationList().remove(reservation);
     }
 }

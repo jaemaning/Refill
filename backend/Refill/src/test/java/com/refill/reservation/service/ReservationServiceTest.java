@@ -20,6 +20,6 @@ class ReservationServiceTest extends ServiceTest {
     void t1() {
         Hospital hospital = hospitalService.findById(1L);
 
-        System.out.println(hospital.getId());
+        System.out.println(hospital.getDoctors().size());
     }
 }
