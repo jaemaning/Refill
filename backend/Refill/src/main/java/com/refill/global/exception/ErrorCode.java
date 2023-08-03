@@ -29,8 +29,7 @@ public enum ErrorCode {
     AI_SERVER_ERROR("AI02", HttpStatus.INTERNAL_SERVER_ERROR, "AI 서버 에러입니다."),
 
     /* Review Exception */
-    INVALID_REVIEW_ID("REVIEW01", HttpStatus.NOT_FOUND, "존재하지 않는 리뷰 ID 입니다."),
-
+    REVIEW_NOT_FOUND("REVIEW01", HttpStatus.NOT_FOUND, "존재하지 않는 리뷰입니다.");
 
 
     private final String code;
