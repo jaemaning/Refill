@@ -21,7 +21,6 @@ import com.refill.hospital.entity.Hospital;
 import com.refill.hospital.exception.HospitalException;
 import com.refill.hospital.repository.HospitalRepository;
 import com.refill.member.exception.MemberException;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -99,35 +98,48 @@ public class HospitalService {
     }
 
     @Transactional
-    public List<HospitalSearchByLocationResponse> searchByLocation(HospitalLocationRequest hospitalLocationRequest) {
-        BigDecimal sLat = hospitalLocationRequest.sLat();
-        BigDecimal sLng = hospitalLocationRequest.sLng();
-        BigDecimal eLat = hospitalLocationRequest.eLat();
-        BigDecimal eLng = hospitalLocationRequest.eLng();
-        BigDecimal curLat = hospitalLocationRequest.curLat();
-        BigDecimal curLng = hospitalLocationRequest.curLng();
-
-        return hospitalRepository.findNearByHospitals(sLat, sLng, eLat, eLng)
-                                 .stream()
-                                 .map(nearByHospital -> new HospitalSearchByLocationResponse(
-                                     nearByHospital, calculateDistance(curLat, curLng,
-                                     nearByHospital.getLatitude(), nearByHospital.getLongitude())))
-                                 .collect(Collectors.toList());
+    public List<HospitalSearchByLocationResponse> searchByLocation(
+        HospitalLocationRequest request) {
+        List<Hospital> nearByHospitals = findNearByHospitals(request);
+        return mapHospitalsToResponses(nearByHospitals, request);
     }
+
+    private List<Hospital> findNearByHospitals(HospitalLocationRequest request) {
+        return hospitalRepository.findNearByHospitals(request.sLat(), request.sLng(),
+            request.eLat(), request.eLng());
+    }
+
+    private List<HospitalSearchByLocationResponse> mapHospitalsToResponses(List<Hospital> hospitals,
+        HospitalLocationRequest request) {
+        return hospitals.stream()
+                        .map(hospital -> createResponse(hospital, request))
+                        .collect(Collectors.toList());
+    }
+
+    private HospitalSearchByLocationResponse createResponse(Hospital hospital,
+        HospitalLocationRequest request) {
+        double distance = calculateDistance(request.curLat(), request.curLng(),
+            hospital.getLatitude(), hospital.getLongitude());
+        return new HospitalSearchByLocationResponse(hospital, distance);
+    }
+
 
     @Transactional
     public List<HospitalResponse> searchByKeyword(String hospitalName, String address) {
 
         if (StringUtils.hasText(hospitalName) && StringUtils.hasText(address)) {
-            return hospitalRepository.findByNameContainingOrAddressContaining(hospitalName, address).stream()
+            return hospitalRepository.findByNameContainingOrAddressContaining(hospitalName, address)
+                                     .stream()
                                      .map(HospitalResponse::new)
                                      .collect(Collectors.toList());
         } else if (StringUtils.hasText(hospitalName)) {
-            return hospitalRepository.findByNameContaining(hospitalName).stream()
+            return hospitalRepository.findByNameContaining(hospitalName)
+                                     .stream()
                                      .map(HospitalResponse::new)
                                      .collect(Collectors.toList());
         } else if (StringUtils.hasText(address)) {
-            return hospitalRepository.findByAddressContaining(address).stream()
+            return hospitalRepository.findByAddressContaining(address)
+                                     .stream()
                                      .map(HospitalResponse::new)
                                      .collect(Collectors.toList());
         } else {
@@ -144,6 +156,7 @@ public class HospitalService {
         /* todo: zoomLevel을 적절하게 Radius로 바꾸는 로직 */
         return 5.0;
     }
+
     private Hospital checkAccessHospital(String loginId, Long hospitalId) {
         Hospital hospital = findByLoginId(loginId);
         if (!hospital.getId()
@@ -184,7 +197,7 @@ public class HospitalService {
         checkAccessHospital(loginId, hospitalId);
         Doctor doctor = doctorService.findById(doctorId);
         doctor.update(doctorUpdateRequest);
-        if(profileImg != null){
+        if (profileImg != null) {
             String profileAddress = amazonS3Service.uploadFile(profileImg);
             doctor.updateProfileAddress(profileAddress);
         }
@@ -211,13 +224,15 @@ public class HospitalService {
     }
 
     private void registEducationBackground(DoctorJoinRequest doctorJoinRequest, Doctor doctor) {
-        doctorJoinRequest.educationBackgrounds().stream()
+        doctorJoinRequest.educationBackgrounds()
+                         .stream()
                          .map(content -> new EducationBackground(doctor, content))
                          .forEach(educationBackgroundRepository::save);
     }
 
     private void registMajor(DoctorJoinRequest doctorJoinRequest, Doctor doctor) {
-        doctorJoinRequest.majorAreas().stream()
+        doctorJoinRequest.majorAreas()
+                         .stream()
                          .map(major -> new MajorArea(doctor, major))
                          .forEach(majorAreaRepository::save);
     }
