@@ -5,6 +5,7 @@ import com.refill.doctor.dto.request.DoctorUpdateRequest;
 import com.refill.hospital.dto.request.HospitalInfoUpdateRequest;
 import com.refill.hospital.dto.request.HospitalOperatingHoursRequest;
 import com.refill.hospital.dto.response.HospitalDetailResponse;
+import com.refill.hospital.dto.response.HospitalOperatingHourResponse;
 import com.refill.hospital.dto.response.HospitalResponse;
 import com.refill.hospital.dto.response.HospitalSearchByLocationResponse;
 import com.refill.hospital.service.HospitalOperatingHourService;
@@ -142,9 +143,19 @@ public class HospitalController {
         @AuthenticationPrincipal LoginInfo loginInfo,
         @RequestBody final List<HospitalOperatingHoursRequest> hospitalOperatingHoursRequest
     ) {
-
+        log.debug("'{}' hospital request registerHour", loginInfo.loginId());
         hospitalOperatingHourService.saveOperatingHours(hospitalOperatingHoursRequest, loginInfo);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/hours")
+    public ResponseEntity<List<HospitalOperatingHourResponse>> getHospitalOperatingHour(
+        @AuthenticationPrincipal LoginInfo loginInfo)
+    {
+        log.debug("'{}' hospital request hospitalOperatingHour", loginInfo.loginId());
+        List<HospitalOperatingHourResponse> hourResponseList = hospitalOperatingHourService.getOperatingHours(loginInfo.loginId());
+
+        return ResponseEntity.ok().body(hourResponseList);
     }
 }

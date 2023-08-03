@@ -3,6 +3,7 @@ package com.refill.hospital.service;
 import com.refill.global.entity.Role;
 import com.refill.global.exception.ErrorCode;
 import com.refill.hospital.dto.request.HospitalOperatingHoursRequest;
+import com.refill.hospital.dto.response.HospitalOperatingHourResponse;
 import com.refill.hospital.entity.Hospital;
 import com.refill.hospital.entity.HospitalOperatingHour;
 import com.refill.hospital.repository.HospitalOperatingHourRepository;
@@ -34,7 +35,16 @@ public class HospitalOperatingHourService {
                                          .map(x -> HospitalOperatingHour.from(x, hospital))
                                          .forEach(hospitalOperatingHourRepository::save);
 
-
     }
 
+    @Transactional
+    public List<HospitalOperatingHourResponse> getOperatingHours(String loginId) {
+
+        Hospital hospital = hospitalService.findByLoginId(loginId);
+
+        return hospitalOperatingHourRepository.findAllByHospital(hospital)
+                                              .stream()
+                                              .map(HospitalOperatingHourResponse::new)
+                                              .toList();
+    }
 }
