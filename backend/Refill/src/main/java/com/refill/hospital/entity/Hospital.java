@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -55,6 +56,9 @@ public class Hospital extends UserInfo {
 
     @OneToMany(mappedBy = "hospital")
     List<Review> reviews;
+
+    @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<HospitalOperatingHours> operatingHours;
 
     public static Hospital from(HospitalJoinRequest hospitalJoinRequest) {
         return Hospital.builder()

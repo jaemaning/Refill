@@ -13,6 +13,7 @@ public record HospitalResponse(
     @NotNull String hospitalProfileImg,
     @NotNull String address,
     @NotNull String tel,
+    @NotNull String email,
     @NotNull Double score
 ) {
     public HospitalResponse(Hospital hospital){
@@ -23,6 +24,7 @@ public record HospitalResponse(
             hospital.getHospitalProfileImg(),
             hospital.getAddress(),
             hospital.getTel(),
+            hospital.getEmail(),
             hospital.getReviews().stream()
                     .mapToInt(Review::getScore)
                     .average()

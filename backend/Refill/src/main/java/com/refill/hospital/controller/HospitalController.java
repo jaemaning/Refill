@@ -3,6 +3,7 @@ package com.refill.hospital.controller;
 import com.refill.doctor.dto.request.DoctorJoinRequest;
 import com.refill.doctor.dto.request.DoctorUpdateRequest;
 import com.refill.hospital.dto.request.HospitalInfoUpdateRequest;
+import com.refill.hospital.dto.request.HospitalOperatingHoursRequest;
 import com.refill.hospital.dto.response.HospitalDetailResponse;
 import com.refill.hospital.dto.response.HospitalResponse;
 import com.refill.hospital.dto.response.HospitalSearchByLocationResponse;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -138,5 +140,16 @@ public class HospitalController {
         hospitalService.deleteDoctorById(loginInfo.loginId(), hospitalId, doctorId);
         return ResponseEntity.ok()
                              .build();
+    }
+
+    @PostMapping("/hours")
+    public ResponseEntity<String> registerHospitalOperatingHours(
+        @AuthenticationPrincipal LoginInfo loginInfo,
+        @RequestBody final List<HospitalOperatingHoursRequest> hospitalOperatingHoursRequest
+    ) {
+
+
+
+        return ResponseEntity.ok().build();
     }
 }
