@@ -24,6 +24,9 @@ public enum ErrorCode {
     /* File Upload Exception*/
     FILE_UPLOAD_FAIL("AWS01", HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패하였습니다."),
 
+    /* HOSPITAL SEARCH Exception */
+    INVALID_LOCATION_REQUEST("SEARCH01", HttpStatus.BAD_REQUEST, "위치 검색에 대한 잘못된 요청입니다."),
+
     /* AI SERVER Exception */
     AI_SERVER_CLIENT_ERROR("AI01", HttpStatus.BAD_REQUEST, "클라이언트 에러입니다."),
     AI_SERVER_ERROR("AI02", HttpStatus.INTERNAL_SERVER_ERROR, "AI 서버 에러입니다.");

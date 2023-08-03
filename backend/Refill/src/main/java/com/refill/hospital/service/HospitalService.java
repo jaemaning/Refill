@@ -13,10 +13,12 @@ import com.refill.doctor.service.DoctorService;
 import com.refill.global.exception.ErrorCode;
 import com.refill.global.service.AmazonS3Service;
 import com.refill.hospital.dto.request.HospitalInfoUpdateRequest;
+import com.refill.hospital.dto.request.HospitalLocationRequest;
 import com.refill.hospital.dto.response.HospitalDetailResponse;
 import com.refill.hospital.dto.response.HospitalResponse;
 import com.refill.hospital.dto.response.HospitalSearchByLocationResponse;
 import com.refill.hospital.entity.Hospital;
+import com.refill.hospital.exception.HospitalException;
 import com.refill.hospital.repository.HospitalRepository;
 import com.refill.member.exception.MemberException;
 import java.math.BigDecimal;
@@ -97,13 +99,18 @@ public class HospitalService {
     }
 
     @Transactional
-    public List<HospitalSearchByLocationResponse> searchByLocation(BigDecimal latitude,
-        BigDecimal longitude, Integer zoomLevel) {
-        Double radius = zoomLevelToRadius(zoomLevel);
-        return hospitalRepository.findNearByHospitals(latitude, longitude, radius)
+    public List<HospitalSearchByLocationResponse> searchByLocation(HospitalLocationRequest hospitalLocationRequest) {
+        BigDecimal sLat = hospitalLocationRequest.sLat();
+        BigDecimal sLng = hospitalLocationRequest.sLng();
+        BigDecimal eLat = hospitalLocationRequest.eLat();
+        BigDecimal eLng = hospitalLocationRequest.eLng();
+        BigDecimal curLat = hospitalLocationRequest.curLat();
+        BigDecimal curLng = hospitalLocationRequest.curLng();
+
+        return hospitalRepository.findNearByHospitals(sLat, sLng, eLat, eLng)
                                  .stream()
                                  .map(nearByHospital -> new HospitalSearchByLocationResponse(
-                                     nearByHospital, calculateDistance(latitude, longitude,
+                                     nearByHospital, calculateDistance(curLat, curLng,
                                      nearByHospital.getLatitude(), nearByHospital.getLongitude())))
                                  .collect(Collectors.toList());
     }
@@ -124,17 +131,8 @@ public class HospitalService {
                                      .map(HospitalResponse::new)
                                      .collect(Collectors.toList());
         } else {
-            throw new IllegalArgumentException("At least one of name or address should be provided");
+            throw new HospitalException(ErrorCode.INVALID_LOCATION_REQUEST);
         }
-
-
-
-
-//        List<Hospital> containingHospital = hospitalRepository.findByNameContainingOrAddressContaining(
-//            hospitalName, address);
-//        return containingHospital.stream()
-//                                 .map(HospitalResponse::new)
-//                                 .collect(Collectors.toList());
     }
 
     @Transactional

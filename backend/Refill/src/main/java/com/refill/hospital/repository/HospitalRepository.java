@@ -18,11 +18,11 @@ public interface HospitalRepository extends JpaRepository<Hospital, Long> {
 
     List<Hospital> findByNameContainingOrAddressContaining(String name, String address);
 
-    @Query(value = "SELECT * FROM Hospital WHERE (6371 * acos(cos(radians(:latitude)) * cos(radians(Hospital.latitude)) * cos(radians(Hospital.longitude) - radians(:longitude)) + sin(radians(:latitude)) * sin(radians(Hospital.latitude)))) < :radius", nativeQuery = true)
-    List<Hospital> findNearByHospitals(@Param("latitude") BigDecimal latitude, @Param("longitude") BigDecimal longitude, @Param("radius") Double radius);
 
     List<Hospital> findByNameContaining(String hospitalName);
 
     List<Hospital> findByAddressContaining(String address);
 
+    @Query("SELECT h FROM Hospital h WHERE h.latitude >= :sLat AND h.latitude <= :eLat AND h.longitude >= :sLng AND h.longitude <= :eLng")
+    List<Hospital> findNearByHospitals(@Param("sLat") BigDecimal sLat, @Param("sLng") BigDecimal sLng, @Param("eLat") BigDecimal eLat, @Param("eLng") BigDecimal eLng);
 }
