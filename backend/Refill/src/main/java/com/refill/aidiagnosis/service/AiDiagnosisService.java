@@ -20,6 +20,7 @@ import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -54,7 +56,9 @@ public class AiDiagnosisService {
         AiDiagnosis aiDiagnosis = aiDiagnosisRepository.findById(id)
                                                        .orElseThrow(EntityNotFoundException::new);
 
-        if (!aiDiagnosis.getMember().getLoginId().equals(loginId)) {
+        if (!aiDiagnosis.getMember()
+                        .getLoginId()
+                        .equals(loginId)) {
             throw new MemberException(ErrorCode.UNAUTHORIZED_REQUEST);
         }
 
@@ -65,10 +69,11 @@ public class AiDiagnosisService {
     public AiDiagnosisResponse doAiDiagnosis(LoginInfo loginInfo, AiDiagnosisRequest aiDiagnosisRequest, MultipartFile hairImg) {
 
         Member member = memberService.findByLoginId(loginInfo.loginId());
-        String result = imageSendToAiServer(hairImg);
+        AiServerResponse aiServerResponse = imageSendToAiServer(hairImg);
 
-        HairLossType hairLossType = HairLossType.getType(result);
-        Integer hairLossScore = HairLossType.scoreGenerator(hairLossType, aiDiagnosisRequest.surveyResult());
+        HairLossType hairLossType = HairLossType.getType(aiServerResponse.result());
+        Integer hairLossScore = HairLossType.scoreGenerator(hairLossType,
+            aiDiagnosisRequest.surveyResult());
 
         AiDiagnosis aiDiagnosis = AiDiagnosis.builder()
                                              .member(member)
@@ -76,7 +81,6 @@ public class AiDiagnosisService {
                                              .hairLossType(hairLossType)
                                              .surveyResult(aiDiagnosisRequest.surveyResult())
                                              .build();
-
 
         String address = amazonS3Service.uploadFile(hairImg);
         aiDiagnosis.updateFileAddress(address);
@@ -86,7 +90,7 @@ public class AiDiagnosisService {
 
     }
 
-    private String imageSendToAiServer(MultipartFile hairImg) {
+    private AiServerResponse imageSendToAiServer(MultipartFile hairImg) {
 
         WebClient webClient = WebClient.builder()
                                        .build();
@@ -103,10 +107,27 @@ public class AiDiagnosisService {
                                                      .contentType(MediaType.MULTIPART_FORM_DATA)
                                                      .body(BodyInserters.fromMultipartData(body))
                                                      .retrieve()
+                                                     .onStatus(HttpStatus::is4xxClientError,
+                                                         response ->
+                                                             Mono.error(
+                                                                 new MemberException(
+                                                                     ErrorCode.UNAUTHORIZED_REQUEST)
+                                                             )
+                                                     )
+                                                     .onStatus(HttpStatus::is5xxServerError,
+                                                         response ->
+                                                             Mono.error(
+                                                                 new MemberException(
+                                                                     ErrorCode.UNAUTHORIZED_REQUEST)
+                                                             ))
                                                      .bodyToMono(AiServerResponse.class)
                                                      .block();
 
-        return aiServerResponse.result();
+        if (aiServerResponse == null) {
+            throw new EntityNotFoundException();
+        }
+
+        return aiServerResponse;
     }
 
 
