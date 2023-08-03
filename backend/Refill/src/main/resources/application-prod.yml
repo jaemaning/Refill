@@ -1,5 +1,5 @@
 server:
-  port : 8090
+  port: 8090
 spring:
   datasource:
     url: jdbc:mariadb://mariadb:3306/refill
