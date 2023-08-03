@@ -1,6 +1,7 @@
 package com.refill.global.exception;
 
 import com.refill.account.exception.AccountException;
+import com.refill.aidiagnosis.exception.AiDiagnosisException;
 import com.refill.global.dto.response.ApiErrorResponse;
 import com.refill.member.exception.MemberException;
 import com.refill.security.exception.SecurityException;
@@ -33,4 +34,12 @@ public class ExceptionControllerAdvice {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus())
                              .body(new ApiErrorResponse(e.getErrorCode().getCode(), e.getErrorCode(), e.getErrorCode().getMessage()));
     }
+
+    @ExceptionHandler(AiDiagnosisException.class)
+    public ResponseEntity<ApiErrorResponse> securityExceptionHandler(AiDiagnosisException e) {
+        log.error("MemberException occurred: '{}'", e.getMessage(), e);
+        return ResponseEntity.status(e.getErrorCode().getHttpStatus())
+                             .body(new ApiErrorResponse(e.getErrorCode().getCode(), e.getErrorCode(), e.getErrorCode().getMessage()));
+    }
+
 }

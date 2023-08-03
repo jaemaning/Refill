@@ -112,7 +112,7 @@ public class HospitalService {
         List<Hospital> containingHospital = hospitalRepository.findByNameContainingOrAddressContaining(
             hospitalName, address);
         return containingHospital.stream()
-                                 .map(hospital -> new HospitalResponse(hospital))
+                                 .map(HospitalResponse::new)
                                  .collect(Collectors.toList());
     }
 
@@ -129,7 +129,7 @@ public class HospitalService {
         Hospital hospital = findByLoginId(loginId);
         if (!hospital.getId()
                      .equals(hospitalId)) {
-            throw new MemberException(ErrorCode.ACCESSE_DENIED);
+            throw new MemberException(ErrorCode.ACCESS_DENIED);
         }
         return hospital;
     }

@@ -1,13 +1,12 @@
-package com.refill.account.exception;
+package com.refill.aidiagnosis.exception;
 
 import com.refill.global.exception.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Getter
 @AllArgsConstructor
-public class AccountException extends RuntimeException {
+@Getter
+public class AiDiagnosisException extends RuntimeException{
 
     private ErrorCode errorCode;
-
 }

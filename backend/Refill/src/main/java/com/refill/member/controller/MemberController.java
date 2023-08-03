@@ -4,6 +4,7 @@ import com.refill.member.dto.request.MemberInfoUpdateRequest;
 import com.refill.member.dto.request.MemberPasswordUpdateRequest;
 import com.refill.member.dto.response.MemberInfoResponse;
 import com.refill.member.service.MemberService;
+import com.refill.security.util.LoginInfo;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,28 +27,28 @@ public class MemberController {
     private final MemberService memberService;
 
     @GetMapping("/mypage")
-    public ResponseEntity<MemberInfoResponse> getMemberInfo(@AuthenticationPrincipal String loginId) {
+    public ResponseEntity<MemberInfoResponse> getMemberInfo(@AuthenticationPrincipal LoginInfo loginInfo) {
 
-        log.debug("'{}' member request mypage", loginId);
-        MemberInfoResponse memberInfoResponse = memberService.getMemberByLoginId(loginId);
+        log.debug("'{}' member request mypage", loginInfo.loginId());
+        MemberInfoResponse memberInfoResponse = memberService.getMemberByLoginId(loginInfo.loginId());
 
         return ResponseEntity.ok().body(memberInfoResponse);
     }
 
     @PutMapping("/mypage")
-    public ResponseEntity<String> modifyMemberInfo(@AuthenticationPrincipal String loginId, @RequestPart("memberInfoUpdateRequest") @Valid final MemberInfoUpdateRequest memberInfoUpdateRequest, @RequestPart(value = "profileImg", required = false) MultipartFile profileImg){
+    public ResponseEntity<String> modifyMemberInfo(@AuthenticationPrincipal LoginInfo loginInfo, @RequestPart("memberInfoUpdateRequest") @Valid final MemberInfoUpdateRequest memberInfoUpdateRequest, @RequestPart(value = "profileImg", required = false) MultipartFile profileImg){
 
-        log.debug("'{}' member request information update", loginId);
-        memberService.modifyMember(loginId, memberInfoUpdateRequest, profileImg);
+        log.debug("'{}' member request information update", loginInfo.loginId());
+        memberService.modifyMember(loginInfo.loginId(), memberInfoUpdateRequest, profileImg);
 
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/mypage/password")
-    public ResponseEntity<String> modifyMemberPassword(@AuthenticationPrincipal String loginId, @RequestBody MemberPasswordUpdateRequest memberPasswordUpdateRequest) {
+    public ResponseEntity<String> modifyMemberPassword(@AuthenticationPrincipal LoginInfo loginInfo, @RequestBody MemberPasswordUpdateRequest memberPasswordUpdateRequest) {
 
-        log.debug("'{}' member request password update", loginId);
-        memberService.modifyPassword(loginId, memberPasswordUpdateRequest);
+        log.debug("'{}' member request password update", loginInfo.loginId());
+        memberService.modifyPassword(loginInfo.loginId(), memberPasswordUpdateRequest);
 
         return ResponseEntity.noContent().build();
     }

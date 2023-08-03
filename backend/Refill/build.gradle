@@ -55,6 +55,9 @@ dependencies {
 
     // awsSES
     implementation 'com.amazonaws:aws-java-sdk-ses:1.12.468'
+
+    // webflux
+    implementation 'org.springframework.boot:spring-boot-starter-webflux:3.1.0'
 }
 
 tasks.named('test') {

@@ -1,5 +1,6 @@
 package com.refill.security.config;
 
+import com.refill.security.util.LoginInfo;
 import com.refill.global.entity.UserInfo;
 import com.refill.global.exception.ErrorCode;
 import com.refill.hospital.repository.HospitalRepository;
@@ -39,8 +40,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         FilterChain filterChain) throws ServletException, IOException, UsernameNotFoundException {
 
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+        log.debug("authorization : '{}'", authorization);
 
         if (authorization == null || !(authorization.startsWith("Bearer ") || authorization.startsWith("Refresh "))) {
+            log.error("authentication is null");
             filterChain.doFilter(request, response);
             return;
         }
@@ -62,15 +65,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                                           hospitalRepository.findByLoginId(loginId)
                                                                             .orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND))
                                                       );
-
+            // 아이디, 권한만 넣어주기
+            LoginInfo loginInfo = new LoginInfo(userDetails.getLoginId(), userDetails.getRole());
             // 권한 부여하기
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                userDetails.getLoginId(), null, userDetails.getAuthorities());
+                loginInfo, null, userDetails.getAuthorities());
 
             // Detail
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext()
                                  .setAuthentication(authenticationToken);
+
 
         } else if (authorization.startsWith("Refresh ")) {
             // Refresh Token 처리
