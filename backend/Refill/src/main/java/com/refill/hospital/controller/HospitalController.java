@@ -7,6 +7,7 @@ import com.refill.hospital.dto.response.HospitalDetailResponse;
 import com.refill.hospital.dto.response.HospitalResponse;
 import com.refill.hospital.dto.response.HospitalSearchByLocationResponse;
 import com.refill.hospital.service.HospitalService;
+import com.refill.security.util.LoginInfo;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.validation.Valid;
@@ -45,11 +46,12 @@ public class HospitalController {
     public ResponseEntity<List<HospitalSearchByLocationResponse>> searchByLocation(
         @RequestParam(name = "lat") BigDecimal latitude,
         @RequestParam(name = "lng") BigDecimal longitude,
-        @RequestParam(name = "z") Integer zoomLevel) {
-        log.info("{}, {}, {}", latitude, longitude, zoomLevel);
+        @RequestParam(name = "z") Integer zoomLevel)
+    {
+        log.debug("{}, {}, {}", latitude, longitude, zoomLevel);
         List<HospitalSearchByLocationResponse> searchHospitalResponses = hospitalService.searchByLocation(
             latitude, longitude, zoomLevel);
-        log.info("searchHospitalResponses: {}", searchHospitalResponses);
+        log.debug("searchHospitalResponses: {}", searchHospitalResponses);
         return ResponseEntity.ok()
                              .body(searchHospitalResponses);
     }
@@ -58,7 +60,9 @@ public class HospitalController {
     @GetMapping("/search/keyword")
     public ResponseEntity<List<HospitalResponse>> searchByKeyword(
         @RequestParam(name = "name", required = false) String hospitalName,
-        @RequestParam(name = "addr", required = false) String address) {
+        @RequestParam(name = "addr", required = false) String address)
+    {
+        log.debug("hospitalName: {}, address: {} ", hospitalName, address);
         List<HospitalResponse> hospitalResponses = hospitalService.searchByKeyword(hospitalName,
             address);
         return ResponseEntity.ok()
@@ -67,7 +71,9 @@ public class HospitalController {
 
     /* 병원 상세 조회 */
     @GetMapping("/{hospitalId}")
-    public ResponseEntity<HospitalDetailResponse> getHospitalDetail(@PathVariable Long hospitalId) {
+    public ResponseEntity<HospitalDetailResponse> getHospitalDetail(@PathVariable Long hospitalId)
+    {
+        log.debug("hospitalId: {}", hospitalId);
         HospitalDetailResponse hospitalDetailResponse = hospitalService.getHospitalDetail(
             hospitalId);
         return ResponseEntity.ok()
@@ -77,13 +83,15 @@ public class HospitalController {
     /* 병원 정보 수정 */
     @PutMapping("/{hospitalId}")
     public ResponseEntity<String> modifyHospitalInfo(
-        @AuthenticationPrincipal String loginId,
+        @AuthenticationPrincipal LoginInfo loginInfo,
         @PathVariable Long hospitalId,
         @RequestPart("hospitalInfoUpdateRequest") @Valid final HospitalInfoUpdateRequest hospitalInfoUpdateRequest,
         @RequestPart(required = false) MultipartFile profileImg,
         @RequestPart(required = false) MultipartFile bannerImg,
-        @RequestPart @Valid final MultipartFile registrationImg){
-        hospitalService.modifyHospitalInfo(hospitalId, loginId, hospitalInfoUpdateRequest, profileImg,
+        @RequestPart @Valid final MultipartFile registrationImg)
+    {
+        log.debug("loginId: {}, ",loginInfo.loginId(), "hospitalId :{}, ", hospitalId, "hospitalInfoRequest: {}", hospitalInfoUpdateRequest);
+        hospitalService.modifyHospitalInfo(hospitalId, loginInfo.loginId(), hospitalInfoUpdateRequest, profileImg,
             bannerImg, registrationImg);
         return ResponseEntity.ok()
                              .build();
@@ -92,13 +100,14 @@ public class HospitalController {
     /* 의사 등록 */
     @PostMapping("/{hospitalId}/doctor")
     public ResponseEntity<String> registerHospitalDoctor(
-        @AuthenticationPrincipal String loginId,
+        @AuthenticationPrincipal LoginInfo loginInfo,
         @PathVariable Long hospitalId,
         @RequestPart("doctorJoinRequest") @Valid final DoctorJoinRequest doctorJoinRequest,
         @RequestPart(value = "profileImg", required = false) MultipartFile profileImg,
         @RequestPart(value = "licenseImg") MultipartFile licenseImg
     ){
-        hospitalService.registHospitalDoctor(loginId, hospitalId, doctorJoinRequest, profileImg, licenseImg);
+        log.debug("doctorJoinRequest: {}", doctorJoinRequest);
+        hospitalService.registHospitalDoctor(loginInfo.loginId(), hospitalId, doctorJoinRequest, profileImg, licenseImg);
         return ResponseEntity.ok().build();
     }
     
@@ -106,13 +115,14 @@ public class HospitalController {
     /* 의사 정보 수정 */
     @PutMapping("/{hospitalId}/doctor/{doctorId}")
     public ResponseEntity<String> modifyHospitalDoctor(
-        @AuthenticationPrincipal String loginId,
+        @AuthenticationPrincipal LoginInfo loginInfo,
         @PathVariable Long hospitalId,
         @PathVariable Long doctorId,
         @RequestPart DoctorUpdateRequest doctorUpdateRequest,
         @RequestPart(name = "profileImg") MultipartFile profileImg
     ) {
-        hospitalService.modifyHospitalDoctor(loginId, hospitalId, doctorId, doctorUpdateRequest, profileImg);
+        log.debug("doctorUpdateRequest: {}", doctorUpdateRequest);
+        hospitalService.modifyHospitalDoctor(loginInfo.loginId(), hospitalId, doctorId, doctorUpdateRequest, profileImg);
         return ResponseEntity.ok()
                              .build();
     }
@@ -120,10 +130,12 @@ public class HospitalController {
     /* 의사 정보 삭제 */
     @DeleteMapping("/{hospitalId}/doctor/{doctorId}")
     public ResponseEntity<String> deleteHospitalDoctor(
-        @AuthenticationPrincipal String loginId,
+        @AuthenticationPrincipal LoginInfo loginInfo,
         @PathVariable Long hospitalId,
-        @PathVariable Long doctorId) {
-        hospitalService.deleteDoctorById(loginId, hospitalId, doctorId);
+        @PathVariable Long doctorId)
+    {
+        log.debug("hospital: {}, doctorId: {}", hospitalId, doctorId);
+        hospitalService.deleteDoctorById(loginInfo.loginId(), hospitalId, doctorId);
         return ResponseEntity.ok()
                              .build();
     }
