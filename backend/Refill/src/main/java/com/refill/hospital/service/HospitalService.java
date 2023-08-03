@@ -27,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
@@ -109,11 +110,31 @@ public class HospitalService {
 
     @Transactional
     public List<HospitalResponse> searchByKeyword(String hospitalName, String address) {
-        List<Hospital> containingHospital = hospitalRepository.findByNameContainingOrAddressContaining(
-            hospitalName, address);
-        return containingHospital.stream()
-                                 .map(HospitalResponse::new)
-                                 .collect(Collectors.toList());
+
+        if (StringUtils.hasText(hospitalName) && StringUtils.hasText(address)) {
+            return hospitalRepository.findByNameContainingOrAddressContaining(hospitalName, address).stream()
+                                     .map(HospitalResponse::new)
+                                     .collect(Collectors.toList());
+        } else if (StringUtils.hasText(hospitalName)) {
+            return hospitalRepository.findByNameContaining(hospitalName).stream()
+                                     .map(HospitalResponse::new)
+                                     .collect(Collectors.toList());
+        } else if (StringUtils.hasText(address)) {
+            return hospitalRepository.findByAddressContaining(address).stream()
+                                     .map(HospitalResponse::new)
+                                     .collect(Collectors.toList());
+        } else {
+            throw new IllegalArgumentException("At least one of name or address should be provided");
+        }
+
+
+
+
+//        List<Hospital> containingHospital = hospitalRepository.findByNameContainingOrAddressContaining(
+//            hospitalName, address);
+//        return containingHospital.stream()
+//                                 .map(HospitalResponse::new)
+//                                 .collect(Collectors.toList());
     }
 
     @Transactional

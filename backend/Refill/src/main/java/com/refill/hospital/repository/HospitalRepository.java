@@ -21,4 +21,8 @@ public interface HospitalRepository extends JpaRepository<Hospital, Long> {
     @Query(value = "SELECT * FROM Hospital WHERE (6371 * acos(cos(radians(:latitude)) * cos(radians(Hospital.latitude)) * cos(radians(Hospital.longitude) - radians(:longitude)) + sin(radians(:latitude)) * sin(radians(Hospital.latitude)))) < :radius", nativeQuery = true)
     List<Hospital> findNearByHospitals(@Param("latitude") BigDecimal latitude, @Param("longitude") BigDecimal longitude, @Param("radius") Double radius);
 
+    List<Hospital> findByNameContaining(String hospitalName);
+
+    List<Hospital> findByAddressContaining(String address);
+
 }
