@@ -41,19 +41,21 @@ public class DataInitializer implements CommandLineRunner {
         String[] building = {"타워펠리스 3차", "파키원 타워", "롯데타워", "운체강 타워", "외피드 타워"};
 
         /* 관리자 생성 */
-        Member.builder()
-              .name("신호인")
-              .loginId("admin")
-              .nickname("관리자")
-              .birthDay(LocalDate.of(1983, 1, 1))
-              .profileImg("ADMIN_PROFILE_IMG_ADDRESS")
-              .address("광주광역시 광산구 윗마을")
-              .email("hoin123@naver.com")
-              .loginPassword(bCryptPasswordEncoder.encode("1234"))
-              .role(Role.ROLE_ADMIN)
-              .tel("010-1234-1234")
-              .createdAt(LocalDateTime.now())
-              .updatedAt(LocalDateTime.now());
+        Member admin = Member.builder()
+                             .name("신호인")
+                             .loginId("admin")
+                             .nickname("관리자")
+                             .birthDay(LocalDate.of(1983, 1, 1))
+                             .profileImg("ADMIN_PROFILE_IMG_ADDRESS")
+                             .address("광주광역시 광산구 윗마을")
+                             .email("hoin123@naver.com")
+                             .loginPassword(bCryptPasswordEncoder.encode("1234"))
+                             .role(Role.ROLE_ADMIN)
+                             .tel("010-1234-1234")
+                             .createdAt(LocalDateTime.now())
+                             .updatedAt(LocalDateTime.now())
+                             .build();
+        memberRepository.save(admin);
 
         for(int i=0; i<20; i++){
 
@@ -71,7 +73,7 @@ public class DataInitializer implements CommandLineRunner {
                                   .address(address)
                                   .email("member" + i + "@google.com")
                                   .loginPassword(bCryptPasswordEncoder.encode("1234"))
-                                  .role(Role.ROLE_ADMIN)
+                                  .role(Role.ROLE_MEMBER)
                                   .tel("010-5678-5678")
                                   .createdAt(LocalDateTime.now())
                                   .updatedAt(LocalDateTime.now()).build();
