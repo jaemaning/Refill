@@ -40,6 +40,7 @@ public class HospitalService {
     private final EducationBackgroundRepository educationBackgroundRepository;
     private final MajorAreaRepository majorAreaRepository;
 
+
     @Transactional(readOnly = true)
     public boolean existsByLoginId(String loginId) {
         return hospitalRepository.existsByLoginId(loginId);

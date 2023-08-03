@@ -5,6 +5,7 @@ import com.refill.aidiagnosis.entity.AiDiagnosis;
 import com.refill.global.entity.Role;
 import com.refill.global.entity.UserInfo;
 import com.refill.member.dto.request.MemberInfoUpdateRequest;
+import com.refill.reservation.entity.Reservation;
 import com.refill.review.entity.Review;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -48,6 +49,9 @@ public class Member extends UserInfo {
 
     @OneToMany(mappedBy = "member")
     List<Review> reviews;
+
+    @OneToMany(mappedBy = "member")
+    private List<Reservation> reservationList;
 
     public static Member from(MemberJoinRequest memberJoinRequest) {
         return Member.builder()

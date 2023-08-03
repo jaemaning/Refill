@@ -4,6 +4,7 @@ import com.refill.doctor.dto.request.DoctorJoinRequest;
 import com.refill.doctor.dto.request.DoctorUpdateRequest;
 import com.refill.global.entity.BaseEntity;
 import com.refill.hospital.entity.Hospital;
+import com.refill.reservation.entity.Reservation;
 import com.refill.review.entity.Review;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,6 +43,9 @@ public class Doctor extends BaseEntity {
     @Cascade(CascadeType.ALL)
     @OneToMany(mappedBy = "doctor", orphanRemoval = true)
     List<EducationBackground> educationBackgrounds;
+
+    @OneToMany(mappedBy = "doctor")
+    List<Reservation> reservationList;
 
     @OneToMany(mappedBy = "doctor")
     List<Review> reviews;
