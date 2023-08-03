@@ -10,31 +10,36 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.Getter;
+import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Entity
 public class Reservation extends BaseEntity {
 
 
-    @Column
+    @Column(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Member member;
 
-    @Column
+    @Column(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Doctor doctor;
 
-    @Column
+    @Column(nullable = false)
     private LocalDateTime startDateTime;
 
-    @Column
+    @Column(nullable = false)
     private LocalDateTime endDateTime;
 
-    @Column
+    @ColumnDefault("false")
+    @Column(nullable = false)
     private boolean isCanceled;
 
     @Column
     private String hairImage;
+
+    @Column(columnDefinition = "TEXT")
+    private String counselingDemands;
 }
