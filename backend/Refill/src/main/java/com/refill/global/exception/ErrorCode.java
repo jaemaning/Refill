@@ -26,7 +26,10 @@ public enum ErrorCode {
 
     /* AI SERVER Exception */
     AI_SERVER_CLIENT_ERROR("AI01", HttpStatus.BAD_REQUEST, "클라이언트 에러입니다."),
-    AI_SERVER_ERROR("AI02", HttpStatus.INTERNAL_SERVER_ERROR, "AI 서버 에러입니다.");
+    AI_SERVER_ERROR("AI02", HttpStatus.INTERNAL_SERVER_ERROR, "AI 서버 에러입니다."),
+
+    /* Reservation Exception */
+    ALREADY_RESERVED("RES01", HttpStatus.BAD_REQUEST, "이미 예약된 시간입니다.");
 
     private final String code;
     private final HttpStatus httpStatus;

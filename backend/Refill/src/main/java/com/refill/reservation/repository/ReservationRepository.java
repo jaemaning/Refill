@@ -1,5 +1,6 @@
 package com.refill.reservation.repository;
 
+import com.refill.doctor.entity.Doctor;
 import com.refill.member.entity.Member;
 import com.refill.reservation.entity.Reservation;
 import java.time.LocalDateTime;
@@ -14,4 +15,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @Query("SELECT r.startDateTime FROM Reservation r WHERE r.doctor.id = :doctorId AND r.startDateTime >= :today")
     List<Reservation> findFutureStartTimesByDoctor(@Param("doctorId") Long doctorId, @Param("today") LocalDateTime today);
+
+    boolean existsByDoctorAndStartDateTime(Doctor doctor, LocalDateTime startDateTime);
 }
