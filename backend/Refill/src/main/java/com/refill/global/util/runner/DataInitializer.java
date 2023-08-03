@@ -1,4 +1,4 @@
-package com.refill.runner;
+package com.refill.global.util.runner;
 
 import com.refill.doctor.entity.Doctor;
 import com.refill.doctor.entity.EducationBackground;
