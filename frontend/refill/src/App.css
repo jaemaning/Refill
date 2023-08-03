@@ -1,11 +1,7 @@
-html body .App {
+html body .MainApp {
   text-align: center;
-  padding: 0; margin: 0;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+  padding: 0;
+  margin: 0;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -14,13 +10,13 @@ html body .App {
   }
 }
 
-.App-body {
+.MainApp-body {
   background-color: #2e5077;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  /* align-items: center; */
+  /* justify-content: center; */
   font-size: calc(10px + 2vmin);
   color: white;
 }
@@ -33,18 +29,21 @@ html body .App {
 }
 
 button:hover {
-  border: #ffffff
+  border: #ffffff;
 }
 
 .App-link {
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+/* 기본 스타일 - md 사이즈 이상일 때 적용 */
+/* .App {
+  padding: 0px 100px;
+} */
+
+/* md 사이즈 이하일 때 적용 */
+/* @media (max-width: 992px) {
+  .App {
+    padding: 0px;
   }
-  to {
-    transform: rotate(360deg);
-  }
-}
+} */

@@ -1,7 +1,6 @@
 package com.refill.account.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -25,6 +24,7 @@ import com.refill.member.exception.MemberException;
 import com.refill.util.ServiceTest;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +48,14 @@ class AccountServiceTest extends ServiceTest {
 
         Member member = memberService.findByLoginId(memberJoinRequest.loginId());
 
-        assertNotNull(member);
-        assertEquals("상원", member.getNickname());
-        assertNotEquals("pass01", member.getLoginPassword());
+        Assertions.assertThat(member).satisfies(m -> {
+            Assertions.assertThat(m).isNotNull();
+            Assertions.assertThat(m.getNickname()).isEqualTo("상원");
+            Assertions.assertThat(m.getLoginPassword()).isNotEqualTo("pass01");
+        });
+//        assertNotNull(member);
+//        assertEquals("상원", member.getNickname());
+//        assertNotEquals("pass01", member.getLoginPassword());
     }
 
     @Test
@@ -68,11 +73,21 @@ class AccountServiceTest extends ServiceTest {
         accountService.hospitalJoin(hospitalJoinRequest, profileImg1, regImg1);
 
         Hospital hospital = hospitalService.findByLoginId(hospitalJoinRequest.loginId());
+        // 하나라도 맞으면, 통과
+        Assertions.assertThat(hospital).satisfiesAnyOf(
+            h -> Assertions.assertThat(h).isNotNull(),
+            h -> Assertions.assertThat(h.getName()).isEqualTo("상원병원"),
+            h -> Assertions.assertThat(h.getRole()).isEqualTo(Role.ROLE_GUEST),
+            h -> Assertions.assertThat(h.getPassword()).isEqualTo("pass01")
+        );
+        // 전부 다 맞으면, 통과
+        Assertions.assertThat(hospital).satisfies(
+            h -> Assertions.assertThat(h).isNotNull(),
+            h -> Assertions.assertThat(h.getName()).isEqualTo("상원병원"),
+            h -> Assertions.assertThat(h.getRole()).isEqualTo(Role.ROLE_GUEST),
+            h -> Assertions.assertThat(h.getPassword()).isNotEqualTo("pass01")
+        );
 
-        assertNotNull(hospital);
-        assertEquals("상원병원", hospital.getName());
-        assertEquals(Role.ROLE_GUEST, hospital.getRole());
-        assertNotEquals("pass01", hospital.getLoginPassword());
     }
 
     @Test

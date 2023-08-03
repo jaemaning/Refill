@@ -6,7 +6,8 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class AccountException extends RuntimeException{
+public class AccountException extends RuntimeException {
 
     private ErrorCode errorCode;
+
 }

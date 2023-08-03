@@ -1,6 +1,7 @@
 package com.refill.admin.service;
 
 import com.refill.admin.dto.response.WaitingHospitalResponse;
+import com.refill.global.entity.Message;
 import com.refill.global.entity.Role;
 import com.refill.global.exception.ErrorCode;
 import com.refill.hospital.entity.Hospital;
@@ -9,6 +10,7 @@ import com.refill.member.exception.MemberException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -24,7 +26,9 @@ public class AdminService {
                               .toList();
     }
 
-    public void acceptHospital(Long hospitalId) {
+
+    @Transactional
+    public String acceptHospital(Long hospitalId) {
 
         Hospital hospital = hospitalService.findById(hospitalId);
 
@@ -33,9 +37,12 @@ public class AdminService {
         }
 
         hospital.acceptHospital();
+
+        return Message.ACCEPT_HOSPITAL.getMessage();
     }
 
-    public void rejectHospital(Long hospitalId) {
+    @Transactional
+    public String rejectHospital(Long hospitalId) {
 
         Hospital hospital = hospitalService.findById(hospitalId);
 
@@ -44,6 +51,8 @@ public class AdminService {
         }
 
         hospitalService.delete(hospitalId);
+
+        return Message.REJECT_HOSPITAL.getMessage();
 
     }
 }

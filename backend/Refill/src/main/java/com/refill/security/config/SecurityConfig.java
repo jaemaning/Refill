@@ -23,7 +23,7 @@ public class SecurityConfig{
             .cors()
             .and()
             .authorizeHttpRequests()
-            .antMatchers("/h2-console/**").permitAll()
+            .antMatchers("/h2-console/**", "/docs/**").permitAll()
             .antMatchers("/api/v1/**/join", "/api/v1/**/login", "/api/v1/account/**/find/**").permitAll()
             .antMatchers("/api/v1/admin/**").hasRole("ADMIN")
             .anyRequest().authenticated()

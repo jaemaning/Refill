@@ -20,4 +20,8 @@ spring:
       host: localhost
       port: 6379
 
+flask:
+  server:
+    url: "localhost:5000/predict"
+
 

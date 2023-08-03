@@ -1,33 +1,39 @@
-import React from 'react';
-import './App.css';
-import Counter from './components/Counter';
-import nav_logo from './assets/logo_final.png';
-// import LoginForm from './LoginForm'
-import MemberJoin from './MemberJoin'
-import ButtonTest from './components/ButtonTest'
+import React from "react";
+import "./App.css";
+import MainApp from "./pages/MainPage";
+import { Routes, Route } from "react-router-dom";
+import { HospitalSearch } from "./pages/HospitalSearchPage";
+import LoginForm from "pages/LoginForm";
+import HLoginForm from "pages/HLoginForm";
+import SignUp from "pages/SignUp";
+import { useKakaoMapScript } from "./hooks/UseKakaoMap";
+import HSingUp from "pages/HSignUp";
 
 const App: React.FC = () => {
+  useKakaoMapScript();
+
   return (
     <div className="App">
-      <nav className="App-navbar flex">
-        <img src={nav_logo} alt="nav_log" />
-        <div className="flex align-items-center">
-          <a href="/">예약</a>
-          <a href="/">서비스</a>
-          <a href="/">로그인</a>
-          <a href="/">회원가입</a>
-        </div>
-      </nav>
-      <div className="App-body">
-        {/* <h1>Hello Refill!</h1>
-        <h3>test for redux ! </h3> */}
-        {/* <LoginForm /> */}
-        <MemberJoin />
-        <Counter />
-        <ButtonTest/>
-      </div>
+      <Routes>
+        <Route path="/" element={<MainApp />} />
+        <Route path="/search" element={<HospitalSearch />} />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="/hos_login" element={<HLoginForm />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/hos_signup" element={<HSingUp />} />
+        <Route
+          path="*"
+          element={
+            <div>
+              404
+              <br />
+              NOT FOUND
+            </div>
+          }
+        />
+      </Routes>
     </div>
   );
-}
+};
 
 export default App;

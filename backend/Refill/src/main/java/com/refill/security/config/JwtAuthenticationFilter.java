@@ -1,5 +1,7 @@
 package com.refill.security.config;
 
+import com.refill.security.util.LoginInfo;
+import com.refill.global.entity.UserInfo;
 import com.refill.global.exception.ErrorCode;
 import com.refill.hospital.repository.HospitalRepository;
 import com.refill.member.exception.MemberException;
@@ -16,7 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -39,7 +40,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         FilterChain filterChain) throws ServletException, IOException, UsernameNotFoundException {
 
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
-        log.info("authorization : '{}'", authorization);
+        log.debug("authorization : '{}'", authorization);
 
         if (authorization == null || !(authorization.startsWith("Bearer ") || authorization.startsWith("Refresh "))) {
             log.error("authentication is null");
@@ -58,21 +59,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
             String loginId = JwtProvider.getLoginId(token, secretKey);
-            UserDetails userDetails = memberRepository.findByLoginId(loginId)
-                                                      .map(UserDetails.class::cast)
-                                                      .orElseGet(() ->
+            UserInfo userDetails = memberRepository.findByLoginId(loginId)
+                                                   .map(UserInfo.class::cast)
+                                                   .orElseGet(() ->
                                                           hospitalRepository.findByLoginId(loginId)
                                                                             .orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND))
                                                       );
-
+            // 아이디, 권한만 넣어주기
+            LoginInfo loginInfo = new LoginInfo(userDetails.getLoginId(), userDetails.getRole());
             // 권한 부여하기
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                userDetails, null, userDetails.getAuthorities());
+                loginInfo, null, userDetails.getAuthorities());
 
             // Detail
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext()
                                  .setAuthentication(authenticationToken);
+
 
         } else if (authorization.startsWith("Refresh ")) {
             // Refresh Token 처리

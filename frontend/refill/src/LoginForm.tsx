@@ -17,17 +17,18 @@ const LoginForm: React.FC = () => {
     event.preventDefault();
 
     const MemberLoginRequest = {
-      loginId : username,
-      loginPassword : password
+      loginId: username,
+      loginPassword: password,
     };
 
     axios
       .post("api/v1/account/member/login", MemberLoginRequest)
-      .then(response => {
-        console.log(response.data)
-      }).catch(err => {
-        console.log(err.response.data)
+      .then((response) => {
+        console.log(response.data);
       })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
   };
 
   return (
