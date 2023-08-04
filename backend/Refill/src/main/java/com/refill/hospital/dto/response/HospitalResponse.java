@@ -26,11 +26,16 @@ public record HospitalResponse(
             hospital.getHospitalBannerImg(),
             hospital.getAddress(),
             hospital.getTel(),
-            hospital.getReviews()
-                    .stream()
-                    .mapToInt(Review::getScore)
-                    .average()
-                    .orElse(0.0),
+            getScore(hospital),
             hospital.getEmail());
+    }
+
+    private static double getScore(Hospital hospital) {
+        double score = hospital.getReviews()
+                       .stream()
+                       .mapToInt(Review::getScore)
+                       .average()
+                       .orElse(0.0);
+        return Math.round(score * 10.0 / 10.0);
     }
 }
