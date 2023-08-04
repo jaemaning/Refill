@@ -9,6 +9,8 @@ import Button from "components/elements/Button";
 import Dropdown from "components/elements/DropDownButton";
 import { InputBox } from "components/elements/InputBox";
 import homeMarker from "assets/homePin2.svg";
+import axios from "axios";
+import { TextField } from "@mui/material";
 
 const max_width = "1350";
 const max_height = "800";
@@ -17,6 +19,11 @@ declare global {
   interface Window {
     kakao: any;
   }
+}
+
+interface TypeFormData {
+  name : string | null;
+  addr : string;
 }
 
 interface DivProps {
@@ -28,12 +35,32 @@ interface ToggleBoxProps {
   toggleSelected : boolean
 }
 
-interface TypeHospitals {
-  title: string,
-  lat: number,
-  lon: number,
-  stars: number,
+interface TypeSearchedData {
+  id? : number;
+  name? : string;
+  longitude? : number;
+  latitude? : number;
+  hospitalProfileImg? : string;
+  address? : string;
+  tel? : string;
+  score? : number;
 }
+
+interface TypeRequestMap {
+  sLat?: number;
+  sLng?: number;
+  eLat?: number;
+  eLng?: number;
+  curLat?: number;
+  curLng?: number;
+}
+
+interface TypeResponseMap {
+  hospitalResponse? : TypeSearchedData;
+  dist? : number;
+}
+
+
 
 // 디자인
 const Container = styled.div`
@@ -70,6 +97,8 @@ const SearchBot = styled.div`
   width: ${max_width + "px"};
   height: ${(parseInt(max_height)-150) + "px"};
   background-color: white;
+  overflow : "auto";
+  max-height : ${(parseInt(max_height)-150) + "px"};
 `;
 
 const ToggleBox = styled.div`
@@ -93,33 +122,10 @@ export const HospitalSearch: React.FC = () => {
   const [rendered, setRendered] = useState(true);
   const [toggleData, setToggleData] = useState(true);
   const nowCenter = useRef<number[]>([33.452613, 126.570888]);
-
-  const hospitals : TypeHospitals[] = [
-    {
-      title: "김승현원장 병원",
-      lat: 33.452616,
-      lon: 126.5708,
-      stars: 4.6,
-    },
-    {
-      title: "싸피 병원",
-      lat: 33.4526,
-      lon: 126.5711,
-      stars: 5,
-    },
-    {
-      title: "뀨 병원",
-      lat: 33.452699,
-      lon: 126.5715,
-      stars: 4,
-    },
-    {
-      title: "뀨 병원2",
-      lat: 33.45299,
-      lon: 126.5711,
-      stars: 4,
-    },
-  ]; // 병원 위치 테스트용
+  const [searchedData, setSearchedData] = useState<TypeSearchedData[]>([]);
+  const [hospitals, setHospitals] = useState<TypeResponseMap[]>([]); // 병원 위치 테스트용
+  const [starsHospitals, setStarsHospitals] = useState<TypeResponseMap[]>([]);
+  const [distanceHospitals, setDistanceHospitalss] = useState<TypeResponseMap[]>([]);
 
   const kakaoMapBox = useRef<HTMLDivElement>(null); // 지도를 담을 div element를 위한 ref
   const map = useRef<any>(null); // map 객체를 관리할 ref
@@ -138,8 +144,27 @@ export const HospitalSearch: React.FC = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(dropSelected + searched);
-    setSearched("");
-  };
+
+    const url = "api/v1/hospital/search/keyword"
+    const formData : TypeFormData = {
+      name: searched,
+      addr: dropSelected
+    }
+    const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbklkIjoibWVtYmVyMSIsInJvbGUiOiJST0xFX01FTUJFUiIsImlhdCI6MTY5MTE1MTQ1NCwiZXhwIjoxNjkxMTU1MDU0fQ.-8vEASGljRVaLeP58Wum8d2Wi5zf3oHO-QDOw-uKCFc"
+    const headers = { Authorization: `Bearer ${accessToken}` };
+
+    axios
+      .get(url, {params: formData, headers: headers})
+      .then((response) => {
+        console.log(response.data);
+        setSearchedData(response.data)
+      })
+      .catch((err) => {
+        console.log(err.response.data);
+      });
+      setSearched("");
+    };
+
 
   // 거리순보기
   const handleToggledist = () => {
@@ -175,7 +200,7 @@ export const HospitalSearch: React.FC = () => {
       };
       loadMap();
     }
-  }, [selected, []]);
+  }, [selected]);
 
   // 지도 홈마커 띄우기
   const makeHomeMarker = (): void => {
@@ -203,41 +228,77 @@ export const HospitalSearch: React.FC = () => {
 
   // 지도 - 병원 마커 띄우기
   // 맵을 그 위치 중심으로 새로 만들고 배열을 바꾼 다음 띄우자!
-  const makeHospitalMarker = async () => {
+  const makeHospitalMarker = () => {
     // 정보를 가져오고 이 정보를 통해 추후 병원 데이터를 아래에 입력 진행 비동기로
     const center = map.current.getCenter();
     nowCenter.current = [center.Ma, center.La];
-    console.log(nowCenter.current);
+    console.log("now",nowCenter.current);
+
+    // 지도의 현재 영역을 얻어옵니다 
+    const bounds = map.current.getBounds();
 
     // 영역의 남서쪽 좌표를 얻어옵니다
-    // const swLatLng = bounds.getSouthWest();
+    const swLatLng = bounds.getSouthWest();
+    console.log("sw",swLatLng)
 
     // 영역의 북동쪽 좌표를 얻어옵니다
-    // const neLatLng = bounds.getNorthEast();
+    const neLatLng = bounds.getNorthEast();
+    console.log("ne",neLatLng)
+
+    const url = "api/v1/hospital/search/location"
+    const formData : TypeRequestMap = {
+      sLat: swLatLng.Ma,
+      sLng: swLatLng.La,
+      eLat: neLatLng.Ma,
+      eLng: neLatLng.La,
+      curLat: center.Ma,
+      curLng: center.La,
+    }
+    const accessToken = "eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbklkIjoibWVtYmVyMSIsInJvbGUiOiJST0xFX01FTUJFUiIsImlhdCI6MTY5MTE1MTQ1NCwiZXhwIjoxNjkxMTU1MDU0fQ.-8vEASGljRVaLeP58Wum8d2Wi5zf3oHO-QDOw-uKCFc"
+    const headers = { Authorization: `Bearer ${accessToken}` };
+    // axios 요청으로 병원 데이터 변경하기
+    axios
+    .get(url, {params: formData, headers: headers})
+    .then((response) => {
+      console.log(response.data);
+      setHospitals(response.data)
+  });
+}
+
+useEffect(() => {
+  if(map.current) {
+    const center = map.current.getCenter();
     // 동일 위치에서 현지도 검색 2번 동작 방지
     const options = {
       center: new window.kakao.maps.LatLng(center.getLat(), center.getLng()),
       level: map.current.getLevel(),
     };
-    map.current = await new window.kakao.maps.Map(kakaoMapBox.current, options);
+    map.current = new window.kakao.maps.Map(kakaoMapBox.current, options);
 
     makeHomeMarker();
 
     for (let i = 0; i < hospitals.length; i++) {
       // 마커 이미지를 생성합니다
-      const latlon = await new window.kakao.maps.LatLng(
-        hospitals[i].lat,
-        hospitals[i].lon,
+      const latlon = new window.kakao.maps.LatLng(
+        hospitals[i].hospitalResponse?.latitude,
+        hospitals[i].hospitalResponse?.longitude,
       );
       // 마커를 생성합니다
-      const marker = await new window.kakao.maps.Marker({
+      const marker = new window.kakao.maps.Marker({
         map: map.current, // 마커를 표시할 지도
         position: latlon, // 마커를 표시할 위치
-        title: hospitals[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+        title: hospitals[i].hospitalResponse?.name, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
       });
       marker.setMap(map.current);
-    }
-  };
+
+      setStarsHospitals(starsFirst())
+      setDistanceHospitalss(distanceFirst())
+    
+      console.log(starsHospitals)
+      console.log(distanceHospitals)
+  }
+  }
+}, [hospitals]);
   // 다음 작업은 지도를 살짝 움직였을때 현지도 검색을 누르면 해당 위치에서 검색 되게 구현
 
   // 지도 - 버튼
@@ -273,20 +334,13 @@ export const HospitalSearch: React.FC = () => {
 
   // 평점 정렬 알고리즘
   const starsFirst = () => {
-    return hospitals.slice().sort((a, b) => b.stars - a.stars);
+    return hospitals.slice().sort((a: TypeResponseMap, b: TypeResponseMap) => (b.hospitalResponse?.score || 0) - (a.hospitalResponse?.score || 0));
   }
-  
+
   // 거리 정렬 알고리즘
   const distanceFirst = () => {
-    return hospitals.slice().sort((a, b) => (Math.abs(nowCenter.current[0]-a.lat) + Math.abs(nowCenter.current[1]-a.lon)) - (Math.abs(nowCenter.current[0]-b.lat) + Math.abs(nowCenter.current[1]-b.lon)));
+    return hospitals.slice().sort((a: TypeResponseMap, b: TypeResponseMap) => (a.dist || 0) - (b.dist || 0));
   }
-
-
-  const starsHospitals = starsFirst()
-  const distanceHospitals = distanceFirst()
-
-  console.log(starsHospitals)
-  console.log(distanceHospitals)
 
   return (
     <div>
@@ -377,7 +431,7 @@ export const HospitalSearch: React.FC = () => {
               }}
             />
             <Button
-              content="현 지도에서 검색"
+              content="현 위치에서 검색"
               onClick={makeHospitalMarker}
               variant="normal"
               width="150px"
@@ -409,34 +463,40 @@ export const HospitalSearch: React.FC = () => {
               </div>
               <div style={{marginTop: "30px", overflow : "auto", maxHeight : "650px"}}>
                 <div style={{display: toggleData ? "block" : "none"}}>
-                  {distanceHospitals.map((hospital, i)=>{
-                    return (
-                      <div key={i} style={{margin: "20px"}}>
-                        병원명 : {hospital.title}
-                        <br/>
-                        lat : {hospital.lat}
-                        <br/>
-                        lon : {hospital.lon}
-                        <br/>
-                        평점 : {hospital.stars}
-                      </div>
-                    )
-                  })}
+                  { distanceHospitals && distanceHospitals.map((hospital, i)=>{
+                        return (
+                          <div key={i} style={{margin: "20px"}}>
+                            병원명 : {hospital.hospitalResponse?.name}
+                            <br/>
+                            거리 : {hospital?.dist}
+                            <br/>
+                            주소 : {hospital.hospitalResponse?.address}
+                            <br/>
+                            전화번호 : {hospital.hospitalResponse?.tel}
+                            <br/>
+                            평점 : {hospital.hospitalResponse?.score}
+                          </div>
+                        )
+                      })
+                    }
                 </div>
                 <div style={{display: toggleData ? "none" : "block"}}>
-                  {starsHospitals.map((hospital, i)=>{
-                    return (
-                      <div key={i} style={{margin: "20px"}}>
-                        병원명 : {hospital.title}
-                        <br/>
-                        lat : {hospital.lat}
-                        <br/>
-                        lon : {hospital.lon}
-                        <br/>
-                        평점 : {hospital.stars}
-                      </div>
-                    )
-                  })}
+                  { starsHospitals && starsHospitals.map((hospital, i)=>{
+                      return (
+                        <div key={i} style={{margin: "20px"}}>
+                          병원명 : {hospital.hospitalResponse?.name}
+                          <br/>
+                          거리 : {hospital?.dist}
+                          <br/>
+                          주소 : {hospital.hospitalResponse?.address}
+                          <br/>
+                          전화번호 : {hospital.hospitalResponse?.tel}
+                          <br/>
+                          평점 : {hospital.hospitalResponse?.score}
+                        </div>
+                      )
+                    })
+                  }
                 </div>
               </div>
             </ToggleBox>
@@ -479,6 +539,7 @@ export const HospitalSearch: React.FC = () => {
                 placeholder="병원 이름을 입력해주세요"
                 handlefunc={handleSubmit}
               />
+              <TextField id="outlined-basic" label="Outlined" variant="outlined" onChange={handleSearchChange} />
               <Button
                 content="검색"
                 variant="success"
@@ -488,7 +549,22 @@ export const HospitalSearch: React.FC = () => {
             </form>
           </SearchTop>
           <SearchBot>
-            <h1 style={{ padding: "20px" }}>검색 결과가 없습니다.</h1>
+            <>
+              <h1 style={{ padding: "20px", display: searchedData ? "none" : "block"}}>검색 결과가 없습니다.</h1>
+              {searchedData.map((data, i) => {
+                return (
+                  <div key={i} style={{marginTop: "20px"}}>
+                    <p>{data.name}</p>
+                    <p>{data.longitude}</p>
+                    <p>{data.latitude}</p>
+                    <p>{data.hospitalProfileImg}</p>
+                    <p>{data.address}</p>
+                    <p>{data.tel}</p>
+                    <p>{data.score}</p>
+                  </div>
+                );
+              })}
+            </>
           </SearchBot>
         </MapBox>
       </Container>
