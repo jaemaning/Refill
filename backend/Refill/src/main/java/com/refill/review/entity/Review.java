@@ -46,6 +46,9 @@ public class Review extends BaseEntity {
     @Column(name = "is_blocked")
     Boolean isBlocked;
 
+    @Column(name ="category")
+    String category;
+
     public static Review from(Hospital hospital, Doctor doctor, Member member, Integer score, String content) {
         return Review.builder()
             .doctor(doctor)
