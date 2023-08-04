@@ -24,9 +24,15 @@ public enum ErrorCode {
     /* File Upload Exception*/
     FILE_UPLOAD_FAIL("AWS01", HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패하였습니다."),
 
+    /* HOSPITAL SEARCH Exception */
+    INVALID_LOCATION_REQUEST("SEARCH01", HttpStatus.BAD_REQUEST, "위치 검색에 대한 잘못된 요청입니다."),
+
     /* AI SERVER Exception */
     AI_SERVER_CLIENT_ERROR("AI01", HttpStatus.BAD_REQUEST, "클라이언트 에러입니다."),
     AI_SERVER_ERROR("AI02", HttpStatus.INTERNAL_SERVER_ERROR, "AI 서버 에러입니다."),
+
+    /* Review Exception */
+    REVIEW_NOT_FOUND("REVIEW01", HttpStatus.NOT_FOUND, "존재하지 않는 리뷰입니다."),
 
     /* Reservation Exception */
     ALREADY_RESERVED("RES01", HttpStatus.BAD_REQUEST, "이미 예약된 시간입니다."),

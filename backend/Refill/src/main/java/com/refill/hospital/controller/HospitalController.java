@@ -4,6 +4,7 @@ import com.refill.doctor.dto.request.DoctorJoinRequest;
 import com.refill.doctor.dto.request.DoctorUpdateRequest;
 import com.refill.hospital.dto.request.HospitalInfoUpdateRequest;
 import com.refill.hospital.dto.request.HospitalOperatingHoursRequest;
+import com.refill.hospital.dto.request.HospitalLocationRequest;
 import com.refill.hospital.dto.response.HospitalDetailResponse;
 import com.refill.hospital.dto.response.HospitalOperatingHourResponse;
 import com.refill.hospital.dto.response.HospitalResponse;
@@ -11,7 +12,6 @@ import com.refill.hospital.dto.response.HospitalSearchByLocationResponse;
 import com.refill.hospital.service.HospitalOperatingHourService;
 import com.refill.hospital.service.HospitalService;
 import com.refill.security.util.LoginInfo;
-import java.math.BigDecimal;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -42,13 +43,11 @@ public class HospitalController {
     /* 현 지도에서 검색, 위도/경도 */
     @GetMapping("/search/location")
     public ResponseEntity<List<HospitalSearchByLocationResponse>> searchByLocation(
-        @RequestParam(name = "lat") BigDecimal latitude,
-        @RequestParam(name = "lng") BigDecimal longitude,
-        @RequestParam(name = "z") Integer zoomLevel)
+        @ModelAttribute HospitalLocationRequest hospitalLocationRequest)
     {
-        log.debug("{}, {}, {}", latitude, longitude, zoomLevel);
+        log.debug("{}", hospitalLocationRequest);
         List<HospitalSearchByLocationResponse> searchHospitalResponses = hospitalService.searchByLocation(
-            latitude, longitude, zoomLevel);
+            hospitalLocationRequest);
         log.debug("searchHospitalResponses: {}", searchHospitalResponses);
         return ResponseEntity.ok()
                              .body(searchHospitalResponses);
