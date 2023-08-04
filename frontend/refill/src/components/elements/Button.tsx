@@ -11,7 +11,11 @@ interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     | "danger"
     | "normal"
     | "selected"
-    | "unselected"; // success : 긍정적 성공 파랑 , warning : 경고 노랑, disable : 사용할 수 없음 회색, dnager : 위험 빨강
+    | "unselected"
+    | "menuUnselected"
+    | "menuSelected"
+    | "detailUnselected"
+    | "detailSelected"; // success : 긍정적 성공 파랑 , warning : 경고 노랑, disable : 사용할 수 없음 회색, dnager : 위험 빨강
   size?: "small" | "medium" | "large"; // 폰트 사이즈가 줄고 좌우 여백이 축소
   width?: string;
   customStyles?: CSSObject;
@@ -104,6 +108,30 @@ const TYPE_VARIANTS = {
       backgroundColor: REFILL_COLORS["grey-2"],
     },
   },
+  menuUnselected: {
+    // define styles for danger variant
+    backgroundColor: REFILL_COLORS["white"],
+    color: REFILL_COLORS["rf-4"],
+    ":hover": {
+      backgroundColor: REFILL_COLORS["grey-2"],
+    },
+  },
+  menuSelected: {
+    // define styles for danger variant
+    backgroundColor: REFILL_COLORS["rf-4"],
+    color: REFILL_COLORS["white"],
+    ":hover": {
+      backgroundColor: REFILL_COLORS["grey-2"],
+    },
+  },
+  detailUnselected:{
+    backgroundColor: REFILL_COLORS["white"],
+    color: REFILL_COLORS["grey-2"],
+  },
+  detailSelected: {
+    backgroundColor: REFILL_COLORS["white"],
+    color: REFILL_COLORS["black"],
+  }
 };
 
 const SIZE_VARIANTS = {

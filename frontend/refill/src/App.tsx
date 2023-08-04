@@ -9,6 +9,7 @@ import SignUp from "pages/SignUp";
 import { useKakaoMapScript } from "./hooks/UseKakaoMap";
 import HSingUp from "pages/HSignUp";
 import Mypage from "pages/Mypage";
+import DetailHospital from "pages/DetialHospital";
 
 const App: React.FC = () => {
   useKakaoMapScript();
@@ -23,6 +24,7 @@ const App: React.FC = () => {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/hos_signup" element={<HSingUp />} />
         <Route path="/mypage" element={<Mypage />} />
+        <Route path="/DetailHospital" element={<DetailHospital/>}></Route>
         <Route
           path="*"
           element={

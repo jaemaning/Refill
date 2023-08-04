@@ -36,14 +36,6 @@ button:hover {
   color: #61dafb;
 }
 
-/* 기본 스타일 - md 사이즈 이상일 때 적용 */
-/* .App {
-  padding: 0px 100px;
-} */
-
-/* md 사이즈 이하일 때 적용 */
-/* @media (max-width: 992px) {
-  .App {
-    padding: 0px;
-  }
-} */
+.test {
+  background-color: #61dafb;
+}

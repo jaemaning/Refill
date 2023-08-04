@@ -60,21 +60,6 @@ export default function Navbar() {
     console.log(menuList);
   }, []);
 
-  // const LoginmenuList = [
-  //   ["예약", "#"],
-  //   ["병원검색", "/search"],
-  //   ["예약", "/logout"],
-  //   ["마이페이지", "/mypage"],
-  // ];
-  //  이쪽에서 router 설정 해주시면 됩니다.
-  // const menuList = [
-  //   ["예약", "#"],
-  //   ["병원검색", "/search"],
-  //   ["AI자가진단", "#"],
-  //   ["로그인", "/login"],
-  //   ["회원가입", "/signup"],
-  // ];
-
   const handleMenuToggle = () => {
     setMenuOpen((prevMenuState) => !prevMenuState);
   };
