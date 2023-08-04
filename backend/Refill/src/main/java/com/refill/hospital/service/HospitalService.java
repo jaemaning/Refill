@@ -128,7 +128,7 @@ public class HospitalService {
     public List<HospitalResponse> searchByKeyword(String hospitalName, String address) {
 
         if (StringUtils.hasText(hospitalName) && StringUtils.hasText(address)) {
-            return hospitalRepository.findByNameContainingOrAddressContaining(hospitalName, address)
+            return hospitalRepository.findByNameContainingAndAddressContaining(hospitalName, address)
                                      .stream()
                                      .map(HospitalResponse::new)
                                      .collect(Collectors.toList());

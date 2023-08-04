@@ -16,7 +16,7 @@ public interface HospitalRepository extends JpaRepository<Hospital, Long> {
     boolean existsByLoginId(String loginId);
     boolean existsByEmail(String email);
 
-    List<Hospital> findByNameContainingOrAddressContaining(String name, String address);
+    List<Hospital> findByNameContainingAndAddressContaining(String name, String address);
 
 
     List<Hospital> findByNameContaining(String hospitalName);
