@@ -65,7 +65,11 @@ const ContentChild: React.FC<ContentChildProps> = ({
   return (
     <div>
       {service ? (
-        <A content={content} buttonName={buttonName || ""} connectNextLink={connectNextLink || ""} />
+        <A
+          content={content}
+          buttonName={buttonName || ""}
+          connectNextLink={connectNextLink || ""}
+        />
       ) : (
         <B content={content} subContent={subContent || ""} />
       )}

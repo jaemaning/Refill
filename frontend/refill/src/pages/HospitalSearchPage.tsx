@@ -288,8 +288,8 @@ export const HospitalSearch: React.FC = () => {
                 boxShadow: "none",
                 borderRadius: "0px",
                 backgroundColor: REFILL_COLORS["grey-2"],
-                borderTopLeftRadius: '7px',
-                borderBottomLeftRadius: '7px',
+                borderTopLeftRadius: "7px",
+                borderBottomLeftRadius: "7px",
               }}
             />
             <Button

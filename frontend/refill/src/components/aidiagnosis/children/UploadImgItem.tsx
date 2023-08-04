@@ -1,22 +1,14 @@
 import React, { ChangeEvent, useState } from "react";
 
-interface InputImageState {
-  uploadImg: File | null;
+interface UploadImgItemProps {
+  onChange: (file: File | null) => void;
 }
 
-const UploadImgItem: React.FC = () => {
-  const [inputImage, setInputImage] = useState<InputImageState>({
-    uploadImg: null,
-  });
-
+const UploadImgItem: React.FC<UploadImgItemProps> = ({ onChange }) => {
   const [preview, setPreview] = useState<string | null>(null);
 
   const handleImgChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null; // 선택한 파일을 가져옵니다. 없으면 null로 설정합니다.
-
-    setInputImage({
-      uploadImg: file,
-    });
+    const file = e.target.files?.[0] || null;
 
     // file reader to generate a preview
     if (file) {
@@ -28,14 +20,15 @@ const UploadImgItem: React.FC = () => {
     } else {
       setPreview(null);
     }
-  };
 
+    onChange(file); // 선택된 파일을 부모 컴포넌트로 전달
+  };
   return (
     <div className="flex justify-center mt-5">
       <div className="img-upload-box">
         <div className="img-upload-small-box flex justify-center">
           <img
-            src={preview ? preview : '#'}
+            src={preview ? preview : "#"}
             alt={preview ? "Selected Image" : "사진을 업로드 해주세요."}
             className="img-upload-img"
           />

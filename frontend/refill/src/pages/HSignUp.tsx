@@ -124,7 +124,7 @@ const HSingUp: React.FC = () => {
     if (inputImage.regImg) {
       formData.append("regImg", inputImage.regImg);
     }
-
+    console.log(inputImage.profileImg);
     axios
       .post("api/v1/account/hospital/join", formData, {
         headers: {
