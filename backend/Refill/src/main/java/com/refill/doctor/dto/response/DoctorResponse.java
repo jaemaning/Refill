@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 
 public record DoctorResponse(
-    @NotNull Long id,
+    @NotNull Long doctorId,
     @NotNull String name,
     @NotNull String profileImg,
     @NotNull String licenseNumber,

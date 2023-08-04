@@ -29,7 +29,11 @@ public enum ErrorCode {
 
     /* AI SERVER Exception */
     AI_SERVER_CLIENT_ERROR("AI01", HttpStatus.BAD_REQUEST, "클라이언트 에러입니다."),
-    AI_SERVER_ERROR("AI02", HttpStatus.INTERNAL_SERVER_ERROR, "AI 서버 에러입니다.");
+    AI_SERVER_ERROR("AI02", HttpStatus.INTERNAL_SERVER_ERROR, "AI 서버 에러입니다."),
+
+    /* Review Exception */
+    REVIEW_NOT_FOUND("REVIEW01", HttpStatus.NOT_FOUND, "존재하지 않는 리뷰입니다.");
+
 
     private final String code;
     private final HttpStatus httpStatus;
