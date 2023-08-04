@@ -25,7 +25,7 @@ public class DistanceCalculator {
             + pow(sin(deltaLon / 2), 2) * cos(lat1_rad) * cos(lat2_rad);
         double c = 2 * asin(sqrt(a));
 
-        return (EARTH_RADIUS * c * 10.0) / 10.0;
+        return Math.round(EARTH_RADIUS * c * 10.0) / 10.0;
     }
 
 }
