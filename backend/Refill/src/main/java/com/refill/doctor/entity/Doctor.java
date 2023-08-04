@@ -73,17 +73,25 @@ public class Doctor extends BaseEntity {
     public void update(DoctorUpdateRequest doctorUpdateRequest) {
         this.description = doctorUpdateRequest.description();
         this.educationBackgrounds.clear();
-        this.educationBackgrounds.addAll(doctorUpdateRequest.educationBackgrounds()
-                                                       .stream()
-                                                       .map(
-                                                           educationBackground -> new EducationBackground(
-                                                               this, educationBackground))
-                                                       .collect(Collectors.toList()));
+        this.educationBackgrounds.addAll(createEducationBackgrounds(doctorUpdateRequest));
         this.majorAreas.clear();
-        this.majorAreas.addAll(doctorUpdateRequest.majorAreas()
-                                             .stream()
-                                             .map(majorArea -> new MajorArea(this, majorArea))
-                                             .collect(Collectors.toList()));
+        this.majorAreas.addAll(createMajorAreas(doctorUpdateRequest));
+    }
+
+    private List<MajorArea> createMajorAreas(DoctorUpdateRequest doctorUpdateRequest) {
+        return doctorUpdateRequest.majorAreas()
+                                  .stream()
+                                  .map(majorArea -> new MajorArea(this, majorArea))
+                                  .collect(Collectors.toList());
+    }
+
+    private List<EducationBackground> createEducationBackgrounds(DoctorUpdateRequest doctorUpdateRequest) {
+        return doctorUpdateRequest.educationBackgrounds()
+                                  .stream()
+                                  .map(
+                                      educationBackground -> new EducationBackground(
+                                          this, educationBackground))
+                                  .collect(Collectors.toList());
     }
 
     public void updateProfileAddress(String profileAddress) {
