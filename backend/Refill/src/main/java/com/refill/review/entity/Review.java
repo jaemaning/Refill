@@ -49,13 +49,14 @@ public class Review extends BaseEntity {
     @Column(name ="category")
     String category;
 
-    public static Review from(Hospital hospital, Doctor doctor, Member member, Integer score, String content) {
+    public static Review from(Hospital hospital, Doctor doctor, Member member, Integer score, String content, String category) {
         return Review.builder()
             .doctor(doctor)
             .member(member)
             .hospital(hospital)
             .score(score)
             .content(content)
+            .category(category)
             .isBlocked(false)
             .build();
     }

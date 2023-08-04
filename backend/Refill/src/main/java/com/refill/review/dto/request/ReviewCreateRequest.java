@@ -7,6 +7,7 @@ public record ReviewCreateRequest(
     @NotNull Long doctorId,
     @NotNull Long memberId,
     @NotNull String content,
+    @NotNull String category,
     @NotNull Integer score
 ) {
 }
