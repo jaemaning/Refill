@@ -7,7 +7,7 @@ public record ReservationResultResponse(
     String memberName,
     LocalDateTime startDateTime,
     String hospitalName,
-    String DoctorName
+    String doctorName
 ) {
     public ReservationResultResponse(Reservation reservation) {
         this(
