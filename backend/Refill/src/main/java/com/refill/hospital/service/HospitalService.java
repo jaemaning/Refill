@@ -13,13 +13,14 @@ import com.refill.doctor.service.DoctorService;
 import com.refill.global.exception.ErrorCode;
 import com.refill.global.service.AmazonS3Service;
 import com.refill.hospital.dto.request.HospitalInfoUpdateRequest;
+import com.refill.hospital.dto.request.HospitalLocationRequest;
 import com.refill.hospital.dto.response.HospitalDetailResponse;
 import com.refill.hospital.dto.response.HospitalResponse;
 import com.refill.hospital.dto.response.HospitalSearchByLocationResponse;
 import com.refill.hospital.entity.Hospital;
+import com.refill.hospital.exception.HospitalException;
 import com.refill.hospital.repository.HospitalRepository;
 import com.refill.member.exception.MemberException;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -27,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
@@ -39,6 +41,7 @@ public class HospitalService {
     private final DoctorService doctorService;
     private final EducationBackgroundRepository educationBackgroundRepository;
     private final MajorAreaRepository majorAreaRepository;
+
 
     @Transactional(readOnly = true)
     public boolean existsByLoginId(String loginId) {
@@ -96,24 +99,53 @@ public class HospitalService {
     }
 
     @Transactional
-    public List<HospitalSearchByLocationResponse> searchByLocation(BigDecimal latitude,
-        BigDecimal longitude, Integer zoomLevel) {
-        Double radius = zoomLevelToRadius(zoomLevel);
-        return hospitalRepository.findNearByHospitals(latitude, longitude, radius)
-                                 .stream()
-                                 .map(nearByHospital -> new HospitalSearchByLocationResponse(
-                                     nearByHospital, calculateDistance(latitude, longitude,
-                                     nearByHospital.getLatitude(), nearByHospital.getLongitude())))
-                                 .collect(Collectors.toList());
+    public List<HospitalSearchByLocationResponse> searchByLocation(
+        HospitalLocationRequest request) {
+        List<Hospital> nearByHospitals = findNearByHospitals(request);
+        return mapHospitalsToResponses(nearByHospitals, request);
     }
+
+    private List<Hospital> findNearByHospitals(HospitalLocationRequest request) {
+        return hospitalRepository.findNearByHospitals(request.sLat(), request.sLng(),
+            request.eLat(), request.eLng());
+    }
+
+    private List<HospitalSearchByLocationResponse> mapHospitalsToResponses(List<Hospital> hospitals,
+        HospitalLocationRequest request) {
+        return hospitals.stream()
+                        .map(hospital -> createResponse(hospital, request))
+                        .collect(Collectors.toList());
+    }
+
+    private HospitalSearchByLocationResponse createResponse(Hospital hospital,
+        HospitalLocationRequest request) {
+        double distance = calculateDistance(request.curLat(), request.curLng(),
+            hospital.getLatitude(), hospital.getLongitude());
+        return new HospitalSearchByLocationResponse(hospital, distance);
+    }
+
 
     @Transactional
     public List<HospitalResponse> searchByKeyword(String hospitalName, String address) {
-        List<Hospital> containingHospital = hospitalRepository.findByNameContainingOrAddressContaining(
-            hospitalName, address);
-        return containingHospital.stream()
-                                 .map(HospitalResponse::new)
-                                 .collect(Collectors.toList());
+
+        if (StringUtils.hasText(hospitalName) && StringUtils.hasText(address)) {
+            return hospitalRepository.findByNameContainingAndAddressContaining(hospitalName, address)
+                                     .stream()
+                                     .map(HospitalResponse::new)
+                                     .collect(Collectors.toList());
+        } else if (StringUtils.hasText(hospitalName)) {
+            return hospitalRepository.findByNameContaining(hospitalName)
+                                     .stream()
+                                     .map(HospitalResponse::new)
+                                     .collect(Collectors.toList());
+        } else if (StringUtils.hasText(address)) {
+            return hospitalRepository.findByAddressContaining(address)
+                                     .stream()
+                                     .map(HospitalResponse::new)
+                                     .collect(Collectors.toList());
+        } else {
+            throw new HospitalException(ErrorCode.INVALID_LOCATION_REQUEST);
+        }
     }
 
     @Transactional
@@ -125,6 +157,7 @@ public class HospitalService {
         /* todo: zoomLevel을 적절하게 Radius로 바꾸는 로직 */
         return 5.0;
     }
+
     private Hospital checkAccessHospital(String loginId, Long hospitalId) {
         Hospital hospital = findByLoginId(loginId);
         if (!hospital.getId()
@@ -165,7 +198,7 @@ public class HospitalService {
         checkAccessHospital(loginId, hospitalId);
         Doctor doctor = doctorService.findById(doctorId);
         doctor.update(doctorUpdateRequest);
-        if(profileImg != null){
+        if (profileImg != null) {
             String profileAddress = amazonS3Service.uploadFile(profileImg);
             doctor.updateProfileAddress(profileAddress);
         }
@@ -192,14 +225,18 @@ public class HospitalService {
     }
 
     private void registEducationBackground(DoctorJoinRequest doctorJoinRequest, Doctor doctor) {
-        doctorJoinRequest.educationBackgrounds().stream()
+        doctorJoinRequest.educationBackgrounds()
+                         .stream()
                          .map(content -> new EducationBackground(doctor, content))
                          .forEach(educationBackgroundRepository::save);
     }
 
     private void registMajor(DoctorJoinRequest doctorJoinRequest, Doctor doctor) {
-        doctorJoinRequest.majorAreas().stream()
+        doctorJoinRequest.majorAreas()
+                         .stream()
                          .map(major -> new MajorArea(doctor, major))
                          .forEach(majorAreaRepository::save);
     }
+
+
 }

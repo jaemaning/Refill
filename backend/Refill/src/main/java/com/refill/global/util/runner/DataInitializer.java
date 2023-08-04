@@ -11,6 +11,8 @@ import com.refill.hospital.entity.Hospital;
 import com.refill.hospital.repository.HospitalRepository;
 import com.refill.member.entity.Member;
 import com.refill.member.repository.MemberRepository;
+import com.refill.review.entity.Review;
+import com.refill.review.repository.ReviewRepository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,6 +34,7 @@ public class DataInitializer implements CommandLineRunner {
     private final DoctorRepository doctorRepository;
     private final MajorAreaRepository majorAreaRepository;
     private final EducationBackgroundRepository educationBackgroundRepository;
+    private final ReviewRepository reviewRepository;
 
     @Override
     @Transactional
@@ -48,7 +51,7 @@ public class DataInitializer implements CommandLineRunner {
                              .loginId("admin")
                              .nickname("관리자")
                              .birthDay(LocalDate.of(1983, 1, 1))
-                             .profileImg("ADMIN_PROFILE_IMG_ADDRESS")
+                             .profileImg("https://picsum.photos/600/600/?random")
                              .address("광주광역시 광산구 윗마을")
                              .email("hoin123@naver.com")
                              .loginPassword(bCryptPasswordEncoder.encode("1234"))
@@ -71,7 +74,7 @@ public class DataInitializer implements CommandLineRunner {
                                   .loginId("member" + i)
                                   .nickname("일반유저" + i)
                                   .birthDay(LocalDate.of(2000, 1, 1))
-                                  .profileImg("MEMBER_PROFILE_IMG_ADDRESS")
+                                  .profileImg("https://picsum.photos/600/600/?random")
                                   .address(address)
                                   .email("member" + i + "@google.com")
                                   .loginPassword(bCryptPasswordEncoder.encode("1234"))
@@ -97,13 +100,13 @@ public class DataInitializer implements CommandLineRunner {
                                             bCryptPasswordEncoder.encode("1234")) //1234
                                         .role(i == 4 ? Role.ROLE_GUEST : Role.ROLE_HOSPITAL)
                                         .tel("02-2345-3465")
-                                        .hospitalBannerImg("HOS_BANNER_IMG_ADDRESS"+i)
-                                        .hospitalProfileImg("HOS_PROFILE_IMG_ADDRESS"+i)
+                                        .hospitalBannerImg("https://picsum.photos/600/600/?random")
+                                        .hospitalProfileImg("https://picsum.photos/600/600/?random")
                                         .latitude(BigDecimal.valueOf(randomDouble))
                                         .longitude(BigDecimal.valueOf(randomDouble))
                                         .postalCode(
                                             String.valueOf(random.nextInt(90000)+10000))
-                                        .registrationImg("HOS_REG_IMG_ADDRESS" + i)
+                                        .registrationImg("https://picsum.photos/600/600/?random")
                                         .build();
             hospitalRepository.save(hospital);
 
@@ -112,35 +115,50 @@ public class DataInitializer implements CommandLineRunner {
             String[] firstName = {"김", "이", "박", "신", "유", "최"};
             
             /* 의사 생성 */
-            Doctor doctor = Doctor.builder()
-                                  .name(firstName[i % firstName.length] + "의사")
-                                  .profileImg("DOCTOR_PROFILE_IMG_ADDRESS")
-                                  .licenseImg("DOCTOR_LICENSE_IMG_ADDRESS")
-                                  .licenseNumber("DOC-LN-2123-" + i)
-                                  .description("한국 미용 성형학회 자문의원\nIBCS\n모발이식의 대가")
-                                  .hospital(hospital)
-                                  .build();
-            doctorRepository.save(doctor);
+            for(int j=0; j<3; j++){
+                Doctor doctor = Doctor.builder()
+                                      .name(firstName[(i + j) % firstName.length] + "의사")
+                                      .profileImg("https://picsum.photos/600/600/?random")
+                                      .licenseImg("https://picsum.photos/600/600/?random")
+                                      .licenseNumber("DOC-LN-2123-" + i)
+                                      .description("한국 미용 성형학회 자문의원\nIBCS\n모발이식의 대가")
+                                      .hospital(hospital)
+                                      .build();
+                doctorRepository.save(doctor);
+                /* 주요 진료 분야 */
+                String[] major = {"탈모 진단 및 진행 추적", "줄기세포 모발 이식 시술", "컨설팅"};
+                for(int k=0; k<major.length; k++){
+                    MajorArea majorArea = MajorArea.builder()
+                                                   .doctor(doctor)
+                                                   .content(major[k])
+                                                   .build();
+                    majorAreaRepository.save(majorArea);
+                }
 
-
-            /* 주요 진료 분야 */
-            String[] major = {"탈모 진단 및 진행 추적", "줄기세포 모발 이식 시술", "컨설팅"};
-            for(int j=0; j<major.length; j++){
-                MajorArea majorArea = MajorArea.builder()
-                                               .doctor(doctor)
-                                               .content(major[j])
-                                               .build();
-                majorAreaRepository.save(majorArea);
-            }
-
-            /* 학력 */
-            String[] edu = {"서울대학교 대학원 졸업", "경희대학교 의과대학 졸업"};
-            for(int j=0; j<edu.length; j++){
-                EducationBackground educationBackground = EducationBackground.builder()
-                                                                             .doctor(doctor)
-                                                                             .content(edu[j])
-                                                                             .build();
-                educationBackgroundRepository.save(educationBackground);
+                /* 학력 */
+                String[] edu = {"서울대학교 대학원 졸업", "경희대학교 의과대학 졸업"};
+                for(int k=0; k<edu.length; k++){
+                    EducationBackground educationBackground = EducationBackground.builder()
+                                                                                 .doctor(doctor)
+                                                                                 .content(edu[k])
+                                                                                 .build();
+                    educationBackgroundRepository.save(educationBackground);
+                }
+                
+                /* 리뷰 생성 - 의사 한명당 3개의 리뷰 생성 */
+                String[] content = {"이분이 진짜 최고", "모발이식 상담을 너무 잘해요!!", "난 좀 별로인듯..."};
+                String[] category = {"모발이식", "컨설팅", "탈모케어"};
+                for(int k=0; k < 3; k++){
+                    Review review = Review.builder()
+                                          .doctor(doctor)
+                                          .content(content[(j + k) % content.length])
+                                          .hospital(hospital)
+                                          .member(member)
+                                          .score(random.nextInt(6))
+                                          .isBlocked(false)
+                                          .category(category[(j + k) % content.length]).build();
+                    reviewRepository.save(review);
+                }
             }
         }
     }

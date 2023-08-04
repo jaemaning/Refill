@@ -4,6 +4,7 @@ import com.refill.doctor.entity.Doctor;
 import com.refill.global.entity.BaseEntity;
 import com.refill.hospital.entity.Hospital;
 import com.refill.member.entity.Member;
+import com.refill.review.dto.request.ReviewModifyRequest;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -44,4 +45,23 @@ public class Review extends BaseEntity {
 
     @Column(name = "is_blocked")
     Boolean isBlocked;
+
+    @Column(name ="category")
+    String category;
+
+    public static Review from(Hospital hospital, Doctor doctor, Member member, Integer score, String content, String category) {
+        return Review.builder()
+            .doctor(doctor)
+            .member(member)
+            .hospital(hospital)
+            .score(score)
+            .content(content)
+            .category(category)
+            .isBlocked(false)
+            .build();
+    }
+    public void update(ReviewModifyRequest reviewModifyRequest) {
+        this.content = reviewModifyRequest.content();
+        this.score = reviewModifyRequest.score();
+    }
 }

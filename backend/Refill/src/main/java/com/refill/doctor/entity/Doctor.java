@@ -4,6 +4,7 @@ import com.refill.doctor.dto.request.DoctorJoinRequest;
 import com.refill.doctor.dto.request.DoctorUpdateRequest;
 import com.refill.global.entity.BaseEntity;
 import com.refill.hospital.entity.Hospital;
+import com.refill.reservation.entity.Reservation;
 import com.refill.review.entity.Review;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,6 +45,9 @@ public class Doctor extends BaseEntity {
     List<EducationBackground> educationBackgrounds;
 
     @OneToMany(mappedBy = "doctor")
+    List<Reservation> reservationList;
+
+    @OneToMany(mappedBy = "doctor")
     List<Review> reviews;
 
     @Column(nullable = false)
@@ -73,17 +77,25 @@ public class Doctor extends BaseEntity {
     public void update(DoctorUpdateRequest doctorUpdateRequest) {
         this.description = doctorUpdateRequest.description();
         this.educationBackgrounds.clear();
-        this.educationBackgrounds.addAll(doctorUpdateRequest.educationBackgrounds()
-                                                       .stream()
-                                                       .map(
-                                                           educationBackground -> new EducationBackground(
-                                                               this, educationBackground))
-                                                       .collect(Collectors.toList()));
+        this.educationBackgrounds.addAll(createEducationBackgrounds(doctorUpdateRequest));
         this.majorAreas.clear();
-        this.majorAreas.addAll(doctorUpdateRequest.majorAreas()
-                                             .stream()
-                                             .map(majorArea -> new MajorArea(this, majorArea))
-                                             .collect(Collectors.toList()));
+        this.majorAreas.addAll(createMajorAreas(doctorUpdateRequest));
+    }
+
+    private List<MajorArea> createMajorAreas(DoctorUpdateRequest doctorUpdateRequest) {
+        return doctorUpdateRequest.majorAreas()
+                                  .stream()
+                                  .map(majorArea -> new MajorArea(this, majorArea))
+                                  .collect(Collectors.toList());
+    }
+
+    private List<EducationBackground> createEducationBackgrounds(DoctorUpdateRequest doctorUpdateRequest) {
+        return doctorUpdateRequest.educationBackgrounds()
+                                  .stream()
+                                  .map(
+                                      educationBackground -> new EducationBackground(
+                                          this, educationBackground))
+                                  .collect(Collectors.toList());
     }
 
     public void updateProfileAddress(String profileAddress) {
