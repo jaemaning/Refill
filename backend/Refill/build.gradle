@@ -55,6 +55,13 @@ dependencies {
 
     // awsSES
     implementation 'com.amazonaws:aws-java-sdk-ses:1.12.468'
+
+    // webflux
+    implementation 'org.springframework.boot:spring-boot-starter-webflux:3.1.0'
+
+    // https://mvnrepository.com/artifact/io.openvidu/openvidu-java-client
+    implementation group: 'io.openvidu', name: 'openvidu-java-client', version: '2.28.0'
+
 }
 
 tasks.named('test') {

@@ -6,14 +6,16 @@ import java.math.BigDecimal;
 import javax.validation.constraints.NotNull;
 
 public record HospitalResponse(
-    @NotNull Long id,
+    @NotNull Long hospitalId,
     @NotNull String name,
     @NotNull BigDecimal longitude,
     @NotNull BigDecimal latitude,
     @NotNull String hospitalProfileImg,
+    @NotNull String bannerProfileImg,
     @NotNull String address,
     @NotNull String tel,
-    @NotNull Double score
+    @NotNull Double score,
+    @NotNull String email
 ) {
     public HospitalResponse(Hospital hospital){
         this(hospital.getId(),
@@ -21,12 +23,14 @@ public record HospitalResponse(
             hospital.getLongitude(),
             hospital.getLatitude(),
             hospital.getHospitalProfileImg(),
+            hospital.getHospitalBannerImg(),
             hospital.getAddress(),
             hospital.getTel(),
-            hospital.getReviews().stream()
+            hospital.getReviews()
+                    .stream()
                     .mapToInt(Review::getScore)
                     .average()
-                    .orElse(0.0));
+                    .orElse(0.0),
+            hospital.getEmail());
     }
-
 }

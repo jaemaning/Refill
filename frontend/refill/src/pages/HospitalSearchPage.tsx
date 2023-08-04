@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect } from "react";
 // import RadioDiv from "../components/elements/RadioButton";
 import styled from "@emotion/styled";
 import { REFILL_COLORS } from "assets/getColors";
@@ -11,6 +11,7 @@ import { InputBox } from "components/elements/InputBox";
 import homeMarker from "assets/homePin2.svg";
 
 const max_width = "1350";
+const max_height = "800";
 
 declare global {
   interface Window {
@@ -23,12 +24,23 @@ interface DivProps {
   selected?: boolean;
 }
 
+interface ToggleBoxProps {
+  toggleSelected : boolean
+}
+
+interface TypeHospitals {
+  title: string,
+  lat: number,
+  lon: number,
+  stars: number,
+}
+
 // 디자인
 const Container = styled.div`
   margin-top: 50px;
   background-color: ${REFILL_COLORS["white"]};
   min-width: 100%;
-  min-height: 100vh;
+  min-height: 120vh;
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -38,14 +50,14 @@ const MapBox = styled.div`
   background-color: ${(props: DivProps) =>
     props.bgcolor ? props.bgcolor : "white"};
   width: ${max_width + "px"};
-  height: 550px;
+  height: ${max_height + "px"};
   display: ${(props: DivProps) => (props.selected ? "block" : "none")};
 `;
 
 const SearchTop = styled.div`
   width: ${max_width + "px"};
   height: 150px;
-  background-color: REFILL_COLORS[ "grey-1"];
+  background-color: REFILL_COLORS["grey-1"];
   border-top: 2px solid black;
   border-bottom: 2px solid black;
   display: flex;
@@ -56,8 +68,19 @@ const SearchTop = styled.div`
 
 const SearchBot = styled.div`
   width: ${max_width + "px"};
-  height: 400px;
+  height: ${(parseInt(max_height)-150) + "px"};
   background-color: white;
+`;
+
+const ToggleBox = styled.div`
+  padding: 20px;
+  width: 30%;
+  height: 100%;
+  background-color: #e0b8b8;
+  position: absolute;
+  z-index: 999;
+  right: 0;
+  display: ${(props:ToggleBoxProps)=>(props.toggleSelected ? "none" : "block")};
 `;
 
 export const HospitalSearch: React.FC = () => {
@@ -66,7 +89,12 @@ export const HospitalSearch: React.FC = () => {
   const [dropSelected, setDropSelected] = useState("서울"); // 드롭다운 버튼 구분
   const [searched, setSearched] = useState<string>(""); // 검색어 박스 구분
   const [homeLat, homeLon] = [33.452613, 126.570888]; // 집위치 테스트를 위해 가상의 값으로 테스트진행
-  const hospitals = [
+  const [toggleSelected, setToggleSelected] = useState(true);
+  const [rendered, setRendered] = useState(true);
+  const [toggleData, setToggleData] = useState(true);
+  const nowCenter = useRef<number[]>([33.452613, 126.570888]);
+
+  const hospitals : TypeHospitals[] = [
     {
       title: "김승현원장 병원",
       lat: 33.452616,
@@ -85,6 +113,12 @@ export const HospitalSearch: React.FC = () => {
       lon: 126.5715,
       stars: 4,
     },
+    {
+      title: "뀨 병원2",
+      lat: 33.45299,
+      lon: 126.5711,
+      stars: 4,
+    },
   ]; // 병원 위치 테스트용
 
   const kakaoMapBox = useRef<HTMLDivElement>(null); // 지도를 담을 div element를 위한 ref
@@ -92,14 +126,12 @@ export const HospitalSearch: React.FC = () => {
 
   // 드롭다운 버튼 옵션 선택에 대한 함수임
   const handleSelect = (option: string) => {
-    console.log(option);
     setDropSelected(option);
   };
 
   // 검색어를 임력하면 변경해주는 이벤트
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearched(e.target.value);
-    console.log(e.target.value);
   };
 
   // 검색시 검색 버튼 누르면 이벤트
@@ -109,9 +141,19 @@ export const HospitalSearch: React.FC = () => {
     setSearched("");
   };
 
+  // 거리순보기
+  const handleToggledist = () => {
+    setToggleData(true)
+  }
+  
+  // 추천순보기
+  const handleTogglestars = () => {
+    setToggleData(false)
+  }
+
   // 지도 생성 메서드
   useEffect(() => {
-    if (selected === "option1") {
+    if (selected === "option1" && rendered === true ) {
       const loadMap = async () => {
         if (!window.kakao || !window.kakao.maps) {
           return;
@@ -164,6 +206,8 @@ export const HospitalSearch: React.FC = () => {
   const makeHospitalMarker = async () => {
     // 정보를 가져오고 이 정보를 통해 추후 병원 데이터를 아래에 입력 진행 비동기로
     const center = map.current.getCenter();
+    nowCenter.current = [center.Ma, center.La];
+    console.log(nowCenter.current);
 
     // 영역의 남서쪽 좌표를 얻어옵니다
     // const swLatLng = bounds.getSouthWest();
@@ -212,47 +256,6 @@ export const HospitalSearch: React.FC = () => {
     }
   };
 
-  // 지도 현재 위치 정보 가져오기
-  const getInfo = () => {
-    // 지도의 현재 중심좌표를 얻어옵니다
-    const center = map.current.getCenter();
-
-    // 지도의 현재 영역을 얻어옵니다
-    const bounds = map.current.getBounds();
-
-    // 영역의 남서쪽 좌표를 얻어옵니다
-    const swLatLng = bounds.getSouthWest();
-
-    // 영역의 북동쪽 좌표를 얻어옵니다
-    const neLatLng = bounds.getNorthEast();
-
-    // 지도의 현재 레벨을 얻어옵니다
-    // const level = map.getLevel();
-
-    // 영역정보를 문자열로 얻어옵니다. ((남,서), (북,동)) 형식입니다
-    // const boundsStr = bounds.toString();
-
-    let message = "지도 중심좌표는 위도 " + center.getLat() + ", <br>";
-    message += "경도 " + center.getLng() + " 이고 <br>";
-    // message += '지도 레벨은 ' + level + ' 입니다 <br> <br>';
-    // message += '지도 타입은 ' + mapTypeId + ' 이고 <br> ';
-    message +=
-      "지도의 남서쪽 좌표는 " +
-      swLatLng.getLat() +
-      ", " +
-      swLatLng.getLng() +
-      " 이고 <br>";
-    message +=
-      "북동쪽 좌표는 " +
-      neLatLng.getLat() +
-      ", " +
-      neLatLng.getLng() +
-      " 입니다";
-    // message += '마지막영역 문자열은' + boundsStr + '입니다';
-
-    console.log(message);
-  };
-
   // 집위치로 이동 하는 코드
   const toHome = () => {
     // 집 위치 map 새로 생성
@@ -262,13 +265,33 @@ export const HospitalSearch: React.FC = () => {
     map.current.panTo(moveHome);
   };
 
+  // 지도 정보 상세 토글 버튼
+  const handleToggleMap = () => {
+    setRendered(false)
+    setToggleSelected(!toggleSelected)
+  };
+
+  // 평점 정렬 알고리즘
+  const starsFirst = () => {
+    return hospitals.slice().sort((a, b) => b.stars - a.stars);
+  }
+  
+  // 거리 정렬 알고리즘
+  const distanceFirst = () => {
+    return hospitals.slice().sort((a, b) => (Math.abs(nowCenter.current[0]-a.lat) + Math.abs(nowCenter.current[1]-a.lon)) - (Math.abs(nowCenter.current[0]-b.lat) + Math.abs(nowCenter.current[1]-b.lon)));
+  }
+
+
+  const starsHospitals = starsFirst()
+  const distanceHospitals = distanceFirst()
+
+  console.log(starsHospitals)
+  console.log(distanceHospitals)
+
   return (
     <div>
       <Navbar />
       <Container>
-        {/* <TopVideo>
-          
-        </TopVideo> */}
         <h1
           style={{
             fontSize: "40px",
@@ -287,10 +310,10 @@ export const HospitalSearch: React.FC = () => {
           maxWidth={max_width}
         ></RadioDiv>
         <MapBox selected={selected === "option1"}>
-          <div ref={kakaoMapBox} style={{ width: "70%", height: "100%" }}>
+          <div ref={kakaoMapBox} style={{ width: "100%", height: "100%" }}>
             <Button
               content="+"
-              variant="success"
+              variant="normal"
               width="50px"
               onClick={handleMapLevelMinus}
               customStyles={{
@@ -303,7 +326,7 @@ export const HospitalSearch: React.FC = () => {
             />
             <Button
               content="-"
-              variant="success"
+              variant="normal"
               width="50px"
               onClick={handleMapLevelPlus}
               customStyles={{
@@ -315,10 +338,10 @@ export const HospitalSearch: React.FC = () => {
               }}
             />
             <Button
-              content=">"
+              content="<"
               variant="disable"
-              width="30px"
-              onClick={handleMapLevelPlus}
+              width="25px"
+              onClick={handleToggleMap}
               customStyles={{
                 zIndex: 999,
                 position: "absolute",
@@ -329,6 +352,28 @@ export const HospitalSearch: React.FC = () => {
                 boxShadow: "none",
                 borderRadius: "0px",
                 backgroundColor: REFILL_COLORS["grey-2"],
+                borderTopLeftRadius: "7px",
+                borderBottomLeftRadius: "7px",
+              }}
+            />
+            <Button
+              content=">"
+              variant="disable"
+              width="25px"
+              onClick={handleToggleMap}
+              customStyles={{
+                zIndex: 999,
+                position: "absolute",
+                top: "50%",
+                right: "30%",
+                height: "100px",
+                transform: "translate(0,-50%)",
+                boxShadow: "none",
+                borderRadius: "0px",
+                backgroundColor: REFILL_COLORS["grey-2"],
+                borderTopLeftRadius: '7px',
+                borderBottomLeftRadius: '7px',
+                display: toggleSelected ? "none" : "block",
               }}
             />
             <Button
@@ -357,6 +402,44 @@ export const HospitalSearch: React.FC = () => {
                 color: "white",
               }}
             />
+            <ToggleBox toggleSelected={toggleSelected}>
+              <div style={{display: "flex", justifyContent: "space-around"}}>
+                <Button content="거리순" variant="normal" width="110px" onClick={handleToggledist} />
+                <Button content="평점순" variant="normal" width="110px" onClick={handleTogglestars} />
+              </div>
+              <div style={{marginTop: "30px", overflow : "auto", maxHeight : "650px"}}>
+                <div style={{display: toggleData ? "block" : "none"}}>
+                  {distanceHospitals.map((hospital, i)=>{
+                    return (
+                      <div key={i} style={{margin: "20px"}}>
+                        병원명 : {hospital.title}
+                        <br/>
+                        lat : {hospital.lat}
+                        <br/>
+                        lon : {hospital.lon}
+                        <br/>
+                        평점 : {hospital.stars}
+                      </div>
+                    )
+                  })}
+                </div>
+                <div style={{display: toggleData ? "none" : "block"}}>
+                  {starsHospitals.map((hospital, i)=>{
+                    return (
+                      <div key={i} style={{margin: "20px"}}>
+                        병원명 : {hospital.title}
+                        <br/>
+                        lat : {hospital.lat}
+                        <br/>
+                        lon : {hospital.lon}
+                        <br/>
+                        평점 : {hospital.stars}
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            </ToggleBox>
           </div>
         </MapBox>
         <MapBox bgcolor="white" selected={selected === "option2"}>
@@ -394,6 +477,7 @@ export const HospitalSearch: React.FC = () => {
                 value={searched}
                 onChange={handleSearchChange}
                 placeholder="병원 이름을 입력해주세요"
+                handlefunc={handleSubmit}
               />
               <Button
                 content="검색"

@@ -36,6 +36,34 @@ button:hover {
   color: #61dafb;
 }
 
-.test {
-  background-color: #61dafb;
+/* 기본 스타일 - md 사이즈 이상일 때 적용 */
+/* .App {
+  padding: 0px 100px;
+} */
+
+/* md 사이즈 이하일 때 적용 */
+/* @media (max-width: 992px) {
+  .App {
+    padding: 0px;
+  }
+} */
+
+::-webkit-scrollbar {
+  width: 8px;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+  border-radius: 10px;
 }

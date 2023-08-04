@@ -9,7 +9,7 @@ export default function Navbar() {
   const [menuList, setMenuList] = useState([
     ["예약", "#"],
     ["병원검색", "/search"],
-    ["AI자가진단", "#"],
+    ["AI자가진단", "/diagnosis"],
   ]);
 
   useEffect(() => {

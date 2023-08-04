@@ -36,3 +36,7 @@ cloud:
 jwt:
   token:
     secret: "testTesttestTesttestTesttestTesttestTesttestTesttestTesttestTesttestTesttestTesttestTesttestTest"
+
+flask:
+  server:
+    url: "helloWorld!!!"

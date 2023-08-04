@@ -40,6 +40,7 @@ public class AccountController {
 
         log.debug("'{}' hospital request joinHospital", hospitalJoinRequest.loginId());
         accountService.hospitalJoin(hospitalJoinRequest, profileImg, regImg);
+
         return ResponseEntity.noContent().build();
     }
 
