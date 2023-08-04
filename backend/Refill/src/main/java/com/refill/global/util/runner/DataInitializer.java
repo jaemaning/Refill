@@ -139,6 +139,11 @@ public class DataInitializer implements CommandLineRunner {
                                                                                  .build();
                     educationBackgroundRepository.save(educationBackground);
                 }
+
+//                /* 리뷰 생성 */
+//                for(int k=0; k< 3; j++){
+//                    Review review = Review.builder().doctor(doctor).content("모발이식 상담을 너무 잘해주세요!").hospital(hospital).member(member).score(4).isBlocked(false)
+//                }
             }
         }
     }
