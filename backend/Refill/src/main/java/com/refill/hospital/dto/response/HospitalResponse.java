@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import javax.validation.constraints.NotNull;
 
 public record HospitalResponse(
-    @NotNull Long id,
+    @NotNull Long hospitalId,
     @NotNull String name,
     @NotNull BigDecimal longitude,
     @NotNull BigDecimal latitude,
