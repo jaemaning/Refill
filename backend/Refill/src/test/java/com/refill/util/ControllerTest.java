@@ -5,12 +5,17 @@ import com.refill.account.controller.AccountController;
 import com.refill.account.service.AccountService;
 import com.refill.admin.controller.AdminController;
 import com.refill.admin.service.AdminService;
+import com.refill.aidiagnosis.controller.AiDiagnosisController;
+import com.refill.aidiagnosis.service.AiDiagnosisService;
 import com.refill.hospital.controller.HospitalController;
 import com.refill.hospital.repository.HospitalRepository;
+import com.refill.hospital.service.HospitalOperatingHourService;
 import com.refill.hospital.service.HospitalService;
 import com.refill.member.controller.MemberController;
 import com.refill.member.repository.MemberRepository;
 import com.refill.member.service.MemberService;
+import com.refill.reservation.controller.ReservationController;
+import com.refill.reservation.service.ReservationService;
 import com.refill.security.util.JwtProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -36,7 +41,9 @@ import org.springframework.test.web.servlet.MockMvc;
     AccountController.class,
     MemberController.class,
     HospitalController.class,
-    AdminController.class
+    AdminController.class,
+    ReservationController.class,
+    AiDiagnosisController.class
 })
 public class ControllerTest {
 
@@ -54,6 +61,9 @@ public class ControllerTest {
     @MockBean protected MemberService memberService;
     @MockBean protected HospitalService hospitalService;
     @MockBean protected AdminService adminService;
+    @MockBean protected AiDiagnosisService aiDiagnosisService;
+    @MockBean protected ReservationService reservationService;
+    @MockBean protected HospitalOperatingHourService hospitalOperatingHourService;
 
     // Repository
     @MockBean protected MemberRepository memberRepository;

@@ -5,6 +5,7 @@ import com.refill.aidiagnosis.entity.AiDiagnosis;
 import com.refill.global.entity.Role;
 import com.refill.global.entity.UserInfo;
 import com.refill.member.dto.request.MemberInfoUpdateRequest;
+import com.refill.reservation.entity.Reservation;
 import com.refill.review.entity.Review;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -44,10 +45,13 @@ public class Member extends UserInfo {
     private String nickname;
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<AiDiagnosis> aiDiagnosisList = new ArrayList<>();
+    private List<AiDiagnosis> aiDiagnosisList;
 
     @OneToMany(mappedBy = "member")
     List<Review> reviews;
+
+    @OneToMany(mappedBy = "member")
+    private List<Reservation> reservationList;
 
     public static Member from(MemberJoinRequest memberJoinRequest) {
         return Member.builder()
@@ -60,6 +64,9 @@ public class Member extends UserInfo {
                      .email(memberJoinRequest.email())
                      .name(memberJoinRequest.name())
                      .role(Role.ROLE_MEMBER)
+                     .aiDiagnosisList(new ArrayList<>())
+                     .reviews(new ArrayList<>())
+                     .reservationList(new ArrayList<>())
                      .build();
 
     }
@@ -68,11 +75,21 @@ public class Member extends UserInfo {
         this.profileImg = address;
     }
 
+    public void addReservation(Reservation reservation) {
+        this.reservationList.add(reservation);
+    }
+
+    public void addAiDiagnosis(AiDiagnosis aiDiagnosis) {
+        this.getAiDiagnosisList()
+            .add(aiDiagnosis);
+    }
+
     public void update(MemberInfoUpdateRequest memberInfoUpdateRequest) {
         super.updateMember(memberInfoUpdateRequest);
         this.birthDay = memberInfoUpdateRequest.birthDay();
         this.nickname = memberInfoUpdateRequest.nickname();
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 

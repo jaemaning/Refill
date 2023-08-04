@@ -3,10 +3,13 @@ package com.refill.hospital.controller;
 import com.refill.doctor.dto.request.DoctorJoinRequest;
 import com.refill.doctor.dto.request.DoctorUpdateRequest;
 import com.refill.hospital.dto.request.HospitalInfoUpdateRequest;
+import com.refill.hospital.dto.request.HospitalOperatingHoursRequest;
 import com.refill.hospital.dto.request.HospitalLocationRequest;
 import com.refill.hospital.dto.response.HospitalDetailResponse;
+import com.refill.hospital.dto.response.HospitalOperatingHourResponse;
 import com.refill.hospital.dto.response.HospitalResponse;
 import com.refill.hospital.dto.response.HospitalSearchByLocationResponse;
+import com.refill.hospital.service.HospitalOperatingHourService;
 import com.refill.hospital.service.HospitalService;
 import com.refill.security.util.LoginInfo;
 import java.util.List;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -34,13 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class HospitalController {
 
     private final HospitalService hospitalService;
-
-    @GetMapping("/")
-    public ResponseEntity<String> sayHello() {
-
-        return ResponseEntity.ok()
-                             .body("hello");
-    }
+    private final HospitalOperatingHourService hospitalOperatingHourService;
 
     /* 현 지도에서 검색, 위도/경도 */
     @GetMapping("/search/location")
@@ -137,5 +135,26 @@ public class HospitalController {
         hospitalService.deleteDoctorById(loginInfo.loginId(), hospitalId, doctorId);
         return ResponseEntity.ok()
                              .build();
+    }
+
+    @PostMapping("/hours")
+    public ResponseEntity<String> registerHospitalOperatingHours(
+        @AuthenticationPrincipal LoginInfo loginInfo,
+        @RequestBody final List<HospitalOperatingHoursRequest> hospitalOperatingHoursRequest
+    ) {
+        log.debug("'{}' hospital request registerHour", loginInfo.loginId());
+        hospitalOperatingHourService.saveOperatingHours(hospitalOperatingHoursRequest, loginInfo);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/hours")
+    public ResponseEntity<List<HospitalOperatingHourResponse>> getHospitalOperatingHour(
+        @AuthenticationPrincipal LoginInfo loginInfo)
+    {
+        log.debug("'{}' hospital request hospitalOperatingHour", loginInfo.loginId());
+        List<HospitalOperatingHourResponse> hourResponseList = hospitalOperatingHourService.getOperatingHours(loginInfo.loginId());
+
+        return ResponseEntity.ok().body(hourResponseList);
     }
 }
