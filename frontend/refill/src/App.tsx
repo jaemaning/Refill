@@ -8,6 +8,8 @@ import HLoginForm from "pages/HLoginForm";
 import SignUp from "pages/SignUp";
 import { useKakaoMapScript } from "./hooks/UseKakaoMap";
 import HSingUp from "pages/HSignUp";
+import Mypage from "pages/Mypage";
+import DetailHospital from "pages/DetailHospital";
 import AIDiagnosis from "pages/aidiagnosis/AIDiagnosis";
 import AIDiagnosisSecond from "pages/aidiagnosis/AIDiagnosisSecond";
 import AIDiagnosisResult from "pages/aidiagnosis/AIDiagnosisResult";
@@ -24,6 +26,8 @@ const App: React.FC = () => {
         <Route path="/hos_login" element={<HLoginForm />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/hos_signup" element={<HSingUp />} />
+        <Route path="/mypage" element={<Mypage />} />
+        <Route path="/DetailHospital" element={<DetailHospital />} />
         <Route path="/diagnosis" element={<AIDiagnosis />} />
         <Route path="/diagnosisSecond" element={<AIDiagnosisSecond />} />
         <Route path="/diagnosisResult" element={<AIDiagnosisResult />} />
