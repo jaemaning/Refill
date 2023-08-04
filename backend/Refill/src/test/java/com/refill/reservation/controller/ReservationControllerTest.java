@@ -1,8 +1,10 @@
 package com.refill.reservation.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -103,7 +105,7 @@ class ReservationControllerTest extends ControllerTest {
                )
                .andExpect(status().isOk())
                .andDo(
-                   document("reservation/findAll",
+                   document("reservation/disabled",
                        preprocessRequest(prettyPrint()),
                        preprocessResponse(prettyPrint()),
                        pathParameters(
@@ -172,6 +174,30 @@ class ReservationControllerTest extends ControllerTest {
 
     }
 
+    @DisplayName("예약 삭제된다")
+    @Test
+    void delete_reservation_by_member() throws Exception {
+
+
+        LoginInfo loginInfo = new LoginInfo("member", Role.ROLE_MEMBER);
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        securityContext.setAuthentication(new TestingAuthenticationToken(loginInfo, null));
+        SecurityContextHolder.setContext(securityContext);
+
+        doNothing().when(reservationService).deleteReservation(any(), any());
+
+        mockMvc.perform(
+            delete(baseUrl + "/{reservationId}", 1L)
+                .with(authentication(new TestingAuthenticationToken(loginInfo, null)))
+               .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isNoContent())
+            .andDo(
+                document("reservation/delete",
+                    pathParameters(
+                        parameterWithName("reservationId").description("삭제 할 예약의 PK")
+                    ))
+            );
+    }
 
 
 }
