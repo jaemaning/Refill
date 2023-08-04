@@ -7,8 +7,7 @@ public record ReservationListResponse(
     Long reservationId,
     String hospitalName,
     String doctorName,
-    LocalDateTime startDateTime,
-    boolean isCanceled
+    LocalDateTime startDateTime
 ) {
 
     public ReservationListResponse(Reservation reservation) {
@@ -16,8 +15,7 @@ public record ReservationListResponse(
             reservation.getId(),
             reservation.getDoctor().getHospital().getName(),
             reservation.getDoctor().getName(),
-            reservation.getStartDateTime(),
-            reservation.isCanceled()
+            reservation.getStartDateTime()
         );
     }
 

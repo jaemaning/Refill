@@ -9,6 +9,7 @@ import com.refill.aidiagnosis.controller.AiDiagnosisController;
 import com.refill.aidiagnosis.service.AiDiagnosisService;
 import com.refill.hospital.controller.HospitalController;
 import com.refill.hospital.repository.HospitalRepository;
+import com.refill.hospital.service.HospitalOperatingHourService;
 import com.refill.hospital.service.HospitalService;
 import com.refill.member.controller.MemberController;
 import com.refill.member.repository.MemberRepository;
@@ -62,6 +63,7 @@ public class ControllerTest {
     @MockBean protected AdminService adminService;
     @MockBean protected AiDiagnosisService aiDiagnosisService;
     @MockBean protected ReservationService reservationService;
+    @MockBean protected HospitalOperatingHourService hospitalOperatingHourService;
 
     // Repository
     @MockBean protected MemberRepository memberRepository;
