@@ -7,6 +7,7 @@ interface InputBoxType {
   value: string | null;
   onChange: (value: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder: string | null;
+  handlefunc? : (e: any)=> void;
 }
 
 const StyleInputBox = styled.input(() => [
@@ -30,11 +31,21 @@ export const InputBox: React.FC<InputBoxType> = ({
   value,
   onChange,
   placeholder,
+  handlefunc
 }) => {
   return (
     <StyleInputBox
       value={value || ""}
       onChange={onChange}
+      onKeyPress={(e) => {
+        if (e.key === "Enter") {
+          // e.preventDefault();
+          e.nativeEvent.stopImmediatePropagation();
+          if (handlefunc) {
+            handlefunc(e);
+          }
+        }
+      }}
       placeholder={placeholder || ""}
       type={type}
     />
