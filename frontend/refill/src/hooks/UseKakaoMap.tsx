@@ -10,7 +10,7 @@ export const useKakaoMapScript = () => {
       script.onload = () => setScriptLoaded(true);
       script.async = true;
       document.head.appendChild(script);
-      console.log(scriptLoaded)
+      console.log(scriptLoaded);
     } else {
       setScriptLoaded(true);
     }
