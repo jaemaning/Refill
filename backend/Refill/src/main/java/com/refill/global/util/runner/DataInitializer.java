@@ -102,8 +102,8 @@ public class DataInitializer implements CommandLineRunner {
                                         .tel("02-2345-3465")
                                         .hospitalBannerImg("https://picsum.photos/600/600/?random")
                                         .hospitalProfileImg("https://picsum.photos/600/600/?random")
-                                        .latitude(BigDecimal.valueOf(randomDouble))
-                                        .longitude(BigDecimal.valueOf(randomDouble))
+                                        .latitude(BigDecimal.valueOf(33.452615))
+                                        .longitude(BigDecimal.valueOf(126.570890))
                                         .postalCode(
                                             String.valueOf(random.nextInt(90000)+10000))
                                         .registrationImg("https://picsum.photos/600/600/?random")
