@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 public record DisabledReservationTimeResponse(
 
-    LocalDateTime startTime
+    LocalDateTime startDateTime
 ) {
 
     public DisabledReservationTimeResponse(Reservation reservation) {

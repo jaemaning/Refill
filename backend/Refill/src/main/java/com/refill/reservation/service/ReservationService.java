@@ -31,7 +31,7 @@ public class ReservationService {
     private final DoctorService doctorService;
     private final MemberService memberService;
     private final AmazonS3Service amazonS3Service;
-    private static final int CONSULTING_TIME = 30;
+    private final int CONSULTING_TIME = 30;
 
     @Transactional(readOnly = true)
     public List<ReservationListResponse> findAllByMember(String loginId) {
