@@ -11,6 +11,7 @@ import com.refill.hospital.entity.Hospital;
 import com.refill.hospital.repository.HospitalRepository;
 import com.refill.member.entity.Member;
 import com.refill.member.repository.MemberRepository;
+import com.refill.review.entity.Review;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -48,7 +49,7 @@ public class DataInitializer implements CommandLineRunner {
                              .loginId("admin")
                              .nickname("관리자")
                              .birthDay(LocalDate.of(1983, 1, 1))
-                             .profileImg("ADMIN_PROFILE_IMG_ADDRESS")
+                             .profileImg("https://picsum.photos/600/600/?random")
                              .address("광주광역시 광산구 윗마을")
                              .email("hoin123@naver.com")
                              .loginPassword(bCryptPasswordEncoder.encode("1234"))
@@ -71,7 +72,7 @@ public class DataInitializer implements CommandLineRunner {
                                   .loginId("member" + i)
                                   .nickname("일반유저" + i)
                                   .birthDay(LocalDate.of(2000, 1, 1))
-                                  .profileImg("MEMBER_PROFILE_IMG_ADDRESS")
+                                  .profileImg("https://picsum.photos/600/600/?random")
                                   .address(address)
                                   .email("member" + i + "@google.com")
                                   .loginPassword(bCryptPasswordEncoder.encode("1234"))
@@ -97,13 +98,13 @@ public class DataInitializer implements CommandLineRunner {
                                             bCryptPasswordEncoder.encode("1234")) //1234
                                         .role(i == 4 ? Role.ROLE_GUEST : Role.ROLE_HOSPITAL)
                                         .tel("02-2345-3465")
-                                        .hospitalBannerImg("HOS_BANNER_IMG_ADDRESS"+i)
-                                        .hospitalProfileImg("HOS_PROFILE_IMG_ADDRESS"+i)
+                                        .hospitalBannerImg("https://picsum.photos/600/600/?random")
+                                        .hospitalProfileImg("https://picsum.photos/600/600/?random")
                                         .latitude(BigDecimal.valueOf(randomDouble))
                                         .longitude(BigDecimal.valueOf(randomDouble))
                                         .postalCode(
                                             String.valueOf(random.nextInt(90000)+10000))
-                                        .registrationImg("HOS_REG_IMG_ADDRESS" + i)
+                                        .registrationImg("https://picsum.photos/600/600/?random")
                                         .build();
             hospitalRepository.save(hospital);
 
@@ -115,8 +116,8 @@ public class DataInitializer implements CommandLineRunner {
             for(int j=0; j<3; j++){
                 Doctor doctor = Doctor.builder()
                                       .name(firstName[(i + j) % firstName.length] + "의사")
-                                      .profileImg("DOCTOR_PROFILE_IMG_ADDRESS")
-                                      .licenseImg("DOCTOR_LICENSE_IMG_ADDRESS")
+                                      .profileImg("https://picsum.photos/600/600/?random")
+                                      .licenseImg("https://picsum.photos/600/600/?random")
                                       .licenseNumber("DOC-LN-2123-" + i)
                                       .description("한국 미용 성형학회 자문의원\nIBCS\n모발이식의 대가")
                                       .hospital(hospital)
@@ -141,11 +142,20 @@ public class DataInitializer implements CommandLineRunner {
                                                                                  .build();
                     educationBackgroundRepository.save(educationBackground);
                 }
-
-//                /* 리뷰 생성 */
-//                for(int k=0; k< 3; j++){
-//                    Review review = Review.builder().doctor(doctor).content("모발이식 상담을 너무 잘해주세요!").hospital(hospital).member(member).score(4).isBlocked(false)
-//                }
+                
+                /* 리뷰 생성 - 의사 한명당 3개의 리뷰 생성 */
+                String[] content = {"이분이 진짜 최고", "모발이식 상담을 너무 잘해요!!", "난 좀 별로인듯..."};
+                String[] category = {"모발이식", "컨설팅", "탈모케어"};
+                for(int k=0; k < 3; j++){
+                    Review review = Review.builder()
+                                          .doctor(doctor)
+                                          .content(content[(j + k) % content.length])
+                                          .hospital(hospital)
+                                          .member(member)
+                                          .score(random.nextInt(6))
+                                          .isBlocked(false)
+                                          .category(category[(j + k) % content.length]).build();
+                }
             }
         }
     }
