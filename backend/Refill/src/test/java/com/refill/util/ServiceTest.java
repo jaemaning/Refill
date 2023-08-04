@@ -36,35 +36,47 @@ import org.springframework.transaction.annotation.Transactional;
 @SpringBootTest
 public class ServiceTest {
 
-    @Autowired protected MemberService memberService;
-    @Autowired protected HospitalService hospitalService;
-    @Autowired protected HospitalOperatingHourService hospitalOperatingHourService;
-    @Autowired protected AccountService accountService;
-    @Autowired protected AiDiagnosisService aiDiagnosisService;
-    @Autowired protected ReservationService reservationService;
-    @Autowired protected DoctorService doctorService;
+    @Autowired
+    protected MemberService memberService;
+    @Autowired
+    protected HospitalService hospitalService;
+    @Autowired
+    protected HospitalOperatingHourService hospitalOperatingHourService;
+    @Autowired
+    protected AccountService accountService;
+    @Autowired
+    protected AiDiagnosisService aiDiagnosisService;
+    @Autowired
+    protected ReservationService reservationService;
+    @Autowired
+    protected DoctorService doctorService;
 
-    @Autowired protected MajorAreaRepository majorAreaRepository;
-    @Autowired protected EducationBackgroundRepository educationBackgroundRepository;
-    @Autowired protected BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    protected MajorAreaRepository majorAreaRepository;
+    @Autowired
+    protected EducationBackgroundRepository educationBackgroundRepository;
+    @Autowired
+    protected BCryptPasswordEncoder passwordEncoder;
 
-    @MockBean protected AmazonS3Service amazonS3Service;
-    @MockBean protected AmazonSESService amazonSESService;
+    @MockBean
+    protected AmazonS3Service amazonS3Service;
+    @MockBean
+    protected AmazonSESService amazonSESService;
 
     @Transactional
     protected void memberInfoGenerator() {
         Member admin = Member.builder()
-                              .name("신호인")
-                              .loginId("admin")
-                              .nickname("관리자")
-                              .birthDay(LocalDate.of(1983, 1, 1))
-                              .profileImg("ADMIN_PROFILE_IMG_ADDRESS")
-                              .address("광주광역시 광산구 윗마을")
-                              .email("hoin123@naver.com")
-                              .loginPassword(passwordEncoder.encode("1234"))
-                              .role(Role.ROLE_ADMIN)
-                              .tel("010-1234-1234")
-                              .build();
+                             .name("신호인")
+                             .loginId("admin")
+                             .nickname("관리자")
+                             .birthDay(LocalDate.of(1983, 1, 1))
+                             .profileImg("ADMIN_PROFILE_IMG_ADDRESS")
+                             .address("광주광역시 광산구 윗마을")
+                             .email("hoin123@naver.com")
+                             .loginPassword(passwordEncoder.encode("1234"))
+                             .role(Role.ROLE_ADMIN)
+                             .tel("010-1234-1234")
+                             .build();
 
         Member member = Member.builder()
                               .name("이규민")
@@ -82,6 +94,7 @@ public class ServiceTest {
         memberService.save(admin);
         memberService.save(member);
     }
+
     @Transactional
     protected void hospitalInfoGenerator() {
         // 병원 생성
@@ -100,10 +113,10 @@ public class ServiceTest {
                                     .longitude(BigDecimal.valueOf(2.456))
                                     .postalCode("12345")
                                     .registrationImg("HOS_REG_IMG_ADDRESS")
+                                    .doctors(new ArrayList<>())
                                     .build();
         hospitalService.save(hospital);
         Hospital savedHospital = hospitalService.findByLoginId("hospital01");
-
 
         // 의사
         Doctor doctor = Doctor.builder()
@@ -116,18 +129,26 @@ public class ServiceTest {
                               .build();
 
         doctorService.save(doctor);
+        savedHospital.getDoctors()
+                     .add(doctor);
         hospitalService.save(savedHospital);
 
         // 운영 시간
         List<HospitalOperatingHoursRequest> list = new ArrayList<>();
         LocalTime startTime = LocalTime.of(9, 0);
         LocalTime endTime = LocalTime.of(21, 0);
-        HospitalOperatingHoursRequest mon = new HospitalOperatingHoursRequest(DayOfWeek.MONDAY, startTime, endTime);
-        HospitalOperatingHoursRequest tue = new HospitalOperatingHoursRequest(DayOfWeek.TUESDAY, startTime, endTime);
-        HospitalOperatingHoursRequest wen = new HospitalOperatingHoursRequest(DayOfWeek.WEDNESDAY, startTime, endTime);
-        HospitalOperatingHoursRequest thur = new HospitalOperatingHoursRequest(DayOfWeek.THURSDAY, startTime, endTime);
-        HospitalOperatingHoursRequest fri = new HospitalOperatingHoursRequest(DayOfWeek.FRIDAY, startTime, endTime);
-        HospitalOperatingHoursRequest sat = new HospitalOperatingHoursRequest(DayOfWeek.SATURDAY, startTime, endTime);
+        HospitalOperatingHoursRequest mon = new HospitalOperatingHoursRequest(DayOfWeek.MONDAY,
+            startTime, endTime);
+        HospitalOperatingHoursRequest tue = new HospitalOperatingHoursRequest(DayOfWeek.TUESDAY,
+            startTime, endTime);
+        HospitalOperatingHoursRequest wen = new HospitalOperatingHoursRequest(DayOfWeek.WEDNESDAY,
+            startTime, endTime);
+        HospitalOperatingHoursRequest thur = new HospitalOperatingHoursRequest(DayOfWeek.THURSDAY,
+            startTime, endTime);
+        HospitalOperatingHoursRequest fri = new HospitalOperatingHoursRequest(DayOfWeek.FRIDAY,
+            startTime, endTime);
+        HospitalOperatingHoursRequest sat = new HospitalOperatingHoursRequest(DayOfWeek.SATURDAY,
+            startTime, endTime);
 
         list.add(mon);
         list.add(tue);
@@ -146,11 +167,11 @@ public class ServiceTest {
         majorAreaRepository.save(majorArea);
 
         // 학력
-            EducationBackground educationBackground = EducationBackground.builder()
-                                                                         .doctor(doctor)
-                                                                         .content("경희대학교 의과대학")
-                                                                         .build();
-            educationBackgroundRepository.save(educationBackground);
+        EducationBackground educationBackground = EducationBackground.builder()
+                                                                     .doctor(doctor)
+                                                                     .content("경희대학교 의과대학")
+                                                                     .build();
+        educationBackgroundRepository.save(educationBackground);
     }
 
 

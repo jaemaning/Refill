@@ -75,7 +75,7 @@ public class ReservationService {
             reservation.updateFileAddress(address);
         }
 
-        member.getReservationList().add(reservation);
+        member.addReservation(reservation);
         reservationRepository.save(reservation);
 
 
@@ -114,7 +114,6 @@ public class ReservationService {
             throw new MemberException(ErrorCode.UNAUTHORIZED_REQUEST);
         }
 
-        member.addReservation(reservation);
         reservationRepository.delete(reservation);
 
     }
