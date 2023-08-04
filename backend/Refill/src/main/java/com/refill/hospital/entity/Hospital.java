@@ -32,10 +32,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 @DynamicUpdate
 public class Hospital extends UserInfo {
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 9, scale = 6)
     BigDecimal latitude;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 9, scale = 6)
     BigDecimal longitude;
 
     @Column(nullable = false)
