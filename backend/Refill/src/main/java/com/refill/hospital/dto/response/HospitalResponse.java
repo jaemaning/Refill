@@ -36,6 +36,6 @@ public record HospitalResponse(
                        .mapToInt(Review::getScore)
                        .average()
                        .orElse(0.0);
-        return Math.round(score * 10.0 / 10.0);
+        return Math.round(score * 10.00) / 10.00;
     }
 }
