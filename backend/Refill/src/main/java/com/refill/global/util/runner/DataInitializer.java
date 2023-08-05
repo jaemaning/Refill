@@ -115,7 +115,7 @@ public class DataInitializer implements CommandLineRunner {
             String[] firstName = {"김", "이", "박", "신", "유", "최"};
             
             /* 의사 생성 */
-            for(int j=0; j<3; j++){
+            for(int j=0; j<4; j++){
                 Doctor doctor = Doctor.builder()
                                       .name(firstName[(i + j) % firstName.length] + "의사")
                                       .profileImg("https://picsum.photos/600/600/?random")
@@ -148,7 +148,7 @@ public class DataInitializer implements CommandLineRunner {
                 /* 리뷰 생성 - 의사 한명당 3개의 리뷰 생성 */
                 String[] content = {"이분이 진짜 최고", "모발이식 상담을 너무 잘해요!!", "난 좀 별로인듯..."};
                 String[] category = {"모발이식", "컨설팅", "탈모케어"};
-                for(int k=0; k < 3; k++){
+                for(int k=0; k < 4; k++){
                     Review review = Review.builder()
                                           .doctor(doctor)
                                           .content(content[(j + k) % content.length])
