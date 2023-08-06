@@ -6,6 +6,7 @@ import com.refill.account.dto.request.LoginIdFindRequest;
 import com.refill.account.dto.request.LoginPasswordRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.dto.request.MemberLoginRequest;
+import com.refill.account.dto.response.TokenResponse;
 import com.refill.account.exception.AccountException;
 import com.refill.global.entity.Message;
 import com.refill.global.entity.Role;
@@ -106,7 +107,7 @@ public class AccountService {
 
 
     //@Transactional(readOnly = true)
-    public String memberLogin(MemberLoginRequest memberLoginRequest) {
+    public TokenResponse memberLogin(MemberLoginRequest memberLoginRequest) {
 
         Member member = memberService.findByLoginId(memberLoginRequest.loginId());
 
@@ -118,12 +119,15 @@ public class AccountService {
             throw new MemberException(ErrorCode.INVALID_PASSWORD);
         }
 
-        return jwtProvider.createToken(member.getLoginId(), member.getRole(), secretKey);
+        String accessToken = jwtProvider.createToken(member.getLoginId(), member.getRole(), secretKey);
+        String refreshToken = jwtProvider.createRefreshToken(member.getLoginId(), secretKey);
+
+        return new TokenResponse(accessToken, refreshToken);
 
     }
 
     //@Transactional(readOnly = true)
-    public String hospitalLogin(HospitalLoginRequest hospitalLoginRequest) {
+    public TokenResponse hospitalLogin(HospitalLoginRequest hospitalLoginRequest) {
 
         Hospital hospital = hospitalService.findByLoginId(hospitalLoginRequest.loginId());
 
@@ -140,7 +144,10 @@ public class AccountService {
             throw new MemberException(ErrorCode.OUTSTANDING_AUTHORIZATION);
         }
 
-        return jwtProvider.createToken(hospital.getLoginId(), hospital.getRole(), secretKey);
+        String accessToken = jwtProvider.createToken(hospital.getLoginId(), hospital.getRole(), secretKey);
+        String refreshToken = jwtProvider.createRefreshToken(hospital.getLoginId(), secretKey);
+
+        return new TokenResponse(accessToken, refreshToken);
     }
 
 

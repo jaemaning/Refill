@@ -6,6 +6,7 @@ import com.refill.account.dto.request.LoginIdFindRequest;
 import com.refill.account.dto.request.LoginPasswordRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.dto.request.MemberLoginRequest;
+import com.refill.account.dto.response.TokenResponse;
 import com.refill.account.service.AccountService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -45,21 +46,21 @@ public class AccountController {
     }
 
     @PostMapping("/member/login")
-    public ResponseEntity<String> loginMember(@RequestBody @Valid final MemberLoginRequest memberLoginRequest) {
+    public ResponseEntity<TokenResponse> loginMember(@RequestBody @Valid final MemberLoginRequest memberLoginRequest) {
 
         log.debug("'{}' member request login", memberLoginRequest.loginId());
-        String token = accountService.memberLogin(memberLoginRequest);
+        TokenResponse tokenResponse = accountService.memberLogin(memberLoginRequest);
 
-        return ResponseEntity.ok().body(token);
+        return ResponseEntity.ok().body(tokenResponse);
     }
 
     @PostMapping("/hospital/login")
-    public ResponseEntity<String> loginHospital(@RequestBody @Valid final HospitalLoginRequest hospitalLoginRequest) {
+    public ResponseEntity<TokenResponse> loginHospital(@RequestBody @Valid final HospitalLoginRequest hospitalLoginRequest) {
 
         log.debug("'{}' member request login", hospitalLoginRequest.loginId());
-        String token = accountService.hospitalLogin(hospitalLoginRequest);
+        TokenResponse tokenResponse = accountService.hospitalLogin(hospitalLoginRequest);
 
-        return ResponseEntity.ok().body(token);
+        return ResponseEntity.ok().body(tokenResponse);
     }
 
     @PostMapping("/member/find/id")

@@ -15,6 +15,7 @@ import com.refill.account.dto.request.LoginIdFindRequest;
 import com.refill.account.dto.request.LoginPasswordRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.dto.request.MemberLoginRequest;
+import com.refill.account.dto.response.TokenResponse;
 import com.refill.global.entity.Message;
 import com.refill.global.entity.Role;
 import com.refill.global.exception.ErrorCode;
@@ -102,7 +103,7 @@ class AccountServiceTest extends ServiceTest {
 
         // when
         MemberLoginRequest memberLoginRequest = new MemberLoginRequest("member01", "pass01");
-        String token = accountService.memberLogin(memberLoginRequest);
+        TokenResponse token = accountService.memberLogin(memberLoginRequest);
 
         assertNotNull(token);
 

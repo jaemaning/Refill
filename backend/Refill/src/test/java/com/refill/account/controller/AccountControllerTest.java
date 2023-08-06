@@ -25,6 +25,7 @@ import com.refill.account.dto.request.LoginIdFindRequest;
 import com.refill.account.dto.request.LoginPasswordRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.dto.request.MemberLoginRequest;
+import com.refill.account.dto.response.TokenResponse;
 import com.refill.global.entity.Message;
 import com.refill.global.entity.Role;
 import com.refill.global.exception.ErrorCode;
@@ -143,7 +144,8 @@ class AccountControllerTest extends ControllerTest {
 
         MemberLoginRequest memberLoginRequest = new MemberLoginRequest("loginId", "loginPassword");
 
-        when(accountService.memberLogin(any())).thenReturn("{\"token\":\"access Token\"}");
+        TokenResponse tokenResponse = new TokenResponse("accessToken", "refreshToken");
+        when(accountService.memberLogin(any())).thenReturn(tokenResponse);
 
         mockMvc.perform(
             post(baseUrl + "/member/login")
@@ -159,7 +161,8 @@ class AccountControllerTest extends ControllerTest {
                         fieldWithPath("loginPassword").description("로그인 패스워드")
                     ),
                     responseFields(
-                        fieldWithPath("token").description("발급된 토큰")
+                        fieldWithPath("accessToken").description("엑세스 토큰"),
+                        fieldWithPath("refreshToken").description("리프레시 토큰")
                     ))
             );
     }
@@ -170,7 +173,8 @@ class AccountControllerTest extends ControllerTest {
 
         HospitalLoginRequest hospitalLoginRequest = new HospitalLoginRequest("loginId", "loginPassword");
 
-        when(accountService.hospitalLogin(any())).thenReturn("{\"token\":\"access Token\"}");
+        TokenResponse tokenResponse = new TokenResponse("accessToken", "refreshToken");
+        when(accountService.hospitalLogin(any())).thenReturn(tokenResponse);
 
         mockMvc.perform(
                    post(baseUrl + "/hospital/login")
@@ -186,7 +190,8 @@ class AccountControllerTest extends ControllerTest {
                            fieldWithPath("loginPassword").description("로그인 패스워드")
                        ),
                        responseFields(
-                           fieldWithPath("token").description("발급된 토큰")
+                           fieldWithPath("accessToken").description("엑세스 토큰"),
+                           fieldWithPath("refreshToken").description("리프레시 토큰")
                        ))
                );
     }
