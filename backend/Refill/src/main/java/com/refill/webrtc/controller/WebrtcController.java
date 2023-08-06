@@ -25,7 +25,7 @@ import io.openvidu.java.client.SessionProperties;
 @RestController
 public class WebrtcController {
 
-    @Value("https://i9c201.p.ssafy.io")
+    @Value("https://i9c201.p.ssafy.io:4441")
     private String OPENVIDU_URL;
 
     @Value("openvidu")

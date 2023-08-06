@@ -3,7 +3,7 @@ import "../styles/Navbar.css";
 import nav_logo from "../assets/logo_final.png";
 import { Link } from "react-router-dom";
 
-export default function Navbar() {
+const Navbar = React.forwardRef<HTMLDivElement>((props, ref) => {
   const [isMenuOpen, setMenuOpen] = useState(false);
 
   const [menuList, setMenuList] = useState([
@@ -65,7 +65,7 @@ export default function Navbar() {
   };
 
   return (
-    <div className="w-full border-b-[2px]">
+    <div ref={ref} className="w-full border-b-[2px]">
       <div className="w-full mx-auto lg:w-[1400px]">
         <nav className="bg-white border-gray-200 w-full mx-auto">
           <div className="flex flex-wrap items-center dark:bg-gray-900 justify-between p-6 w-full mx-auto">
@@ -123,4 +123,8 @@ export default function Navbar() {
       </div>
     </div>
   );
-}
+});
+
+Navbar.displayName = "Navbar";
+
+export default Navbar;

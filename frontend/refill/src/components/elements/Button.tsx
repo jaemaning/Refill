@@ -68,7 +68,8 @@ const TYPE_VARIANTS = {
     },
   },
   normal: {
-    backgroundColor: REFILL_COLORS["rf-4"],
+    // backgroundColor: REFILL_COLORS["rf-4"],
+    backgroundColor: "#00aeff",
     color: REFILL_COLORS["white"],
     ":hover": {
       backgroundColor: REFILL_COLORS["normalChange"],
@@ -102,7 +103,7 @@ const TYPE_VARIANTS = {
   },
   unselected: {
     // define styles for danger variant
-    backgroundColor: REFILL_COLORS["grey-1"],
+    backgroundColor: "#eeeeee",
     color: REFILL_COLORS["black"],
     ":hover": {
       backgroundColor: REFILL_COLORS["grey-2"],
