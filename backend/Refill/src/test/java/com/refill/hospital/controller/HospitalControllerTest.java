@@ -2,6 +2,7 @@ package com.refill.hospital.controller;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
@@ -11,7 +12,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -25,93 +25,25 @@ import com.refill.member.entity.Member;
 import com.refill.review.entity.Review;
 import com.refill.util.ControllerTest;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 
 class HospitalControllerTest extends ControllerTest {
 
     private Hospital mockHospital;
     private Review mockReview;
     private Doctor mockDoctor;
+    private Member mockMember;
 
     @BeforeEach
     void setUp() {
-        Member member = Member.builder()
-                              .id(1L)
-                              .name("호인")
-                              .build();
-
-        MajorArea majorArea = MajorArea.builder()
-                                       .content("모발이식")
-                                       .build();
-        MajorArea majorArea1 = MajorArea.builder()
-                                        .content("모발이식")
-                                        .build();
-        List<MajorArea> majorAreas = new ArrayList<>();
-        majorAreas.add(majorArea);
-        majorAreas.add(majorArea1);
-
-        EducationBackground educationBackground = EducationBackground.builder()
-                                                                     .content("서울대 졸업")
-                                                                     .build();
-        EducationBackground educationBackground1 = EducationBackground.builder()
-                                                                      .content("고려대 졸업")
-                                                                      .build();
-        List<EducationBackground> educationBackgrounds = new ArrayList<>();
-        educationBackgrounds.add(educationBackground1);
-        educationBackgrounds.add(educationBackground);
-
-        Doctor doctor = Doctor.builder()
-                              .description("상담을 잘합니다.")
-                              .majorAreas(majorAreas)
-                              .educationBackgrounds(educationBackgrounds)
-                              .build();
-        Doctor doctor1 = Doctor.builder()
-                               .description("모발이식을 잘합니다.")
-                               .majorAreas(majorAreas)
-                               .educationBackgrounds(educationBackgrounds)
-                               .build();
-        List<Doctor> doctorList = new ArrayList<>();
-        doctorList.add(doctor1);
-        doctorList.add(doctor);
-
-        Review review1 = Review.builder()
-                               .score(3)
-                               .isBlocked(false)
-                               .member(member)
-                               .doctor(doctor)
-                               .hospital(mockHospital)
-                               .build();
-        Review review2 = Review.builder()
-                               .score(2)
-                               .isBlocked(false)
-                               .doctor(doctor1)
-                               .hospital(mockHospital)
-                               .member(member)
-                               .build();
-        List<Review> reviews = new ArrayList<>();
-        reviews.add(review1);
-        reviews.add(review2);
-
-        Hospital hospital = Hospital.builder()
-                                    .id(1L)
-                                    .hospitalProfileImg("qwer")
-                                    .hospitalBannerImg("qwer")
-                                    .registrationImg("qewr")
-                                    .tel("0101")
-                                    .postalCode("1234")
-                                    .role(Role.ROLE_HOSPITAL)
-                                    .name("호인병원")
-                                    .address("경기도 수원시 ")
-                                    .doctors(doctorList)
-                                    .reviews(reviews)
-                                    .build();
-        mockHospital = hospital;
+        createMember();
+        createDoctor();
+        createHospital();
+        createReview();
     }
 
     void createHospital() {
@@ -129,19 +61,53 @@ class HospitalControllerTest extends ControllerTest {
                                     .loginId("hospital1")
                                     .email("hos_@naver.com")
                                     .build();
+        hospital.addDoctor(mockDoctor);
+        mockHospital = hospital;
     }
-    void createDoctor(){
-        MajorArea majorArea = MajorArea.builder()
-                                       .content("주전공은..")
-                                       .build();
 
-
+    void createDoctor() {
         Doctor doctor = Doctor.builder()
                               .licenseNumber("123-123")
                               .profileImg("doc_pro_img")
                               .name("doctor1")
                               .description("모발이식1")
                               .build();
+        MajorArea majorArea = MajorArea.builder()
+                                       .content("주전공은..")
+                                       .build();
+        EducationBackground educationBackground = EducationBackground.builder()
+                                                                     .content("서울대 졸업")
+                                                                     .build();
+        educationBackground.setDoctor(doctor);
+        majorArea.setDoctor(doctor);
+
+        doctor.addEducationBackground(educationBackground);
+        doctor.addMajorArea(majorArea);
+        mockDoctor = doctor;
+    }
+
+    void createMember() {
+        Member member = Member.builder()
+                              .name("사용자1")
+                              .id(1L)
+                              .address("장덕동")
+                              .nickname("호인")
+                              .build();
+        mockMember = member;
+    }
+
+    void createReview() {
+        Review review = Review.builder()
+                              .content("정말 좋았어요.")
+                              .member(mockMember)
+                              .doctor(mockDoctor)
+                              .hospital(mockHospital)
+                              .score(3)
+                              .updatedAt(LocalDateTime.now())
+                              .build();
+        mockDoctor.addReview(review);
+        mockHospital.addReview(review);
+        mockReview = review;
     }
 
 
@@ -159,22 +125,22 @@ class HospitalControllerTest extends ControllerTest {
     @DisplayName("병원_검색_위도_경도_테스트")
     public void testSearchByLocation() throws Exception {
         this.mockMvc.perform(
-                RestDocumentationRequestBuilders.get("/api/v1/hospital/search/location")
-                                                .param("latitude", "37.5665")
-                                                .param("longitude", "126.9780")
-                                                .accept(MediaType.APPLICATION_JSON))
+                get("/api/v1/hospital/search/location")
+                    .param("latitude", "37.5665")
+                    .param("longitude", "126.9780")
+                    .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
-                    .andDo(document("searchByLocation",
+                    .andDo(document("hospital/searchByLocation",
                         preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint())));
     }
 
     @Test
     @DisplayName("병원_검색_키워드_테스트")
     public void testSearchByKeyword() throws Exception {
-        this.mockMvc.perform(RestDocumentationRequestBuilders.get("/api/v1/hospital/search/keyword")
-                                                             .param("name", "Hospital Name")
-                                                             .param("addr", "Hospital Address")
-                                                             .accept(MediaType.APPLICATION_JSON))
+        this.mockMvc.perform(get("/api/v1/hospital/search/keyword")
+                .param("name", "Hospital Name")
+                .param("addr", "Hospital Address")
+                .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andDo(document("searchByKeyword",
                         preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint())));
@@ -195,9 +161,37 @@ class HospitalControllerTest extends ControllerTest {
                             parameterWithName("hospitalId").description("병원 아이디")
                         ),
                         responseFields(
-                            fieldWithPath("hospitalId").description("병원 아이디"),
-                            fieldWithPath("name").description("병원 이름"),
-                            fieldWithPath("address").description("병원 주소")
+                            fieldWithPath("hospitalResponse.address").description("병원 주소"),
+                            fieldWithPath("hospitalResponse.hospitalId").description("병원 아이디"),
+                            fieldWithPath("hospitalResponse.name").description("병원 이름"),
+                            fieldWithPath("hospitalResponse.longitude").description("병원 위도"),
+                            fieldWithPath("hospitalResponse.latitude").description("병원 경도"),
+                            fieldWithPath("hospitalResponse.hospitalProfileImg").description(
+                                "병원 프로필 이미지"),
+                            fieldWithPath("hospitalResponse.bannerProfileImg").description(
+                                "병원 배너 이미지"),
+                            fieldWithPath("hospitalResponse.address").description("병원 주소"),
+                            fieldWithPath("hospitalResponse.tel").description("병원 전화번호"),
+                            fieldWithPath("hospitalResponse.score").description("병원 리뷰 평균 점수"),
+                            fieldWithPath("hospitalResponse.email").description("병원 이메일"),
+
+                            fieldWithPath("doctorResponses[].doctorId").description("의사 아이디"),
+                            fieldWithPath("doctorResponses[].name").description("의사 이름"),
+                            fieldWithPath("doctorResponses[].profileImg").description("의사 프로필 이미지"),
+                            fieldWithPath("doctorResponses[].licenseNumber").description(
+                                "의사 면허 번호"),
+                            fieldWithPath("doctorResponses[].licenseImg").description("의사 면허 이미지"),
+                            fieldWithPath("doctorResponses[].description").description("의사 약력"),
+                            fieldWithPath("doctorResponses[].majorAreas.[]").description(
+                                "주요 진료 분야"),
+                            fieldWithPath("doctorResponses[].majorAreas.[]").description(
+                                "주요 진료 분야"),
+                            fieldWithPath("doctorResponses[].educationBackgrounds.[]").description(
+                                "학력"),
+                            fieldWithPath("doctorResponses[].educationBackgrounds.[]").description(
+                                "학력")
+
+//                            fieldWithPath("reviewResponses.[]").description("리뷰")
                         )));
     }
 
@@ -215,8 +209,7 @@ class HospitalControllerTest extends ControllerTest {
                             parameterWithName("hospitalId").description("병원 아이디")
                         ),
                         requestFields(
-                            fieldWithPath("name").description("병원 이름"),
-                            fieldWithPath("address").description("병원 주소")
+
                         )));
     }
 }

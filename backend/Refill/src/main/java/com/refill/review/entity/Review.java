@@ -12,16 +12,16 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @ToString(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Builder
+@SuperBuilder
 @Entity
 public class Review extends BaseEntity {
 

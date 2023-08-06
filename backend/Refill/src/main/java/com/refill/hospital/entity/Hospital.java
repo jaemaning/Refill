@@ -7,6 +7,7 @@ import com.refill.global.entity.UserInfo;
 import com.refill.hospital.dto.request.HospitalInfoUpdateRequest;
 import com.refill.review.entity.Review;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -16,6 +17,7 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -52,13 +54,16 @@ public class Hospital extends UserInfo {
     String registrationImg;
 
     @OneToMany(mappedBy = "hospital")
-    List<Doctor> doctors;
+    @Builder.Default
+    List<Doctor> doctors = new ArrayList<>();
 
     @OneToMany(mappedBy = "hospital")
-    List<Review> reviews;
+    @Builder.Default
+    List<Review> reviews = new ArrayList<>();
 
     @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<HospitalOperatingHour> operatingHours;
+    @Builder.Default
+    private List<HospitalOperatingHour> operatingHours = new ArrayList<>();
 
     public static Hospital from(HospitalJoinRequest hospitalJoinRequest) {
         return Hospital.builder()
