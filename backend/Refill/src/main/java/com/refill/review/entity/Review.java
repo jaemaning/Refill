@@ -64,4 +64,13 @@ public class Review extends BaseEntity {
         this.content = reviewModifyRequest.content();
         this.score = reviewModifyRequest.score();
     }
+
+    public void setHospital(Hospital hospital) {
+        this.hospital = hospital;
+        if(!hospital.getReviews()
+                    .contains(this)){
+            hospital.getReviews()
+                    .add(this);
+        }
+    }
 }

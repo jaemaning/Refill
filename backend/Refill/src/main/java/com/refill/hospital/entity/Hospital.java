@@ -132,5 +132,10 @@ public class Hospital extends UserInfo {
 
     }
 
+    public void addReview(Review review){
+        this.reviews.add(review);
+        review.setHospital(this);
+    }
+
 
 }
