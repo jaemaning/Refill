@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import styled from "@emotion/styled";
 
 const StyledMainContainer = styled.div`
@@ -18,47 +18,43 @@ const StyledMainContainer = styled.div`
     cursor: pointer;
 
     &:hover {
-
       span {
-
         color: #fff;
-        text-shadow: 0 0 10px #fff,
-                     0 0 20px #fff,
-                     0 0 40px #fff,
-                     0 0 80px #fff;
-                     /* 0 0 120px #fff; */
+        text-shadow:
+          0 0 10px #fff,
+          0 0 20px #fff,
+          0 0 40px #fff,
+          0 0 80px #fff;
+        /* 0 0 120px #fff; */
 
-        &:nth-of-type(1){
-
+        &:nth-of-type(1) {
           &::after {
-
             content: ":";
             font-size: 125px;
-
           }
         }
 
-        &:nth-of-type(2){
-
+        &:nth-of-type(2) {
           margin-left: 40px;
-
         }
-  
       }
     }
   }
-`
+`;
 
 interface MainProps {
-  handleClick : () => void;
+  handleClick: () => void;
 }
 
 const MainComponent = ({ handleClick }: MainProps) => {
   return (
     <StyledMainContainer onClick={handleClick}>
-      <h2><span>RE</span><span>Fill</span></h2>
+      <h2>
+        <span>RE</span>
+        <span>Fill</span>
+      </h2>
     </StyledMainContainer>
   );
-}
+};
 
-export default MainComponent
+export default MainComponent;

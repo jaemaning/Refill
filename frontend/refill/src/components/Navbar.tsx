@@ -4,7 +4,6 @@ import nav_logo from "../assets/logo_final.png";
 import { Link } from "react-router-dom";
 
 const Navbar = React.forwardRef<HTMLDivElement>((props, ref) => {
-
   const [isMenuOpen, setMenuOpen] = useState(false);
 
   const [menuList, setMenuList] = useState([
@@ -124,8 +123,8 @@ const Navbar = React.forwardRef<HTMLDivElement>((props, ref) => {
       </div>
     </div>
   );
-})
+});
 
 Navbar.displayName = "Navbar";
 
-export default Navbar
+export default Navbar;

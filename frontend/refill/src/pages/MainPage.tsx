@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 import { REFILL_COLORS } from "../assets/getColors.js";
 import styled from "@emotion/styled";
 import app_logo from "../assets/app_logo.png";
-import MainComponent from "components/MainComponent"
+import MainComponent from "components/MainComponent";
 // import Counter from '../components/Counter';
 
 // import LoginForm from './LoginForm'
@@ -34,38 +34,35 @@ const GreyLine = styled.div`
   width: 100%;
   height: 80px;
   background-color: #f4f4f4;
-`
+`;
 
 const MainApp: React.FC = () => {
-
   const [windowHeight, setWindowHeight] = useState(window.innerHeight);
   const [navbarHeight, setNavbarHeight] = useState(0);
   const navbarRef = useRef<HTMLDivElement | null>(null);
-  
+
   useEffect(() => {
     const handleResize = () => setWindowHeight(window.innerHeight);
-    
-    window.addEventListener('resize', handleResize);
+
+    window.addEventListener("resize", handleResize);
 
     if (navbarRef.current) {
       const navH = navbarRef.current.getBoundingClientRect().height;
-      setNavbarHeight(navH)
+      setNavbarHeight(navH);
       console.log(navbarHeight, navH);
       window.scrollTo(0, navH);
     }
 
-
-
-    return () => window.removeEventListener('resize', handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const handleClickWord = () => {
     window.scroll({
-      top: windowHeight+80+navbarHeight,
+      top: windowHeight + 80 + navbarHeight,
       left: 0,
-      behavior: 'smooth',
+      behavior: "smooth",
     });
-  }
+  };
 
   return (
     <div className="MainApp">
@@ -75,7 +72,11 @@ const MainApp: React.FC = () => {
       <Container>
         <Word>당신의 자심감을 다시</Word>
         <Word>채워 줄 단 하나의 플랫폼, RE:Fill</Word>
-        <img src={app_logo} alt="" style={{ width: '100px', height: '100px' }} />
+        <img
+          src={app_logo}
+          alt=""
+          style={{ width: "100px", height: "100px" }}
+        />
       </Container>
       <GreyLine />
       <Footer />

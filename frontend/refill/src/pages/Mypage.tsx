@@ -5,7 +5,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Button from "../components/elements/Button";
 import axios from "axios";
-import default_profile from "../assets/default_profile.png"
+import default_profile from "../assets/default_profile.png";
 
 interface DivProps {
   selected?: boolean;
@@ -34,41 +34,41 @@ const Common = styled.div`
 `;
 
 const ButtonList = styled.div`
-  display : flex;
-  flex-direction : column;
-  justify-content : center;
-`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
 
 const Content = styled.div`
   display: flex;
   flex-direction: column;
-  margin : 0px 50px;
-  display : ${(props: DivProps) => (props.selected ? "block" : "none")};
-`
+  margin: 0px 50px;
+  display: ${(props: DivProps) => (props.selected ? "block" : "none")};
+`;
 const Content2 = styled.div`
   display: flex;
   flex-direction: column;
-  margin : 0px 50px;
-  display : ${(props: DivProps) => (props.selected ? "none" : "block")};
-`
+  margin: 0px 50px;
+  display: ${(props: DivProps) => (props.selected ? "none" : "block")};
+`;
 const Profileimg = styled.img`
-  width : 150px;
-  height : 150px;
-  border-radius : 50%;
-  border : 1px;
-`
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 1px;
+`;
 
 const Ptag = styled.p`
-  font-size : 20px;
-  margin : 5px 0px;
-  color : black;
-`
+  font-size: 20px;
+  margin: 5px 0px;
+  color: black;
+`;
 
 const DownContent = styled.div`
-  display : flex;
-  justify-content : space-between;
-  align-items : center;
-`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
 
 const Mypage: React.FC = () => {
   // 로그인이 안되있으면 메인페이지로 이동
@@ -95,18 +95,17 @@ const Mypage: React.FC = () => {
         .get("api/v1/member/mypage", {
           headers: {
             "Content-Type": "application/json",
-            Authorization : `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         })
 
         .then((response) => {
           setuserData(response.data);
           setIsLogin(true);
-          if (userData.profileImg !== null){
-            setCheckimg(true)
-            
+          if (userData.profileImg !== null) {
+            setCheckimg(true);
           }
-          console.log(checkimg)
+          console.log(checkimg);
         })
         .catch((error) => {
           console.log("에러:", error);
@@ -114,17 +113,17 @@ const Mypage: React.FC = () => {
     }
   }, []);
 
-  const buttonclick = () =>{
-    setSelected(!selected)
-    console.log(selected)
-  }
-  
+  const buttonclick = () => {
+    setSelected(!selected);
+    console.log(selected);
+  };
+
   return (
     <div>
       <Navbar />
       <Container>
         <div className="flex">
-          <Common style={{width : "200px" , height: "220px"}}>
+          <Common style={{ width: "200px", height: "220px" }}>
             <div className="ms-4 mb-4">
               <span className="text-gray-500">내 정보 관리</span>
             </div>
@@ -134,7 +133,7 @@ const Mypage: React.FC = () => {
                 variant={selected ? "menuSelected" : "menuUnselected"}
                 width="180px"
                 onClick={buttonclick}
-              />  
+              />
               <br />
               <Button
                 content="나의기록"
@@ -145,26 +144,36 @@ const Mypage: React.FC = () => {
             </ButtonList>
           </Common>
           <Content selected={selected}>
-            <h1 style={{ color : "#2E5077" }} className="text-3xl font-bold">계정 관리</h1>
+            <h1 style={{ color: "#2E5077" }} className="text-3xl font-bold">
+              계정 관리
+            </h1>
             <br />
             <span className="text-xl font-bold">기본 정보</span>
-            <Common style={{width : "700px", height : "480px"}} className="mt-3 mb-6">
-              <Profileimg src={checkimg ? `${userData.profileImg}` : `${default_profile}`}/>
+            <Common
+              style={{ width: "700px", height: "480px" }}
+              className="mt-3 mb-6"
+            >
+              <Profileimg
+                src={checkimg ? `${userData.profileImg}` : `${default_profile}`}
+              />
               <br />
-              <div className="flex justify-between" style={{width : "600px"}}>
-                <div className="flex flex-col text-center" style={{width : "100px"}}>
+              <div className="flex justify-between" style={{ width: "600px" }}>
+                <div
+                  className="flex flex-col text-center"
+                  style={{ width: "100px" }}
+                >
                   <Ptag>이름</Ptag>
                   <Ptag>주소</Ptag>
                   <Ptag>생년월일</Ptag>
                   <Ptag>전화번호</Ptag>
                   <Ptag>닉네임</Ptag>
                 </div>
-                <div style={{width : "450px"}}>
+                <div style={{ width: "450px" }}>
                   <Ptag>{userData.name}</Ptag>
                   <Ptag>{userData.address}</Ptag>
                   <Ptag>{userData.birthDay}</Ptag>
                   <Ptag>{userData.tel}</Ptag>
-                  <div className ="flex justify-between">
+                  <div className="flex justify-between">
                     <Ptag>{userData.nickname}</Ptag>
                     <Button
                       content="정보수정"
@@ -177,43 +186,62 @@ const Mypage: React.FC = () => {
               </div>
             </Common>
             <span className="text-xl font-bold mt-10 mb-3">비밀번호</span>
-            <Common style={{width : "700px", height : "150px"}} className="mt-3 mb-6">
-              <DownContent style={{width: "600px"}}>
-                <h1 className="text-xl text-gray-400 font-bold">비밀번호를 바꾸고 싶거나 잊어버리셨나요?</h1>
+            <Common
+              style={{ width: "700px", height: "150px" }}
+              className="mt-3 mb-6"
+            >
+              <DownContent style={{ width: "600px" }}>
+                <h1 className="text-xl text-gray-400 font-bold">
+                  비밀번호를 바꾸고 싶거나 잊어버리셨나요?
+                </h1>
                 <Button
                   content="비밀번호 변경"
                   variant="menuSelected"
                   width="120px"
                   onClick={buttonclick}
-                />   
+                />
               </DownContent>
             </Common>
             <span className="text-xl font-bold mt-10 mb-3">계정 삭제</span>
-            <Common style={{width : "700px", height : "150px"}} className="mt-3 mb-6">
-              <DownContent style={{width: "600px"}}>
-                <h1 className="text-xl text-gray-400 font-bold">계정 삭제 시 작성했던 댓글, 리뷰는 삭제되지 않습니다.</h1>
+            <Common
+              style={{ width: "700px", height: "150px" }}
+              className="mt-3 mb-6"
+            >
+              <DownContent style={{ width: "600px" }}>
+                <h1 className="text-xl text-gray-400 font-bold">
+                  계정 삭제 시 작성했던 댓글, 리뷰는 삭제되지 않습니다.
+                </h1>
                 <Button
                   content="계정 삭제"
                   variant="danger"
                   width="80px"
                   onClick={buttonclick}
-                />   
+                />
               </DownContent>
             </Common>
           </Content>
-          <Content2 selected = {selected}>
-            <h1 style={{ color : "#2E5077" }} className="text-3xl font-bold">나의 기록</h1>
+          <Content2 selected={selected}>
+            <h1 style={{ color: "#2E5077" }} className="text-3xl font-bold">
+              나의 기록
+            </h1>
             <br />
             <span className="text-xl font-bold mb-3">나의 예약 현황</span>
-            <Common style={{width : "700px", height : "480px"}} className="mt-3 mb-6">
-            </Common>
+            <Common
+              style={{ width: "700px", height: "480px" }}
+              className="mt-3 mb-6"
+            ></Common>
             <span className="text-xl font-bold mt-10 mb-3">나의 상담 기록</span>
-            <Common style={{width : "700px", height : "150px"}} className="mt-3 mb-6">
-              
-            </Common>
-            <span className="text-xl font-bold mt-10 mb-3">나의 AI 자가진단 기록</span>
-            <Common style={{width : "700px", height : "150px"}} className="mt-3 mb-6">
-            </Common>
+            <Common
+              style={{ width: "700px", height: "150px" }}
+              className="mt-3 mb-6"
+            ></Common>
+            <span className="text-xl font-bold mt-10 mb-3">
+              나의 AI 자가진단 기록
+            </span>
+            <Common
+              style={{ width: "700px", height: "150px" }}
+              className="mt-3 mb-6"
+            ></Common>
           </Content2>
         </div>
       </Container>
