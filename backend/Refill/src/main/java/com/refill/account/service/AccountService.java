@@ -21,10 +21,12 @@ import com.refill.member.entity.Member;
 import com.refill.member.exception.MemberException;
 import com.refill.member.service.MemberService;
 import com.refill.security.util.JwtProvider;
+import com.refill.security.util.LoginInfo;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,6 +42,7 @@ public class AccountService {
     private final AmazonSESService amazonSESService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final RedisTemplate<String, String> redisTemplate;
     @Value("${jwt.token.secret}")
     private String secretKey;
 
@@ -216,5 +219,14 @@ public class AccountService {
         String accessToken = jwtProvider.refreshAccessToken(refreshRequest.refreshToken(), secretKey);
 
         return new RefreshResponse(accessToken);
+    }
+
+    public void logout(LoginInfo loginInfo) {
+
+        boolean tokenExists = redisTemplate.hasKey(loginInfo.loginId());
+
+        if(tokenExists ) {
+            redisTemplate.delete(loginInfo.loginId());
+        }
     }
 }

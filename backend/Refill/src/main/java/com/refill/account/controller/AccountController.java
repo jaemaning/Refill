@@ -10,10 +10,13 @@ import com.refill.account.dto.request.RefreshRequest;
 import com.refill.account.dto.response.RefreshResponse;
 import com.refill.account.dto.response.TokenResponse;
 import com.refill.account.service.AccountService;
+import com.refill.security.util.LoginInfo;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -102,13 +105,22 @@ public class AccountController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<RefreshResponse> refreshToken(@RequestBody final RefreshRequest refreshRequest) {
+    public ResponseEntity<RefreshResponse> refreshToken(@AuthenticationPrincipal LoginInfo loginInfo, @RequestBody final RefreshRequest refreshRequest) {
 
-        log.debug("member request refreshAccessToken");
+        log.debug("'{}' member request refreshAccessToken", loginInfo.loginId());
 
         RefreshResponse refreshResponse = accountService.refreshAccessToken(refreshRequest);
 
         return ResponseEntity.ok().body(refreshResponse);
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<Void> logout(@AuthenticationPrincipal LoginInfo loginInfo) {
+
+        log.debug("'{}' member request logout", loginInfo.loginId());
+
+        accountService.logout(loginInfo);
+        return ResponseEntity.noContent().build();
     }
 
 
