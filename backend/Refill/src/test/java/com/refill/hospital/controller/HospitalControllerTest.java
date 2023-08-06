@@ -3,6 +3,7 @@ package com.refill.hospital.controller;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
@@ -12,17 +13,20 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.refill.doctor.entity.Doctor;
 import com.refill.doctor.entity.EducationBackground;
 import com.refill.doctor.entity.MajorArea;
 import com.refill.global.entity.Role;
+import com.refill.hospital.dto.request.HospitalInfoUpdateRequest;
 import com.refill.hospital.dto.response.HospitalDetailResponse;
 import com.refill.hospital.entity.Hospital;
 import com.refill.member.entity.Member;
 import com.refill.review.entity.Review;
+import com.refill.security.util.LoginInfo;
 import com.refill.util.ControllerTest;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -30,6 +34,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.authentication.TestingAuthenticationToken;
 
 class HospitalControllerTest extends ControllerTest {
 
@@ -104,21 +110,11 @@ class HospitalControllerTest extends ControllerTest {
                               .hospital(mockHospital)
                               .score(3)
                               .updatedAt(LocalDateTime.now())
+                              .id(1L)
                               .build();
         mockDoctor.addReview(review);
         mockHospital.addReview(review);
         mockReview = review;
-    }
-
-
-    @Test
-    @DisplayName("테스트_예제")
-    void sayHello() throws Exception {
-        mockMvc.perform(get("/api/v1/hospital/"))
-               .andExpect(status()
-                   .isOk())
-               .andExpect(content()
-                   .string("hello"));
     }
 
     @Test
@@ -142,7 +138,7 @@ class HospitalControllerTest extends ControllerTest {
                 .param("addr", "Hospital Address")
                 .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
-                    .andDo(document("searchByKeyword",
+                    .andDo(document("hospital/searchByKeyword",
                         preprocessRequest(prettyPrint()), preprocessResponse(prettyPrint())));
     }
 
@@ -156,7 +152,7 @@ class HospitalControllerTest extends ControllerTest {
         this.mockMvc.perform(get("/api/v1/hospital/{hospitalId}", 1L)
                 .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
-                    .andDo(document("getHospitalDetail",
+                    .andDo(document("hospital/getHospitalDetail",
                         pathParameters(
                             parameterWithName("hospitalId").description("병원 아이디")
                         ),
@@ -166,10 +162,8 @@ class HospitalControllerTest extends ControllerTest {
                             fieldWithPath("hospitalResponse.name").description("병원 이름"),
                             fieldWithPath("hospitalResponse.longitude").description("병원 위도"),
                             fieldWithPath("hospitalResponse.latitude").description("병원 경도"),
-                            fieldWithPath("hospitalResponse.hospitalProfileImg").description(
-                                "병원 프로필 이미지"),
-                            fieldWithPath("hospitalResponse.bannerProfileImg").description(
-                                "병원 배너 이미지"),
+                            fieldWithPath("hospitalResponse.hospitalProfileImg").description("병원 프로필 이미지"),
+                            fieldWithPath("hospitalResponse.bannerProfileImg").description("병원 배너 이미지"),
                             fieldWithPath("hospitalResponse.address").description("병원 주소"),
                             fieldWithPath("hospitalResponse.tel").description("병원 전화번호"),
                             fieldWithPath("hospitalResponse.score").description("병원 리뷰 평균 점수"),
@@ -178,20 +172,25 @@ class HospitalControllerTest extends ControllerTest {
                             fieldWithPath("doctorResponses[].doctorId").description("의사 아이디"),
                             fieldWithPath("doctorResponses[].name").description("의사 이름"),
                             fieldWithPath("doctorResponses[].profileImg").description("의사 프로필 이미지"),
-                            fieldWithPath("doctorResponses[].licenseNumber").description(
-                                "의사 면허 번호"),
+                            fieldWithPath("doctorResponses[].licenseNumber").description("의사 면허 번호"),
                             fieldWithPath("doctorResponses[].licenseImg").description("의사 면허 이미지"),
                             fieldWithPath("doctorResponses[].description").description("의사 약력"),
-                            fieldWithPath("doctorResponses[].majorAreas.[]").description(
-                                "주요 진료 분야"),
-                            fieldWithPath("doctorResponses[].majorAreas.[]").description(
-                                "주요 진료 분야"),
-                            fieldWithPath("doctorResponses[].educationBackgrounds.[]").description(
-                                "학력"),
-                            fieldWithPath("doctorResponses[].educationBackgrounds.[]").description(
-                                "학력")
+                            fieldWithPath("doctorResponses[].majorAreas.[]").description("주요 진료 분야"),
+                            fieldWithPath("doctorResponses[].majorAreas.[]").description("주요 진료 분야"),
+                            fieldWithPath("doctorResponses[].educationBackgrounds.[]").description("학력"),
+                            fieldWithPath("doctorResponses[].educationBackgrounds.[]").description("학력"),
 
-//                            fieldWithPath("reviewResponses.[]").description("리뷰")
+                            fieldWithPath("reviewResponses.[].reviewId").description("리뷰 아이디"),
+                            fieldWithPath("reviewResponses.[].score").description("리뷰 점수"),
+                            fieldWithPath("reviewResponses.[].content").description("리뷰 내용"),
+                            fieldWithPath("reviewResponses.[].memberId").description("작성자 아이디"),
+                            fieldWithPath("reviewResponses.[].nickname").description("작성자 닉네임"),
+                            fieldWithPath("reviewResponses.[].doctorId").description("의사 아이디"),
+                            fieldWithPath("reviewResponses.[].doctorName").description("의사 이름"),
+                            fieldWithPath("reviewResponses.[].hospitalId").description("병원 아이디"),
+                            fieldWithPath("reviewResponses.[].hospitalName").description("병원 이름"),
+                            fieldWithPath("reviewResponses.[].updateDate").description("리뷰 업데이트 일시"),
+                            fieldWithPath("reviewResponses.[].category").description("카테고리")
                         )));
     }
 
@@ -200,11 +199,39 @@ class HospitalControllerTest extends ControllerTest {
     public void testModifyHospitalInfo() throws Exception {
         String requestBody = "{\"name\":\"Updated Hospital\", \"address\":\"Updated Address\"}";
 
+
+        Long hospitalId = 1L;
+        LoginInfo mockLoginInfo = new LoginInfo("sample_login_id", Role.ROLE_HOSPITAL);
+        HospitalInfoUpdateRequest mockRequest = new HospitalInfoUpdateRequest("호인병원", "광주 광산구", "010-1234-1234", "qwer@naver.com", BigDecimal.valueOf(33.232), BigDecimal.valueOf(123.123), "43132");
+        String requestContent = new ObjectMapper().writeValueAsString(mockRequest);
+
+        MockMultipartFile mockRequestPart = new MockMultipartFile("hospitalInfoUpdateRequest", "request.json", "application/json", requestContent.getBytes());
+        MockMultipartFile mockProfileImg = new MockMultipartFile("profileImg", "profile.jpg", "image/jpeg", "some-image".getBytes());
+        MockMultipartFile mockBannerImg = new MockMultipartFile("bannerImg", "banner.jpg", "image/jpeg", "some-image".getBytes());
+        MockMultipartFile mockRegistrationImg = new MockMultipartFile("registrationImg", "registration.jpg", "image/jpeg", "some-image".getBytes());
+
+        // 실행 & 검증
+        this.mockMvc.perform(multipart("/" + hospitalId)
+                .file(mockProfileImg)
+                .file(mockBannerImg)
+                .file(mockRegistrationImg)
+                .file(mockRequestPart)
+                .with(request -> {  // PUT 메서드로 설정
+                    request.setMethod("PUT");
+                    return request;
+                })
+                .with(authentication(new TestingAuthenticationToken(mockLoginInfo, null)))
+                .contentType(MediaType.MULTIPART_FORM_DATA))
+                    .andExpect(status().isOk())
+                    .andDo(document("modifyHospitalInfo",  // RestDocs를 사용한 문서화
+                        pathParameters("hospitalId")
+                    ));
+
         this.mockMvc.perform(put("/api/v1/hospital/{hospitalId}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
                     .andExpect(status().isOk())
-                    .andDo(document("modifyHospitalInfo",
+                    .andDo(document("hospital/modifyHospitalInfo",
                         pathParameters(
                             parameterWithName("hospitalId").description("병원 아이디")
                         ),
@@ -212,4 +239,5 @@ class HospitalControllerTest extends ControllerTest {
 
                         )));
     }
+
 }
