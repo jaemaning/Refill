@@ -137,5 +137,10 @@ public class Hospital extends UserInfo {
         review.setHospital(this);
     }
 
+    public void addDoctor(Doctor doctor){
+        this.doctors.add(doctor);
+        doctor.setHospital(this);
+    }
+
 
 }

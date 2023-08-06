@@ -109,4 +109,11 @@ public class Doctor extends BaseEntity {
     public void registLicenseAddress(String licenseAddress) {
         this.licenseImg = licenseAddress;
     }
+
+    public void setHospital(Hospital hospital) {
+        this.hospital = hospital;
+        if (!hospital.getDoctors().contains(this)) {
+            hospital.addDoctor(this);
+        }
+    }
 }
