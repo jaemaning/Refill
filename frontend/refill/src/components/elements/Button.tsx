@@ -124,14 +124,14 @@ const TYPE_VARIANTS = {
       backgroundColor: REFILL_COLORS["grey-2"],
     },
   },
-  detailUnselected:{
+  detailUnselected: {
     backgroundColor: REFILL_COLORS["white"],
     color: REFILL_COLORS["grey-2"],
   },
   detailSelected: {
     backgroundColor: REFILL_COLORS["white"],
     color: REFILL_COLORS["black"],
-  }
+  },
 };
 
 const SIZE_VARIANTS = {

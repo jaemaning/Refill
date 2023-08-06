@@ -25,14 +25,14 @@ interface DivProps {
 }
 
 interface ToggleBoxProps {
-  toggleSelected : boolean
+  toggleSelected: boolean;
 }
 
 interface TypeHospitals {
-  title: string,
-  lat: number,
-  lon: number,
-  stars: number,
+  title: string;
+  lat: number;
+  lon: number;
+  stars: number;
 }
 
 // 디자인
@@ -57,7 +57,7 @@ const MapBox = styled.div`
 const SearchTop = styled.div`
   width: ${max_width + "px"};
   height: 150px;
-  background-color: REFILL_COLORS["grey-1"];
+  background-color: REFILL_COLORS[ "grey-1"];
   border-top: 2px solid black;
   border-bottom: 2px solid black;
   display: flex;
@@ -68,7 +68,7 @@ const SearchTop = styled.div`
 
 const SearchBot = styled.div`
   width: ${max_width + "px"};
-  height: ${(parseInt(max_height)-150) + "px"};
+  height: ${parseInt(max_height) - 150 + "px"};
   background-color: white;
 `;
 
@@ -80,7 +80,8 @@ const ToggleBox = styled.div`
   position: absolute;
   z-index: 999;
   right: 0;
-  display: ${(props:ToggleBoxProps)=>(props.toggleSelected ? "none" : "block")};
+  display: ${(props: ToggleBoxProps) =>
+    props.toggleSelected ? "none" : "block"};
 `;
 
 export const HospitalSearch: React.FC = () => {
@@ -94,7 +95,7 @@ export const HospitalSearch: React.FC = () => {
   const [toggleData, setToggleData] = useState(true);
   const nowCenter = useRef<number[]>([33.452613, 126.570888]);
 
-  const hospitals : TypeHospitals[] = [
+  const hospitals: TypeHospitals[] = [
     {
       title: "김승현원장 병원",
       lat: 33.452616,
@@ -143,17 +144,17 @@ export const HospitalSearch: React.FC = () => {
 
   // 거리순보기
   const handleToggledist = () => {
-    setToggleData(true)
-  }
-  
+    setToggleData(true);
+  };
+
   // 추천순보기
   const handleTogglestars = () => {
-    setToggleData(false)
-  }
+    setToggleData(false);
+  };
 
   // 지도 생성 메서드
   useEffect(() => {
-    if (selected === "option1" && rendered === true ) {
+    if (selected === "option1" && rendered === true) {
       const loadMap = async () => {
         if (!window.kakao || !window.kakao.maps) {
           return;
@@ -267,26 +268,33 @@ export const HospitalSearch: React.FC = () => {
 
   // 지도 정보 상세 토글 버튼
   const handleToggleMap = () => {
-    setRendered(false)
-    setToggleSelected(!toggleSelected)
+    setRendered(false);
+    setToggleSelected(!toggleSelected);
   };
 
   // 평점 정렬 알고리즘
   const starsFirst = () => {
     return hospitals.slice().sort((a, b) => b.stars - a.stars);
-  }
-  
+  };
+
   // 거리 정렬 알고리즘
   const distanceFirst = () => {
-    return hospitals.slice().sort((a, b) => (Math.abs(nowCenter.current[0]-a.lat) + Math.abs(nowCenter.current[1]-a.lon)) - (Math.abs(nowCenter.current[0]-b.lat) + Math.abs(nowCenter.current[1]-b.lon)));
-  }
+    return hospitals
+      .slice()
+      .sort(
+        (a, b) =>
+          Math.abs(nowCenter.current[0] - a.lat) +
+          Math.abs(nowCenter.current[1] - a.lon) -
+          (Math.abs(nowCenter.current[0] - b.lat) +
+            Math.abs(nowCenter.current[1] - b.lon)),
+      );
+  };
 
+  const starsHospitals = starsFirst();
+  const distanceHospitals = distanceFirst();
 
-  const starsHospitals = starsFirst()
-  const distanceHospitals = distanceFirst()
-
-  console.log(starsHospitals)
-  console.log(distanceHospitals)
+  console.log(starsHospitals);
+  console.log(distanceHospitals);
 
   return (
     <div>
@@ -371,8 +379,8 @@ export const HospitalSearch: React.FC = () => {
                 boxShadow: "none",
                 borderRadius: "0px",
                 backgroundColor: REFILL_COLORS["grey-2"],
-                borderTopLeftRadius: '7px',
-                borderBottomLeftRadius: '7px',
+                borderTopLeftRadius: "7px",
+                borderBottomLeftRadius: "7px",
                 display: toggleSelected ? "none" : "block",
               }}
             />
@@ -403,39 +411,55 @@ export const HospitalSearch: React.FC = () => {
               }}
             />
             <ToggleBox toggleSelected={toggleSelected}>
-              <div style={{display: "flex", justifyContent: "space-around"}}>
-                <Button content="거리순" variant="normal" width="110px" onClick={handleToggledist} />
-                <Button content="평점순" variant="normal" width="110px" onClick={handleTogglestars} />
+              <div style={{ display: "flex", justifyContent: "space-around" }}>
+                <Button
+                  content="거리순"
+                  variant="normal"
+                  width="110px"
+                  onClick={handleToggledist}
+                />
+                <Button
+                  content="평점순"
+                  variant="normal"
+                  width="110px"
+                  onClick={handleTogglestars}
+                />
               </div>
-              <div style={{marginTop: "30px", overflow : "auto", maxHeight : "650px"}}>
-                <div style={{display: toggleData ? "block" : "none"}}>
-                  {distanceHospitals.map((hospital, i)=>{
+              <div
+                style={{
+                  marginTop: "30px",
+                  overflow: "auto",
+                  maxHeight: "650px",
+                }}
+              >
+                <div style={{ display: toggleData ? "block" : "none" }}>
+                  {distanceHospitals.map((hospital, i) => {
                     return (
-                      <div key={i} style={{margin: "20px"}}>
+                      <div key={i} style={{ margin: "20px" }}>
                         병원명 : {hospital.title}
-                        <br/>
+                        <br />
                         lat : {hospital.lat}
-                        <br/>
+                        <br />
                         lon : {hospital.lon}
-                        <br/>
+                        <br />
                         평점 : {hospital.stars}
                       </div>
-                    )
+                    );
                   })}
                 </div>
-                <div style={{display: toggleData ? "none" : "block"}}>
-                  {starsHospitals.map((hospital, i)=>{
+                <div style={{ display: toggleData ? "none" : "block" }}>
+                  {starsHospitals.map((hospital, i) => {
                     return (
-                      <div key={i} style={{margin: "20px"}}>
+                      <div key={i} style={{ margin: "20px" }}>
                         병원명 : {hospital.title}
-                        <br/>
+                        <br />
                         lat : {hospital.lat}
-                        <br/>
+                        <br />
                         lon : {hospital.lon}
-                        <br/>
+                        <br />
                         평점 : {hospital.stars}
                       </div>
-                    )
+                    );
                   })}
                 </div>
               </div>
