@@ -2,20 +2,29 @@ import React, { useState } from "react";
 
 interface DiagnosisItemProps {
   title: string;
+  index: number; // Add index prop
+  onChange: (value: string, index: number) => void;
 }
 
-const DiagnosisItem: React.FC<DiagnosisItemProps> = ({ title }) => {
-  const [selectedOption, setSelectedOption] = useState<string>("option1");
+const DiagnosisItem: React.FC<DiagnosisItemProps> = ({
+  title,
+  index,
+  onChange,
+}) => {
+  const [selectedOption, setSelectedOption] = useState<string>("");
 
   const handleOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedOption(event.target.value);
+    onChange(event.target.value, index);
   };
 
   return (
     <div className="flex justify-center">
-      <div className="diagnosis-item sm:min-w-full sm:h-12 md:w-11/12 md:h-14 lg:w-5/6 lg:h-20 px-10 grid grid-cols-2 gap-4">
+      <div className="diagnosis-item sm:min-w-full sm:h-16 md:w-11/12 md:h-20 lg:w-5/6 lg:h-20 px-10 grid grid-cols-2 gap-4">
         <div className="flex items-center">
-          <span className="font-black sm:text-lg md:text-xl lg:text-2xl">{title}</span>
+          <span className="font-black sm:text-lg md:text-xl lg:text-2xl">
+            {title}
+          </span>
         </div>
         <div className="grid grid-cols-2">
           <div className="flex items-center justify-end">

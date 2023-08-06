@@ -7,7 +7,7 @@ public record AiDiagnosisResponse (
 
     Integer hairLossScore,
     String diagnosisImage,
-    LocalDate createdAt
+    LocalDate diagnosisDate
 
 ) {
 

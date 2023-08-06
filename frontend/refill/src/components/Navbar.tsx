@@ -1,26 +1,72 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles/Navbar.css";
 import nav_logo from "../assets/logo_final.png";
 import { Link } from "react-router-dom";
 
-export default function Navbar() {
+const Navbar = React.forwardRef<HTMLDivElement>((props, ref) => {
+
   const [isMenuOpen, setMenuOpen] = useState(false);
 
-  //. 이쪽에서 router 설정 해주시면 됩니다.
-  const menuList = [
+  const [menuList, setMenuList] = useState([
     ["예약", "#"],
     ["병원검색", "/search"],
-    ["AI자가진단", "/#"],
-    ["로그인", "/login"],
-    ["회원가입", "/signup"],
-  ];
+    ["AI자가진단", "/diagnosis"],
+  ]);
+
+  useEffect(() => {
+    const role =
+      localStorage.getItem("user") && localStorage.getItem("login-token")
+        ? JSON.parse(localStorage.getItem("user")!)
+        : null;
+
+    const Nonloginmenu = [
+      ["로그인", "/login"],
+      ["회원가입", "/signup"],
+    ];
+    const Membermenu = [
+      ["로그아웃", "/logout"],
+      ["마이페이지", "/mypage"],
+    ];
+    const Hospitalmenu = [
+      ["로그아웃", "/logout"],
+      ["마이페이지", "/mypage"],
+    ];
+    const Adminmenu = [
+      ["로그아웃", "/logout"],
+      ["Admin관리", "/"],
+    ];
+
+    const updateMenuList = [...menuList];
+
+    if (role === null) {
+      Nonloginmenu.forEach((item) => {
+        updateMenuList.push(item);
+      });
+    } else if (role.role === "ROLE_MEMBER") {
+      Membermenu.forEach((item) => {
+        updateMenuList.push(item);
+      });
+    } else if (role.role === "ROLE_HOSPITAL") {
+      Hospitalmenu.forEach((item) => {
+        updateMenuList.push(item);
+      });
+    } else {
+      Adminmenu.forEach((item) => {
+        updateMenuList.push(item);
+      });
+    }
+
+    setMenuList(updateMenuList);
+
+    console.log(menuList);
+  }, []);
 
   const handleMenuToggle = () => {
     setMenuOpen((prevMenuState) => !prevMenuState);
   };
 
   return (
-    <div className="w-full border-b-[2px]">
+    <div ref={ref} className="w-full border-b-[2px]">
       <div className="w-full mx-auto lg:w-[1400px]">
         <nav className="bg-white border-gray-200 w-full mx-auto">
           <div className="flex flex-wrap items-center dark:bg-gray-900 justify-between p-6 w-full mx-auto">
@@ -78,4 +124,8 @@ export default function Navbar() {
       </div>
     </div>
   );
-}
+})
+
+Navbar.displayName = "Navbar";
+
+export default Navbar

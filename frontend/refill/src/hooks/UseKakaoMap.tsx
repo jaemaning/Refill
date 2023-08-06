@@ -10,9 +10,10 @@ export const useKakaoMapScript = () => {
       script.onload = () => setScriptLoaded(true);
       script.async = true;
       document.head.appendChild(script);
-      console.log(scriptLoaded)
     } else {
       setScriptLoaded(true);
     }
   }, []);
+
+  return scriptLoaded; // 이 값을 반환하여 커스텀 훅 사용자가 알 수 있도록 합니다.
 };

@@ -1,0 +1,41 @@
+=== 회원 전체 예약 조회
+
+==== HTTP Request
+include::{snippets}/reservation/findAll/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/reservation/findAll/http-response.adoc[]
+include::{snippets}/reservation/findAll/response-body.adoc[]
+include::{snippets}/reservation/findAll/response-fields.adoc[]
+
+=== 예약 불가능한 시간 조회
+
+==== HTTP Request
+include::{snippets}/reservation/disabled/http-request.adoc[]
+include::{snippets}/reservation/disabled/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/reservation/disabled/http-response.adoc[]
+include::{snippets}/reservation/disabled/response-body.adoc[]
+include::{snippets}/reservation/disabled/response-fields.adoc[]
+
+=== 예약 생성
+
+==== HTTP Request
+include::{snippets}/reservation/create/http-request.adoc[]
+include::{snippets}/reservation/create/request-parts.adoc[]
+include::{snippets}/reservation/create/request-part-reservationRequest-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/reservation/create/http-response.adoc[]
+include::{snippets}/reservation/create/response-body.adoc[]
+include::{snippets}/reservation/create/response-fields.adoc[]
+
+=== 예약 삭제
+
+==== HTTP Request
+include::{snippets}/reservation/delete/http-request.adoc[]
+include::{snippets}/reservation/delete/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/reservation/delete/http-response.adoc[]
