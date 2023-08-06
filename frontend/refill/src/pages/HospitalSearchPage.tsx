@@ -36,13 +36,6 @@ interface ToggleBoxProps {
   toggleSelected: boolean;
 }
 
-<<<<<<< HEAD
-interface TypeHospitals {
-  title: string;
-  lat: number;
-  lon: number;
-  stars: number;
-=======
 interface TypeSearchedData {
   id?: number;
   name?: string;
@@ -66,7 +59,6 @@ interface TypeRequestMap {
 interface TypeResponseMap {
   hospitalResponse?: TypeSearchedData;
   dist?: number;
->>>>>>> 98a472777bbef29b6c42bab4d9f5bc7296bde6a9
 }
 
 // 디자인
@@ -130,42 +122,12 @@ export const HospitalSearch: React.FC = () => {
   const [rendered, setRendered] = useState(true);
   const [toggleData, setToggleData] = useState(true);
   const nowCenter = useRef<number[]>([33.452613, 126.570888]);
-<<<<<<< HEAD
-
-  const hospitals: TypeHospitals[] = [
-    {
-      title: "김승현원장 병원",
-      lat: 33.452616,
-      lon: 126.5708,
-      stars: 4.6,
-    },
-    {
-      title: "싸피 병원",
-      lat: 33.4526,
-      lon: 126.5711,
-      stars: 5,
-    },
-    {
-      title: "뀨 병원",
-      lat: 33.452699,
-      lon: 126.5715,
-      stars: 4,
-    },
-    {
-      title: "뀨 병원2",
-      lat: 33.45299,
-      lon: 126.5711,
-      stars: 4,
-    },
-  ]; // 병원 위치 테스트용
-=======
   const [searchedData, setSearchedData] = useState<TypeSearchedData[]>([]);
   const [hospitals, setHospitals] = useState<TypeResponseMap[]>([]); // 병원 위치 테스트용
   const [starsHospitals, setStarsHospitals] = useState<TypeResponseMap[]>([]);
   const [distanceHospitals, setDistanceHospitalss] = useState<
     TypeResponseMap[]
   >([]);
->>>>>>> 98a472777bbef29b6c42bab4d9f5bc7296bde6a9
 
   const kakaoMapBox = useRef<HTMLDivElement>(null); // 지도를 담을 div element를 위한 ref
   const map = useRef<any>(null); // map 객체를 관리할 ref
@@ -218,17 +180,8 @@ export const HospitalSearch: React.FC = () => {
   };
 
   // 지도 생성 메서드
-<<<<<<< HEAD
-  useEffect(() => {
-    if (selected === "option1" && rendered === true) {
-      const loadMap = async () => {
-        if (!window.kakao || !window.kakao.maps) {
-          return;
-        }
-=======
   // 처음부터 훅 호출
   const scriptLoaded = useKakaoMapScript();
->>>>>>> 98a472777bbef29b6c42bab4d9f5bc7296bde6a9
 
   useEffect(() => {
     if (selected === "option1" && rendered === true && scriptLoaded) {
@@ -374,16 +327,12 @@ export const HospitalSearch: React.FC = () => {
 
   // 평점 정렬 알고리즘
   const starsFirst = () => {
-<<<<<<< HEAD
-    return hospitals.slice().sort((a, b) => b.stars - a.stars);
-=======
     return hospitals
       .slice()
       .sort(
         (a: TypeResponseMap, b: TypeResponseMap) =>
           (b.hospitalResponse?.score || 0) - (a.hospitalResponse?.score || 0),
       );
->>>>>>> 98a472777bbef29b6c42bab4d9f5bc7296bde6a9
   };
 
   // 거리 정렬 알고리즘
@@ -391,26 +340,10 @@ export const HospitalSearch: React.FC = () => {
     return hospitals
       .slice()
       .sort(
-<<<<<<< HEAD
-        (a, b) =>
-          Math.abs(nowCenter.current[0] - a.lat) +
-          Math.abs(nowCenter.current[1] - a.lon) -
-          (Math.abs(nowCenter.current[0] - b.lat) +
-            Math.abs(nowCenter.current[1] - b.lon)),
-      );
-  };
-
-  const starsHospitals = starsFirst();
-  const distanceHospitals = distanceFirst();
-
-  console.log(starsHospitals);
-  console.log(distanceHospitals);
-=======
         (a: TypeResponseMap, b: TypeResponseMap) =>
           (a.dist || 0) - (b.dist || 0),
       );
   };
->>>>>>> 98a472777bbef29b6c42bab4d9f5bc7296bde6a9
 
   return (
     <div>
@@ -549,36 +482,6 @@ export const HospitalSearch: React.FC = () => {
                 }}
               >
                 <div style={{ display: toggleData ? "block" : "none" }}>
-<<<<<<< HEAD
-                  {distanceHospitals.map((hospital, i) => {
-                    return (
-                      <div key={i} style={{ margin: "20px" }}>
-                        병원명 : {hospital.title}
-                        <br />
-                        lat : {hospital.lat}
-                        <br />
-                        lon : {hospital.lon}
-                        <br />
-                        평점 : {hospital.stars}
-                      </div>
-                    );
-                  })}
-                </div>
-                <div style={{ display: toggleData ? "none" : "block" }}>
-                  {starsHospitals.map((hospital, i) => {
-                    return (
-                      <div key={i} style={{ margin: "20px" }}>
-                        병원명 : {hospital.title}
-                        <br />
-                        lat : {hospital.lat}
-                        <br />
-                        lon : {hospital.lon}
-                        <br />
-                        평점 : {hospital.stars}
-                      </div>
-                    );
-                  })}
-=======
                   {hospitals.length > 0 ? (
                     distanceHospitals.map((hospital, i) => (
                       <div key={i} style={{ margin: "0px 20px 20px 10px" }}>
@@ -611,7 +514,6 @@ export const HospitalSearch: React.FC = () => {
                   ) : (
                     <div></div>
                   )}
->>>>>>> 98a472777bbef29b6c42bab4d9f5bc7296bde6a9
                 </div>
               </div>
             </ToggleBox>
