@@ -24,6 +24,7 @@ import com.refill.hospital.entity.Hospital;
 import com.refill.member.entity.Member;
 import com.refill.review.entity.Review;
 import com.refill.util.ControllerTest;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +36,8 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 class HospitalControllerTest extends ControllerTest {
 
     private Hospital mockHospital;
+    private Review mockReview;
+    private Doctor mockDoctor;
 
     @BeforeEach
     void setUp() {
@@ -80,16 +83,16 @@ class HospitalControllerTest extends ControllerTest {
         Review review1 = Review.builder()
                                .score(3)
                                .isBlocked(false)
-            .member(member)
-            .doctor(doctor)
-            .hospital(mockHospital)
+                               .member(member)
+                               .doctor(doctor)
+                               .hospital(mockHospital)
                                .build();
         Review review2 = Review.builder()
                                .score(2)
                                .isBlocked(false)
-            .doctor(doctor1)
-            .hospital(mockHospital)
-            .member(member)
+                               .doctor(doctor1)
+                               .hospital(mockHospital)
+                               .member(member)
                                .build();
         List<Review> reviews = new ArrayList<>();
         reviews.add(review1);
@@ -109,6 +112,36 @@ class HospitalControllerTest extends ControllerTest {
                                     .reviews(reviews)
                                     .build();
         mockHospital = hospital;
+    }
+
+    void createHospital() {
+        Hospital hospital = Hospital.builder()
+                                    .name("호인병원")
+                                    .address("경기도 수원시")
+                                    .role(Role.ROLE_HOSPITAL)
+                                    .postalCode("12345")
+                                    .tel("010-1234-1234")
+                                    .registrationImg("reg_img")
+                                    .id(1L)
+                                    .hospitalProfileImg("pro_img")
+                                    .longitude(BigDecimal.valueOf(38.123))
+                                    .latitude(BigDecimal.valueOf(128.123))
+                                    .loginId("hospital1")
+                                    .email("hos_@naver.com")
+                                    .build();
+    }
+    void createDoctor(){
+        MajorArea majorArea = MajorArea.builder()
+                                       .content("주전공은..")
+                                       .build();
+
+
+        Doctor doctor = Doctor.builder()
+                              .licenseNumber("123-123")
+                              .profileImg("doc_pro_img")
+                              .name("doctor1")
+                              .description("모발이식1")
+                              .build();
     }
 
 

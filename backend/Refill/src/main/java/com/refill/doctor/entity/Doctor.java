@@ -122,5 +122,15 @@ public class Doctor extends BaseEntity {
         review.setDoctor(this);
     }
 
+    public void addMajorArea(MajorArea majorArea) {
+        this.majorAreas.add(majorArea);
+        majorArea.setDoctor(this);
+    }
+
+    public void addEducationBackground(EducationBackground educationBackground) {
+        this.educationBackgrounds.add(educationBackground);
+        educationBackground.setDoctor(this);
+    }
+
 
 }
