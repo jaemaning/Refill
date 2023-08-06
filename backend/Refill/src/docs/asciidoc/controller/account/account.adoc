@@ -79,3 +79,23 @@ include::{snippets}/account/member/login/request-fields.adoc[]
 ==== HTTP Response
 include::{snippets}/account/member/login/http-response.adoc[]
 include::{snippets}/account/member/login/response-fields.adoc[]
+
+=== Refresh Token을 통한 Access Token 재 발급
+
+==== HTTP Request
+include::{snippets}/account/refreshToken/http-request.adoc[]
+include::{snippets}/account/refreshToken/request-body.adoc[]
+include::{snippets}/account/refreshToken/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/account/refreshToken/http-response.adoc[]
+include::{snippets}/account/refreshToken/response-body.adoc[]
+include::{snippets}/account/refreshToken/response-fields.adoc[]
+
+=== 회원 통합 로그아웃
+
+==== HTTP Request
+include::{snippets}/account/logout/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/account/logout/http-response.adoc[]
