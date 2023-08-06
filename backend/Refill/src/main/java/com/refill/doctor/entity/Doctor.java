@@ -113,7 +113,14 @@ public class Doctor extends BaseEntity {
     public void setHospital(Hospital hospital) {
         this.hospital = hospital;
         if (!hospital.getDoctors().contains(this)) {
-            hospital.addDoctor(this);
+            hospital.getDoctors().add(this);
         }
     }
+
+    public void addReview(Review review){
+        this.reviews.add(review);
+        review.setDoctor(this);
+    }
+
+
 }

@@ -73,4 +73,11 @@ public class Review extends BaseEntity {
                     .add(this);
         }
     }
+
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
+        if (!doctor.getReviews().contains(this)) {
+            doctor.getReviews().add(this);
+        }
+    }
 }
