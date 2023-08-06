@@ -1,39 +1,107 @@
 .title-large-box {
-    background: linear-gradient(to bottom, #AADAFF, white);
-    height: 390px;
-    width: 100%;
+  background: linear-gradient(to bottom, #aadaff, white);
+  height: 390px;
+  width: 100%;
 }
 
 .content-large-box {
-    height: 1200px;
+  height: 1200px;
 }
 
 .title-hr {
-    color: rgba(0, 0, 0, 0.500);
-    border: 2px solid;
-    margin-bottom: 20px;
-    min-width: 400px;
+  color: rgba(0, 0, 0, 0.5);
+  border: 2px solid;
+  margin-bottom: 20px;
+  min-width: 400px;
 }
 
 .caution-box {
-    margin-top: 20px;
-    min-width: 400px;
-    min-height: 80px;
-    background-color: rgba(242, 152, 31, 0.5);
+  margin-top: 20px;
+  min-width: 400px;
+  min-height: 80px;
+  background-color: rgba(242, 152, 31, 0.5);
 }
 
 .ai-diagnosis-title {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .diagnosis-item {
-    border: solid 1px black;
-    margin-top: 20px;
-    min-width: 600px;
-    min-height: 48px;
-    border-radius: 10px;
+  border: solid 1px black;
+  margin-top: 20px;
+  min-width: 600px;
+  min-height: 48px;
+  border-radius: 10px;
 }
 
 .next-prev-buttons-box {
-    min-width: 400px;
+  min-width: 400px;
+}
+
+.guide-line {
+  min-width: 400px;
+  min-height: 800px;
+}
+
+.guide-line-text {
+  background-color: rgba(46, 80, 119, 0.8);
+}
+
+.aid-img-box {
+  height: 400px;
+  background-color: blueviolet;
+  border-radius: 12px;
+}
+
+.aid-img-img {
+  height: 300px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.aid-img-text {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.img-upload-box {
+  height: 400px;
+  width: 400px;
+}
+
+.img-upload-small-box {
+  padding: 10px;
+  height: 300px;
+  width: 400px;
+}
+
+.img-upload-input {
+  padding: 10px;
+  height: 100px;
+  width: 400px;
+}
+
+.img-upload-img {
+  height: 280px;
+  width: 280px;
+  border-radius: 10px;
+}
+
+.aid-result-small-box {
+  height: 100px;
+  width: 100px;
+}
+
+.aid-result-middle-box {
+  height: 100px;
+  width: 200px;
+}
+
+.aid-result {
+  background-color: rgba(46, 80, 119);
+}
+
+.result-btn {
+  background-color: #20a4f3;
+  box-shadow: 3px 3px 10px gray;
 }

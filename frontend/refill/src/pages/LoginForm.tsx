@@ -6,6 +6,7 @@ import Naver from "../assets/Naver_logo.png";
 import Google from "../assets/Google_logo.png";
 import Button from "../components/elements/Button";
 import "../styles/Loginsignup.css";
+import jwt_decode from "jwt-decode";
 
 const LoginForm: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -31,6 +32,13 @@ const LoginForm: React.FC = () => {
       .post("api/v1/account/member/login", MemberLoginRequest)
       .then((response) => {
         console.log(response.data);
+
+        const accessToken = response.data;
+
+        localStorage.setItem("login-token", accessToken);
+
+        const decodetoken = jwt_decode(accessToken);
+        localStorage.setItem("user", JSON.stringify(decodetoken));
       })
       .catch((err) => {
         console.log(err.response.data);
