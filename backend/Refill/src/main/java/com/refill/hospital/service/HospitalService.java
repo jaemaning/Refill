@@ -42,6 +42,7 @@ public class HospitalService {
     private final EducationBackgroundRepository educationBackgroundRepository;
     private final MajorAreaRepository majorAreaRepository;
 
+
     @Transactional(readOnly = true)
     public boolean existsByLoginId(String loginId) {
         return hospitalRepository.existsByLoginId(loginId);
@@ -128,7 +129,7 @@ public class HospitalService {
     public List<HospitalResponse> searchByKeyword(String hospitalName, String address) {
 
         if (StringUtils.hasText(hospitalName) && StringUtils.hasText(address)) {
-            return hospitalRepository.findByNameContainingOrAddressContaining(hospitalName, address)
+            return hospitalRepository.findByNameContainingAndAddressContaining(hospitalName, address)
                                      .stream()
                                      .map(HospitalResponse::new)
                                      .collect(Collectors.toList());
@@ -236,4 +237,6 @@ public class HospitalService {
                          .map(major -> new MajorArea(doctor, major))
                          .forEach(majorAreaRepository::save);
     }
+
+
 }

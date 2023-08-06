@@ -14,7 +14,8 @@ public record HospitalResponse(
     @NotNull String bannerProfileImg,
     @NotNull String address,
     @NotNull String tel,
-    @NotNull Double score
+    @NotNull Double score,
+    @NotNull String email
 ) {
     public HospitalResponse(Hospital hospital){
         this(hospital.getId(),
@@ -25,10 +26,11 @@ public record HospitalResponse(
             hospital.getHospitalBannerImg(),
             hospital.getAddress(),
             hospital.getTel(),
-            hospital.getReviews().stream()
+            hospital.getReviews()
+                    .stream()
                     .mapToInt(Review::getScore)
                     .average()
-                    .orElse(0.0));
+                    .orElse(0.0),
+            hospital.getEmail());
     }
-
 }
