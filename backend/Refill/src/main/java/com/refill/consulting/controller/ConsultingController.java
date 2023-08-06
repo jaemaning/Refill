@@ -1,9 +1,10 @@
-package com.refill.webrtc.controller;
+package com.refill.consulting.controller;
 
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.openvidu.java.client.Connection;
@@ -21,14 +23,15 @@ import io.openvidu.java.client.OpenViduJavaClientException;
 import io.openvidu.java.client.Session;
 import io.openvidu.java.client.SessionProperties;
 
-@CrossOrigin(origins = "*")
+@Slf4j
+@RequestMapping("/api/v1/consulting")
 @RestController
-public class WebrtcController {
+public class ConsultingController {
 
-    @Value("https://i9c201.p.ssafy.io:4441")
+    @Value("${OPENVIUD_SERVER_URL}")
     private String OPENVIDU_URL;
 
-    @Value("openvidu")
+    @Value("{OPENVIDU_SECRET_KEY}")
     private String OPENVIDU_SECRET;
 
     private OpenVidu openvidu;
