@@ -25,9 +25,9 @@ const SelectDoctorAndTime: React.FC<SelectDoctorAndTimeProps> = ({
 
   const handleChange = (event: SelectChangeEvent) => {
     const selectedName = event.target.value as string;
-    setSelectedDoctor(selectedName)
-    setDoctorName(selectedName)
-    console.log(selectedName)
+    setSelectedDoctor(selectedName);
+    setDoctorName(selectedName);
+    console.log(selectedName);
   };
   const [selectedDoctor, setSelectedDoctor] = React.useState("");
   const DOCTORS = ["LEETAESEONG", "LEETAEMUSCLE", "MUSCLEMUSCLE"];
@@ -54,8 +54,6 @@ const SelectDoctorAndTime: React.FC<SelectDoctorAndTimeProps> = ({
           </Select>
         </FormControl>
       </Box>
-
-      
     </>
   );
 };

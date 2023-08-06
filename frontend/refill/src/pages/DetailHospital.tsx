@@ -6,6 +6,14 @@ import Cloud2 from "../assets/cloud.png";
 import styled from "@emotion/styled";
 import Button from "../components/elements/Button";
 import Arrow from "../assets/icons/reservation_arrow_icon.png";
+import { Rating, Pagination, Stack, Grid } from "@mui/material";
+import Container from "@mui/material/Container";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import NotificationImportantIcon from "@mui/icons-material/NotificationImportant";
+import { red } from "@mui/material/colors";
 
 // [taeseong]
 import SelectDoctorAndTime from "components/consultReservation/SelectDoctorAndTime";
@@ -41,7 +49,7 @@ interface Review {
   category: string;
 }
 
-const Container = styled.div`
+const Containers = styled.div`
   border 0;
   min-width: 100%;
   min-height: 50vh;
@@ -147,7 +155,6 @@ const DetailHospital: React.FC = () => {
   // merge
   const [doctorName, setDoctorName] = useState("");
 
-
   // 배너이미지 갈아끼울때마다 적용
   const [doctorData, setDoctorData] = useState<Doctor[]>([]);
   const [reviewData, setReviewData] = useState<Review[]>([]);
@@ -164,6 +171,7 @@ const DetailHospital: React.FC = () => {
     email: "",
   });
 
+  // 버튼누르는거에 따른 상태값
   const [buttonData, setButtonData] = useState(0);
 
   const handleHospitalClick = () => {
@@ -178,13 +186,96 @@ const DetailHospital: React.FC = () => {
     setButtonData(2);
   };
 
+  // 페이지네이션
+  const [page, setPage] = useState(1);
+  const reviewPerPage = 3;
+
+  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+  };
+
+  // 리뷰 최신순, 평점높은순, 낮은순 state값으로 반영
+  const [state, setState] = useState<number>(0);
+  const stateChange = (event: SelectChangeEvent<number>) => {
+    setState(event.target.value as number);
+  };
+
+  // 의사에 따른 리뷰 데이터 반영
+  const [dreview, setDreview] = useState<number>(0);
+  const dreviewChange = (event: SelectChangeEvent<number>) => {
+    setDreview(event.target.value as number);
+  };
+
+  // doctorId값 추출
+  const doctorIds: { doctorId: number; doctorName: string }[] = [];
+
+  reviewData.forEach((response) => {
+    const { doctorId, doctorName } = response;
+    const existingDoctor = doctorIds.find((item) => item.doctorId === doctorId);
+
+    if (!existingDoctor) {
+      doctorIds.push({ doctorId, doctorName });
+    }
+  });
+
+  // 평점 높은순 나열 알고리즘
+  const reviewFirst = () => {
+    return reviewData
+      .slice()
+      .sort((a: Review, b: Review) => (b.score || 0) - (a.score || 0));
+  };
+
+  // 평점 낮은순 나열 알고리즘
+  const reviewLast = () => {
+    return reviewData
+      .slice()
+      .sort((a: Review, b: Review) => (a.score || 0) - (b.score || 0));
+  };
+
+  // 리뷰 최신순 알고리즘
+  const reviewLatest = () => {
+    return reviewData.slice().sort((a: Review, b: Review) => {
+      const dateA = new Date(a.updateDate);
+      const dateB = new Date(b.updateDate);
+
+      const differenceInMillis: number = dateA.getTime() - dateB.getTime();
+
+      return differenceInMillis;
+    });
+  };
+
+  // 의사Id와 리뷰 알고리즘에 대한 리뷰 리턴
+  const getFilteredReviewData = () => {
+    let filteredData = [...reviewData];
+
+    // state에 따라 리뷰 정보 재구성
+    if (state === 0) {
+      filteredData = reviewFirst();
+    } else if (state === 1) {
+      filteredData = reviewLast();
+    } else if (state === 2) {
+      filteredData = reviewLatest();
+    }
+
+    // dreview 값에 따라 리뷰 정보를 필터링
+    if (dreview !== 0) {
+      filteredData = filteredData.filter(
+        (review) => review.doctorId === dreview,
+      );
+    }
+
+    return filteredData;
+  };
+
+  const filteredReviewData = getFilteredReviewData();
+
   // 테스트용
   useEffect(() => {
     const token = localStorage.getItem("login-token");
     axios
       .get("api/v1/hospital/1", {
         headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbklkIjoibWVtYmVyMSIsInJvbGUiOiJST0xFX01FTUJFUiIsImlhdCI6MTY5MTEzMzA3MywiZXhwIjoxNjkxMTM2NjczfQ.UuTda1tnPotVfTWn1zsqKRK9jmlQKZ80FUS5oNlpCLs`,
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbklkIjoibWVtYmVyMSIsInJvbGUiOiJST0xFX01FTUJFUiIsImlhdCI6MTY5MTMwNTMyMywiZXhwIjoxNjkxMzA4OTIzfQ.PPSn6eLTFbG9nHOooKBYLcZmDEud0i1Y2eloT4F1UeU`,
         },
       })
 
@@ -219,7 +310,7 @@ const DetailHospital: React.FC = () => {
         <Profileimg src={Cloud2} />
         {/* </ProfileContainer> */}
       </BannerContainer>
-      <Container>
+      <Containers>
         <Layout>
           <Content style={{ width: "850px" }}>
             <span className="text-2xl font-bold">{hospitalData.name}</span>
@@ -310,7 +401,7 @@ const DetailHospital: React.FC = () => {
                               <li className="text-lg" key={index}>
                                 {background}
                               </li>
-                            )
+                            ),
                           )}
                         </ul>
                       </Doctor_common>
@@ -324,7 +415,143 @@ const DetailHospital: React.FC = () => {
               </div>
             </DoctorInfo>
             <Review buttonData={buttonData}>
-              <h1 className="text-4xl font-bold">리뷰</h1>
+              <div className="flex justify-between">
+                <h1 className="text-4xl font-bold">리뷰</h1>
+                <div className="my-4">
+                  <FormControl sx={{ m: 1, minWidth: 200 }}>
+                    <InputLabel id="demo-simple-select-autowidth-label">
+                      리뷰 정보
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-autowidth-label"
+                      id="demo-simple-select-autowidth"
+                      value={state}
+                      onChange={stateChange}
+                      autoWidth
+                      label="보기옵션"
+                    >
+                      <MenuItem value={0} sx={{ m: 1, minWidth: 180 }}>
+                        평점 높은순
+                      </MenuItem>
+                      <MenuItem value={1} sx={{ m: 1, minWidth: 180 }}>
+                        평점 낮은순
+                      </MenuItem>
+                      <MenuItem value={2} sx={{ m: 1, minWidth: 180 }}>
+                        최신 순
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+
+                  <FormControl sx={{ m: 1, minWidth: 200 }}>
+                    <InputLabel id="demo-simple-select-autowidth-label">
+                      의사 목록
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-autowidth-label"
+                      id="demo-simple-select-autowidth"
+                      value={dreview}
+                      onChange={dreviewChange}
+                      autoWidth
+                      label="보기옵션"
+                    >
+                      <MenuItem value={0} sx={{ m: 1, minWidth: 180 }}>
+                        전체
+                      </MenuItem>
+                      {doctorIds.map((doctor) => (
+                        <MenuItem
+                          key={doctor.doctorId}
+                          value={doctor.doctorId}
+                          sx={{ m: 1, minWidth: 180 }}
+                        >
+                          {doctor.doctorName}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </div>
+              </div>
+              <div className="flex my-11 justify-center">
+                <h1 className="text-7xl font-bold">{hospitalData.score}</h1>
+                <div className="flex-col text-center ms-5">
+                  <Rating
+                    name="read-only"
+                    value={hospitalData.score}
+                    readOnly
+                    precision={0.1}
+                    sx={{
+                      fontSize: "60px",
+                    }}
+                  />
+                  <h1>{reviewData.length}개의 리뷰</h1>
+                </div>
+              </div>
+              <Container maxWidth="sm">
+                <div>
+                  {filteredReviewData
+                    .slice((page - 1) * reviewPerPage, page * reviewPerPage)
+                    .map((review) => (
+                      <div key={review.reviewId}>
+                        {
+                          <div className="flex-col">
+                            <Grid container spacing={1} className="my-10">
+                              <Grid item xs={3}>
+                                <h1 className="text-lg font-bold">
+                                  {review.nickname}
+                                </h1>
+                              </Grid>
+                              <Grid item xs={2}>
+                                <h1 className="text-xl font-bold">
+                                  {review.score} 점
+                                </h1>
+                              </Grid>
+                              <Grid item xs={5}>
+                                <Rating
+                                  name="read-only"
+                                  value={review.score}
+                                  readOnly
+                                  precision={1}
+                                  size={"medium"}
+                                />
+                              </Grid>
+                              <Grid item xs={2}>
+                                <NotificationImportantIcon
+                                  sx={{ color: red[500] }}
+                                />
+                              </Grid>
+                              <Grid item xs={2}>
+                                <h1>{review.doctorName}</h1>
+                              </Grid>
+                              <Grid item xs={2}>
+                                <h1 className="text-gray-500">
+                                  {review.updateDate}
+                                </h1>
+                              </Grid>
+                              <Grid item xs={8}>
+                                <h1 className="text-gray-500">
+                                  {review.category}
+                                </h1>
+                              </Grid>
+                              <Grid item xs={12}>
+                                <h1 className="text-2xl">{review.content}</h1>
+                              </Grid>
+                            </Grid>
+                          </div>
+                        }
+                      </div>
+                    ))}
+                  <div className="flex justify-center">
+                    <Stack spacing={2}>
+                      <Pagination
+                        count={Math.ceil(
+                          filteredReviewData.length / reviewPerPage,
+                        )}
+                        page={page}
+                        onChange={handleChange}
+                      />
+                    </Stack>
+                  </div>
+                </div>
+              </Container>
             </Review>
           </Content>
           <Content style={{ width: "350px" }}>
@@ -332,7 +559,7 @@ const DetailHospital: React.FC = () => {
             <SelectDoctorAndTime setDoctorName={setDoctorName} />
           </Content>
         </Layout>
-      </Container>
+      </Containers>
       <Footer />
     </div>
   );
