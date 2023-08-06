@@ -13,6 +13,7 @@ import DetailHospital from "pages/DetailHospital";
 import AIDiagnosis from "pages/aidiagnosis/AIDiagnosis";
 import AIDiagnosisSecond from "pages/aidiagnosis/AIDiagnosisSecond";
 import AIDiagnosisResult from "pages/aidiagnosis/AIDiagnosisResult";
+// import WebRTC from "pages/WebRTC";
 
 const App: React.FC = () => {
   useKakaoMapScript();
@@ -31,6 +32,8 @@ const App: React.FC = () => {
         <Route path="/diagnosis" element={<AIDiagnosis />} />
         <Route path="/diagnosisSecond" element={<AIDiagnosisSecond />} />
         <Route path="/diagnosisResult" element={<AIDiagnosisResult />} />
+        {/* <Route path="/webrtc" element={<WebRTC />} /> */}
+
         <Route
           path="*"
           element={

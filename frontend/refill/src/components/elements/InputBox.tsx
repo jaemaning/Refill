@@ -7,7 +7,7 @@ interface InputBoxType {
   value: string | null;
   onChange: (value: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder: string | null;
-  handlefunc? : (e: any)=> void;
+  handlefunc?: (e: any) => void;
 }
 
 const StyleInputBox = styled.input(() => [
@@ -31,7 +31,7 @@ export const InputBox: React.FC<InputBoxType> = ({
   value,
   onChange,
   placeholder,
-  handlefunc
+  handlefunc,
 }) => {
   return (
     <StyleInputBox

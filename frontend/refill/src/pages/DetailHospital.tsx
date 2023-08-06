@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "../components/Navbar";
 import Footer from "components/Footer";
-import Cloud2 from "../assets/cloud.png"
+import Cloud2 from "../assets/cloud.png";
 import styled from "@emotion/styled";
 import Button from "../components/elements/Button";
-import Arrow from "../assets/icons/reservation_arrow_icon.png"
+import Arrow from "../assets/icons/reservation_arrow_icon.png";
 // import StarRatings from "react-star-ratings";
 
 interface DivProps {
