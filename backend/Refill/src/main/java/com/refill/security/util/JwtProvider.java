@@ -104,11 +104,12 @@ public class JwtProvider {
                                 .parseClaimsJws(refreshToken)
                                 .getBody();
 
-            String loginId = claims.getSubject();
-
+            String loginId = claims.get("loginId", String.class);
+            Role role = claims.get("role", Role.class);
             // Redis 또는 데이터베이스에서 저장된 refreshToken과 전달된 refreshToken이 일치하는지 확인
             String storedRefreshToken = redisTemplate.opsForValue()
                                                      .get(loginId);
+
             if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)) {
                 throw new SecurityException(ErrorCode.INVALID_REFRESH_TOKEN);
             }
@@ -119,6 +120,7 @@ public class JwtProvider {
 
             Claims newClaims = Jwts.claims();
             newClaims.put("loginId", loginId);
+            newClaims.put("role", role);
 
             return Jwts.builder()
                        .setClaims(newClaims)

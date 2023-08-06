@@ -6,6 +6,8 @@ import com.refill.account.dto.request.LoginIdFindRequest;
 import com.refill.account.dto.request.LoginPasswordRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.dto.request.MemberLoginRequest;
+import com.refill.account.dto.request.RefreshRequest;
+import com.refill.account.dto.response.RefreshResponse;
 import com.refill.account.dto.response.TokenResponse;
 import com.refill.account.service.AccountService;
 import javax.validation.Valid;
@@ -97,6 +99,16 @@ public class AccountController {
         String message = accountService.findHospitalPassword(loginPasswordRequest);
 
         return ResponseEntity.ok().body(message);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<RefreshResponse> refreshToken(@RequestBody final RefreshRequest refreshRequest) {
+
+        log.debug("member request refreshAccessToken");
+
+        RefreshResponse refreshResponse = accountService.refreshAccessToken(refreshRequest);
+
+        return ResponseEntity.ok().body(refreshResponse);
     }
 
 

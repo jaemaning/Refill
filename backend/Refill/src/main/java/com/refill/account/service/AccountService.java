@@ -6,6 +6,8 @@ import com.refill.account.dto.request.LoginIdFindRequest;
 import com.refill.account.dto.request.LoginPasswordRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.dto.request.MemberLoginRequest;
+import com.refill.account.dto.request.RefreshRequest;
+import com.refill.account.dto.response.RefreshResponse;
 import com.refill.account.dto.response.TokenResponse;
 import com.refill.account.exception.AccountException;
 import com.refill.global.entity.Message;
@@ -207,5 +209,12 @@ public class AccountService {
                      .collect(StringBuilder::new, StringBuilder::appendCodePoint,
                          StringBuilder::append)
                      .toString();
+    }
+
+    public RefreshResponse refreshAccessToken(RefreshRequest refreshRequest) {
+
+        String accessToken = jwtProvider.refreshAccessToken(refreshRequest.refreshToken(), secretKey);
+
+        return new RefreshResponse(accessToken);
     }
 }
