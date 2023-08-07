@@ -74,4 +74,9 @@ public class ReviewController {
         return ResponseEntity.noContent()
                              .build();
     }
+
+    @PostMapping("report/{reviewId}")
+    public ResponseEntity<String> reportReview(){
+        return null;
+    }
 }
