@@ -12,10 +12,10 @@ public interface ConsultingRepository extends JpaRepository<Consulting, Long> {
     Consulting findConsultingBySessionId(String sessionId);
 
     @Query("SELECT c FROM Consulting c WHERE c.doctor.id = :doctorId AND c.reservation.id = :reservationId")
-    Consulting findConsultingByDoctorAndReservation(@Param("doctorId") Long doctorId, @Param("reservation_id") Long reservationId);
+    Consulting findConsultingByDoctorAndReservation(@Param("doctorId") Long doctorId, @Param("reservationId") Long reservationId);
 
     @Query("SELECT c FROM Consulting c WHERE c.member.id = :memberId AND c.reservation.id = :reservationId")
-    Consulting findConsultingByMemberAndReservation(@Param("memberId") Long memberId, @Param("reservation_id") Long reservationId);
+    Consulting findConsultingByMemberAndReservation(@Param("memberId") Long memberId, @Param("reservationId") Long reservationId);
 
 //    List<Consulting> findConsultingsByMember(Member member);
 
