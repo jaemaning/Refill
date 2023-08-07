@@ -1,12 +1,11 @@
 package com.refill.hospital.exception;
 
+import com.refill.global.exception.BaseException;
 import com.refill.global.exception.ErrorCode;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@AllArgsConstructor
-@Getter
-public class HospitalException extends RuntimeException{
+public class HospitalException extends BaseException {
 
-    private ErrorCode errorCode;
+    public HospitalException(ErrorCode errorCode) {
+        super(errorCode);
+    }
 }

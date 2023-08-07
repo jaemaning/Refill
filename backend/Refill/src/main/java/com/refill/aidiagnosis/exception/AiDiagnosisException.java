@@ -1,12 +1,11 @@
 package com.refill.aidiagnosis.exception;
 
+import com.refill.global.exception.BaseException;
 import com.refill.global.exception.ErrorCode;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@AllArgsConstructor
-@Getter
-public class AiDiagnosisException extends RuntimeException{
+public class AiDiagnosisException extends BaseException {
 
-    private ErrorCode errorCode;
+    public AiDiagnosisException(ErrorCode errorCode) {
+        super(errorCode);
+    }
 }
