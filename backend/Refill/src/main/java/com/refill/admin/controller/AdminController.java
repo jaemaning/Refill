@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -57,13 +58,13 @@ public class AdminController {
         return ResponseEntity.ok().body(reportReviewResponses);
     }
 //
-//    /* 신고 리뷰 상세 조회 - 병원 controller review 조회로 대체 */
+//    /* 신고 리뷰 상세 조회 - review 도메인 단건 조회로 대체 가능 */
 
 //    /* 신고 리뷰 승인 */
-//    @PutMapping
-//    public ResponseEntity<String> acceptReportReview(){
-//        return null;
-//    }
+    @PutMapping
+    public ResponseEntity<String> acceptReportReview(){
+        return null;
+    }
 //
 //    /* 신고 리뷰 반려 */
 //    @PutMapping
