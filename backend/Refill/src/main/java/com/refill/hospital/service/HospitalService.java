@@ -239,4 +239,7 @@ public class HospitalService {
     }
 
 
+    public List<HospitalResponse> findAllHospitals() {
+        return this.findAll().stream().map(hospital -> new HospitalResponse(hospital)).collect(Collectors.toList());
+    }
 }
