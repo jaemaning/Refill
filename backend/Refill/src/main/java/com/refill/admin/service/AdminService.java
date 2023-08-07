@@ -15,6 +15,7 @@ import com.refill.report.service.ReportService;
 import com.refill.review.entity.Review;
 import com.refill.review.exception.ReviewException;
 import com.refill.review.service.ReviewService;
+import com.refill.security.util.LoginInfo;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -100,8 +101,17 @@ public class AdminService {
     }
 
 
+    @Transactional
+    public String acceptReportReview(Long reportId, LoginInfo loginInfo) {
+        Report report = reportService.findById(reportId);
+        reviewService.deleteReviewById(report.getTargetId(), loginInfo);
+        reportService.deleteReportById(reportId);
+        return Message.ACCEPT_REPORT_REVIEW.getMessage();
+    }
 
-
-
-
+    @Transactional
+    public String rejectReportReview(Long reportId) {
+        reportService.deleteReportById(reportId);
+        return Message.REJECT_REPORT_REVIEW.getMessage();
+    }
 }
