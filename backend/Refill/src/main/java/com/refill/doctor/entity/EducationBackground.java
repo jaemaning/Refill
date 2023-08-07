@@ -26,4 +26,11 @@ public class EducationBackground extends BaseEntity {
     @Column(nullable = false)
     String content;
 
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
+        if (!doctor.getEducationBackgrounds().contains(this)) {
+            doctor.getEducationBackgrounds()
+                  .add(this);
+        }
+    }
 }
