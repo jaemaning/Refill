@@ -1,5 +1,5 @@
 package com.refill.report.entity;
 
-public enum ReportTargetType {
+public enum TargetType {
     REVIEW, CONSULTING
 }

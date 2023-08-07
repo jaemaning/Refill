@@ -1,6 +1,7 @@
 package com.refill.report.entity;
 
 import com.refill.global.entity.BaseEntity;
+import com.refill.global.entity.Role;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -22,7 +23,7 @@ public class Report extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    ReporterType reporterType;
+    Role reporterRole;
 
     @Column(nullable = false)
     Long reporterId;
@@ -35,5 +36,5 @@ public class Report extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    ReportTargetType targetType;
+    TargetType targetType;
 }
