@@ -6,7 +6,6 @@ public record ConsultingListResponse(
     Long consultingId,
     String hospitalName,
     String doctorName,
-
     LocalDateTime startDateTime
 ) {
     public ConsultingListResponse(Consulting consulting) {

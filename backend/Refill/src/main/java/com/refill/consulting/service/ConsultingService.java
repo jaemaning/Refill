@@ -1,5 +1,7 @@
 package com.refill.consulting.service;
 
+import com.refill.consulting.dto.response.ConsultingDetailResponse;
+import com.refill.consulting.dto.response.ConsultingListResponse;
 import com.refill.consulting.entity.Consulting;
 import com.refill.consulting.repository.ConsultingRepository;
 import com.refill.doctor.entity.Doctor;
@@ -7,6 +9,7 @@ import com.refill.member.entity.Member;
 import com.refill.reservation.entity.Reservation;
 import com.refill.reservation.repository.ReservationRepository;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +48,7 @@ public class ConsultingService {
     private final ReservationRepository reservationRepository;
     private final ConsultingRepository consultingRepository;
 
-    private final int BEFORE_CONSULTING_TIME =15;
+    private final int BEFORE_CONSULTING_TIME = 15;
 
     @Scheduled(cron = "0 15,45 8-18 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
@@ -75,6 +78,28 @@ public class ConsultingService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<String> getDoctorConnectionToken(Long doctorId, Long reservationId) {
+        Consulting consulting = consultingRepository.findConsultingByDoctorAndReservation(doctorId, reservationId);
+
+        List<String> connectionInfo = new ArrayList<>();
+        connectionInfo.add(consulting.getDoctorToken());
+        connectionInfo.add(consulting.getSessionId());
+
+        return connectionInfo; //  DTO로 만들 다시 만들 것
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> getMemberConnectionToken(Long memberId, Long reservationId) {
+        Consulting consulting = consultingRepository.findConsultingByMemberAndReservation(memberId,
+            reservationId);
+
+        List<String> connectionInfo = new ArrayList<>();
+        connectionInfo.add(consulting.getMemberToken());
+        connectionInfo.add(consulting.getSessionId());
+
+        return connectionInfo; //  DTO로 만들 다시 만들 것
+    }
 
     @Transactional
     public void leaveSession(String sessionId, String consultingDetailInfo) {
@@ -84,5 +109,22 @@ public class ConsultingService {
     }
 
     @Transactional(readOnly = true)
-    public
+    public List<ConsultingListResponse> getConsultingList(long memberId) {
+        List<Consulting> consultingList = consultingRepository.findConsultingsByMember(memberId);
+
+        List<ConsultingListResponse> consultingListResponseList = new ArrayList<>();
+
+        for (Consulting consulting : consultingList) {
+            consultingListResponseList.add(new ConsultingListResponse(consulting));
+        }
+
+        return consultingListResponseList;
+    }
+
+    @Transactional(readOnly = true)
+    public ConsultingDetailResponse getConsultingDetailInfo(Long consultingId) {
+        Consulting consulting = consultingRepository.findConsultingById(consultingId);
+
+        return new ConsultingDetailResponse(consulting);
+    }
 }
