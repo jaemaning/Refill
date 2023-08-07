@@ -1,13 +1,12 @@
 package com.refill.security.exception;
 
+import com.refill.global.exception.BaseException;
 import com.refill.global.exception.ErrorCode;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@Getter
-@AllArgsConstructor
-public class SecurityException extends RuntimeException{
+public class SecurityException extends BaseException {
 
-    private ErrorCode errorCode;
+    public SecurityException(ErrorCode errorCode) {
+        super(errorCode);
+    }
 
 }
