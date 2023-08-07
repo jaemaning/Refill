@@ -13,6 +13,7 @@ import com.refill.member.service.MemberService;
 import com.refill.report.entity.Report;
 import com.refill.report.service.ReportService;
 import com.refill.review.entity.Review;
+import com.refill.review.exception.ReviewException;
 import com.refill.review.service.ReviewService;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -69,42 +70,38 @@ public class AdminService {
         return Message.REJECT_HOSPITAL.getMessage();
     }
 
+    @Transactional(readOnly = true)
     public Page<ReportReviewResponse> getReportReviews(Pageable pageable) {
-//        Page<Report> reportReviews = reportService.getReportReviews(pageable);
-//        UserInfo userInfo = null;
-//        Review review;
-//        List<ReportReviewResponse> list = new ArrayList<>();
-//        for (Report reportReview : reportReviews) {
-//            if (reportReview.getReporterType()
-//                            .equals(ReporterType.MEMBER)) {
-//                userInfo = memberService.findById(reportReview.getReporterId());
-//            } else if (reportReview.getReporterType()
-//                                   .equals(ReporterType.HOSPITAL)) {
-//                userInfo = hospitalService.findById(reportReview.getReporterId());
-//            }
-//            review = reviewService.findById(reportReview.getTargetId());
-//            list.add(new ReportReviewResponse(reportReview, userInfo, review));
-//        }
-//        return new PageImpl<>(list, pageable, reportReviews.getTotalElements());
         Page<Report> reportReviews = reportService.getReportReviews(pageable);
 
         List<ReportReviewResponse> list = reportReviews.getContent()
                                                        .stream()
-                                                       .map(reportReview -> {
-                                                           UserInfo userInfo;
-                                                           if (reportReview.getReporterRole() == Role.ROLE_MEMBER) {
-                                                               userInfo = memberService.findById(reportReview.getReporterId());
-                                                           } else if (reportReview.getReporterRole() == Role.ROLE_HOSPITAL) {
-                                                               userInfo = hospitalService.findById(reportReview.getReporterId());
-                                                           } else {
-                                                               throw new IllegalArgumentException("Unexpected ReporterType: " + reportReview.getReporterRole());
-                                                           }
-
-                                                           Review review = reviewService.findById(reportReview.getTargetId());
-                                                           return new ReportReviewResponse(reportReview, userInfo, review);
-                                                       })
+                                                       .map(this::buildReportReviewResponse)
                                                        .collect(Collectors.toList());
 
         return new PageImpl<>(list, pageable, reportReviews.getTotalElements());
     }
+
+    private ReportReviewResponse buildReportReviewResponse(Report reportReview) {
+        UserInfo userInfo = getUserInfoBasedOnRole(reportReview);
+        Review review = reviewService.findById(reportReview.getTargetId());
+        return new ReportReviewResponse(reportReview, userInfo, review);
+    }
+
+    private UserInfo getUserInfoBasedOnRole(Report reportReview) {
+        switch (reportReview.getReporterRole()) {
+            case ROLE_MEMBER:
+                return memberService.findById(reportReview.getReporterId());
+            case ROLE_HOSPITAL:
+                return hospitalService.findById(reportReview.getReporterId());
+            default:
+                throw new ReviewException(ErrorCode.UNAUTHORIZED_REQUEST);
+        }
+    }
+
+
+
+
+
+
 }
