@@ -1,12 +1,11 @@
 package com.refill.reservation.exception;
 
+import com.refill.global.exception.BaseException;
 import com.refill.global.exception.ErrorCode;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@AllArgsConstructor
-@Getter
-public class ReservationException extends RuntimeException{
+public class ReservationException extends BaseException {
 
-    private ErrorCode errorCode;
+    public ReservationException(ErrorCode errorCode) {
+        super(errorCode);
+    }
 }

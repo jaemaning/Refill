@@ -1,13 +1,12 @@
 package com.refill.account.exception;
 
+import com.refill.global.exception.BaseException;
 import com.refill.global.exception.ErrorCode;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@Getter
-@AllArgsConstructor
-public class AccountException extends RuntimeException {
+public class AccountException extends BaseException {
 
-    private ErrorCode errorCode;
+    public AccountException(ErrorCode errorCode) {
+        super(errorCode);
+    }
 
 }
