@@ -1,5 +1,6 @@
 package com.refill.admin.dto.response;
 
+import com.refill.global.entity.Role;
 import com.refill.global.entity.UserInfo;
 import com.refill.report.entity.Report;
 import com.refill.review.dto.response.ReviewResponse;
@@ -9,7 +10,7 @@ import javax.validation.constraints.NotNull;
 public record ReportReviewResponse (
     @NotNull Long reportId,
     @NotNull ReviewResponse reviewResponse,
-    @NotNull String reporterType, // 신고한 사람의 유형: MEMBER, HOSPITAL (의사는 실제 로그인하는 회원이 아님)
+    @NotNull Role reporterType, // 신고한 사람의 유형: MEMBER, HOSPITAL (의사는 실제 로그인하는 회원이 아님)
     @NotNull Long reporterId,
     @NotNull String reporterName,
     @NotNull String content
@@ -18,7 +19,7 @@ public record ReportReviewResponse (
         this(
             report.getId(),
             new ReviewResponse(review),
-            report.getReporterType().name(),
+            report.getReporterRole(),
             report.getReporterId(),
             userInfo.getName(),
             report.getContent()

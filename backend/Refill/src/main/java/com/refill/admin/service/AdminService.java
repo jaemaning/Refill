@@ -11,7 +11,6 @@ import com.refill.hospital.service.HospitalService;
 import com.refill.member.exception.MemberException;
 import com.refill.member.service.MemberService;
 import com.refill.report.entity.Report;
-import com.refill.report.entity.ReporterType;
 import com.refill.report.service.ReportService;
 import com.refill.review.entity.Review;
 import com.refill.review.service.ReviewService;
@@ -93,12 +92,12 @@ public class AdminService {
                                                        .stream()
                                                        .map(reportReview -> {
                                                            UserInfo userInfo;
-                                                           if (reportReview.getReporterType().equals(ReporterType.MEMBER)) {
+                                                           if (reportReview.getReporterRole() == Role.ROLE_MEMBER) {
                                                                userInfo = memberService.findById(reportReview.getReporterId());
-                                                           } else if (reportReview.getReporterType().equals(ReporterType.HOSPITAL)) {
+                                                           } else if (reportReview.getReporterRole() == Role.ROLE_HOSPITAL) {
                                                                userInfo = hospitalService.findById(reportReview.getReporterId());
                                                            } else {
-                                                               throw new IllegalArgumentException("Unexpected ReporterType: " + reportReview.getReporterType());
+                                                               throw new IllegalArgumentException("Unexpected ReporterType: " + reportReview.getReporterRole());
                                                            }
 
                                                            Review review = reviewService.findById(reportReview.getTargetId());
