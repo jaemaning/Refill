@@ -47,19 +47,16 @@ public class ConsultingController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<List<ConsultingListResponse>> getConsultingList(@AuthenticationPrincipal LoginInfo loginInfo) {
-        log.debug("'{}' member request consultingList", loginInfo.loginId());
-        // 상담 내역 반환
-        List<ConsultingListResponse> consultingList = new ArrayList<>();
+    public ResponseEntity<String> getConsultingList(@AuthenticationPrincipal LoginInfo loginInfo) {
 
-        return ResponseEntity.ok().body(consultingList);
+        return ResponseEntity.ok().body("consultingList");
     }
 
     @GetMapping("/{consultingId}")
     public ResponseEntity<ConsultingDetailResponse> getDetailConsultingInfo(@AuthenticationPrincipal LoginInfo loginInfo, @PathVariable Long consultingId) {
         log.debug("'{}' member request detailconsulting", loginInfo.loginId());
 
-        ConsultingDetailResponse consultingDetailResponse;
+        ConsultingDetailResponse consultingDetailResponse = new ConsultingDetailResponse();
 
         return ResponseEntity.ok().body(consultingDetailResponse);
     }

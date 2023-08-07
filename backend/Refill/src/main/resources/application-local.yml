@@ -24,4 +24,7 @@ flask:
   server:
     url: "localhost:5000/predict"
 
+OPENVIDU_URL: "https://i9c201.p.ssafy.io:4441"
+OPENVIDU_SECRET: "openvidu"
+
 

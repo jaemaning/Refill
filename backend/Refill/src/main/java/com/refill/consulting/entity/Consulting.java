@@ -57,4 +57,9 @@ public class Consulting extends BaseEntity {
         this.doctorToken = doctorToken;
         this.isExecuted = false;
     }
+
+    public void updateConsultingInfo(String consultingDetailInfo) {
+        this.isExecuted = true;
+        this.consultingDetailInfo = consultingDetailInfo;
+    }
 }

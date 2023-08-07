@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ConsultingRepository extends JpaRepository<Consulting, Long> {
 
+    Consulting findConsultingBySessionId(String sessionId);
 }

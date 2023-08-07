@@ -29,10 +29,10 @@ import org.springframework.transaction.annotation.Transactional;
 @EnableScheduling
 public class ConsultingService {
 
-    @Value("${OPENVIDU_SERVER_URL}")
+    @Value("${OPENVIDU_URL}")
     private String OPENVIDU_URL;
 
-    @Value("${OPENVIDU_SECRET_KEY}")
+    @Value("${OPENVIDU_SECRET}")
     private String OPENVIDU_SECRET;
 
     private OpenVidu openvidu;
@@ -77,5 +77,10 @@ public class ConsultingService {
 
 
     @Transactional
-    public void leaveSession(String sessionId, )
+    public void leaveSession(String sessionId, String consultingDetailInfo) {
+        Consulting consulting = consultingRepository.findConsultingBySessionId(sessionId);
+
+
+        consulting.updateConsultingInfo(consultingDetailInfo);
+    }
 }

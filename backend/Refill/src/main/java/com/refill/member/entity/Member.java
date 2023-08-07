@@ -54,7 +54,7 @@ public class Member extends UserInfo {
     @OneToMany(mappedBy = "member")
     private List<Reservation> reservationList;
 
-    @OneToMany(mappedBy = "consulting")
+    @OneToMany(mappedBy = "member")
     private List<Consulting> consultingList;
 
     public static Member from(MemberJoinRequest memberJoinRequest) {
