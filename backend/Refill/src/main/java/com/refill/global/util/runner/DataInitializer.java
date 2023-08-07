@@ -1,5 +1,8 @@
 package com.refill.global.util.runner;
 
+import com.refill.aidiagnosis.entity.AiDiagnosis;
+import com.refill.aidiagnosis.entity.HairLossType;
+import com.refill.aidiagnosis.repository.AiDiagnosisRepository;
 import com.refill.doctor.entity.Doctor;
 import com.refill.doctor.entity.EducationBackground;
 import com.refill.doctor.entity.MajorArea;
@@ -7,15 +10,22 @@ import com.refill.doctor.repository.DoctorRepository;
 import com.refill.doctor.repository.EducationBackgroundRepository;
 import com.refill.doctor.repository.MajorAreaRepository;
 import com.refill.global.entity.Role;
+import com.refill.hospital.dto.request.HospitalOperatingHoursRequest;
 import com.refill.hospital.entity.Hospital;
+import com.refill.hospital.entity.HospitalOperatingHour;
+import com.refill.hospital.repository.HospitalOperatingHourRepository;
 import com.refill.hospital.repository.HospitalRepository;
 import com.refill.member.entity.Member;
 import com.refill.member.repository.MemberRepository;
+import com.refill.reservation.entity.Reservation;
+import com.refill.reservation.repository.ReservationRepository;
 import com.refill.review.entity.Review;
 import com.refill.review.repository.ReviewRepository;
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -35,6 +45,9 @@ public class DataInitializer implements CommandLineRunner {
     private final MajorAreaRepository majorAreaRepository;
     private final EducationBackgroundRepository educationBackgroundRepository;
     private final ReviewRepository reviewRepository;
+    private final HospitalOperatingHourRepository hospitalOperatingHourRepository;
+    private final ReservationRepository reservationRepository;
+    private final AiDiagnosisRepository aiDiagnosisRepository;
 
     @Override
     @Transactional
@@ -62,6 +75,8 @@ public class DataInitializer implements CommandLineRunner {
                              .build();
         memberRepository.save(admin);
 
+
+
         for(int i=0; i<20; i++){
 
             Random random = new Random();
@@ -83,6 +98,17 @@ public class DataInitializer implements CommandLineRunner {
                                   .createdAt(LocalDateTime.now())
                                   .updatedAt(LocalDateTime.now()).build();
             memberRepository.save(member);
+
+            AiDiagnosis aiDiagnosis = AiDiagnosis.builder()
+                                                 .member(member)
+                                                 .hairLossScore(40)
+                                                 .hairLossType(HairLossType.TYPE3)
+                                                 .surveyResult("1010100000")
+                                                 .build();
+
+            aiDiagnosis.updateFileAddress("https://picsum.photos/600/600/?random");
+            aiDiagnosisRepository.save(aiDiagnosis);
+
 
             /* 병원 생성 */
             String[] hospitalName = {
@@ -110,10 +136,21 @@ public class DataInitializer implements CommandLineRunner {
                                         .build();
             hospitalRepository.save(hospital);
 
+            // 운영시간 넣기
+            LocalTime startTime = LocalTime.of(9, 0);
+            LocalTime endTime = LocalTime.of(19, 0);
+
+            DayOfWeek[] weeks = DayOfWeek.values();
+
+            for(int k = 0; k < weeks.length; k++) {
+                HospitalOperatingHoursRequest request = new HospitalOperatingHoursRequest(weeks[k], startTime, endTime);
+                HospitalOperatingHour hospitalOperatingHour = HospitalOperatingHour.from(request, hospital);
+                hospitalOperatingHourRepository.save(hospitalOperatingHour);
+            }
 
 
             String[] firstName = {"김", "이", "박", "신", "유", "최"};
-            
+
             /* 의사 생성 */
             for(int j=0; j<4; j++){
                 Doctor doctor = Doctor.builder()
@@ -144,7 +181,7 @@ public class DataInitializer implements CommandLineRunner {
                                                                                  .build();
                     educationBackgroundRepository.save(educationBackground);
                 }
-                
+
                 /* 리뷰 생성 - 의사 한명당 3개의 리뷰 생성 */
                 String[] content = {"이분이 진짜 최고", "모발이식 상담을 너무 잘해요!!", "난 좀 별로인듯..."};
                 String[] category = {"모발이식", "컨설팅", "탈모케어"};
@@ -159,7 +196,26 @@ public class DataInitializer implements CommandLineRunner {
                                           .category(category[(j + k) % content.length]).build();
                     reviewRepository.save(review);
                 }
+
+                // 예약
+                LocalDate localDate = LocalDate.now().plusDays(1L);
+                LocalTime localTime = LocalTime.of(10, 0);
+                LocalDateTime startDateTime = LocalDateTime.of(localDate, localTime);
+                LocalDateTime endDateTime = startDateTime.plusMinutes(30);
+                String counselingDemands = "상담 요청합니다.";
+
+                Reservation reservation = Reservation.builder()
+                                                     .member(member)
+                                                     .doctor(doctor)
+                                                     .startDateTime(startDateTime)
+                                                     .endDateTime(endDateTime)
+                                                     .counselingDemands(counselingDemands)
+                                                     .build();
+
+                reservationRepository.save(reservation);
             }
+
+
         }
     }
 }
