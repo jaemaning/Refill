@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 // import axios from "axios";
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
@@ -7,7 +7,8 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import SelectTime from "./SelectTime";
 import SelectDate from "./SelectDate";
-import MedicalInformationOutlinedIcon from '@mui/icons-material/MedicalInformationOutlined';
+import MedicalInformationOutlinedIcon from "@mui/icons-material/MedicalInformationOutlined";
+import UploadImg from "./UploadImg";
 
 interface SelectDoctorAndTimeProps {
   setDoctorName: (name: string) => void;
@@ -48,52 +49,78 @@ const SelectDoctorAndTime: React.FC<SelectDoctorAndTimeProps> = ({
 
   // 의사 클릭하는 이벤트
 
-  const handleChange = (event: SelectChangeEvent) => {
+  const ishandleChange = (event: SelectChangeEvent) => {
     const selectedName = event.target.value as string;
-    const NowDays = new Date()
+    const NowDays = new Date();
     setSelectedDoctor(selectedName);
     setDoctorName(selectedName);
     console.log(selectedName);
-    console.log(NowDays)
+    console.log(NowDays);
   };
   const [selectedDoctor, setSelectedDoctor] = React.useState("");
-  // const [selectedDate, setSelectedDate] = React.useState("");
-  // const [selectedTime, setSelectedTime] = React.useState("");
+  const [selectedDate, setSelectedDate] = React.useState("");
+  const [selectedTime, setSelectedTime] = React.useState("");
   const DOCTORS = ["LEETAESEONG", "LEETAEMUSCLE", "MUSCLEMUSCLE"];
+  const [isFirst, setIsFirst] = React.useState(true);
+  // first second result
+  // if isFirst == true 현재 컴포넌트 보여주고
+  // 다음 버튼을 누를 경우 isFirst = false 다음 컴포넌트 나옴
+  // else인 경우 다음 버튼 이전 버튼 보여주고
+  // 다음 버튼을 누를 경우 modal 나오고 확인 또는 X클릭하면 마이페이지로 이동
+  // 이전 버튼을 누를 경우 isFirst = true
+  const changeIsFirst = () => {
+    setIsFirst(false);
+  };
 
   return (
     <div className="m-2 py-2">
-      <div className="m-1 text-xl">
-        <MedicalInformationOutlinedIcon /> 의사 선택
-      </div>
-      <Box sx={{ minWidth: 120 }} className="m-2 mb-8">
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">
-            의사 선생님을 선택해주세요
-          </InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={selectedDoctor}
-            label="의사 선생님을 선택해주세요"
-            onChange={handleChange}
-          >
-            {DOCTORS.map((doctor, index) => (
-              <MenuItem key={index} value={doctor}>
-                {doctor}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Box>
-      <hr className="border-2 my-2" />
-      <SelectDate />
-      <hr className="border-2 my-2" />
-      <SelectTime />
-      <hr className="border-2 my-2" />
-      <div className="flex items-center justify-center">
-      <button className="rounded text-lg font-black hover:bg-slate-400 bg-black text-white py-2 px-4"> 다음단계 </button>
-      </div>
+      {isFirst ? (
+        <>
+          <div className="m-1 text-xl">
+            <MedicalInformationOutlinedIcon /> 의사 선택
+          </div>
+          <Box sx={{ minWidth: 120 }} className="m-2 mb-8">
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">
+                의사 선생님을 선택해주세요
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={selectedDoctor}
+                label="의사 선생님을 선택해주세요"
+                onChange={ishandleChange}
+              >
+                {DOCTORS.map((doctor, index) => (
+                  <MenuItem key={index} value={doctor}>
+                    {doctor}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+          <hr className="border-2 border-black my-2" />
+          <SelectDate />
+          <hr className="border-2 border-black my-2" />
+          <SelectTime />
+          <hr className="border-2 border-black my-2" />
+          <div className="flex items-center justify-center">
+            <button
+              onClick={changeIsFirst}
+              className="rounded text-lg font-black hover:bg-slate-400 bg-black text-white py-2 px-4"
+            >
+              {" "}
+              다음단계{" "}
+            </button>
+          </div>{" "}
+        </>
+      ) : (
+        <UploadImg
+          doctorName={selectedDoctor}
+          selectedDate={selectedDate}
+          selectedTime={selectedTime}
+        />
+      )}
     </div>
   );
 };
