@@ -14,6 +14,8 @@ import AIDiagnosis from "pages/aidiagnosis/AIDiagnosis";
 import AIDiagnosisSecond from "pages/aidiagnosis/AIDiagnosisSecond";
 import AIDiagnosisResult from "pages/aidiagnosis/AIDiagnosisResult";
 // import WebRTC from "pages/WebRTC";
+import VideoChatPage from "pages/openvidu/VideoChatPage";
+// import { OpenVidu } from "openvidu-browser";
 
 const App: React.FC = () => {
   useKakaoMapScript();
@@ -33,6 +35,7 @@ const App: React.FC = () => {
         <Route path="/diagnosisSecond" element={<AIDiagnosisSecond />} />
         <Route path="/diagnosisResult" element={<AIDiagnosisResult />} />
         {/* <Route path="/webrtc" element={<WebRTC />} /> */}
+        <Route path="/video" element={<VideoChatPage />} />
 
         <Route
           path="*"
