@@ -32,11 +32,13 @@ public enum ErrorCode {
     AI_SERVER_ERROR("AI02", HttpStatus.INTERNAL_SERVER_ERROR, "AI 서버 에러입니다."),
 
     /* Review Exception */
-    REVIEW_NOT_FOUND("REVIEW01", HttpStatus.NOT_FOUND, "존재하지 않는 리뷰입니다."),
+    REVIEW_NOT_FOUND("REV", HttpStatus.NOT_FOUND, "존재하지 않는 리뷰입니다."),
 
     /* Reservation Exception */
     ALREADY_RESERVED("RES01", HttpStatus.BAD_REQUEST, "이미 예약된 시간입니다."),
     MEMBER_RESERVATION_DUPLICATED("RES02", HttpStatus.BAD_REQUEST, "이미 같은 시간에 예약하셨습니다."),
+
+    REPORT_NOT_FOUND("RPT01", HttpStatus.NOT_FOUND, "존재하지 않는 신고입니다."),
 
     /* Consulting Exception */
     CONSULTING_NOT_YET("CON01",HttpStatus.BAD_REQUEST,"방이 아직 생성되지 않았습니다."),
