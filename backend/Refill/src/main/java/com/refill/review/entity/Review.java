@@ -12,16 +12,16 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @ToString(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Builder
+@SuperBuilder
 @Entity
 public class Review extends BaseEntity {
 
@@ -63,5 +63,21 @@ public class Review extends BaseEntity {
     public void update(ReviewModifyRequest reviewModifyRequest) {
         this.content = reviewModifyRequest.content();
         this.score = reviewModifyRequest.score();
+    }
+
+    public void setHospital(Hospital hospital) {
+        this.hospital = hospital;
+        if(!hospital.getReviews()
+                    .contains(this)){
+            hospital.getReviews()
+                    .add(this);
+        }
+    }
+
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
+        if (!doctor.getReviews().contains(this)) {
+            doctor.getReviews().add(this);
+        }
     }
 }
