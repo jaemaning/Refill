@@ -7,6 +7,7 @@ import com.refill.member.exception.MemberException;
 import com.refill.member.service.MemberService;
 import com.refill.report.entity.Report;
 import com.refill.report.entity.TargetType;
+import com.refill.report.exception.ReportException;
 import com.refill.report.repository.ReportRepository;
 import com.refill.security.util.LoginInfo;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +55,10 @@ public class ReportService {
     }
 
     public Report findById(Long reportId) {
-        return reportRepository.findById(reportId).orElseThrow(()-> new MemberException(ErrorCode.REVIEW_NOT_FOUND));
+        return reportRepository.findById(reportId).orElseThrow(()-> new ReportException(ErrorCode.REPORT_NOT_FOUND));
+    }
+
+    public void deleteReportById(Long reportId) {
+        reportRepository.deleteById(reportId);
     }
 }

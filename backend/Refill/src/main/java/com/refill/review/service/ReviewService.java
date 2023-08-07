@@ -103,6 +103,7 @@ public class ReviewService {
 
     @Transactional
     public void reportReview(Long reviewId, String content, LoginInfo loginInfo) {
+        findById(reviewId);
         reportService.reportReview(reviewId, content, loginInfo);
     }
 }
