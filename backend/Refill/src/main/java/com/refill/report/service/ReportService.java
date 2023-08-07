@@ -52,4 +52,8 @@ public class ReportService {
 
         reportRepository.save(report);
     }
+
+    public Report findById(Long reportId) {
+        return reportRepository.findById(reportId).orElseThrow(()-> new MemberException(ErrorCode.REVIEW_NOT_FOUND));
+    }
 }
