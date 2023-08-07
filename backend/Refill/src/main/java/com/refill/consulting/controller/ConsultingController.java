@@ -30,7 +30,7 @@ public class ConsultingController {
     }
 
     @GetMapping("/member/{memberId}")
-    public ResponseEntity<String> getmemberToken(@AuthenticationPrincipal LoginInfo loginInfo, @PathVariable Long memberId) {
+    public ResponseEntity<String> getMemberToken(@AuthenticationPrincipal LoginInfo loginInfo, @PathVariable Long memberId) {
         log.debug("'{}' member request doctorToken", loginInfo.loginId());
         // 토큰 가져오기
         String token = "abcd";
@@ -47,9 +47,12 @@ public class ConsultingController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<String> getConsultingList(@AuthenticationPrincipal LoginInfo loginInfo) {
+    public ResponseEntity<List<ConsultingListResponse>> getConsultingList(@AuthenticationPrincipal LoginInfo loginInfo) {
+        log.debug("'{}' member request consultingList", loginInfo.loginId());
 
-        return ResponseEntity.ok().body("consultingList");
+        List<ConsultingListResponse> consultingList = new ArrayList<>();
+
+        return ResponseEntity.ok().body(consultingList);
     }
 
     @GetMapping("/{consultingId}")

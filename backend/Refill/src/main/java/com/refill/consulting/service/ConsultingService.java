@@ -80,7 +80,9 @@ public class ConsultingService {
     public void leaveSession(String sessionId, String consultingDetailInfo) {
         Consulting consulting = consultingRepository.findConsultingBySessionId(sessionId);
 
-
         consulting.updateConsultingInfo(consultingDetailInfo);
     }
+
+    @Transactional(readOnly = true)
+    public
 }
