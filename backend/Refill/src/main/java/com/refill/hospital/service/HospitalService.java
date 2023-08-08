@@ -174,6 +174,7 @@ public class HospitalService {
 
         Hospital hospital = checkAccessHospital(loginId, hospitalId);
         hospital.update(hospitalInfoUpdateRequest);
+
         uploadFileAndUpdateAddress(profileImg, hospital::updateProfileAddress);
         uploadFileAndUpdateAddress(bannerImg, hospital::updateBannerAddress);
         uploadFileAndUpdateAddress(registrationImg, hospital::updateRegistrationImg);
