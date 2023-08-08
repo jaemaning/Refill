@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import Logo_img from "../assets/logo2_final.png";
 import Kakao from "../assets/Kakao_logo.png";
 import Naver from "../assets/Naver_logo.png";
@@ -7,14 +6,11 @@ import Google from "../assets/Google_logo.png";
 import Button from "../components/elements/Button";
 import "../styles/Loginsignup.css";
 import UseLoginForm from "hooks/UseLoginForm";
-import { useSelector } from "react-redux";
-import { RootState } from "store/reducers";
 
 const LoginForm: React.FC = () => {
   const [loginId, setLoginId] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [handleSubmitLogin] = UseLoginForm(loginId, loginPassword);
-  const user = useSelector((state: RootState) => state.login.islogin);
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLoginId(event.target.value);
@@ -33,7 +29,6 @@ const LoginForm: React.FC = () => {
       <div className="Common_Left text-3xl" style={{ margin: "200px 0px" }}>
         <div>
           <div className="my-3">
-            <span>{user}</span>
             <span className="text-white">머리도 </span>
             <span className="text-whiteblue">Fill </span>
           </div>

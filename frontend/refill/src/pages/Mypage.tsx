@@ -6,6 +6,9 @@ import Footer from "../components/Footer";
 import Button from "../components/elements/Button";
 import axios from "axios";
 import default_profile from "../assets/default_profile.png";
+import { RootState } from "store/reducers";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 interface DivProps {
   selected?: boolean;
@@ -73,10 +76,8 @@ const DownContent = styled.div`
 const Mypage: React.FC = () => {
   // 로그인이 안되있으면 메인페이지로 이동
 
-  const [selected, setSelected] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
+  const [selected, setSelected] = useState(true);
   const [checkimg, setCheckimg] = useState(false);
-
   const [userData, setuserData] = useState({
     address: "",
     birthDay: "",
@@ -87,10 +88,13 @@ const Mypage: React.FC = () => {
     tel: "",
   });
 
+  const token = useSelector((state: RootState) => state.login.token);
+  const islogin = useSelector((state: RootState) => state.login.islogin);
+
+  const navigate = useNavigate();
+
   useEffect(() => {
-    if (!isLogin) {
-      const token = localStorage.getItem("login-token");
-      console.log(token);
+    if (islogin === true) {
       axios
         .get("api/v1/member/mypage", {
           headers: {
@@ -101,7 +105,7 @@ const Mypage: React.FC = () => {
 
         .then((response) => {
           setuserData(response.data);
-          setIsLogin(true);
+
           if (userData.profileImg !== null) {
             setCheckimg(true);
           }
@@ -110,6 +114,9 @@ const Mypage: React.FC = () => {
         .catch((error) => {
           console.log("에러:", error);
         });
+    } else {
+      navigate("/");
+      alert("접근 권한이 없습니다.");
     }
   }, []);
 

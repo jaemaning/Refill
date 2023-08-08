@@ -263,10 +263,10 @@ const DetailHospital: React.FC = () => {
   };
 
   const filteredReviewData = getFilteredReviewData();
+  const token = useSelector((state: RootState) => state.login.token);
 
   // 테스트용
   useEffect(() => {
-    const token = useSelector((state: RootState) => state.login.token);
     axios
       .get("api/v1/hospital/1", {
         headers: {
