@@ -91,9 +91,9 @@ const SelectDoctorAndTime: React.FC = () => {
             </FormControl>
           </Box>
           <hr className="border-2 border-black my-2" />
-          <SelectDate />
+          <SelectDate setSelectedDate={setSelectedDate} />
           <hr className="border-2 border-black my-2" />
-          <SelectTime />
+          <SelectTime setSelectedTime={setSelectedTime} />
           <hr className="border-2 border-black my-2" />
           <div className="flex items-center justify-center">
             <button

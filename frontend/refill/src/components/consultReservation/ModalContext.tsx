@@ -1,13 +1,36 @@
-import React from "react"
+import React, { createContext, useState, useContext } from "react";
 import CheckIcon from '@mui/icons-material/Check';
 import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
 import CloseIcon from '@mui/icons-material/Close';
 
-const CompleteReservation: React.FC = () => {
-    return (
-        <div className="h-96 w-52">
+
+interface ModalContextType {
+  isModalOpen: boolean;
+  openModal: () => void;
+  closeModal: () => void;
+}
+
+const ModalContext = createContext<ModalContextType | undefined>(undefined);
+
+export const useModal = () => {
+  const context = useContext(ModalContext);
+  if (!context) {
+    throw new Error("useModal must be used within a ModalProvider");
+  }
+  return context;
+};
+
+export const ModalProvider: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
+  return (
+    <ModalContext.Provider value={{ isModalOpen, openModal, closeModal }}>
+       <div className="h-96 w-52">
             <div>
-                <p><CheckIcon /> 정상적으로 예약이 접수되었습니다. <CloseIcon /> </p>
+                <p><CheckIcon /> 정상적으로 예약이 접수되었습니다. <button onClick={closeModal}><CloseIcon /></button> </p>
             </div>
             <div>
                 <LocalHospitalIcon />
@@ -23,8 +46,7 @@ const CompleteReservation: React.FC = () => {
                 </ul>
                 <button>확인</button>
             </div>
-
         </div>
-    )
-}
-export default CompleteReservation
+    </ModalContext.Provider>
+  );
+};

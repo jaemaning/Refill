@@ -1,7 +1,11 @@
 import React from "react";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
-const SelectTime: React.FC = () => {
+interface SelectTimeProps {
+  setSelectedTime: (time: string) => void;
+}
+
+const SelectTime: React.FC<SelectTimeProps> = ({ setSelectedTime }) => {
   return (
     <div className="mb-12">
       <div className="m-1 text-xl mb-2">
