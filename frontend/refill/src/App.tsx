@@ -13,6 +13,7 @@ import DetailHospital from "pages/DetailHospital";
 import AIDiagnosis from "pages/aidiagnosis/AIDiagnosis";
 import AIDiagnosisSecond from "pages/aidiagnosis/AIDiagnosisSecond";
 import AIDiagnosisResult from "pages/aidiagnosis/AIDiagnosisResult";
+import Logout from "pages/user/Logout";
 // import WebRTC from "pages/WebRTC";
 import VideoChatPage from "pages/openvidu/VideoChatPage";
 // import { OpenVidu } from "openvidu-browser";
@@ -34,6 +35,7 @@ const App: React.FC = () => {
         <Route path="/diagnosis" element={<AIDiagnosis />} />
         <Route path="/diagnosisSecond" element={<AIDiagnosisSecond />} />
         <Route path="/diagnosisResult" element={<AIDiagnosisResult />} />
+        <Route path="/logout" element={<Logout />} />
         {/* <Route path="/webrtc" element={<WebRTC />} /> */}
         <Route path="/video" element={<VideoChatPage />} />
 

@@ -40,6 +40,13 @@ public class HospitalController {
     private final HospitalService hospitalService;
     private final HospitalOperatingHourService hospitalOperatingHourService;
 
+    @GetMapping("/")
+    public ResponseEntity<List<HospitalResponse>> getAllHospitals(){
+        List<HospitalResponse> hospitalResponses = hospitalService.findAllHospitals();
+        return ResponseEntity.ok()
+                             .body(hospitalResponses);
+    }
+
     /* 현 지도에서 검색, 위도/경도 */
     @GetMapping("/search/location")
     public ResponseEntity<List<HospitalSearchByLocationResponse>> searchByLocation(

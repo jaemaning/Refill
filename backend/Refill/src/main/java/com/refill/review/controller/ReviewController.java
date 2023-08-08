@@ -2,6 +2,7 @@ package com.refill.review.controller;
 
 import com.refill.review.dto.request.ReviewCreateRequest;
 import com.refill.review.dto.request.ReviewModifyRequest;
+import com.refill.review.dto.request.ReviewReportRequest;
 import com.refill.review.dto.response.ReviewResponse;
 import com.refill.review.service.ReviewService;
 import com.refill.security.util.LoginInfo;
@@ -73,5 +74,17 @@ public class ReviewController {
         reviewService.deleteReviewById(reviewId, loginInfo);
         return ResponseEntity.noContent()
                              .build();
+    }
+
+    /* 리뷰 신고 */
+    @PostMapping("report/{reviewId}")
+    public ResponseEntity<String> reportReview(
+        @PathVariable Long reviewId,
+        @AuthenticationPrincipal LoginInfo loginInfo,
+        @RequestBody ReviewReportRequest request)
+    {
+        log.info("reviewId: {}, loginInfo: {}, content: {}", reviewId, loginInfo, request.content());
+        reviewService.reportReview(reviewId, request.content(), loginInfo);
+        return ResponseEntity.ok().build();
     }
 }

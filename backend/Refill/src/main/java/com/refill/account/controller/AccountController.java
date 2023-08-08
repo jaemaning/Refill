@@ -105,9 +105,9 @@ public class AccountController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<RefreshResponse> refreshToken(@AuthenticationPrincipal LoginInfo loginInfo, @RequestBody final RefreshRequest refreshRequest) {
+    public ResponseEntity<RefreshResponse> refreshToken(@RequestBody final RefreshRequest refreshRequest) {
 
-        log.debug("'{}' member request refreshAccessToken", loginInfo.loginId());
+        log.debug("member request refreshAccessToken");
 
         RefreshResponse refreshResponse = accountService.refreshAccessToken(refreshRequest);
 

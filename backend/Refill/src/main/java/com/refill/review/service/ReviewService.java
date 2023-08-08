@@ -9,6 +9,7 @@ import com.refill.hospital.service.HospitalService;
 import com.refill.member.entity.Member;
 import com.refill.member.exception.MemberException;
 import com.refill.member.service.MemberService;
+import com.refill.report.service.ReportService;
 import com.refill.review.dto.request.ReviewCreateRequest;
 import com.refill.review.dto.request.ReviewModifyRequest;
 import com.refill.review.dto.response.ReviewResponse;
@@ -32,6 +33,7 @@ public class ReviewService {
     private final HospitalService hospitalService;
     private final DoctorService doctorService;
     private final MemberService memberService;
+    private final ReportService reportService;
 
     @Transactional(readOnly = true)
     public Review findById(Long id){
@@ -97,5 +99,11 @@ public class ReviewService {
         if (!loginId.equals(review.getMember().getLoginId())) {
             throw new MemberException(ErrorCode.ACCESS_DENIED);
         }
+    }
+
+    @Transactional
+    public void reportReview(Long reviewId, String content, LoginInfo loginInfo) {
+        findById(reviewId);
+        reportService.reportReview(reviewId, content, loginInfo);
     }
 }
