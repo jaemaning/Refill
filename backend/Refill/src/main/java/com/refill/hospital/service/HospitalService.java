@@ -180,6 +180,7 @@ public class HospitalService {
         processImage(bannerImg, hospital.getHospitalBannerImg(), hospital::updateBannerAddress);
         processImage(registrationImg, hospital.getRegistrationImg(), hospital::updateRegistrationImg);
     }
+
     private void processImage(MultipartFile newImage, String existingImageAddress, Consumer<String> addressUpdater) {
         if (Objects.nonNull(newImage)) {
             deleteExistingFile(existingImageAddress);
@@ -192,9 +193,8 @@ public class HospitalService {
             amazonS3Service.deleteFile(fileAddress);
         }
     }
-
     private void uploadFileAndUpdateAddress(MultipartFile file, Consumer<String> addressUpdater) {
-        if (file != null && !file.isEmpty()) {
+        if (Objects.nonNull(file) && !file.isEmpty()) {
             String address = amazonS3Service.uploadFile(file);
             addressUpdater.accept(address);
         }
@@ -221,14 +221,9 @@ public class HospitalService {
         Hospital hospital = checkAccessHospital(loginId, hospitalId);
 
         Doctor doctor = Doctor.from(doctorJoinRequest, hospital);
-        if (profileImg != null) {
-            String profileAddress = amazonS3Service.uploadFile(profileImg);
-            doctor.registProfileAddress(profileAddress);
-        }
-        if (licenseImg != null) {
-            String licenseAddress = amazonS3Service.uploadFile(licenseImg);
-            doctor.registLicenseAddress(licenseAddress);
-        }
+        uploadFileAndUpdateAddress(profileImg, doctor::registProfileAddress);
+        uploadFileAndUpdateAddress(licenseImg, doctor::registLicenseAddress);
+
         doctorService.save(doctor);
         registEducationBackground(doctorJoinRequest, doctor);
         registMajor(doctorJoinRequest, doctor);
