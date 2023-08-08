@@ -30,7 +30,7 @@ public class Consulting extends BaseEntity {
     private Doctor doctor;
 
     @OneToOne
-    @JoinColumn(name = "reservationId")
+    @JoinColumn(name = "reservation_id")
     private Reservation reservation; // reservation에 추가 예정
 
     @Column(nullable = false)
@@ -49,12 +49,13 @@ public class Consulting extends BaseEntity {
     private boolean isExecuted;
 
     @Builder
-    public Consulting(Member member, Doctor doctor, String sessionId, String memberToken, String doctorToken){
+    public Consulting(Member member, Doctor doctor, String sessionId, String memberToken, String doctorToken, Reservation reservation){
         this.member = member;
         this.doctor = doctor;
         this.sessionId = sessionId;
         this.memberToken = memberToken;
         this.doctorToken = doctorToken;
+        this.reservation = reservation;
         this.isExecuted = false;
     }
 

@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 @EnableScheduling
+@Slf4j
 public class ConsultingService {
 
     @Value("${OPENVIDU_URL}")
@@ -60,6 +62,7 @@ public class ConsultingService {
         for (Reservation reservation : reservationList) {
             Member member = reservation.getMember();
             Doctor doctor = reservation.getDoctor();
+            Long reservationId = reservation.getId();
 
             Session session = openvidu.createSession();
             String sessionId = session.getSessionId();
@@ -72,6 +75,7 @@ public class ConsultingService {
                                               .sessionId(sessionId)
                                               .memberToken(memberToken)
                                               .doctorToken(doctorToken)
+                                              .reservation(reservation)
                                               .build();
 
             consultingRepository.save(consulting);
@@ -125,6 +129,7 @@ public class ConsultingService {
     public ConsultingDetailResponse getConsultingDetailInfo(Long consultingId) {
         Consulting consulting = consultingRepository.findConsultingById(consultingId);
 
+        log.info("===================");
         return new ConsultingDetailResponse(consulting);
     }
 }

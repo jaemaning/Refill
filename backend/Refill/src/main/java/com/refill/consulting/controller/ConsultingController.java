@@ -73,7 +73,7 @@ public class ConsultingController {
         return ResponseEntity.ok().body(consultingList);
     }
 
-    @GetMapping("/{consultingId}")
+    @GetMapping("/consultingDetail/{consultingId}")
     public ResponseEntity<ConsultingDetailResponse> getDetailConsultingInfo(@AuthenticationPrincipal LoginInfo loginInfo, @PathVariable Long consultingId) {
         log.debug("'{}' member request detailConsultingInfo", loginInfo.loginId());
 
