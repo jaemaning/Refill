@@ -1,0 +1,38 @@
+=== 병원 상세 조회
+
+==== HTTP Request
+include::{snippets}/hospital/getHospitalDetail/http-request.adoc[]
+include::{snippets}/hospital/getHospitalDetail/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/hospital/getHospitalDetail/http-response.adoc[]
+include::{snippets}/hospital/getHospitalDetail/response-fields.adoc[]
+
+
+=== 병원 정보 수정
+
+==== HTTP Request
+include::{snippets}/hospital/modifyHospital/path-parameters.adoc[]
+include::{snippets}/hospital/modifyHospital/curl-request.adoc[]
+
+
+==== HTTP Response
+include::{snippets}/hospital/modifyHospital/http-response.adoc[]
+
+=== 병원 검색 (키워드 조회)
+
+==== HTTP Request
+include::{snippets}/hospital/searchByKeyword/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/hospital/searchByKeyword/http-response.adoc[]
+include::{snippets}/hospital/searchByKeyword/response-fields.adoc[]
+
+=== 병원 검색 (위치 조회)
+
+==== HTTP Request
+include::{snippets}/hospital/searchByLocation/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/hospital/searchByLocation/http-response.adoc[]
+include::{snippets}/hospital/searchByLocation/response-fields.adoc[]

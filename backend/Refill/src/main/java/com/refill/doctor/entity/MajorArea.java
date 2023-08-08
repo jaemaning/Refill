@@ -28,4 +28,12 @@ public class MajorArea extends BaseEntity {
 
     @Column(nullable = false)
     String content;
+
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
+        if (!doctor.getMajorAreas().contains(this)) {
+            doctor.getMajorAreas()
+                  .add(this);
+        }
+    }
 }
