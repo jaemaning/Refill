@@ -65,14 +65,14 @@ public class AdminController {
     public ResponseEntity<String> acceptReportReview(@PathVariable Long reportId, @AuthenticationPrincipal
         LoginInfo loginInfo){
         String message = adminService.acceptReportReview(reportId, loginInfo);
-        return ResponseEntity.ok().body("success");
+        return ResponseEntity.ok().body(message);
     }
 
     /* 신고 리뷰 반려 - 리뷰 삭제하지 않고 report 삭제 */
     @DeleteMapping("/reviews/reject/{reportId}")
     public ResponseEntity<String> rejectReportReview(@PathVariable Long reportId){
         String message = adminService.rejectReportReview(reportId);
-        return ResponseEntity.ok().body("success");
+        return ResponseEntity.ok().body(message);
     }
 
 
