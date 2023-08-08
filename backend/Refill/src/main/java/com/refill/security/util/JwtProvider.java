@@ -32,6 +32,15 @@ public class JwtProvider {
                    .get("loginId", String.class);
     }
 
+    public static String getRoleName(String token, String secretKey) {
+        return Jwts.parserBuilder()
+                   .setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8))
+                   .build()
+                   .parseClaimsJws(token)
+                   .getBody()
+                   .get("role", String.class);
+    }
+
     public boolean isExpired(String token, String secretKey) {
         return Jwts.parserBuilder()
                    .setSigningKey(secretKey.getBytes(StandardCharsets.UTF_8))
@@ -45,7 +54,7 @@ public class JwtProvider {
     public String createToken(String loginId, Role role, String secretKey) {
         Claims claims = Jwts.claims();
         claims.put("loginId", loginId);
-        claims.put("role", role);
+        claims.put("role", role.name());
 
         Date now = new Date();
         Date accessTokenExpiration = new Date(now.getTime() + accessTokenExpireTimeMs);
@@ -76,12 +85,17 @@ public class JwtProvider {
 
     }
 
-    public String createRefreshToken(String loginId, String secretKey) {
+    public String createRefreshToken(String loginId, Role role, String secretKey) {
+
+        Claims claims = Jwts.claims();
+        claims.put("loginId", loginId);
+        claims.put("role", role.name());
+
         Date now = new Date();
         Date refreshTokenExpiration = new Date(now.getTime() + refreshTokenExpireTimeMs);
 
         String refreshToken = Jwts.builder()
-                                  .setSubject(loginId)
+                                  .setClaims(claims)
                                   .setIssuedAt(now)
                                   .setExpiration(refreshTokenExpiration)
                                   .signWith(Keys.hmacShaKeyFor(
@@ -104,8 +118,8 @@ public class JwtProvider {
                                 .parseClaimsJws(refreshToken)
                                 .getBody();
 
-            String loginId = claims.getSubject();
-            Role role = claims.get("role", Role.class);
+            String loginId = claims.get("loginId", String.class);
+            Role role = Role.valueOf(claims.get("role", String.class));
             // Redis 또는 데이터베이스에서 저장된 refreshToken과 전달된 refreshToken이 일치하는지 확인
             String storedRefreshToken = redisTemplate.opsForValue()
                                                      .get(loginId);
@@ -120,7 +134,7 @@ public class JwtProvider {
 
             Claims newClaims = Jwts.claims();
             newClaims.put("loginId", loginId);
-            newClaims.put("role", role);
+            newClaims.put("role", role.name());
 
             return Jwts.builder()
                        .setClaims(newClaims)
