@@ -22,6 +22,7 @@ import com.refill.hospital.exception.HospitalException;
 import com.refill.hospital.repository.HospitalRepository;
 import com.refill.member.exception.MemberException;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -175,9 +176,21 @@ public class HospitalService {
         Hospital hospital = checkAccessHospital(loginId, hospitalId);
         hospital.update(hospitalInfoUpdateRequest);
 
-        uploadFileAndUpdateAddress(profileImg, hospital::updateProfileAddress);
-        uploadFileAndUpdateAddress(bannerImg, hospital::updateBannerAddress);
-        uploadFileAndUpdateAddress(registrationImg, hospital::updateRegistrationImg);
+        processImage(profileImg, hospital.getHospitalProfileImg(), hospital::updateProfileAddress);
+        processImage(bannerImg, hospital.getHospitalBannerImg(), hospital::updateBannerAddress);
+        processImage(registrationImg, hospital.getRegistrationImg(), hospital::updateRegistrationImg);
+    }
+    private void processImage(MultipartFile newImage, String existingImageAddress, Consumer<String> addressUpdater) {
+        if (Objects.nonNull(newImage)) {
+            deleteExistingFile(existingImageAddress);
+            uploadFileAndUpdateAddress(newImage, addressUpdater);
+        }
+    }
+
+    private void deleteExistingFile(String fileAddress) {
+        if (Objects.nonNull(fileAddress)) {
+            amazonS3Service.deleteFile(fileAddress);
+        }
     }
 
     private void uploadFileAndUpdateAddress(MultipartFile file, Consumer<String> addressUpdater) {
@@ -199,11 +212,7 @@ public class HospitalService {
         checkAccessHospital(loginId, hospitalId);
         Doctor doctor = doctorService.findById(doctorId);
         doctor.update(doctorUpdateRequest);
-        if (profileImg != null) {
-            String profileAddress = amazonS3Service.uploadFile(profileImg);
-            doctor.updateProfileAddress(profileAddress);
-        }
-
+        processImage(profileImg, doctor.getProfileImg(), doctor::updateProfileAddress);
     }
 
     @Transactional
