@@ -5,7 +5,8 @@ import com.refill.consulting.dto.response.ConsultingDetailResponse;
 import com.refill.consulting.dto.response.ConsultingListResponse;
 import com.refill.consulting.service.ConsultingService;
 import com.refill.security.util.LoginInfo;
-import java.util.ArrayList;
+import io.openvidu.java.client.OpenViduHttpException;
+import io.openvidu.java.client.OpenViduJavaClientException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +27,17 @@ public class ConsultingController {
 
     private final ConsultingService consultingService;
 
+    // 토큰 발급 테스트
+    @GetMapping("/session/create")
+    public ResponseEntity<String> createSessionTest(@AuthenticationPrincipal LoginInfo loginInfo)
+        throws OpenViduJavaClientException, OpenViduHttpException {
+        consultingService.createSession();
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/doctor/{reservationId}/{doctorId}")
     public ResponseEntity<List<String>> getDoctorToken(@AuthenticationPrincipal LoginInfo loginInfo, @PathVariable Long reservationId, @PathVariable Long doctorId) {
-        // 로그인 정보, 의사 ID 받으면 겹치는거 아닌가 ?...
+        // 이게 맞나?... 아닌거 같은데
         log.debug("'{}' doctor request doctorToken", loginInfo.loginId());
         // 토큰 가져오기
         List<String> doctorConnection = consultingService.getDoctorConnectionToken(doctorId, reservationId);
@@ -40,7 +49,6 @@ public class ConsultingController {
     public ResponseEntity<List<String>> getMemberToken(@AuthenticationPrincipal LoginInfo loginInfo, @PathVariable Long reservationId, @PathVariable Long memberId) {
         log.debug("'{}' member request doctorToken", loginInfo.loginId());
         // 토큰 가져오기
-
         return ResponseEntity.ok().body(consultingService.getMemberConnectionToken(memberId, reservationId));
     }
 
