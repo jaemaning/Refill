@@ -6,6 +6,7 @@ import { REFILL_COLORS } from "../assets/getColors.js";
 import styled from "@emotion/styled";
 import app_logo from "../assets/app_logo.png";
 import MainComponent from "components/MainComponent";
+import { useSelector } from "react-redux";
 // import Counter from '../components/Counter';
 
 // import LoginForm from './LoginForm'
