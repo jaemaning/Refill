@@ -12,6 +12,8 @@ import homeMarker from "assets/homePin2.svg";
 import axios from "axios";
 import SearchCard from "components/search/SearchCard";
 import { useKakaoMapScript } from "hooks/UseKakaoMap";
+import { useSelector } from 'react-redux';
+import { RootState } from "store/reducers";
 
 const max_width = "1350";
 const max_height = "800";
@@ -129,6 +131,9 @@ export const HospitalSearch: React.FC = () => {
     TypeResponseMap[]
   >([]);
 
+  const token = useSelector((state: RootState) => state.login.token);
+  const islogin = useSelector((state: RootState) => state.login.islogin);
+
   const kakaoMapBox = useRef<HTMLDivElement>(null); // 지도를 담을 div element를 위한 ref
   const map = useRef<any>(null); // map 객체를 관리할 ref
 
@@ -147,26 +152,30 @@ export const HospitalSearch: React.FC = () => {
     e.preventDefault();
     console.log(dropSelected + searched);
 
-    const url = "api/v1/hospital/search/keyword";
-    const formData: TypeFormData = {
-      name: searched,
-      addr: dropSelected,
-    };
-    const accessToken =
-      "eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbklkIjoibWVtYmVyMSIsInJvbGUiOiJST0xFX01FTUJFUiIsImlhdCI6MTY5MTMxMTQxOSwiZXhwIjoxNjkxMzE1MDE5fQ.5Mx1oWKNWPZyIBl9q9Lpjmvo_XA61puDwIiOqCcozaQ";
-    const headers = { Authorization: `Bearer ${accessToken}` };
+    if (islogin === true) {
+      const url = "api/v1/hospital/search/keyword";
+      const formData: TypeFormData = {
+        name: searched,
+        addr: dropSelected,
+      };
+      const accessToken = token
+      const headers = { Authorization: `Bearer ${accessToken}` };
+  
+      axios
+        .get(url, { params: formData, headers: headers })
+        .then((response) => {
+          console.log(response.data);
+          setSearchedData(response.data);
+          console.log(searchedData);
+        })
+        .catch((err) => {
+          console.log(err.response.data);
+        });
+      setSearched("");
+    } else {
+      console.log('error')
+    }
 
-    axios
-      .get(url, { params: formData, headers: headers })
-      .then((response) => {
-        console.log(response.data);
-        setSearchedData(response.data);
-        console.log(searchedData);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-      });
-    setSearched("");
   };
 
   // 거리순보기
@@ -226,39 +235,42 @@ export const HospitalSearch: React.FC = () => {
   // 지도 - 병원 마커 띄우기
   // 맵을 그 위치 중심으로 새로 만들고 배열을 바꾼 다음 띄우자!
   const makeHospitalMarker = () => {
-    // 정보를 가져오고 이 정보를 통해 추후 병원 데이터를 아래에 입력 진행 비동기로
-    const center = map.current.getCenter();
-    nowCenter.current = [center.Ma, center.La];
-    console.log("now", nowCenter.current);
 
-    // 지도의 현재 영역을 얻어옵니다
-    const bounds = map.current.getBounds();
+    if (islogin === true) {
 
-    // 영역의 남서쪽 좌표를 얻어옵니다
-    const swLatLng = bounds.getSouthWest();
-    console.log("sw", swLatLng);
-
-    // 영역의 북동쪽 좌표를 얻어옵니다
-    const neLatLng = bounds.getNorthEast();
-    console.log("ne", neLatLng);
-
-    const url = "api/v1/hospital/search/location";
-    const formData: TypeRequestMap = {
-      sLat: swLatLng.Ma,
-      sLng: swLatLng.La,
-      eLat: neLatLng.Ma,
-      eLng: neLatLng.La,
-      curLat: center.Ma,
-      curLng: center.La,
-    };
-    const accessToken =
-      "eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbklkIjoibWVtYmVyMSIsInJvbGUiOiJST0xFX01FTUJFUiIsImlhdCI6MTY5MTIyMTEyNiwiZXhwIjoxNjkxMjI0NzI2fQ._xnYcwTCYsF41b5DqkTAq-KfLhGyqi10kqsXoDFibsI";
-    const headers = { Authorization: `Bearer ${accessToken}` };
-    // axios 요청으로 병원 데이터 변경하기
-    axios.get(url, { params: formData, headers: headers }).then((response) => {
-      console.log(response.data);
-      setHospitals(response.data);
-    });
+      // 정보를 가져오고 이 정보를 통해 추후 병원 데이터를 아래에 입력 진행 비동기로
+      const center = map.current.getCenter();
+      nowCenter.current = [center.Ma, center.La];
+      console.log("now", nowCenter.current);
+  
+      // 지도의 현재 영역을 얻어옵니다
+      const bounds = map.current.getBounds();
+  
+      // 영역의 남서쪽 좌표를 얻어옵니다
+      const swLatLng = bounds.getSouthWest();
+      console.log("sw", swLatLng);
+  
+      // 영역의 북동쪽 좌표를 얻어옵니다
+      const neLatLng = bounds.getNorthEast();
+      console.log("ne", neLatLng);
+  
+      const url = "api/v1/hospital/search/location";
+      const formData: TypeRequestMap = {
+        sLat: swLatLng.Ma,
+        sLng: swLatLng.La,
+        eLat: neLatLng.Ma,
+        eLng: neLatLng.La,
+        curLat: center.Ma,
+        curLng: center.La,
+      };
+      const accessToken = token;
+      const headers = { Authorization: `Bearer ${accessToken}` };
+      // axios 요청으로 병원 데이터 변경하기
+      axios.get(url, { params: formData, headers: headers }).then((response) => {
+        console.log(response.data);
+        setHospitals(response.data);
+      });
+    }
   };
 
   useEffect(() => {

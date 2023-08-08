@@ -10,6 +10,9 @@ import axios from "axios";
 import UserVideoComponent from "./UserVideoComponent";
 import Button from "components/elements/Button";
 import styled from "@emotion/styled";
+import { useSelector } from 'react-redux';
+import { RootState } from "store/reducers";
+
 
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === "production" ? "" : "http://localhost/";
@@ -27,6 +30,8 @@ const VideoChatPage: React.FC = () => {
   const [subscribers, setSubscribers] = useState<StreamManager[]>([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState<Device | undefined>(undefined);
   const [showChat, setShowChat] = useState(false);
+  const token = useSelector((state: RootState) => state.login.token);
+  const islogin = useSelector((state: RootState) => state.login.islogin);
 
   // 강제로 창 종료시 동작
 
@@ -182,8 +187,7 @@ const VideoChatPage: React.FC = () => {
     setPublisher(undefined);
   };
 
-  const accessToken =
-    "eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbklkIjoibWVtYmVyMSIsInJvbGUiOiJST0xFX01FTUJFUiIsImlhdCI6MTY5MTQ2Mjc5NSwiZXhwIjoxNjkxNDY2Mzk1fQ.irKeqpjL6m-BTBsFxmlyMsrUeRG4a3XgkflO8BWvuXg";
+  const accessToken = token;
   const headers = {
     Authorization: `Bearer ${accessToken}`,
     "Content-Type": "application/json",
@@ -201,7 +205,7 @@ const VideoChatPage: React.FC = () => {
       {
         headers: headers,
       },
-    );
+    ); 
 
     console.log(response.data);
 
