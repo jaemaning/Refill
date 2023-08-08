@@ -28,6 +28,7 @@ const VideoChatPage: React.FC = () => {
   const [currentVideoDevice, setCurrentVideoDevice] = useState<Device | undefined>(undefined);
   const [showChat, setShowChat] = useState(false);
 
+  // 강제로 창 종료시 동작
 
   useEffect(() => {
     window.addEventListener("beforeunload", onbeforeunload);
@@ -43,7 +44,9 @@ const VideoChatPage: React.FC = () => {
     }
   }, [mainStreamManager, publisher, subscribers]);
 
+  // 나갈때 동작
   const onbeforeunload = () => {
+    // session 떠나기
     leaveSession();
   };
 
@@ -90,8 +93,11 @@ const VideoChatPage: React.FC = () => {
       console.warn(exception);
     });
 
+    console.log(111)
+
     try {
       const token = await getToken();
+      console.log(222)
       await mySession.connect(token, { clientData: myUserName });
 
       const publisher = await OV.initPublisherAsync(undefined, {
