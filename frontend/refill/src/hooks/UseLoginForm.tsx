@@ -8,7 +8,6 @@ import {
   loginAdmin,
 } from "store/reducers/loginReducer";
 import { setCookie } from "auth/cookie";
-import { useNavigate } from "react-router-dom";
 
 interface User {
   loginId?: string;
