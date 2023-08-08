@@ -60,17 +60,17 @@ public class JwtProvider {
                                      SignatureAlgorithm.HS256)
                                  .compact();
 
-        String refreshToken = Jwts.builder()
-                                  .setIssuedAt(now)
-                                  .setExpiration(refreshTokenExpiration)
-                                  .signWith(Keys.hmacShaKeyFor(
-                                          secretKey.getBytes(StandardCharsets.UTF_8)),
-                                      SignatureAlgorithm.HS256)
-                                  .compact();
+//        String refreshToken = Jwts.builder()
+//                                  .setIssuedAt(now)
+//                                  .setExpiration(refreshTokenExpiration)
+//                                  .signWith(Keys.hmacShaKeyFor(
+//                                          secretKey.getBytes(StandardCharsets.UTF_8)),
+//                                      SignatureAlgorithm.HS256)
+//                                  .compact();
 
         // refreshToken을 Redis 또는 데이터베이스에 저장하는 로직 추가
-        redisTemplate.opsForValue()
-                     .set(loginId, refreshToken, refreshTokenExpireTimeMs, TimeUnit.MILLISECONDS);
+//        redisTemplate.opsForValue()
+//                     .set(loginId, refreshToken, refreshTokenExpireTimeMs, TimeUnit.MILLISECONDS);
 
         return accessToken;
 
