@@ -9,6 +9,7 @@ import {
 import axios from "axios";
 import UserVideoComponent from "./UserVideoComponent";
 import Button from "components/elements/Button";
+import styled from "@emotion/styled";
 
 const APPLICATION_SERVER_URL =
   process.env.NODE_ENV === "production" ? "" : "http://localhost/";
@@ -24,9 +25,9 @@ const VideoChatPage: React.FC = () => {
   >(undefined);
   const [publisher, setPublisher] = useState<Publisher | undefined>(undefined);
   const [subscribers, setSubscribers] = useState<StreamManager[]>([]);
-  const [currentVideoDevice, setCurrentVideoDevice] = useState<
-    Device | undefined
-  >(undefined);
+  const [currentVideoDevice, setCurrentVideoDevice] = useState<Device | undefined>(undefined);
+  const [showChat, setShowChat] = useState(false);
+
 
   useEffect(() => {
     window.addEventListener("beforeunload", onbeforeunload);
@@ -175,64 +176,8 @@ const VideoChatPage: React.FC = () => {
     setPublisher(undefined);
   };
 
-  const switchCamera = async () => {
-    try {
-      const OV = new OpenVidu();
-      const devices = await OV.getDevices();
-      const videoDevices = devices.filter(
-        (device: any) => device.kind === "videoinput",
-      );
-
-      if (videoDevices.length > 1 && publisher) {
-        const newVideoDevice = videoDevices.find(
-          (device: any) => device.deviceId !== currentVideoDevice?.deviceId,
-        );
-        const currentAudioState = publisher?.stream?.audioActive ?? true;
-        const currentVideoState = publisher?.stream?.videoActive ?? true;
-
-        if (newVideoDevice) {
-          const newPublisher = OV.initPublisher(undefined, {
-            videoSource: newVideoDevice.deviceId,
-            publishAudio: currentAudioState,
-            publishVideo: currentVideoState,
-            mirror: true,
-          });
-
-          if (mainStreamManager instanceof Publisher) {
-            await session?.unpublish(mainStreamManager);
-          }
-
-          if (newPublisher instanceof Publisher) {
-            await session?.publish(newPublisher);
-          }
-
-          setCurrentVideoDevice(newVideoDevice);
-          setMainStreamManager(newPublisher);
-          setPublisher(newPublisher);
-        }
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  /**
-   * --------------------------------------------
-   * GETTING A TOKEN FROM YOUR APPLICATION SERVER
-   * --------------------------------------------
-   * The methods below request the creation of a Session and a Token to
-   * your application server. This keeps your OpenVidu deployment secure.
-   *
-   * In this sample code, there is no user control at all. Anybody could
-   * access your application server endpoints! In a real production
-   * environment, your application server must identify the user to allow
-   * access to the endpoints.
-   *
-   * Visit https://docs.openvidu.io/en/stable/application-server to learn
-   * more about the integration of OpenVidu in your application server.
-   */
   const accessToken =
-    "eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbklkIjoibWVtYmVyMSIsInJvbGUiOiJST0xFX01FTUJFUiIsImlhdCI6MTY5MTM5NDkxMiwiZXhwIjoxNjkxMzk4NTEyfQ.xjTjy_GH0svQ4jMdnfNDlnl0E9z3sTYXQBFmyxyD-YQ";
+    "eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbklkIjoibWVtYmVyMSIsInJvbGUiOiJST0xFX01FTUJFUiIsImlhdCI6MTY5MTQ2Mjc5NSwiZXhwIjoxNjkxNDY2Mzk1fQ.irKeqpjL6m-BTBsFxmlyMsrUeRG4a3XgkflO8BWvuXg";
   const headers = {
     Authorization: `Bearer ${accessToken}`,
     "Content-Type": "application/json",
@@ -268,13 +213,28 @@ const VideoChatPage: React.FC = () => {
     return response.data; // The token
   };
 
+  const handleShowBox = () => {
+    console.log(11)
+    console.log(showChat)
+    setShowChat(!showChat)
+  }
+
+  const StyleSidebar = styled.div`
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    transform: translate(0, -70%);
+    background: #aafffc;
+  `
+
   return (
     <div
-      className="container p-5"
+      className="container"
       style={{
-        minWidth: "100vw",
+        minWidth: "100%",
         minHeight: "100vh",
-        backgroundColor: "skyblue",
+        backgroundColor: "#dddddd",
+        padding: "20px 20px",
       }}
     >
       {session === undefined ? (
@@ -320,84 +280,86 @@ const VideoChatPage: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div id="session">
-          <div
-            id="session-header"
-            className="flex justify-between items-center"
-          >
-            <h1 id="session-title" className="text-xl font-bold">
-              {mySessionId}
-            </h1>
-            <div>
-              <input
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                type="button"
-                id="buttonLeaveSession"
-                onClick={leaveSession}
-                value="Leave session"
-              />
-              <input
-                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 ml-2 rounded"
-                type="button"
-                id="buttonSwitchCamera"
-                onClick={switchCamera}
-                value="Switch Camera"
-              />
-              <Button content="캠 on/off" onClick={camOnOff} />
-              <Button content="소리 on/off" onClick={soundOnOff} />
-              <Button content="소리조절" onClick={soundControl} />
-              <Button content="상담 나가기" onClick={roomOut} />
-            </div>
-          </div>
-          <div className="flex" style={{ position: "relative" }}>
-            <div style={{ width: "50%" }}>
-              <UserVideoComponent streamManager={mainStreamManager} />
-            </div>
-            {subscribers && mainStreamManager === publisher ? (
-              subscribers.map((sub) => (
+        <div id="session" style={{ minWidth:"100%", minHeight:"100%" }}>
+            <div className="flex justify-start" style={{ position: "relative", width:'100%'}}>
+              <div style={{ width: '55%', minWidth: '500px' }}>
+                <UserVideoComponent streamManager={mainStreamManager} />
+              </div>
+              {subscribers && mainStreamManager === publisher ? (
+                subscribers.map((sub) => (
+                  <div
+                    key={sub.id}
+                    style={{
+                      width: "15%",
+                      minWidth: "150px",
+                      position: "absolute",
+                      top: "30px",
+                      left: "30px",
+                    }}
+                    onClick={() => toggleMainAndSubStream(sub)}
+                  >
+                    <UserVideoComponent streamManager={sub} />
+                  </div>
+                ))
+              ) : publisher !== undefined ? (
                 <div
-                  key={sub.id}
                   style={{
                     width: "15%",
+                    minWidth: "150px",
                     position: "absolute",
                     top: "30px",
                     left: "30px",
                   }}
-                  onClick={() => toggleMainAndSubStream(sub)}
+                  onClick={() => toggleMainAndSubStream(publisher)}
                 >
-                  <UserVideoComponent streamManager={sub} />
+                  <UserVideoComponent streamManager={publisher} />
                 </div>
-              ))
-            ) : publisher !== undefined ? (
-              <div
-                style={{
-                  width: "15%",
-                  position: "absolute",
-                  top: "30px",
-                  left: "30px",
-                }}
-                onClick={() => toggleMainAndSubStream(publisher)}
-              >
-                <UserVideoComponent streamManager={publisher} />
+              ) : null}
+              <div style={{marginLeft: '20px',display: "flex", flexDirection:"column", width: '35%', minHeight: '100%'}}>
+                <div style={{ minWidth:'100%', height: '70%', backgroundColor: 'white' }}>
+                  안녕하세요 ??
+                </div>
+                <div style={{ marginTop: "20px", height: '30%', backgroundColor: 'white' }}>
+                  안녕하세요?
+                </div>
               </div>
-            ) : null}
-            {/* <div id="video-container" className="w-1/2 flex flex-wrap">
-              {mainStreamManager === publisher
-                ? 
-                subscribers.map((sub) => (
-                  <div key={sub.id} className="stream-container w-1/2" onClick={() => handleMainVideoStream(sub)}>
-                    <span>{sub.id}</span>
-                    <UserVideoComponent streamManager={sub} />
-                  </div>
-                ))
-                : 
-                publisher !== undefined ? (
-                  <div className="stream-container w-1/2 p-0" onClick={() => handleMainVideoStream(publisher)}>
-                    <UserVideoComponent streamManager={publisher} />
-                  </div>
-                ) : null
-              }
-            </div> */}
+          </div>
+
+          <div style={{position: 'fixed', bottom: '20px', left: '0', padding:'0 20px', width: '100%'}}>
+            <div
+              id="session-footer"
+              className="flex justify-between items-center"
+              style={{ width: '100%' }}
+            >
+              <h1 id="session-title" className="text-xl font-bold">
+                {mySessionId}
+              </h1>
+              <div>
+                <Button content="캠 on/off" onClick={camOnOff}  />
+                <Button content="소리 on/off" onClick={soundOnOff} />
+                <Button content="소리조절" onClick={soundControl} />
+                <Button content="상담 나가기" onClick={roomOut} />
+              </div>
+              <div>
+                <Button content="채팅" onClick={handleShowBox}/>
+              </div>
+            </div>
+          </div>
+
+          <StyleSidebar>
+            <div
+              id="session-sidebar"
+              className="flex flex-col justify-between items-center"
+            >
+              <Button width="40px" content="상담"  />
+              <Button width="40px" content="AI" />
+              <Button width="40px" content="화면" />
+            </div>
+          </StyleSidebar>
+
+
+          <div style={{position: "absolute", bottom: '40px', right: '40px', minWidth: '200px', minHeight:'200px', backgroundColor: 'grey', display: showChat ? 'block' : 'none'}}>
+
           </div>
         </div>
       )}
