@@ -1,11 +1,12 @@
 package com.refill.reservation.dto.request;
 
 import java.time.LocalDateTime;
+import javax.validation.constraints.NotBlank;
 
 public record ReservationRequest(
 
-    Long doctorId,
-    LocalDateTime startDateTime,
+    @NotBlank Long doctorId,
+    @NotBlank LocalDateTime startDateTime,
     String counselingDemands
 
 ) {

@@ -1,5 +1,7 @@
 package com.refill.account.dto.request;
 
-public record RefreshRequest(String refreshToken) {
+import javax.validation.constraints.NotBlank;
+
+public record RefreshRequest(@NotBlank String refreshToken) {
 
 }

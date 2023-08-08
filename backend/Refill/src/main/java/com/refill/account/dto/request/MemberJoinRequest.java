@@ -1,19 +1,19 @@
 package com.refill.account.dto.request;
 
 import java.time.LocalDate;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
 
 public record MemberJoinRequest(
 
-    @NotNull @Length(min = 4, max = 16) String loginId,
-    @NotNull String loginPassword,
-    @NotNull @Length(min = 2, max = 8) String nickname,
-    @NotNull String name,
-    @NotNull String address,
-    @NotNull String tel,
-    @NotNull LocalDate birthDay,
-    @NotNull String email
+    @NotBlank @Length(min = 4, max = 16) String loginId,
+    @NotBlank String loginPassword,
+    @NotBlank @Length(min = 2, max = 16) String nickname,
+    @NotBlank String name,
+    @NotBlank String address,
+    @NotBlank String tel,
+    @NotBlank LocalDate birthDay,
+    @NotBlank String email
 
 
 ) {

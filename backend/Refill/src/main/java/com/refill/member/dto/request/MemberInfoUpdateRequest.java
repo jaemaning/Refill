@@ -1,14 +1,15 @@
 package com.refill.member.dto.request;
 
 import java.time.LocalDate;
+import javax.validation.constraints.NotBlank;
 
 public record MemberInfoUpdateRequest(
-    String name,
-    String address,
-    LocalDate birthDay,
-    String tel,
-    String nickname,
-    String email
+    @NotBlank String name,
+    @NotBlank String address,
+    @NotBlank LocalDate birthDay,
+    @NotBlank String tel,
+    @NotBlank String nickname,
+    @NotBlank String email
 ) {
 
 }
