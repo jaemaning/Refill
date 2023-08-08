@@ -9,9 +9,10 @@ import { RootState } from "store/reducers";
 const Logout: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const token = useSelector((state: RootState) => state.login.token);
 
   useEffect(() => {
-    const token = useSelector((state: RootState) => state.login.token);
+    console.log(token);
     const fetchLogout = async () => {
       try {
         const response = await axios.get("api/v1/account/logout", {

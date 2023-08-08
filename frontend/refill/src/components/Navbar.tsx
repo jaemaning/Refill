@@ -2,12 +2,8 @@ import React, { useEffect, useState } from "react";
 import "../styles/Navbar.css";
 import nav_logo from "../assets/logo_final.png";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "store/reducers";
-import axios from "axios";
-import { loginFail } from "store/reducers/loginReducer";
-import { useNavigate } from "react-router-dom";
-import { removeCookie } from "auth/cookie";
 
 const Navbar = React.forwardRef<HTMLDivElement>((props, ref) => {
   const [isMenuOpen, setMenuOpen] = useState(false);
