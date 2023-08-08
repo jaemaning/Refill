@@ -104,7 +104,7 @@ public class JwtProvider {
                                 .parseClaimsJws(refreshToken)
                                 .getBody();
 
-            String loginId = claims.get("loginId", String.class);
+            String loginId = claims.getSubject();
             Role role = claims.get("role", Role.class);
             // Redis 또는 데이터베이스에서 저장된 refreshToken과 전달된 refreshToken이 일치하는지 확인
             String storedRefreshToken = redisTemplate.opsForValue()
