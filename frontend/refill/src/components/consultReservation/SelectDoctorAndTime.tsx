@@ -10,15 +10,7 @@ import SelectDate from "./SelectDate";
 import MedicalInformationOutlinedIcon from "@mui/icons-material/MedicalInformationOutlined";
 import UploadImg from "./UploadImg";
 
-interface SelectDoctorAndTimeProps {
-  setDoctorName: (name: string) => void;
-  setSelectedDate: (date: string) => void;
-  setSelectedTime: (time: string) => void;
-}
-
-const SelectDoctorAndTime: React.FC<SelectDoctorAndTimeProps> = ({
-  setDoctorName,
-}) => {
+const SelectDoctorAndTime: React.FC = () => {
   // 의사 정보를 가져오는 axios
   // 병원 이름을 통해서 가져와야 할듯
   // 디테일 페이지를 들어오면 바로 랜더링 되어야 좋을듯
@@ -53,7 +45,6 @@ const SelectDoctorAndTime: React.FC<SelectDoctorAndTimeProps> = ({
     const selectedName = event.target.value as string;
     const NowDays = new Date();
     setSelectedDoctor(selectedName);
-    setDoctorName(selectedName);
     console.log(selectedName);
     console.log(NowDays);
   };
@@ -119,6 +110,7 @@ const SelectDoctorAndTime: React.FC<SelectDoctorAndTimeProps> = ({
           doctorName={selectedDoctor}
           selectedDate={selectedDate}
           selectedTime={selectedTime}
+          setIsFirst={setIsFirst}
         />
       )}
     </div>

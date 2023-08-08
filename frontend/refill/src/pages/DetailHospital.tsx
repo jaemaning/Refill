@@ -152,11 +152,6 @@ const Doctor_res_icon = styled.span`
 `;
 
 const DetailHospital: React.FC = () => {
-  // merge
-  const [doctorName, setDoctorName] = useState("");
-  const [selectedDate, setSelectedDate] = useState("");
-  const [selectedTime, setSelectedTime] = useState("");
-
   // 배너이미지 갈아끼울때마다 적용
   const [doctorData, setDoctorData] = useState<Doctor[]>([]);
   const [reviewData, setReviewData] = useState<Review[]>([]);
@@ -558,11 +553,7 @@ const DetailHospital: React.FC = () => {
           </Content>
           <Content style={{ width: "350px" }}>
             {/* merge 하거나 git pull 하기 전에 삭제 */}
-            <SelectDoctorAndTime
-              setDoctorName={setDoctorName}
-              setSelectedDate={setSelectedDate}
-              setSelectedTime={setSelectedTime}
-            />
+            <SelectDoctorAndTime />
           </Content>
         </Layout>
       </Containers>
