@@ -1,6 +1,7 @@
 package com.refill.consulting.controller;
 
 import com.refill.consulting.dto.request.ConsultingCloseRequest;
+import com.refill.consulting.dto.response.ConnectionTokenResponse;
 import com.refill.consulting.dto.response.ConsultingDetailResponse;
 import com.refill.consulting.dto.response.ConsultingListResponse;
 import com.refill.consulting.service.ConsultingService;
@@ -15,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,24 +37,15 @@ public class ConsultingController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/doctor/{reservationId}/{doctorId}")
-    public ResponseEntity<List<String>> getDoctorToken(@AuthenticationPrincipal LoginInfo loginInfo, @PathVariable Long reservationId, @PathVariable Long doctorId) {
-        // 이게 맞나?... 아닌거 같은데
-        log.debug("'{}' doctor request doctorToken", loginInfo.loginId());
-        // 토큰 가져오기
-        List<String> doctorConnection = consultingService.getDoctorConnectionToken(doctorId, reservationId);
-
-        return ResponseEntity.ok().body(doctorConnection);
+    @GetMapping("/connection/{reservationId}")
+    public ResponseEntity<ConnectionTokenResponse> getToken(@AuthenticationPrincipal LoginInfo loginInfo, @PathVariable Long reservationId) {
+        // 로그인 정보 받아서 의사, 환자 구분
+        // 이에 맞는 토큰 DTO에 넣어서 반환
+        return ResponseEntity.ok()
+                             .body(consultingService.getConnectionToken(reservationId, loginInfo));
     }
 
-    @GetMapping("/member/{reservationId}/{memberId}")
-    public ResponseEntity<List<String>> getMemberToken(@AuthenticationPrincipal LoginInfo loginInfo, @PathVariable Long reservationId, @PathVariable Long memberId) {
-        log.debug("'{}' member request doctorToken", loginInfo.loginId());
-        // 토큰 가져오기
-        return ResponseEntity.ok().body(consultingService.getMemberConnectionToken(memberId, reservationId));
-    }
-
-    @PostMapping ("/leave")
+    @PutMapping("/leave")
     public ResponseEntity<String> leaveConsult(@AuthenticationPrincipal LoginInfo loginInfo,@RequestPart("consultingCloseRequest") final
     ConsultingCloseRequest consultingCloseRequest) {
         // GET, POST 뭐할지 고민...
@@ -61,7 +54,7 @@ public class ConsultingController {
         consultingService.leaveSession(consultingCloseRequest.sessionId(),
             consultingCloseRequest.consultingDetailInfo());
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("succcess");
     }
 
     @GetMapping("/{memberId}")
@@ -81,4 +74,25 @@ public class ConsultingController {
 
         return ResponseEntity.ok().body(consultingDetailResponse);
     }
+
+
+
+    /*
+    @GetMapping("/doctor/{reservationId}/{doctorId}")
+    public ResponseEntity<List<String>> getDoctorToken(@AuthenticationPrincipal LoginInfo loginInfo, @PathVariable Long reservationId, @PathVariable Long doctorId) {
+        // 이게 맞나?... 아닌거 같은데
+        log.debug("'{}' doctor request doctorToken", loginInfo.loginId());
+        // 토큰 가져오기
+        List<String> doctorConnection = consultingService.getDoctorConnectionToken(doctorId, reservationId);
+
+        return ResponseEntity.ok().body(doctorConnection);
+    }
+
+    @GetMapping("/member/{reservationId}/{memberId}")
+    public ResponseEntity<List<String>> getMemberToken(@AuthenticationPrincipal LoginInfo loginInfo, @PathVariable Long reservationId, @PathVariable Long memberId) {
+        log.debug("'{}' member request doctorToken", loginInfo.loginId());
+        // 토큰 가져오기
+        return ResponseEntity.ok().body(consultingService.getMemberConnectionToken(memberId, reservationId));
+    }
+     */
 }

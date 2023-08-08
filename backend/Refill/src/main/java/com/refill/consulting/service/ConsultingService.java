@@ -1,5 +1,8 @@
 package com.refill.consulting.service;
 
+import static com.refill.global.entity.Role.ROLE_MEMBER;
+
+import com.refill.consulting.dto.response.ConnectionTokenResponse;
 import com.refill.consulting.dto.response.ConsultingDetailResponse;
 import com.refill.consulting.dto.response.ConsultingListResponse;
 import com.refill.consulting.entity.Consulting;
@@ -8,10 +11,12 @@ import com.refill.doctor.entity.Doctor;
 import com.refill.member.entity.Member;
 import com.refill.reservation.entity.Reservation;
 import com.refill.reservation.repository.ReservationRepository;
+import com.refill.security.util.LoginInfo;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -83,33 +88,37 @@ public class ConsultingService {
     }
 
     @Transactional(readOnly = true)
-    public List<String> getDoctorConnectionToken(Long doctorId, Long reservationId) {
-        Consulting consulting = consultingRepository.findConsultingByDoctorAndReservation(doctorId, reservationId);
+    public ConnectionTokenResponse getConnectionToken(Long reservationId, LoginInfo loginInfo){
+        try {
+            Consulting consulting = consultingRepository.findConsultingByReservationId(reservationId).orElseThrow(
+                EntityNotFoundException::new);
+            String sessionId = consulting.getSessionId();
+            String token;
 
-        List<String> connectionInfo = new ArrayList<>();
-        connectionInfo.add(consulting.getDoctorToken());
-        connectionInfo.add(consulting.getSessionId());
-
-        return connectionInfo; //  DTO로 만들 다시 만들 것
-    }
-
-    @Transactional(readOnly = true)
-    public List<String> getMemberConnectionToken(Long memberId, Long reservationId) {
-        Consulting consulting = consultingRepository.findConsultingByMemberAndReservation(memberId,
-            reservationId);
-
-        List<String> connectionInfo = new ArrayList<>();
-        connectionInfo.add(consulting.getMemberToken());
-        connectionInfo.add(consulting.getSessionId());
-
-        return connectionInfo; //  DTO로 만들 다시 만들 것
+            if (loginInfo.role() == ROLE_MEMBER) {
+                token = consulting.getMemberToken();
+            } else {
+                token = consulting.getDoctorToken();
+            }
+            return new ConnectionTokenResponse(sessionId, token);
+        } catch (EntityNotFoundException e) {
+            return new ConnectionTokenResponse("","");
+        }
     }
 
     @Transactional
     public void leaveSession(String sessionId, String consultingDetailInfo) {
-        Consulting consulting = consultingRepository.findConsultingBySessionId(sessionId);
+        try {
+            Consulting consulting = consultingRepository.findConsultingBySessionId(sessionId).orElseThrow(EntityNotFoundException::new);
 
-        consulting.updateConsultingInfo(consultingDetailInfo);
+            consulting.updateConsultingInfo(consultingDetailInfo);
+        }
+        catch {
+
+        }
+
+
+
     }
 
     @Transactional(readOnly = true)
@@ -132,4 +141,31 @@ public class ConsultingService {
         log.info("===================");
         return new ConsultingDetailResponse(consulting);
     }
+
+
+
+    /*
+        @Transactional(readOnly = true)
+    public List<String> getDoctorConnectionToken(Long doctorId, Long reservationId) {
+        Consulting consulting = consultingRepository.findConsultingByDoctorAndReservation(doctorId, reservationId);
+
+        List<String> connectionInfo = new ArrayList<>();
+        connectionInfo.add(consulting.getDoctorToken());
+        connectionInfo.add(consulting.getSessionId());
+
+        return connectionInfo; //  DTO로 만들 다시 만들 것
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> getMemberConnectionToken(Long memberId, Long reservationId) {
+        Consulting consulting = consultingRepository.findConsultingByMemberAndReservation(memberId,
+            reservationId);
+
+        List<String> connectionInfo = new ArrayList<>();
+        connectionInfo.add(consulting.getMemberToken());
+        connectionInfo.add(consulting.getSessionId());
+
+        return connectionInfo; //  DTO로 만들 다시 만들 것
+    }
+     */
 }

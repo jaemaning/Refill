@@ -4,14 +4,13 @@ import com.refill.consulting.entity.Consulting;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.validator.constraints.Range;
 
 @Slf4j
 public record ConsultingDetailResponse(
     // 진료과, 담당의사, 일자
 //    String content,
     String doctorName,
-//    LocalDateTime startDateTime,
+    LocalDateTime startDateTime,
 //
     // member 주소, 이름, 생년월일, 성별?, 나이
     String memberAddress,
@@ -29,9 +28,9 @@ public record ConsultingDetailResponse(
 ) {
     public ConsultingDetailResponse(Consulting consulting) {
         this (
-//            consulting.getDoctor().getMajorAreas().toString(),
+//            consulting.getDoctor().getMajorAreas().get(0),
             consulting.getDoctor().getName(),
-//            consulting.getReservation().getStartDateTime(),
+            consulting.getReservation().getStartDateTime(),
             consulting.getMember().getAddress(),
             consulting.getMember().getName(),
             consulting.getMember().getBirthDay(),
