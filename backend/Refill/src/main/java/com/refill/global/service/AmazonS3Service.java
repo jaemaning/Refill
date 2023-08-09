@@ -5,7 +5,7 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.refill.global.exception.AmazonS3Exception;
+import com.refill.global.exception.AmazonException;
 import com.refill.global.exception.ErrorCode;
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
@@ -41,7 +40,7 @@ public class AmazonS3Service {
                 new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
         } catch (IOException e) {
-            throw new AmazonS3Exception(ErrorCode.FILE_UPLOAD_FAIL);
+            throw new AmazonException(ErrorCode.FILE_UPLOAD_FAIL);
         }
 
         return fileName;
@@ -63,7 +62,7 @@ public class AmazonS3Service {
                     new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
                         .withCannedAcl(CannedAccessControlList.PublicRead));
             } catch (IOException e) {
-                throw new AmazonS3Exception(ErrorCode.FILE_UPLOAD_FAIL);
+                throw new AmazonException(ErrorCode.FILE_UPLOAD_FAIL);
             }
 
             fileNameList.add(fileName);
@@ -88,7 +87,7 @@ public class AmazonS3Service {
         try {
             return fileName.substring(fileName.lastIndexOf("."));
         } catch (StringIndexOutOfBoundsException e) {
-            throw new AmazonS3Exception(ErrorCode.FILE_UPLOAD_FAIL);
+            throw new AmazonException(ErrorCode.FILE_UPLOAD_FAIL);
         }
     }
 
