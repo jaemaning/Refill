@@ -14,6 +14,8 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import NotificationImportantIcon from "@mui/icons-material/NotificationImportant";
 import { red } from "@mui/material/colors";
+import { RootState } from "store/reducers";
+import { useSelector } from "react-redux";
 
 // [taeseong]
 import SelectDoctorAndTime from "components/consultReservation/SelectDoctorAndTime";
@@ -265,14 +267,14 @@ const DetailHospital: React.FC = () => {
   };
 
   const filteredReviewData = getFilteredReviewData();
+  const token = useSelector((state: RootState) => state.login.token);
 
   // 테스트용
   useEffect(() => {
-    const token = localStorage.getItem("login-token");
     axios
       .get("api/v1/hospital/1", {
         headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJsb2dpbklkIjoibWVtYmVyMSIsInJvbGUiOiJST0xFX01FTUJFUiIsImlhdCI6MTY5MTMwNTMyMywiZXhwIjoxNjkxMzA4OTIzfQ.PPSn6eLTFbG9nHOooKBYLcZmDEud0i1Y2eloT4F1UeU`,
+          Authorization: `Bearer ${token}`,
         },
       })
 

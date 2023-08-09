@@ -2,6 +2,7 @@ package com.refill.review.controller;
 
 import com.refill.review.dto.request.ReviewCreateRequest;
 import com.refill.review.dto.request.ReviewModifyRequest;
+import com.refill.review.dto.request.ReviewReportRequest;
 import com.refill.review.dto.response.ReviewResponse;
 import com.refill.review.service.ReviewService;
 import com.refill.security.util.LoginInfo;
@@ -30,7 +31,6 @@ public class ReviewController {
     /* 리뷰 전체 조회 */
     @GetMapping
     public ResponseEntity<List<ReviewResponse>> getReviews() {
-        log.debug("여기까지들어왔음");
         List<ReviewResponse> reviews = reviewService.getReviews();
         return ResponseEntity.ok()
                              .body(reviews);
@@ -39,7 +39,7 @@ public class ReviewController {
     /* 리뷰 단건 조회 */
     @GetMapping("/{reviewId}")
     public ResponseEntity<ReviewResponse> getReviewById(@PathVariable Long reviewId) {
-        log.debug("여기까지들어왔음");
+        log.debug("reviewId: {}", reviewId);
         ReviewResponse reviewResponse = reviewService.getReviewById(reviewId);
         return ResponseEntity.ok()
                              .body(reviewResponse);
@@ -49,7 +49,7 @@ public class ReviewController {
     @PostMapping
     public ResponseEntity<String> createReview(
         @RequestBody ReviewCreateRequest reviewCreateRequest) {
-        log.debug("여기까지들어왔음");
+        log.debug("reviewCreateRequest: {}", reviewCreateRequest);
         reviewService.createReview(reviewCreateRequest);
         return ResponseEntity.ok().build();
     }
@@ -61,7 +61,7 @@ public class ReviewController {
         @RequestBody ReviewModifyRequest reviewModifyRequest,
         @AuthenticationPrincipal LoginInfo loginInfo)
     {
-        log.debug("여기까지들어왔음");
+        log.debug("reviewId: {} , reviewModifyRequest: {}", reviewId, reviewModifyRequest);
         reviewService.modifyReview(reviewId, reviewModifyRequest, loginInfo.loginId());
         return ResponseEntity.noContent()
                              .build();
@@ -70,9 +70,21 @@ public class ReviewController {
     /* 리뷰 삭제 - 작성자와 관리자 가능 */
     @DeleteMapping("/{reviewId}")
     public ResponseEntity<String> deleteReviewById(@PathVariable Long reviewId, @AuthenticationPrincipal LoginInfo loginInfo){
-        log.debug("여기까지들어왔음");
+        log.debug("reviewId: {}, loginInfo: {}", reviewId, loginInfo);
         reviewService.deleteReviewById(reviewId, loginInfo);
         return ResponseEntity.noContent()
                              .build();
+    }
+
+    /* 리뷰 신고 */
+    @PostMapping("report/{reviewId}")
+    public ResponseEntity<String> reportReview(
+        @PathVariable Long reviewId,
+        @AuthenticationPrincipal LoginInfo loginInfo,
+        @RequestBody ReviewReportRequest request)
+    {
+        log.info("reviewId: {}, loginInfo: {}, content: {}", reviewId, loginInfo, request.content());
+        reviewService.reportReview(reviewId, request.content(), loginInfo);
+        return ResponseEntity.ok().build();
     }
 }

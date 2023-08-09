@@ -9,6 +9,7 @@ import com.refill.member.entity.Member;
 import com.refill.member.exception.MemberException;
 import com.refill.member.repository.MemberRepository;
 import com.refill.security.util.JwtProvider;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -78,9 +79,19 @@ public class MemberService {
         Member member = findByLoginId(loginId);
         member.update(memberInfoUpdateRequest);
 
-        if(profileImg != null) {
+        // 기존에 등록 된 사진이 없고 새로 등록 시킬 때
+        if(Objects.isNull(member.getProfileImg()) && Objects.nonNull(profileImg)) {
             String profileAddress = amazonS3Service.uploadFile(profileImg);
             member.updateFileAddress(profileAddress);
+            return;
+        }
+        // 기존에 등록 된 사진이 있고 수정할 때
+        if(Objects.nonNull(member.getProfileImg()) && Objects.nonNull(profileImg)) {
+            String profileAddress = member.getAddress();
+            amazonS3Service.deleteFile(profileAddress);
+
+            String newProfileAddress = amazonS3Service.uploadFile(profileImg);
+            member.updateFileAddress(newProfileAddress);
         }
 
     }

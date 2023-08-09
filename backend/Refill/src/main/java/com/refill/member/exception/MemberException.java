@@ -1,12 +1,11 @@
 package com.refill.member.exception;
 
+import com.refill.global.exception.BaseException;
 import com.refill.global.exception.ErrorCode;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@Getter
-@AllArgsConstructor
-public class MemberException extends RuntimeException {
+public class MemberException extends BaseException {
 
-    private ErrorCode errorCode;
+    public MemberException(ErrorCode errorCode) {
+        super(errorCode);
+    }
 }

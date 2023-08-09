@@ -6,6 +6,9 @@ import com.refill.account.dto.request.LoginIdFindRequest;
 import com.refill.account.dto.request.LoginPasswordRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.dto.request.MemberLoginRequest;
+import com.refill.account.dto.request.RefreshRequest;
+import com.refill.account.dto.response.RefreshResponse;
+import com.refill.account.dto.response.TokenResponse;
 import com.refill.account.exception.AccountException;
 import com.refill.global.entity.Message;
 import com.refill.global.entity.Role;
@@ -18,10 +21,12 @@ import com.refill.member.entity.Member;
 import com.refill.member.exception.MemberException;
 import com.refill.member.service.MemberService;
 import com.refill.security.util.JwtProvider;
+import com.refill.security.util.LoginInfo;
 import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,6 +42,7 @@ public class AccountService {
     private final AmazonSESService amazonSESService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+    private final RedisTemplate<String, String> redisTemplate;
     @Value("${jwt.token.secret}")
     private String secretKey;
 
@@ -106,7 +112,7 @@ public class AccountService {
 
 
     //@Transactional(readOnly = true)
-    public String memberLogin(MemberLoginRequest memberLoginRequest) {
+    public TokenResponse memberLogin(MemberLoginRequest memberLoginRequest) {
 
         Member member = memberService.findByLoginId(memberLoginRequest.loginId());
 
@@ -118,12 +124,15 @@ public class AccountService {
             throw new MemberException(ErrorCode.INVALID_PASSWORD);
         }
 
-        return jwtProvider.createToken(member.getLoginId(), member.getRole(), secretKey);
+        String accessToken = jwtProvider.createToken(member.getLoginId(), member.getRole(), secretKey);
+        String refreshToken = jwtProvider.createRefreshToken(member.getLoginId(), member.getRole(), secretKey);
+
+        return new TokenResponse(accessToken, refreshToken);
 
     }
 
     //@Transactional(readOnly = true)
-    public String hospitalLogin(HospitalLoginRequest hospitalLoginRequest) {
+    public TokenResponse hospitalLogin(HospitalLoginRequest hospitalLoginRequest) {
 
         Hospital hospital = hospitalService.findByLoginId(hospitalLoginRequest.loginId());
 
@@ -140,7 +149,10 @@ public class AccountService {
             throw new MemberException(ErrorCode.OUTSTANDING_AUTHORIZATION);
         }
 
-        return jwtProvider.createToken(hospital.getLoginId(), hospital.getRole(), secretKey);
+        String accessToken = jwtProvider.createToken(hospital.getLoginId(), hospital.getRole(), secretKey);
+        String refreshToken = jwtProvider.createRefreshToken(hospital.getLoginId(), hospital.getRole(), secretKey);
+
+        return new TokenResponse(accessToken, refreshToken);
     }
 
 
@@ -200,5 +212,21 @@ public class AccountService {
                      .collect(StringBuilder::new, StringBuilder::appendCodePoint,
                          StringBuilder::append)
                      .toString();
+    }
+
+    public RefreshResponse refreshAccessToken(RefreshRequest refreshRequest) {
+
+        String accessToken = jwtProvider.refreshAccessToken(refreshRequest.refreshToken(), secretKey);
+
+        return new RefreshResponse(accessToken);
+    }
+
+    public void logout(LoginInfo loginInfo) {
+
+        boolean tokenExists = redisTemplate.hasKey(loginInfo.loginId());
+
+        if(tokenExists ) {
+            redisTemplate.delete(loginInfo.loginId());
+        }
     }
 }

@@ -28,3 +28,7 @@ include::controller/member/member.adoc[]
 == Reservation API
 
 include::controller/reservation/reservation.adoc[]
+
+[[HOSPITAL-API]]
+== Hospital API
+include::controller/hospital/hospital.adoc[]

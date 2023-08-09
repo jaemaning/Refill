@@ -6,6 +6,7 @@ import com.refill.global.entity.BaseEntity;
 import com.refill.hospital.entity.Hospital;
 import com.refill.reservation.entity.Reservation;
 import com.refill.review.entity.Review;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.Column;
@@ -38,17 +39,21 @@ public class Doctor extends BaseEntity {
 
     @Cascade(CascadeType.ALL)
     @OneToMany(mappedBy = "doctor", orphanRemoval = true)
-    List<MajorArea> majorAreas;
+    @Builder.Default
+    List<MajorArea> majorAreas = new ArrayList<>();
 
     @Cascade(CascadeType.ALL)
     @OneToMany(mappedBy = "doctor", orphanRemoval = true)
-    List<EducationBackground> educationBackgrounds;
+    @Builder.Default
+    List<EducationBackground> educationBackgrounds = new ArrayList<>();
 
     @OneToMany(mappedBy = "doctor")
-    List<Reservation> reservationList;
+    @Builder.Default
+    List<Reservation> reservationList = new ArrayList<>();
 
     @OneToMany(mappedBy = "doctor")
-    List<Review> reviews;
+    @Builder.Default
+    List<Review> reviews = new ArrayList<>();
 
     @Column(nullable = false)
     String name;
@@ -109,4 +114,28 @@ public class Doctor extends BaseEntity {
     public void registLicenseAddress(String licenseAddress) {
         this.licenseImg = licenseAddress;
     }
+
+    public void setHospital(Hospital hospital) {
+        this.hospital = hospital;
+        if (!hospital.getDoctors().contains(this)) {
+            hospital.getDoctors().add(this);
+        }
+    }
+
+    public void addReview(Review review){
+        this.reviews.add(review);
+        review.setDoctor(this);
+    }
+
+    public void addMajorArea(MajorArea majorArea) {
+        this.majorAreas.add(majorArea);
+        majorArea.setDoctor(this);
+    }
+
+    public void addEducationBackground(EducationBackground educationBackground) {
+        this.educationBackgrounds.add(educationBackground);
+        educationBackground.setDoctor(this);
+    }
+
+
 }

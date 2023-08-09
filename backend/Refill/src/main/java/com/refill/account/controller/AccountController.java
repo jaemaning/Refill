@@ -6,11 +6,17 @@ import com.refill.account.dto.request.LoginIdFindRequest;
 import com.refill.account.dto.request.LoginPasswordRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.dto.request.MemberLoginRequest;
+import com.refill.account.dto.request.RefreshRequest;
+import com.refill.account.dto.response.RefreshResponse;
+import com.refill.account.dto.response.TokenResponse;
 import com.refill.account.service.AccountService;
+import com.refill.security.util.LoginInfo;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,21 +51,21 @@ public class AccountController {
     }
 
     @PostMapping("/member/login")
-    public ResponseEntity<String> loginMember(@RequestBody @Valid final MemberLoginRequest memberLoginRequest) {
+    public ResponseEntity<TokenResponse> loginMember(@RequestBody @Valid final MemberLoginRequest memberLoginRequest) {
 
         log.debug("'{}' member request login", memberLoginRequest.loginId());
-        String token = accountService.memberLogin(memberLoginRequest);
+        TokenResponse tokenResponse = accountService.memberLogin(memberLoginRequest);
 
-        return ResponseEntity.ok().body(token);
+        return ResponseEntity.ok().body(tokenResponse);
     }
 
     @PostMapping("/hospital/login")
-    public ResponseEntity<String> loginHospital(@RequestBody @Valid final HospitalLoginRequest hospitalLoginRequest) {
+    public ResponseEntity<TokenResponse> loginHospital(@RequestBody @Valid final HospitalLoginRequest hospitalLoginRequest) {
 
         log.debug("'{}' member request login", hospitalLoginRequest.loginId());
-        String token = accountService.hospitalLogin(hospitalLoginRequest);
+        TokenResponse tokenResponse = accountService.hospitalLogin(hospitalLoginRequest);
 
-        return ResponseEntity.ok().body(token);
+        return ResponseEntity.ok().body(tokenResponse);
     }
 
     @PostMapping("/member/find/id")
@@ -96,6 +102,25 @@ public class AccountController {
         String message = accountService.findHospitalPassword(loginPasswordRequest);
 
         return ResponseEntity.ok().body(message);
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<RefreshResponse> refreshToken(@RequestBody final RefreshRequest refreshRequest) {
+
+        log.debug("member request refreshAccessToken");
+
+        RefreshResponse refreshResponse = accountService.refreshAccessToken(refreshRequest);
+
+        return ResponseEntity.ok().body(refreshResponse);
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<Void> logout(@AuthenticationPrincipal LoginInfo loginInfo) {
+
+        log.debug("'{}' member request logout", loginInfo.loginId());
+
+        accountService.logout(loginInfo);
+        return ResponseEntity.noContent().build();
     }
 
 

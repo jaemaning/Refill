@@ -1,48 +1,23 @@
 import React, { useState } from "react";
-import axios from "axios";
 import Logo_img from "../assets/logo2_final.png";
 import Kakao from "../assets/Kakao_logo.png";
 import Naver from "../assets/Naver_logo.png";
 import Google from "../assets/Google_logo.png";
 import Button from "../components/elements/Button";
 import "../styles/Loginsignup.css";
-import jwt_decode from "jwt-decode";
+import UseLoginForm from "hooks/UseLoginForm";
 
 const LoginForm: React.FC = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [loginId, setLoginId] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [handleSubmitLogin] = UseLoginForm(loginId, loginPassword);
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(event.target.value);
+    setLoginId(event.target.value);
   };
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
-  };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const MemberLoginRequest = {
-      loginId: username,
-      loginPassword: password,
-    };
-
-    axios
-      .post("api/v1/account/member/login", MemberLoginRequest)
-      .then((response) => {
-        console.log(response.data);
-
-        const accessToken = response.data;
-
-        localStorage.setItem("login-token", accessToken);
-
-        const decodetoken = jwt_decode(accessToken);
-        localStorage.setItem("user", JSON.stringify(decodetoken));
-      })
-      .catch((err) => {
-        console.log(err.response.data);
-      });
+    setLoginPassword(event.target.value);
   };
 
   const middle = "flex justify-center items-center";
@@ -83,7 +58,11 @@ const LoginForm: React.FC = () => {
           </div>
         </div>
         <div className={`${middle} MLogin rounded-b-2xl`}>
-          <form onSubmit={handleSubmit} className="" style={{ width: "80%" }}>
+          <form
+            onSubmit={handleSubmitLogin}
+            className=""
+            style={{ width: "80%" }}
+          >
             <div>
               <div className="flex justify-between">
                 <label className="block mb-2 text-sm font-medium text-gray-900 ">
@@ -97,7 +76,7 @@ const LoginForm: React.FC = () => {
                 type="text"
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                 placeholder="아이디를 입력해주세요"
-                value={username}
+                value={loginId}
                 onChange={handleUsernameChange}
               ></input>
             </div>
@@ -115,7 +94,7 @@ const LoginForm: React.FC = () => {
                 type="password"
                 className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                 placeholder="비밀번호를 입력해주세요"
-                value={password}
+                value={loginPassword}
                 onChange={handlePasswordChange}
               ></input>
             </div>

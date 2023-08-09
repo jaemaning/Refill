@@ -1,0 +1,64 @@
+=== 병원 상세 조회
+
+==== HTTP Request
+include::{snippets}/hospital/getHospitalDetail/path-parameters.adoc[]
+include::{snippets}/hospital/getHospitalDetail/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/hospital/getHospitalDetail/http-response.adoc[]
+---
+=== 병원 정보 수정
+
+==== HTTP Request
+include::{snippets}/hospital/modifyHospital/path-parameters.adoc[]
+include::{snippets}/hospital/modifyHospital/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/hospital/modifyHospital/http-response.adoc[]
+---
+=== 병원 검색 (키워드 조회)
+
+==== HTTP Request
+include::{snippets}/hospital/searchByKeyword/request-parameters.adoc[]
+=== variable
+include::{snippets}/hospital/searchByKeyword/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/hospital/searchByKeyword/http-response.adoc[]
+---
+=== 병원 검색 (위치 조회)
+
+==== HTTP Request
+include::{snippets}/hospital/searchByLocation/request-parameters.adoc[]
+include::{snippets}/hospital/searchByLocation/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/hospital/searchByLocation/http-response.adoc[]
+---
+=== 의사 등록
+
+==== HTTP Request
+include::{snippets}/hospital/doctor/register/path-parameters.adoc[]
+include::{snippets}/hospital/doctor/register/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/hospital/doctor/register/http-response.adoc[]
+---
+=== 의사 수정
+
+==== HTTP Request
+include::{snippets}/hospital/doctor/modify/path-parameters.adoc[]
+include::{snippets}/hospital/doctor/modify/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/hospital/doctor/modify/http-response.adoc[]
+---
+=== 의사 삭제
+
+==== HTTP Request
+include::{snippets}/hospital/doctor/modify/path-parameters.adoc[]
+include::{snippets}/hospital/doctor/delete/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/hospital/doctor/delete/http-response.adoc[]
+---

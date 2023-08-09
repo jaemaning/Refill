@@ -2,9 +2,15 @@ import React, { useEffect, useState } from "react";
 import "../styles/Navbar.css";
 import nav_logo from "../assets/logo_final.png";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { RootState } from "store/reducers";
 
 const Navbar = React.forwardRef<HTMLDivElement>((props, ref) => {
   const [isMenuOpen, setMenuOpen] = useState(false);
+  const isLogin = useSelector((state: RootState) => state.login.islogin);
+  const isMember = useSelector((state: RootState) => state.login.ismember);
+  const isHospital = useSelector((state: RootState) => state.login.ishospital);
+  const isAdmin = useSelector((state: RootState) => state.login.isadmin);
 
   const [menuList, setMenuList] = useState([
     ["예약", "#"],
@@ -13,51 +19,31 @@ const Navbar = React.forwardRef<HTMLDivElement>((props, ref) => {
   ]);
 
   useEffect(() => {
-    const role =
-      localStorage.getItem("user") && localStorage.getItem("login-token")
-        ? JSON.parse(localStorage.getItem("user")!)
-        : null;
-
-    const Nonloginmenu = [
-      ["로그인", "/login"],
-      ["회원가입", "/signup"],
-    ];
-    const Membermenu = [
-      ["로그아웃", "/logout"],
-      ["마이페이지", "/mypage"],
-    ];
-    const Hospitalmenu = [
-      ["로그아웃", "/logout"],
-      ["마이페이지", "/mypage"],
-    ];
-    const Adminmenu = [
-      ["로그아웃", "/logout"],
-      ["Admin관리", "/"],
-    ];
-
-    const updateMenuList = [...menuList];
-
-    if (role === null) {
-      Nonloginmenu.forEach((item) => {
-        updateMenuList.push(item);
-      });
-    } else if (role.role === "ROLE_MEMBER") {
-      Membermenu.forEach((item) => {
-        updateMenuList.push(item);
-      });
-    } else if (role.role === "ROLE_HOSPITAL") {
-      Hospitalmenu.forEach((item) => {
-        updateMenuList.push(item);
-      });
+    if (isLogin === true) {
+      if (isMember === true) {
+        setMenuList([
+          ...menuList,
+          ["로그아웃", "/logout"],
+          ["마이페이지", "/mypage"],
+        ]);
+      } else if (isHospital === true) {
+        setMenuList([
+          ...menuList,
+          ["로그아웃", "/logout"],
+          ["마이페이지", "/mypage"],
+        ]);
+      } else if (isAdmin === true) {
+        setMenuList([
+          ["로그아웃", "/logout"],
+          ["Admin관리", "/"],
+        ]);
+      }
     } else {
-      Adminmenu.forEach((item) => {
-        updateMenuList.push(item);
-      });
+      setMenuList([...menuList, ["로그인", "/login"], ["회원가입", "/signup"]]);
     }
 
-    setMenuList(updateMenuList);
-
     console.log(menuList);
+    console.log(isLogin);
   }, []);
 
   const handleMenuToggle = () => {

@@ -1,8 +1,10 @@
 package com.refill.member.dto.request;
 
+import javax.validation.constraints.NotBlank;
+
 public record MemberPasswordUpdateRequest(
-    String oldPassword,
-    String newPassword
+    @NotBlank String oldPassword,
+    @NotBlank String newPassword
 ) {
 
 }
