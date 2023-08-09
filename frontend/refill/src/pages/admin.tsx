@@ -1,9 +1,8 @@
 import * as React from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import axios from 'axios';
-import { RootState } from "store/reducers";
-import { useSelector } from "react-redux";
+import WaitingHospitalList from 'components/admin/WaitingHospitalList';
+
 // react hooks 3대장
 // useSelector
 // emotion styles를 써서 components
@@ -20,70 +19,16 @@ interface WaitingHospitalResponse {
   registrationImg: string;
 }
 
-const token: string = useSelector((state: RootState) => state.login.token);
 
 const Admin: React.FC = () => {
-  const [hospitals, setHospitals] = React.useState<WaitingHospitalResponse[]>([]);
-  const [loading, setLoading] = React.useState(true);
-  
-  React.useEffect(() => {
-    async function fetchHospitals() {
-      try {
-        const response = await axios.get<WaitingHospitalResponse[]>("api/v1/admin/hospitals",{
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        }
-      });
-        setHospitals(response.data);
-      } catch (error) {
-        console.error("Error fetching hospitals:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchHospitals();
-  }, []);
-
-  // 로딩 중이면 로딩 텍스트 출력
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
       <Navbar />
 
-      {/* 간단한 테이블 출력 */}
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Login ID</th>
-            <th>Name</th>
-            <th>Address</th>
-            <th>Tel</th>
-            <th>Email</th>
-            <th>Profile Image</th>
-            <th>Registration Image</th>
-          </tr>
-        </thead>
-        <tbody>
-          {hospitals.map(hospital => (
-            <tr key={hospital.id}>
-              <td>{hospital.id}</td>
-              <td>{hospital.loginId}</td>
-              <td>{hospital.name}</td>
-              <td>{hospital.address}</td>
-              <td>{hospital.tel}</td>
-              <td>{hospital.email}</td>
-              <td><img src={hospital.hospitalProfileImg} alt="Profile" width="50" /></td>
-              <td><img src={hospital.registrationImg} alt="Registration" width="50" /></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: '0 10%' }}>
+        <WaitingHospitalList />
+        {/* 여기에 '신고 내역 관리' 컴포넌트를 배치할 예정입니다. */}
+      </div>
 
       <Footer />
     </div>
