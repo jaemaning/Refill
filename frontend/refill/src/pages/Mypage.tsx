@@ -88,8 +88,8 @@ const Mypage: React.FC = () => {
     tel: "",
   });
 
-  const token = useSelector((state: RootState) => state.login.token);
-  const islogin = useSelector((state: RootState) => state.login.islogin);
+  const token: string = useSelector((state: RootState) => state.login.token);
+  const islogin: boolean = useSelector((state: RootState) => state.login.islogin);
 
   const navigate = useNavigate();
 
