@@ -2,6 +2,8 @@ import * as React from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import axios from 'axios';
+import { RootState } from "store/reducers";
+import { useSelector } from "react-redux";
 // react hooks 3대장
 // useSelector
 // emotion styles를 써서 components
@@ -18,17 +20,21 @@ interface WaitingHospitalResponse {
   registrationImg: string;
 }
 
+const token: string = useSelector((state: RootState) => state.login.token);
 
 const Admin: React.FC = () => {
-  // 상태 설정
   const [hospitals, setHospitals] = React.useState<WaitingHospitalResponse[]>([]);
   const [loading, setLoading] = React.useState(true);
   
-  // API 호출 효과 설정
   React.useEffect(() => {
     async function fetchHospitals() {
       try {
-        const response = await axios.get<WaitingHospitalResponse[]>("/hospitals");
+        const response = await axios.get<WaitingHospitalResponse[]>("api/v1/admin/hospitals",{
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        }
+      });
         setHospitals(response.data);
       } catch (error) {
         console.error("Error fetching hospitals:", error);
