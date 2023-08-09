@@ -1,5 +1,6 @@
 package com.refill.consulting.service;
 
+import static com.refill.global.entity.Role.ROLE_HOSPITAL;
 import static com.refill.global.entity.Role.ROLE_MEMBER;
 
 import com.refill.consulting.dto.request.ConsultingCloseRequest;
@@ -10,10 +11,14 @@ import com.refill.consulting.entity.Consulting;
 import com.refill.consulting.exception.ConsultingException;
 import com.refill.consulting.repository.ConsultingRepository;
 import com.refill.doctor.entity.Doctor;
+import com.refill.global.entity.Role;
 import com.refill.global.exception.ErrorCode;
 import com.refill.member.entity.Member;
+import com.refill.report.service.ReportService;
 import com.refill.reservation.entity.Reservation;
 import com.refill.reservation.repository.ReservationRepository;
+import com.refill.review.entity.Review;
+import com.refill.review.exception.ReviewException;
 import com.refill.security.util.LoginInfo;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,6 +26,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -57,10 +63,13 @@ public class ConsultingService {
 
     private final ReservationRepository reservationRepository;
     private final ConsultingRepository consultingRepository;
+    private final ReportService reportService;
 
     private final int BEFORE_CONSULTING_TIME = 15;
 
-    @Scheduled(cron = "0 15,45 8-18 * * ?")
+//    @Scheduled(cron = "0 15,45 8-18 * * ?")
+//    @Scheduled(fixedRate = 100000)
+    @Scheduled(cron = "0 56 8-18 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
         LocalDateTime now = LocalDateTime.now();//.plusMinutes(BEFORE_CONSULTING_TIME);
         LocalDateTime tmp = LocalDateTime.of(2023, 8, 10, 10, 00);
@@ -114,7 +123,11 @@ public class ConsultingService {
     }
 
     @Transactional
-    public void leaveSession(ConsultingCloseRequest consultingCloseRequest) {
+    public void leaveSession(ConsultingCloseRequest consultingCloseRequest, LoginInfo loginInfo) {
+
+        if(loginInfo.role().equals(ROLE_MEMBER)) {
+            throw new ConsultingException(ErrorCode.UNAUTHORIZED_REQUEST);
+        }
 
         Consulting consulting = consultingRepository.findConsultingBySessionId(consultingCloseRequest.sessionId());
 
@@ -144,6 +157,17 @@ public class ConsultingService {
         Consulting consulting = consultingRepository.findConsultingById(consultingId);
 
         return new ConsultingDetailResponse(consulting);
+    }
+
+    public Consulting findById(Long consultingId){
+        return consultingRepository.findById(consultingId)
+                                   .orElseThrow(() -> new ConsultingException(ErrorCode.SESSION_FAIL));
+    }
+
+    @Transactional
+    public void reportConsulting(Long consultingId, String content, LoginInfo loginInfo) {
+        findById(consultingId);
+        reportService.reportConsulting(consultingId, content, loginInfo);
     }
 
 }

@@ -61,4 +61,27 @@ public class ReportService {
     public void deleteReportById(Long reportId) {
         reportRepository.deleteById(reportId);
     }
+
+    public void reportConsulting(Long consultingId, String content, LoginInfo loginInfo) {
+        Role reporterRole = loginInfo.role();
+        Long id;
+
+        if(reporterRole.equals(Role.ROLE_MEMBER))  {
+            id = memberService.findByLoginId(loginInfo.loginId()).getId();
+        }
+        else if(reporterRole.equals(Role.ROLE_HOSPITAL)){
+            id = hospitalService.findByLoginId(loginInfo.loginId()).getId();
+        } else {
+            throw new MemberException(ErrorCode.USERNAME_NOT_FOUND);
+        }
+
+        Report report = Report.builder()
+                              .reporterRole(loginInfo.role())
+                              .reporterId(id)
+                              .targetId(consultingId)
+                              .content(content)
+                              .targetType(TargetType.CONSULTING).build();
+
+        reportRepository.save(report);
+    }
 }

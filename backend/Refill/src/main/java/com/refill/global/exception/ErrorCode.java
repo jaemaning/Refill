@@ -45,6 +45,7 @@ public enum ErrorCode {
     SESSION_FAIL("CON02",HttpStatus.BAD_REQUEST,"해당 세션이 존재하지 않습니다."),
     CONSULTING_DETAIL_ERROR("CON03",HttpStatus.BAD_REQUEST,"해당 삼당 기록이 존재하지 않습니다.");
 
+
     private final String code;
     private final HttpStatus httpStatus;
     private final String message;
