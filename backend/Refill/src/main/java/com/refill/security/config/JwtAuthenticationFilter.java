@@ -48,7 +48,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         String token = authorization.substring(7); // "Bearer " 또는 "Refresh " 이후의 토큰 부분만 추출
-
         if (authorization.startsWith("Bearer ")) {
             // Access Token 처리
             if (jwtProvider.isExpired(token, secretKey)) {

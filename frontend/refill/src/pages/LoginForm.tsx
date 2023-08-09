@@ -10,7 +10,7 @@ import UseLoginForm from "hooks/UseLoginForm";
 const LoginForm: React.FC = () => {
   const [loginId, setLoginId] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
-  const [handleSubmitLogin] = UseLoginForm(loginId, loginPassword);
+  const [handleSubmitLogin] = UseLoginForm(loginId, loginPassword, 0);
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLoginId(event.target.value);
