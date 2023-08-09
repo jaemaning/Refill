@@ -21,7 +21,7 @@ public record ConsultingDetailResponse(
     // 상담 소견
     String detailConsultingInfo,
 
-//    // 병원 이름, 주소, 전화번호
+    // 병원 이름, 주소, 전화번호
     String hospitalName,
     String hospitalAddress
     // 전화번호
