@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import Logo_img from "../assets/logo2_final.png";
 import Kakao from "../assets/Kakao_logo.png";
 import Naver from "../assets/Naver_logo.png";
@@ -11,7 +10,7 @@ import UseLoginForm from "hooks/UseLoginForm";
 const HLoginForm: React.FC = () => {
   const [loginId, setLoginId] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
-  const [handleSubmitLogin] = UseLoginForm(loginId, loginPassword);
+  const [handleSubmitLogin] = UseLoginForm(loginId, loginPassword, 1);
 
   const handleIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLoginId(event.target.value);
