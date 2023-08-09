@@ -2,16 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import "../App.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { REFILL_COLORS } from "../assets/getColors.js";
 import styled from "@emotion/styled";
 import app_logo from "../assets/app_logo.png";
 import MainComponent from "components/MainComponent";
-import { useSelector } from "react-redux";
-// import Counter from '../components/Counter';
-
-// import LoginForm from './LoginForm'
-// import MemberJoin from '../MemberJoin'
-// import ButtonTest from '../components/ButtonTest'
 
 const Container = styled.div`
   display: flex;

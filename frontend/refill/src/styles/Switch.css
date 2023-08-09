@@ -5,7 +5,7 @@
 }
 
 .toggle-switch.checked .slider {
-  animation: slide 0.3s forwards; /* 스위치가 checked 상태일 때 애니메이션 적용 */
+  animation: slide 0.3s forwards;
 }
 
 @keyframes slide {
@@ -13,17 +13,17 @@
     transform: translateX(0);
   }
   to {
-    transform: translateX(20px);
+    transform: translateX(60px);
   }
 }
 
 .toggle-switch.unchecked .slider {
-  animation: slideRight 0.3s forwards; /* 스위치가 checked 상태이며 오른쪽으로 움직일 때 애니메이션 적용 */
+  animation: slideRight 0.3s forwards;
 }
 
 @keyframes slideRight {
   from {
-    transform: translateX(20px);
+    transform: translateX(60px);
   }
   to {
     transform: translateX(0);
@@ -31,31 +31,83 @@
 }
 
 .toggle-switch label {
-  margin-right: 10px;
+  margin-left: 10px;
 }
 
 .switch {
-  width: 40px;
-  height: 20px;
-  background-color: #ffa726;
-  border-radius: 20px;
-  position: relative;
-  cursor: pointer;
-}
-
-.slider {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
+  width: 115px; /* 크기 조정 */
+  height: 50px; /* 크기 조정 */
   background-color: white;
-  position: absolute;
-  top: 0;
+  border-radius: 40px; /* 크기 조정 */
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 8px;
+  color: #ffa726;
+  position: relative;
 }
 
 .switch.checked {
-  background-color: #42a5f5; /* 파란색 */
+  background-color: #2e5077;
 }
 
 .switch.unchecked {
   background-color: #ffa726;
+}
+
+.slider {
+  width: 36px; /* 크기 조정 */
+  height: 36px; /* 크기 조정 */
+  /* background-color:black; */
+  border-radius: 20px; /* 크기 조정 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  transition: transform 0.3s;
+  cursor: pointer;
+}
+
+.slider.unchecked {
+  background-color: #ffa726;
+}
+
+.slider.checked {
+  background-color: #2e5077;
+}
+
+.on-text,
+.off-text {
+  position: absolute;
+}
+
+.on-text.checked {
+  display: block;
+  color: #2e5077;
+}
+.off-text.unchecked {
+  display: block;
+  color: #ffa726;
+}
+
+.toggle-switch.checked .on-text {
+  opacity: 1;
+}
+
+.toggle-switch.unchecked .off-text {
+  opacity: 1;
+}
+
+.toggle-switch.unchecked .on-text,
+.toggle-switch.checked .off-text {
+  opacity: 0;
+}
+
+.toggle-switch.checked .switch {
+  background-color: white; /* 파란색 */
+}
+
+.toggle-switch.unchecked .switch {
+  background-color: white; /* 주황색 */
 }
