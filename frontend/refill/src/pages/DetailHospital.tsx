@@ -555,7 +555,7 @@ const DetailHospital: React.FC = () => {
           </Content>
           <Content style={{ width: "350px" }}>
             {/* merge 하거나 git pull 하기 전에 삭제 */}
-            <SelectDoctorAndTime />
+            <SelectDoctorAndTime doctors={doctorData}/>
           </Content>
         </Layout>
       </Containers>

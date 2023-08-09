@@ -1,5 +1,5 @@
-import React from "react";
-// import axios from "axios";
+import React, { useState } from "react";
+import axios from "axios";
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -9,8 +9,25 @@ import SelectTime from "./SelectTime";
 import SelectDate from "./SelectDate";
 import MedicalInformationOutlinedIcon from "@mui/icons-material/MedicalInformationOutlined";
 import UploadImg from "./UploadImg";
+import { RootState } from "store/reducers";
+import { useSelector } from "react-redux";
 
-const SelectDoctorAndTime: React.FC = () => {
+
+type Doctor = {
+  doctorId: number;
+  name: string;
+  profileImg: string;
+  licenseNumber: string;
+  licenseImg: string;
+  // 필요한 경우 여기에 추가적인 필드를 추가하세요
+};
+
+// 만약 컴포넌트에서 여러 doctors를 props로 받는다면:
+type ComponentProps = {
+  doctors: Doctor[];
+};
+
+const SelectDoctorAndTime: React.FC<ComponentProps> = ({ doctors }) => {
   // 의사 정보를 가져오는 axios
   // 병원 이름을 통해서 가져와야 할듯
   // 디테일 페이지를 들어오면 바로 랜더링 되어야 좋을듯
@@ -40,18 +57,76 @@ const SelectDoctorAndTime: React.FC = () => {
   */
 
   // 의사 클릭하는 이벤트
+  // 클릭하고 날짜 클릭하면 시간이 떠야함
+  // /doctor/{doctorId}/disabled 여기로 호출해서 안되는 날짜와 시간 받아와야 한다.
 
+  /*
+  안되는 날은 이거로 true처리
+  shouldDisableDate
+Disable specific date.
+
+Type:
+
+func
+Signature:
+
+function(day: TDate) => boolean
+day The date to test.
+Returns: If true the date will be disabled.
+  */
+  const [doctorDisabledTime, setdoctorDisabledTime] = useState<string[]>([]);
   const ishandleChange = (event: SelectChangeEvent) => {
     const selectedName = event.target.value as string;
-    const NowDays = new Date();
     setSelectedDoctor(selectedName);
     console.log(selectedName);
-    console.log(NowDays);
+    const doctor = doctors.find((doc) => doc.name === selectedName);
+    if (doctor) {
+      console.log(doctor.doctorId);
+      disabledTime(doctor.doctorId);
+    } else {
+      console.log("해당 이름의 의사를 찾을 수 없습니다.");
+    }
   };
-  const [selectedDoctor, setSelectedDoctor] = React.useState("");
-  const [selectedDate, setSelectedDate] = React.useState("");
-  const [selectedTime, setSelectedTime] = React.useState("");
-  const DOCTORS = ["LEETAESEONG", "LEETAEMUSCLE", "MUSCLEMUSCLE"];
+
+  const disabledTime = (doctorId: number) => {
+    axios
+      .get(`/api/v1/reservation/doctor/${doctorId}/disabled`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        setdoctorDisabledTime(response.data)
+        // 이제 오늘 날짜랑 비교해서 오늘 날짜인 date를 가져오고 시간을 추출한 다음에 list에 보관
+      })
+      .catch((error) => {
+        console.error("Error disabled time", error);
+      });
+  };
+
+  const [selectedDoctor, setSelectedDoctor] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
+
+  const token = useSelector((state: RootState) => state.login.token);
+
+  // const hospitalDetail = () => {
+  //   axios.get(`/api/v1/hospital/hours`, {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   })
+  //     .then((response) => {
+  //       console.log(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching hospital details:", error);
+  //     });
+  // }
+
+  const doctorsName = doctors.map((doctor) => doctor.name);
+
   const [isFirst, setIsFirst] = React.useState(true);
   // first second result
   // if isFirst == true 현재 컴포넌트 보여주고
@@ -84,7 +159,7 @@ const SelectDoctorAndTime: React.FC = () => {
                 label="의사 선생님을 선택해주세요"
                 onChange={ishandleChange}
               >
-                {DOCTORS.map((doctor, index) => (
+                {doctorsName.map((doctor, index) => (
                   <MenuItem key={index} value={doctor}>
                     {doctor}
                   </MenuItem>

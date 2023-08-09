@@ -3,6 +3,13 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("Asia/Seoul");
 
 interface SelectDateProps {
   setSelectedDate: (date: string) => void;
@@ -26,10 +33,14 @@ const SelectDate: React.FC<SelectDateProps> = ({ setSelectedDate }) => {
       </div>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DateCalendar
+          timezone="Asia/Seoul"
+          disablePast={true}
           value={selectedDateValue}
           onChange={(date, selectionState) => {
             if (selectionState === "finish") {
-              handleDateChange(date);
+              const formattedDate = dayjs(date).tz("Asia/Seoul").format();
+              setSelectedDate(formattedDate);
+              console.log(formattedDate);
             }
           }}
         />
