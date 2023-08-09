@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useState } from "react";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import { useModal } from "./ModalContext"
+import CompleteCompo from "./CompleteCompo";
 
 interface UploadImgProps {
   doctorName: string;
@@ -18,9 +18,10 @@ const UploadImg: React.FC<UploadImgProps> = ({
 }) => {
   const [imgFile, setImgFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const { closeModal } = useModal();
+  const [modalOpen, setModalOpen] = useState(false)
 
   const nextProgress = () => {
+    setModalOpen(true)
     return;
   };
 
@@ -47,6 +48,7 @@ const UploadImg: React.FC<UploadImgProps> = ({
 
   return (
     <div>
+      <CompleteCompo ModalOpen={modalOpen}/>
       <CalendarMonthOutlinedIcon /> {selectedDate}
       <hr className="border-2 border-black my-2" />
       <AccessTimeIcon />

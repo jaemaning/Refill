@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 // import axios from "axios";
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
@@ -62,6 +62,11 @@ const SelectDoctorAndTime: React.FC = () => {
   const changeIsFirst = () => {
     setIsFirst(false);
   };
+
+  // 병원 정보 가져오기
+
+
+
 
   return (
     <div className="m-2 py-2">
