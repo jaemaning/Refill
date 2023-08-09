@@ -39,20 +39,18 @@ public class ConsultingController {
 
     @GetMapping("/connection/{reservationId}")
     public ResponseEntity<ConnectionTokenResponse> getToken(@AuthenticationPrincipal LoginInfo loginInfo, @PathVariable Long reservationId) {
-        // 로그인 정보 받아서 의사, 환자 구분
-        // 이에 맞는 토큰 DTO에 넣어서 반환
+
+        log.debug("'{}' wants to get connction",loginInfo);
+
         return ResponseEntity.ok()
                              .body(consultingService.getConnectionToken(reservationId, loginInfo));
     }
 
     @PutMapping("/leave")
-    public ResponseEntity<String> leaveConsult(@AuthenticationPrincipal LoginInfo loginInfo,@RequestPart("consultingCloseRequest") final
-    ConsultingCloseRequest consultingCloseRequest) {
-        // GET, POST 뭐할지 고민...
+    public ResponseEntity<String> leaveConsult(@AuthenticationPrincipal LoginInfo loginInfo,@RequestPart("consultingCloseRequest") final ConsultingCloseRequest consultingCloseRequest) {
         log.debug("Close Session");
         // 세션 닫기 & 상담 실행 여부 변경
-        consultingService.leaveSession(consultingCloseRequest.sessionId(),
-            consultingCloseRequest.consultingDetailInfo());
+        consultingService.leaveSession(consultingCloseRequest);
 
         return ResponseEntity.ok().body("succcess");
     }
@@ -75,24 +73,4 @@ public class ConsultingController {
         return ResponseEntity.ok().body(consultingDetailResponse);
     }
 
-
-
-    /*
-    @GetMapping("/doctor/{reservationId}/{doctorId}")
-    public ResponseEntity<List<String>> getDoctorToken(@AuthenticationPrincipal LoginInfo loginInfo, @PathVariable Long reservationId, @PathVariable Long doctorId) {
-        // 이게 맞나?... 아닌거 같은데
-        log.debug("'{}' doctor request doctorToken", loginInfo.loginId());
-        // 토큰 가져오기
-        List<String> doctorConnection = consultingService.getDoctorConnectionToken(doctorId, reservationId);
-
-        return ResponseEntity.ok().body(doctorConnection);
-    }
-
-    @GetMapping("/member/{reservationId}/{memberId}")
-    public ResponseEntity<List<String>> getMemberToken(@AuthenticationPrincipal LoginInfo loginInfo, @PathVariable Long reservationId, @PathVariable Long memberId) {
-        log.debug("'{}' member request doctorToken", loginInfo.loginId());
-        // 토큰 가져오기
-        return ResponseEntity.ok().body(consultingService.getMemberConnectionToken(memberId, reservationId));
-    }
-     */
 }

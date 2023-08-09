@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface ConsultingRepository extends JpaRepository<Consulting, Long> {
 
-    Optional<Consulting> findConsultingBySessionId(String sessionId);
+    Consulting findConsultingBySessionId(String sessionId);
 
     @Query("SELECT c FROM Consulting c WHERE c.member.id = :memberId AND c.isExecuted = false")
     List<Consulting> findConsultingsByMember(@Param("memberId") Long memberId);
@@ -18,12 +18,6 @@ public interface ConsultingRepository extends JpaRepository<Consulting, Long> {
     Consulting findConsultingById(Long consultingId);
 
     @Query("SELECT c FROM Consulting  c WHERE c.reservation.id = :reservationId AND c.isExecuted = false")
-    Optional<Consulting> findConsultingByReservationId(@Param("reservationId") Long reservationId);
+    Consulting findConsultingByReservationId(@Param("reservationId") Long reservationId);
 
-
-//    @Query("SELECT c FROM Consulting c WHERE c.doctor.id = :doctorId AND c.reservation.id = :reservationId")
-//    Consulting findConsultingByDoctorAndReservation(@Param("doctorId") Long doctorId, @Param("reservationId") Long reservationId);
-//
-//    @Query("SELECT c FROM Consulting c WHERE c.member.id = :memberId AND c.reservation.id = :reservationId")
-//    Consulting findConsultingByMemberAndReservation(@Param("memberId") Long memberId, @Param("reservationId") Long reservationId);
 }

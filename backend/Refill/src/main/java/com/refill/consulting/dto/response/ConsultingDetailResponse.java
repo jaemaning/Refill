@@ -11,7 +11,7 @@ public record ConsultingDetailResponse(
 //    String content,
     String doctorName,
     LocalDateTime startDateTime,
-//
+
     // member 주소, 이름, 생년월일, 성별?, 나이
     String memberAddress,
     String memberName,
@@ -20,7 +20,7 @@ public record ConsultingDetailResponse(
 
     // 상담 소견
     String detailConsultingInfo,
-//
+
 //    // 병원 이름, 주소, 전화번호
     String hospitalName,
     String hospitalAddress
