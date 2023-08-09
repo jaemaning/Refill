@@ -13,18 +13,14 @@ dayjs.tz.setDefault("Asia/Seoul");
 
 interface SelectDateProps {
   setSelectedDate: (date: string) => void;
+  setNowWeekday: (weekday: number) => void;
 }
 
-const SelectDate: React.FC<SelectDateProps> = ({ setSelectedDate }) => {
+const SelectDate: React.FC<SelectDateProps> = ({
+  setSelectedDate,
+  setNowWeekday,
+}) => {
   const [selectedDateValue, setSelectedDateValue] = useState<Date | null>(null);
-
-  const handleDateChange = (date: Date | null) => {
-    setSelectedDateValue(date);
-    if (date) {
-      setSelectedDate(date.toISOString()); // or format it with dayjs
-      console.log(date.toISOString());
-    }
-  };
 
   return (
     <div>
@@ -33,14 +29,17 @@ const SelectDate: React.FC<SelectDateProps> = ({ setSelectedDate }) => {
       </div>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DateCalendar
-          timezone="Asia/Seoul"
           disablePast={true}
           value={selectedDateValue}
           onChange={(date, selectionState) => {
             if (selectionState === "finish") {
               const formattedDate = dayjs(date).tz("Asia/Seoul").format();
               setSelectedDate(formattedDate);
+              setSelectedDateValue(date);
               console.log(formattedDate);
+              const weekday = dayjs(date).tz("Asia/Seoul").day();
+              setNowWeekday(weekday);
+              console.log(weekday)
             }
           }}
         />
