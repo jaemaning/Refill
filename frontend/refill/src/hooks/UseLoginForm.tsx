@@ -31,8 +31,11 @@ const UseLoginForm = (loginId: string, loginPassword: string) => {
         status,
         data: { accessToken, refreshToken },
       } = await authService.memberlogin(data);
+    
 
       if (status === 200) {
+        console.log('???')
+        console.log("내가원하는거",authService.memberlogin(data))
         console.log("login Success");
         dispatch(
           loginSuccess({

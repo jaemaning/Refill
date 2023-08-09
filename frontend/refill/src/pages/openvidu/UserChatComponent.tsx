@@ -12,11 +12,11 @@ const UserChatComponent: React.FC<UserChatComponentProps> = ({
 }) => {
 
   return (
-    <div>
+    <>
       {streamManager !== undefined ? (
         <OpenViduVideoComponent streamManager={streamManager} />
       ) : null}
-    </div>
+    </>
   );
 };
 

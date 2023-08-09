@@ -20,7 +20,7 @@ const OpenViduVideoComponent: React.FC<OpenViduVideoComponentProps> = ({
   };
 
   const resultStyle = {
-    width: "1000px",
+    width: "100%",
     height: "auto",
     float: "left" as const,
     cursor: "pointer",

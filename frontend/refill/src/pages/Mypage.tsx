@@ -104,6 +104,7 @@ const Mypage: React.FC = () => {
         })
 
         .then((response) => {
+          console.log(response.data)
           setuserData(response.data);
 
           if (userData.profileImg !== null) {

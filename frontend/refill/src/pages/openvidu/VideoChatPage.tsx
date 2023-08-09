@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   OpenVidu,
   Session,
@@ -12,6 +13,21 @@ import Button from "components/elements/Button";
 import styled from "@emotion/styled";
 import { useSelector } from 'react-redux';
 import { RootState } from "store/reducers";
+import {AiComponent} from 'components/openvidu/AIComponent';
+import { PrevComponent } from 'components/openvidu/prevComponent';
+import { ScreenComponent } from 'components/openvidu/screenComponent';
+import ChatLog from 'components/openvidu/chatLogComponent'
+// import Chat from "../../components/openvidu/chatComponent";
+
+interface MessageList {
+  nickname: string;
+  message: string;
+}
+
+interface Chat {
+  messageList : MessageList[];
+  message : string;
+}
 
 
 const APPLICATION_SERVER_URL =
@@ -30,11 +46,101 @@ const VideoChatPage: React.FC = () => {
   const [subscribers, setSubscribers] = useState<StreamManager[]>([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState<Device | undefined>(undefined);
   const [showChat, setShowChat] = useState(false);
+  const [sideOption, setSideOption] = useState<string>("prev");
+
+  const inputref = useRef<HTMLInputElement>(null)
+  const chatLogref = useRef<HTMLInputElement>(null)
+  const [chat, setChat] = useState<Chat>({
+    messageList: [],
+    message: '',
+  })
+  const { messageList, message } = chat
+  const [userData, setuserData] = useState({
+    address: "",
+    birthDay: "",
+    email: "",
+    name: "",
+    nickname: "",
+    profileImg: null,
+    tel: "",
+  });
+
+
   const token = useSelector((state: RootState) => state.login.token);
   const islogin = useSelector((state: RootState) => state.login.islogin);
+  
+  // 유저 정보 가져오기
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (islogin === true) {
+      axios
+        .get("api/v1/member/mypage", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+
+        .then((response) => {
+          console.log(response.data)
+          setuserData(response.data);
+        })
+        .catch((error) => {
+          console.log("에러:", error);
+        });
+    } else {
+      navigate("/");
+      alert("로그인이 해제되었습니다.");
+    }
+  }, []);
+
+  // useEffect(() => {
+  //   if (OV && OV.session && OV.publishers) {
+
+  //   }
+  // }, [messageList, OV])
+
+  function handleChange(event : any) {
+
+    if (typeof event.target.value === 'string') {
+      console.log(chat)
+      setChat(prev => ({
+        ...prev,
+        message: event.target.value,
+      }))
+    }
+  }
+
+  function handlePresskey(event : any) {
+    if (event.key === 'Enter') {
+      sendMessage()
+      event.target.value = ''
+    }
+  }
+
+  function sendMessage() {
+    if (chat.message) {
+      const data = {
+        message: chat.message,
+        nickname: userData.nickname,
+      }
+      if (session) {
+        session.signal({
+          data: JSON.stringify(data),
+          type: 'chat',
+        })
+      }
+    }
+    setChat(prev => ({
+      ...prev,
+      message: '',
+    }))
+  }
+
+  // 여기까지 채팅 부분
 
   // 강제로 창 종료시 동작
-
   useEffect(() => {
     window.addEventListener("beforeunload", onbeforeunload);
     return () => {
@@ -62,7 +168,8 @@ const VideoChatPage: React.FC = () => {
   const handleChangeUserName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMyUserName(e.target.value);
   };
-
+  //
+  
   // 메인 스트림과 클릭된 서브 스트림을 전환하는 함수
   const toggleMainAndSubStream = (target: StreamManager) => {
     if (target === publisher) {
@@ -98,7 +205,25 @@ const VideoChatPage: React.FC = () => {
       console.warn(exception);
     });
 
-    console.log(111)
+    mySession.on('signal:chat', event => {
+      console.log(event)
+      if (typeof event.data === 'string') {
+        const data = JSON.parse(event.data)
+        messageList.push({
+          nickname: userData.nickname,
+          message: data.message,
+        })
+        setChat(prev => ({ ...prev, messageList }))
+        // scrollToBottom()
+      }
+    })
+
+    // mySession.on(`signal:${}`,(event : any) : void => {
+    //   const msg = JSON.parse(event.data).message;
+    //   setMessage([...message, msg])
+    // })
+
+    console.log('오픈비두 ?',OV)
 
     try {
       const token = await getToken();
@@ -110,12 +235,13 @@ const VideoChatPage: React.FC = () => {
         videoSource: undefined,
         publishAudio: true,
         publishVideo: true,
-        resolution: "640x480",
+        resolution: "800x1000",
         frameRate: 30,
         insertMode: "APPEND",
         mirror: false,
       });
 
+      // 여기부터 저 끝까지 createPublish
       mySession.publish(publisher);
 
       const devices = await OV.getDevices();
@@ -229,12 +355,14 @@ const VideoChatPage: React.FC = () => {
     setShowChat(!showChat)
   }
 
+  const handleChangeComponent = (str : string) : void => {
+    setSideOption(str)
+  }
+
   const StyleSidebar = styled.div`
-    position: fixed;
-    top: 50%;
-    right: 20px;
-    transform: translate(0, -70%);
-    background: #aafffc;
+    width: 100px;
+    display: flex;
+    justify-content: center;
   `
 
   return (
@@ -242,9 +370,10 @@ const VideoChatPage: React.FC = () => {
       className="container"
       style={{
         minWidth: "100%",
-        minHeight: "100vh",
-        backgroundColor: "#dddddd",
+        minHeight: "100%",
+        backgroundColor: "white",
         padding: "20px 20px",
+        boxSizing: 'border-box'
       }}
     >
       {session === undefined ? (
@@ -290,17 +419,16 @@ const VideoChatPage: React.FC = () => {
           </div>
         </div>
       ) : (
-        <div id="session" style={{ minWidth:"100%", minHeight:"100%" }}>
-            <div className="flex justify-start" style={{ position: "relative", width:'100%'}}>
-              <div style={{ width: '55%', minWidth: '500px' }}>
+        <div id="session" style={{display: "flex", flexDirection:"column", justifyContent: "between", minWidth:"100%", minHeight:"100%" }}>
+            <div className="flex justify-around" style={{ width:'100%'}}>
+              <div style={{ position:'relative', width: '55%', minWidth: '500px' }}>
                 <UserVideoComponent streamManager={mainStreamManager} />
-              </div>
               {subscribers && mainStreamManager === publisher ? (
                 subscribers.map((sub) => (
                   <div
                     key={sub.id}
                     style={{
-                      width: "15%",
+                      width: "25%",
                       minWidth: "150px",
                       position: "absolute",
                       top: "30px",
@@ -313,29 +441,46 @@ const VideoChatPage: React.FC = () => {
                 ))
               ) : publisher !== undefined ? (
                 <div
-                  style={{
-                    width: "15%",
-                    minWidth: "150px",
-                    position: "absolute",
-                    top: "30px",
-                    left: "30px",
-                  }}
-                  onClick={() => toggleMainAndSubStream(publisher)}
+                style={{
+                  width: "25%",
+                  minWidth: "150px",
+                  position: "absolute",
+                  top: "30px",
+                  left: "30px",
+                }}
+                onClick={() => toggleMainAndSubStream(publisher)}
                 >
                   <UserVideoComponent streamManager={publisher} />
                 </div>
               ) : null}
-              <div style={{marginLeft: '20px',display: "flex", flexDirection:"column", width: '35%', minHeight: '100%'}}>
-                <div style={{ minWidth:'100%', height: '70%', backgroundColor: 'white' }}>
-                  안녕하세요 ??
-                </div>
-                <div style={{ marginTop: "20px", height: '30%', backgroundColor: 'white' }}>
+              </div>
+              <div style={{ display: "flex", flexDirection:"column", width: '35%', minHeight: '100%'}}>
+                {sideOption === 'prev'
+                 ? <PrevComponent />
+                 : null }
+                {sideOption === 'AI'
+                 ? <AiComponent />
+                 : null }
+                {sideOption === 'screen'
+                 ? <ScreenComponent />
+                 : null }
+                <div style={{ marginTop: "20px", height: '30%', backgroundColor: '#eeeeee' }}>
                   안녕하세요?
                 </div>
               </div>
+              <StyleSidebar>
+                <div
+                  id="session-sidebar"
+                  className="flex flex-col justify-center items-center"
+                >
+                  <Button width="60px" content="상담" onClick={()=>handleChangeComponent('prev')} />
+                  <Button width="60px" content="AI" onClick={()=>handleChangeComponent('AI')} />
+                  <Button width="60px" content="화면" onClick={()=>handleChangeComponent('screen')} />
+                </div>
+              </StyleSidebar>
           </div>
 
-          <div style={{position: 'fixed', bottom: '20px', left: '0', padding:'0 20px', width: '100%'}}>
+          <div style={{ position:'fixed', bottom:'20px', left: '0' , padding:'20px', width: '100%'}}>
             <div
               id="session-footer"
               className="flex justify-between items-center"
@@ -352,24 +497,28 @@ const VideoChatPage: React.FC = () => {
               </div>
               <div>
                 <Button content="채팅" onClick={handleShowBox}/>
-              </div>
+              </div>    
             </div>
           </div>
-
-          <StyleSidebar>
-            <div
-              id="session-sidebar"
-              className="flex flex-col justify-between items-center"
-            >
-              <Button width="40px" content="상담"  />
-              <Button width="40px" content="AI" />
-              <Button width="40px" content="화면" />
+          <div style={{position: "absolute", bottom: '50px', right: '80px', minWidth: '350px', minHeight:'500px', backgroundColor: '#eeeeee', display: showChat ? 'block' : 'none', borderRadius: '7px'}}>
+            <div ref={chatLogref}>
+              {messageList.map(({ message, nickname }, idx) => (
+                <ChatLog
+                  key={idx}
+                  chatData={{
+                    nickname: nickname,
+                    message: message,
+                  }}
+                ></ChatLog>
+              ))}
             </div>
-          </StyleSidebar>
-
-
-          <div style={{position: "absolute", bottom: '40px', right: '40px', minWidth: '200px', minHeight:'200px', backgroundColor: 'grey', display: showChat ? 'block' : 'none'}}>
-
+            <div>
+                <input
+                  onChange={handleChange}
+                  onKeyUp={handlePresskey}
+                  ref={inputref}
+                ></input>
+            </div>
           </div>
         </div>
       )}
