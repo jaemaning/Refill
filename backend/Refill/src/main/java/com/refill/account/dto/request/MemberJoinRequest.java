@@ -2,6 +2,7 @@ package com.refill.account.dto.request;
 
 import java.time.LocalDate;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 public record MemberJoinRequest(
@@ -12,7 +13,7 @@ public record MemberJoinRequest(
     @NotBlank String name,
     @NotBlank String address,
     @NotBlank String tel,
-    @NotBlank LocalDate birthDay,
+    @NotNull LocalDate birthDay,
     @NotBlank String email
 
 
