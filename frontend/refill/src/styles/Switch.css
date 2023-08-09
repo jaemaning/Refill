@@ -1,0 +1,61 @@
+.toggle-switch {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.toggle-switch.checked .slider {
+  animation: slide 0.3s forwards; /* 스위치가 checked 상태일 때 애니메이션 적용 */
+}
+
+@keyframes slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(20px);
+  }
+}
+
+.toggle-switch.unchecked .slider {
+  animation: slideRight 0.3s forwards; /* 스위치가 checked 상태이며 오른쪽으로 움직일 때 애니메이션 적용 */
+}
+
+@keyframes slideRight {
+  from {
+    transform: translateX(20px);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.toggle-switch label {
+  margin-right: 10px;
+}
+
+.switch {
+  width: 40px;
+  height: 20px;
+  background-color: #ffa726;
+  border-radius: 20px;
+  position: relative;
+  cursor: pointer;
+}
+
+.slider {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: white;
+  position: absolute;
+  top: 0;
+}
+
+.switch.checked {
+  background-color: #42a5f5; /* 파란색 */
+}
+
+.switch.unchecked {
+  background-color: #ffa726;
+}
