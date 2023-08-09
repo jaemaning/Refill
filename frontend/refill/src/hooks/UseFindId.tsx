@@ -17,14 +17,9 @@ const UseFindIdForm = (email: string, role: boolean) => {
         setCheck(await authService.hospitalFindId(data));
       }
 
-      const {
-        status,
-        data: { message },
-      } = check;
-
-      if (status === 200) {
-        console.log("login Success");
-        console.log(message);
+      if (check.status === 200) {
+        console.log(check.status);
+        console.log(check.data);
       }
     } catch (error: any) {
       console.log(error.response.data.message);
