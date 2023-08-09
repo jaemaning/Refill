@@ -14,9 +14,8 @@ import Button from "components/elements/Button";
 import styled from "@emotion/styled";
 import { useSelector } from "react-redux";
 import { RootState } from "store/reducers";
-import { AiComponent } from "components/openvidu/AIComponent";
 import { PrevComponent } from "components/openvidu/prevComponent";
-import { ScreenComponent } from "components/openvidu/screenComponent";
+// import { ScreenComponent } from "components/openvidu/screenComponent";
 import ChatLog from "components/openvidu/chatLogComponent";
 // import Chat from "../../components/openvidu/chatComponent";
 
@@ -46,16 +45,14 @@ const VideoChatPage: React.FC = () => {
     StreamManager | undefined
   >(undefined);
   const [publisher, setPublisher] = useState<Publisher | undefined>(undefined);
-  // const [screenPublisher, setScreenPublisher] = useState<Publisher|undefined>(undefined);
+  const [screenPublisher, setScreenPublisher] = useState<Publisher|undefined>(undefined);
+  const [toggleScreenPublisher, setToggleScreenPublisher] = useState<boolean>(true);
   const [subscribers, setSubscribers] = useState<StreamManager[]>([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState<
     Device | undefined
   >(undefined);
   const [showChat, setShowChat] = useState(false);
   const [sideOption, setSideOption] = useState<string>("prev");
-  const [screenShareStream, setScreenShareStream] = useState<Stream | null>(
-    null,
-  );
 
   const inputref = useRef<HTMLInputElement>(null);
   const chatLogref = useRef<HTMLInputElement>(null);
@@ -76,12 +73,18 @@ const VideoChatPage: React.FC = () => {
 
   const token = useSelector((state: RootState) => state.login.token);
   const islogin = useSelector((state: RootState) => state.login.islogin);
+  const ismember = useSelector((state: RootState) => state.login.ismember);
+  const ishospital = useSelector((state: RootState) => state.login.ishospital);
+
 
   // 유저 정보 가져오기
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (islogin === true) {
+    console.log('멤버야?',ismember)
+    console.log('병원???',ishospital)
+    console.log('islogin 은 ????',islogin)
+    if (islogin && ismember) {
       axios
         .get("api/v1/member/mypage", {
           headers: {
@@ -97,17 +100,14 @@ const VideoChatPage: React.FC = () => {
         .catch((error) => {
           console.log("에러:", error);
         });
+    } else if (islogin && ishospital) {
+      console.log('병원입니다.')
     } else {
       navigate("/");
-      alert("로그인이 해제되었습니다.");
+      alert("접근 권한이 없습니다.");
     }
   }, []);
 
-  // useEffect(() => {
-  //   if (OV && OV.session && OV.publishers) {
-
-  //   }
-  // }, [messageList, OV])
 
   function handleChange(event: any) {
     if (typeof event.target.value === "string") {
@@ -193,27 +193,18 @@ const VideoChatPage: React.FC = () => {
     );
   };
 
+
+  // 의사전용 joinsession
   const joinSession = async () => {
     const OV = new OpenVidu();
     const mySession = OV.initSession();
     setSession(mySession);
 
-    const OVS = new OpenVidu();
-    const myScreenSession = OVS.initSession();
-    setScreenSession(myScreenSession);
-
     // Specify the actions when events take place in the session
     mySession.on("streamCreated", (event) => {
-      if (event.stream !== screenShareStream) {
-        console.log(
-          "??? 이게 뭔데 그래서",
-          event.stream,
-          screenShareStream,
-          event.stream == screenShareStream,
-        );
-        const subscriber = mySession.subscribe(event.stream, undefined);
-        setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
-      }
+      const subscriber = mySession.subscribe(event.stream, undefined);
+      console.log("여기야여기!!!!!!!!!!!!!!!!!!!!!!",subscriber)
+      setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
     });
 
     mySession.on("streamDestroyed", (event) => {
@@ -239,10 +230,7 @@ const VideoChatPage: React.FC = () => {
 
     try {
       const token = await getToken();
-      const tokenScreen = await getToken();
       await mySession.connect(token, { clientData: myUserName });
-      await myScreenSession.connect(tokenScreen, { clientData: myUserName });
-      // await myScreenSession.connect(token, { clientData: myUserName });
 
       const publisher = await OV.initPublisherAsync("container-video", {
         audioSource: undefined,
@@ -254,21 +242,30 @@ const VideoChatPage: React.FC = () => {
         insertMode: "APPEND",
         mirror: false,
       });
-
+      
       mySession.publish(publisher);
-
+      
       // 이제부터 screen 부분
-      const screenPublisher = await OV.initPublisherAsync("container-screen", {
-        videoSource: "screen", // 화면 공유를 위해 'screen'을 지정
-        publishAudio: false, // 오디오를 포함할 것인지 여부
-        publishVideo: true, // 비디오를 포함할 것인지 여부
-        resolution: "1280x720", // 스크린 공유의 해상도
-        frameRate: 30, // 스크린 공유의 프레임 레이트
-        insertMode: "APPEND", // 비디오가 타겟 엘리먼트에 삽입되는 방식
-        mirror: false, // 로컬 비디오 미러링 여부
-      });
-      setScreenShareStream(screenPublisher.stream);
-      myScreenSession.publish(screenPublisher);
+      if (ishospital) {
+        const OVS = await new OpenVidu();
+        const myScreenSession = await OVS.initSession();
+        await setScreenSession(myScreenSession);
+
+        const tokenScreen = await getToken();
+        await myScreenSession.connect(tokenScreen, { clientData: myUserName });
+        const screenPublisher = await OV.initPublisherAsync("container-screen", {
+          videoSource: "screen", // 화면 공유를 위해 'screen'을 지정
+          publishAudio: false, // 오디오를 포함할 것인지 여부
+          publishVideo: true, // 비디오를 포함할 것인지 여부
+          resolution: "1280x720", // 스크린 공유의 해상도
+          frameRate: 30, // 스크린 공유의 프레임 레이트
+          insertMode: "APPEND", // 비디오가 타겟 엘리먼트에 삽입되는 방식
+          mirror: false, // 로컬 비디오 미러링 여부
+        });
+  
+        await setScreenPublisher(screenPublisher);
+        myScreenSession.publish(screenPublisher);
+      }
 
       const devices = await OV.getDevices();
       const videoDevices = devices.filter(
@@ -290,9 +287,25 @@ const VideoChatPage: React.FC = () => {
     }
   };
 
+  // screenShare 토글 버튼
+  const toggleScreenShare = () => {
+    if( screenSession && screenPublisher && toggleScreenPublisher ) {
+      // disconnect
+      setToggleScreenPublisher(false);
+      screenSession.unpublish(screenPublisher);
+    } else if ( screenSession && screenPublisher ) {
+      // connect
+      setToggleScreenPublisher(true);
+      screenSession.publish(screenPublisher);
+    }
+  }
+
   const leaveSession = () => {
     if (session) {
       session.disconnect();
+    }
+    if (screenSession) {
+      screenSession.disconnect();
     }
 
     // Empty all properties...
@@ -303,6 +316,7 @@ const VideoChatPage: React.FC = () => {
     setMyUserName("Participant" + Math.floor(Math.random() * 100));
     setMainStreamManager(undefined);
     setPublisher(undefined);
+    setScreenPublisher(undefined);
   };
 
   const camOnOff = () => {
@@ -327,21 +341,21 @@ const VideoChatPage: React.FC = () => {
     }
   };
 
-  const roomOut = () => {
-    if (session) {
-      session.disconnect();
-    }
+  // const roomOut = () => {
+  //   if (session) {
+  //     session.disconnect();
+  //   }
 
-    // Empty all properties...
-    setSession(undefined);
-    setScreenSession(undefined);
-    setSubscribers([]);
-    setMySessionId("SessionA");
-    setMyUserName("Participant" + Math.floor(Math.random() * 100));
-    setMainStreamManager(undefined);
-    setPublisher(undefined);
-    setCurrentVideoDevice(undefined);
-  };
+  //   // Empty all properties...
+  //   setSession(undefined);
+  //   setScreenSession(undefined);
+  //   setSubscribers([]);
+  //   setMySessionId("SessionA");
+  //   setMyUserName("Participant" + Math.floor(Math.random() * 100));
+  //   setMainStreamManager(undefined);
+  //   setPublisher(undefined);
+  //   setCurrentVideoDevice(undefined);
+  // };
 
   const accessToken = token;
   const headers = {
@@ -383,16 +397,6 @@ const VideoChatPage: React.FC = () => {
     console.log(showChat);
     setShowChat(!showChat);
   };
-
-  const handleChangeComponent = (str: string): void => {
-    setSideOption(str);
-  };
-
-  const StyleSidebar = styled.div`
-    width: 100px;
-    display: flex;
-    justify-content: center;
-  `;
 
   return (
     <div
@@ -458,13 +462,15 @@ const VideoChatPage: React.FC = () => {
             minHeight: "100%",
           }}
         >
-          <div className="flex justify-around" style={{ width: "100%" }}>
+          <div className="flex justify-between" style={{ width: "100%" }}>
             <div
-              style={{ position: "relative", width: "55%", minWidth: "500px" }}
+              style={{ position: "relative", width: "50%", minWidth: "500px" }}
             >
               <UserVideoComponent streamManager={mainStreamManager} />
               {subscribers && mainStreamManager === publisher ? (
-                subscribers.map((sub) => (
+                subscribers
+                .filter((sub)=> sub.stream.typeOfVideo !== 'SCREEN')
+                .map((sub) => (
                   <div
                     key={sub.id}
                     style={{
@@ -498,18 +504,26 @@ const VideoChatPage: React.FC = () => {
               style={{
                 display: "flex",
                 flexDirection: "column",
-                width: "35%",
-                minHeight: "100%",
+                width: "48%",
+                minHeight: "500px",
+                position: 'relative'
               }}
             >
-              {sideOption === "prev" ? <PrevComponent /> : null}
-              {sideOption === "AI" ? <AiComponent /> : null}
-              {sideOption === "screen" ? (
-                <div
-                  id="container-screen"
-                  style={{ width: "500px", height: "500px" }}
-                ></div>
-              ) : null}
+              <PrevComponent/>
+                {toggleScreenPublisher && ishospital ? (
+                  <UserVideoComponent streamManager={screenPublisher} customStyle={{display: 'float', minHeight: '100%', cursor: 'none'}} />
+                ) : null}
+                {ismember ? 
+                subscribers
+                .filter((sub)=>sub.stream.typeOfVideo === 'SCREEN')
+                .map((sub) => (
+                  <div
+                    key={sub.id}
+                  >
+                    <UserVideoComponent streamManager={sub} customStyle={{display: 'float', minHeight: '100%', cursor: 'none'}}/>
+                  </div>
+                ))
+                : null}
               <div
                 style={{
                   marginTop: "20px",
@@ -520,30 +534,7 @@ const VideoChatPage: React.FC = () => {
                 안녕하세요?
               </div>
             </div>
-            <StyleSidebar>
-              <div
-                id="session-sidebar"
-                className="flex flex-col justify-center items-center"
-              >
-                <Button
-                  width="60px"
-                  content="상담"
-                  onClick={() => handleChangeComponent("prev")}
-                />
-                <Button
-                  width="60px"
-                  content="AI"
-                  onClick={() => handleChangeComponent("AI")}
-                />
-                <Button
-                  width="60px"
-                  content="화면"
-                  onClick={() => handleChangeComponent("screen")}
-                />
-              </div>
-            </StyleSidebar>
           </div>
-
           <div
             style={{
               position: "fixed",
@@ -565,7 +556,13 @@ const VideoChatPage: React.FC = () => {
                 <Button content="캠 on/off" onClick={camOnOff} />
                 <Button content="소리 on/off" onClick={soundOnOff} />
                 <Button content="소리조절" onClick={soundControl} />
-                <Button content="상담 나가기" onClick={roomOut} />
+                <Button
+                  width="60px"
+                  content="화면"
+                  onClick={toggleScreenShare}
+                  customStyles={{display: ishospital ? 'inline-block' : 'none'}}
+                />
+                <Button content="상담 나가기" onClick={leaveSession} />
               </div>
               <div>
                 <Button content="채팅" onClick={handleShowBox} />

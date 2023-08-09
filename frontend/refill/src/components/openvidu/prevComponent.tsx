@@ -8,5 +8,9 @@ const StylePrev = styled.div`
 `;
 
 export function PrevComponent() {
-  return <StylePrev>이전 상담 기록</StylePrev>;
+  return (
+    <StylePrev>
+
+    </StylePrev>
+  )
 }
