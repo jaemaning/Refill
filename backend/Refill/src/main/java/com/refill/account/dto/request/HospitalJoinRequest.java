@@ -2,6 +2,7 @@ package com.refill.account.dto.request;
 
 import java.math.BigDecimal;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 public record HospitalJoinRequest(
@@ -10,8 +11,8 @@ public record HospitalJoinRequest(
     @NotBlank String name,
     @NotBlank String address,
     @NotBlank String postalCode,
-    @NotBlank BigDecimal latitude,
-    @NotBlank BigDecimal longitude,
+    @NotNull BigDecimal latitude,
+    @NotNull BigDecimal longitude,
     @NotBlank String tel,
     @NotBlank String email
 ) {
