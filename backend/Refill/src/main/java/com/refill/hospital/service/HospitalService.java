@@ -15,7 +15,6 @@ import com.refill.global.service.AmazonS3Service;
 import com.refill.hospital.dto.request.HospitalInfoUpdateRequest;
 import com.refill.hospital.dto.request.HospitalLocationRequest;
 import com.refill.hospital.dto.response.HospitalDetailResponse;
-import com.refill.hospital.dto.response.HospitalOperatingHourResponse;
 import com.refill.hospital.dto.response.HospitalResponse;
 import com.refill.hospital.dto.response.HospitalSearchByLocationResponse;
 import com.refill.hospital.entity.Hospital;
@@ -43,7 +42,6 @@ public class HospitalService {
     private final DoctorService doctorService;
     private final EducationBackgroundRepository educationBackgroundRepository;
     private final MajorAreaRepository majorAreaRepository;
-    private final HospitalOperatingHourService hospitalOperatingHourService;
 
 
     @Transactional(readOnly = true)
@@ -153,11 +151,7 @@ public class HospitalService {
 
     @Transactional
     public HospitalDetailResponse getHospitalDetail(Long id) {
-
-        Hospital hospital = findById(id);
-        List<HospitalOperatingHourResponse> operatingHourResponses = hospitalOperatingHourService.getOperatingHours(hospital.getLoginId());
-
-        return new HospitalDetailResponse(hospital, operatingHourResponses);
+        return new HospitalDetailResponse(findById(id));
     }
 
     private Double zoomLevelToRadius(Integer zoomLevel) {
