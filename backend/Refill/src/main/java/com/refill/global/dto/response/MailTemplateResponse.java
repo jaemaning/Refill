@@ -34,7 +34,7 @@ public class MailTemplateResponse {
     <body>
         <div class="container">
             <div class="header">
-                <img src="https://via.placeholder.com/150" alt="Company Logo">
+                <img src="https://ssafyfinal.s3.ap-northeast-2.amazonaws.com/assets/logo_final.png" alt="Company Logo">
             </div>
             <div class="content">
                 <h2>{{Subject}}</h2>
