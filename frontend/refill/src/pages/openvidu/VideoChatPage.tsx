@@ -6,6 +6,7 @@ import {
   StreamManager,
   Publisher,
   Device,
+  Stream,
 } from "openvidu-browser";
 import axios from "axios";
 import UserVideoComponent from "./UserVideoComponent";
@@ -39,14 +40,17 @@ const VideoChatPage: React.FC = () => {
     "Participant" + Math.floor(Math.random() * 100),
   );
   const [session, setSession] = useState<Session | undefined>(undefined);
+  const [screenSession,setScreenSession] = useState<Session | undefined>(undefined);
   const [mainStreamManager, setMainStreamManager] = useState<
     StreamManager | undefined
   >(undefined);
   const [publisher, setPublisher] = useState<Publisher | undefined>(undefined);
+  // const [screenPublisher, setScreenPublisher] = useState<Publisher|undefined>(undefined);
   const [subscribers, setSubscribers] = useState<StreamManager[]>([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState<Device | undefined>(undefined);
   const [showChat, setShowChat] = useState(false);
   const [sideOption, setSideOption] = useState<string>("prev");
+  const [screenShareStream, setScreenShareStream] = useState<Stream | null>(null);
 
   const inputref = useRef<HTMLInputElement>(null)
   const chatLogref = useRef<HTMLInputElement>(null)
@@ -190,11 +194,18 @@ const VideoChatPage: React.FC = () => {
     const OV = new OpenVidu();
     const mySession = OV.initSession();
     setSession(mySession);
+    
+    const OVS = new OpenVidu();
+    const myScreenSession = OVS.initSession();
+    setScreenSession(myScreenSession);
 
     // Specify the actions when events take place in the session
     mySession.on("streamCreated", (event) => {
-      const subscriber = mySession.subscribe(event.stream, undefined);
-      setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
+      if (event.stream !== screenShareStream ) {
+        console.log("??? 이게 뭔데 그래서", event.stream, screenShareStream, event.stream == screenShareStream)
+        const subscriber = mySession.subscribe(event.stream, undefined);
+        setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
+      }
     });
 
     mySession.on("streamDestroyed", (event) => {
@@ -218,19 +229,14 @@ const VideoChatPage: React.FC = () => {
       }
     })
 
-    // mySession.on(`signal:${}`,(event : any) : void => {
-    //   const msg = JSON.parse(event.data).message;
-    //   setMessage([...message, msg])
-    // })
-
-    console.log('오픈비두 ?',OV)
-
     try {
       const token = await getToken();
-      console.log(222)
+      const tokenScreen = await getToken();
       await mySession.connect(token, { clientData: myUserName });
+      await myScreenSession.connect(tokenScreen, { clientData: myUserName });
+      // await myScreenSession.connect(token, { clientData: myUserName });
 
-      const publisher = await OV.initPublisherAsync(undefined, {
+      const publisher = await OV.initPublisherAsync('container-video', {
         audioSource: undefined,
         videoSource: undefined,
         publishAudio: true,
@@ -241,8 +247,20 @@ const VideoChatPage: React.FC = () => {
         mirror: false,
       });
 
-      // 여기부터 저 끝까지 createPublish
       mySession.publish(publisher);
+      
+      // 이제부터 screen 부분
+      const screenPublisher = await OV.initPublisherAsync('container-screen', {
+        videoSource: "screen", // 화면 공유를 위해 'screen'을 지정
+        publishAudio: false,   // 오디오를 포함할 것인지 여부
+        publishVideo: true,    // 비디오를 포함할 것인지 여부
+        resolution: '1280x720', // 스크린 공유의 해상도
+        frameRate: 30,         // 스크린 공유의 프레임 레이트
+        insertMode: 'APPEND',  // 비디오가 타겟 엘리먼트에 삽입되는 방식
+        mirror: false,          // 로컬 비디오 미러링 여부
+      })
+      setScreenShareStream(screenPublisher.stream);
+      myScreenSession.publish(screenPublisher)
 
       const devices = await OV.getDevices();
       const videoDevices = devices.filter(
@@ -258,6 +276,7 @@ const VideoChatPage: React.FC = () => {
       setCurrentVideoDevice(currentVideoDevice);
       setMainStreamManager(publisher);
       setPublisher(publisher);
+      console.log(subscribers)
     } catch (error) {
       console.log("There was an error connecting to the session:", error);
     }
@@ -270,6 +289,7 @@ const VideoChatPage: React.FC = () => {
 
     // Empty all properties...
     setSession(undefined);
+    setScreenSession(undefined);
     setSubscribers([]);
     setMySessionId("SessionA");
     setMyUserName("Participant" + Math.floor(Math.random() * 100));
@@ -306,11 +326,13 @@ const VideoChatPage: React.FC = () => {
 
     // Empty all properties...
     setSession(undefined);
+    setScreenSession(undefined);
     setSubscribers([]);
     setMySessionId("SessionA");
     setMyUserName("Participant" + Math.floor(Math.random() * 100));
     setMainStreamManager(undefined);
     setPublisher(undefined);
+    setCurrentVideoDevice(undefined);
   };
 
   const accessToken = token;
@@ -350,7 +372,6 @@ const VideoChatPage: React.FC = () => {
   };
 
   const handleShowBox = () => {
-    console.log(11)
     console.log(showChat)
     setShowChat(!showChat)
   }
@@ -462,7 +483,7 @@ const VideoChatPage: React.FC = () => {
                  ? <AiComponent />
                  : null }
                 {sideOption === 'screen'
-                 ? <ScreenComponent />
+                 ? <div id='container-screen' style={{ width:'500px', height:'500px' }}></div>
                  : null }
                 <div style={{ marginTop: "20px", height: '30%', backgroundColor: '#eeeeee' }}>
                   안녕하세요?
@@ -500,7 +521,7 @@ const VideoChatPage: React.FC = () => {
               </div>    
             </div>
           </div>
-          <div style={{position: "absolute", bottom: '50px', right: '80px', minWidth: '350px', minHeight:'500px', backgroundColor: '#eeeeee', display: showChat ? 'block' : 'none', borderRadius: '7px'}}>
+          <div style={{position: "absolute", bottom: '70px', right: '70px', minWidth: '350px', minHeight:'500px', backgroundColor: '#eeeeee', display: showChat ? 'block' : 'none', borderRadius: '7px'}}>
             <div ref={chatLogref}>
               {messageList.map(({ message, nickname }, idx) => (
                 <ChatLog
