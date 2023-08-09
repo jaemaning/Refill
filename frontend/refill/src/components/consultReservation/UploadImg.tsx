@@ -18,10 +18,10 @@ const UploadImg: React.FC<UploadImgProps> = ({
 }) => {
   const [imgFile, setImgFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [modalOpen, setModalOpen] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false);
 
   const nextProgress = () => {
-    setModalOpen(true)
+    setModalOpen(true);
     return;
   };
 
@@ -48,7 +48,7 @@ const UploadImg: React.FC<UploadImgProps> = ({
 
   return (
     <div>
-      <CompleteCompo ModalOpen={modalOpen}/>
+      <CompleteCompo ModalOpen={modalOpen} />
       <CalendarMonthOutlinedIcon /> {selectedDate}
       <hr className="border-2 border-black my-2" />
       <AccessTimeIcon />

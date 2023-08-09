@@ -65,9 +65,6 @@ const SelectDoctorAndTime: React.FC = () => {
 
   // 병원 정보 가져오기
 
-
-
-
   return (
     <div className="m-2 py-2">
       {isFirst ? (

@@ -2,7 +2,7 @@ import React from "react";
 import CheckIcon from "@mui/icons-material/Check";
 import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 import CloseIcon from "@mui/icons-material/Close";
-import "styles/Modal.css"
+import "styles/Modal.css";
 
 interface CompleteCompoProps {
   ModalOpen: boolean;
