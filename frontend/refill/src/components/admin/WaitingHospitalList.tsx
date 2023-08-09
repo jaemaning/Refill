@@ -3,17 +3,8 @@ import axios from 'axios';
 import { RootState } from "store/reducers";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
-interface WaitingHospitalResponse {
-  id: number;
-  loginId: string;
-  name: string;
-  address: string;
-  tel: string;
-  email: string;
-  hospitalProfileImg: string;
-  registrationImg: string;
-}
+import HospitalDetailModal from './HospitalDetailModal';
+import { WaitingHospitalResponse } from './adminTypes';
 
 const WaitingHospitalList: React.FC = () => {
   const token: string = useSelector((state: RootState) => state.login.token);
@@ -80,6 +71,16 @@ const WaitingHospitalList: React.FC = () => {
     }
   }
 
+  const [selectedHospital, setSelectedHospital] = React.useState<WaitingHospitalResponse | null>(null);
+
+  const handleOpenModal = (hospital: WaitingHospitalResponse) => {
+    setSelectedHospital(hospital);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedHospital(null);
+  };
+
   
 
 
@@ -88,43 +89,27 @@ const WaitingHospitalList: React.FC = () => {
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      {/* 간단한 테이블 출력 */}
-      <table style={{ margin: 'auto' }}>       
-       <thead>
-          <tr>
-            <th>ID</th>
-            <th>Login ID</th>
-            <th>Name</th>
-            <th>Address</th>
-            <th>Tel</th>
-            <th>Email</th>
-            <th>Profile Image</th>
-            <th>Registration Image</th>
-          </tr>
-        </thead>
-        <tbody>
-          {hospitals.map(hospital => (
-            <tr key={hospital.id}>
-              <td>{hospital.id}</td>
-              <td>{hospital.loginId}</td>
-              <td>{hospital.name}</td>
-              <td>{hospital.address}</td>
-              <td>{hospital.tel}</td>
-              <td>{hospital.email}</td>
-              <td><img src={hospital.hospitalProfileImg} alt="Profile" width="50" /></td>
-              <td><img src={hospital.registrationImg} alt="Registration" width="50" /></td>
-              <td>
-                <button onClick={() => handleAccept(hospital.id)}>승인</button>
-                <button onClick={() => handleReject(hospital.id)}>거절</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <>
+      <h2 className="text-2xl font-bold mb-4">병원 가입 대기</h2>
 
-    </div>
-  );
+      {hospitals.map(hospital => (
+        <div key={hospital.id} className="flex items-center justify-between mb-4 p-4 border-t border-b min-w-[600px]">
+          <img src={hospital.hospitalProfileImg} alt="Profile" width="50" onClick={() => handleOpenModal(hospital)} className="cursor-pointer" />
+          <div className="ml-4">
+            <div className="font-medium">{hospital.name}</div>
+            <div className="text-sm text-gray-600">{hospital.address}</div>
+          </div>
+          <div className="flex space-x-2"> {/* 버튼들을 묶는 부모 div */}
+          <button onClick={() => handleAccept(hospital.id)} className="text-green-500 border rounded p-2 hover:bg-green-100">승인</button>
+          <button onClick={() => handleReject(hospital.id)} style={{ color: 'red' }} className="border rounded p-2 hover:bg-red-100">거절</button> {/* 임시로 인라인 스타일 사용 */}
+          <button onClick={() => handleOpenModal(hospital)} className="text-blue-500 border rounded p-2 hover:bg-blue-100">상세</button>
+        </div>
+        </div>
+      ))}
+
+      {selectedHospital && <HospitalDetailModal hospital={selectedHospital} onClose={handleCloseModal} />}
+    </>
+);
 }
 
 export default WaitingHospitalList;

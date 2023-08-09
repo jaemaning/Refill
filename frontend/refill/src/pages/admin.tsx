@@ -2,6 +2,7 @@ import * as React from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import WaitingHospitalList from 'components/admin/WaitingHospitalList';
+import ReportReviewList from 'components/admin/ReportReviewList';
 
 // react hooks 3대장
 // useSelector
@@ -22,14 +23,16 @@ interface WaitingHospitalResponse {
 
 const Admin: React.FC = () => {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div className="flex flex-col h-full">
       <Navbar />
-
-      <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', padding: '0 10%' }}>
-        <WaitingHospitalList />
-        {/* 여기에 '신고 내역 관리' 컴포넌트를 배치할 예정입니다. */}
-      </div>
-
+      <main className="flex-grow flex justify-center mt-8 px-4 lg:px-0">
+        <div className="flex-shrink-0 mr-1000px"> 
+          <WaitingHospitalList />
+        </div>
+        <div className="flex-shrink-0">
+          <ReportReviewList />
+        </div>
+      </main>
       <Footer />
     </div>
   );
