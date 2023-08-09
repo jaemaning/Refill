@@ -45,11 +45,8 @@ public class AmazonSESService {
         }
     }
 
-    private void sendEmailWithTemplate(String email, String text) {
+    private void sendEmailWithTemplate(String email, Map<String, String> data) {
 
-        Map<String, String> data = new HashMap<>();
-        data.put("Subject", "아이디를 보내드립니다.");
-        data.put("Message", text);
         String templateDate = new Gson().toJson(data);
 
         SendTemplatedEmailRequest request = new SendTemplatedEmailRequest()
@@ -68,13 +65,23 @@ public class AmazonSESService {
     }
 
     public void sendTempPassword(String email, String tempPassword) {
-        String text = String.format("비밀번호는 '%s'입니다.", tempPassword);
-        sendEmailWithTemplate(email, text);
+        String subject = "임시 비밀번호를 전송해드립니다.";
+        String message = "비밀번호는 '%s' 입니다.".formatted(tempPassword);
+
+        Map<String, String> data = new HashMap<>();
+        data.put("Subject", subject);
+        data.put("Message", message);
+        sendEmailWithTemplate(email, data);
     }
 
     public void sendLoginId(String email, String loginId) {
-        String text = String.format("아이디는 '%s'입니다.", loginId);
-        sendEmailWithTemplate(email,  text);
+        String subject = "요청하신 아이디를 전송해드립니다.";
+        String message = "아이디는 '%s'입니다.".formatted(loginId);
+
+        Map<String, String> data = new HashMap<>();
+        data.put("Subject", subject);
+        data.put("Message", message);
+        sendEmailWithTemplate(email, data);
     }
 
 //    public void sendTempPassword(String email, String tempPassword) {
