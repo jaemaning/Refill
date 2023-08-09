@@ -78,8 +78,9 @@ public class HospitalController {
     public ResponseEntity<HospitalDetailResponse> getHospitalDetail(@PathVariable Long hospitalId)
     {
         log.debug("hospitalId: {}", hospitalId);
-        HospitalDetailResponse hospitalDetailResponse = hospitalService.getHospitalDetail(
-            hospitalId);
+        HospitalDetailResponse hospitalDetailResponse = hospitalService.getHospitalDetail(hospitalId);
+
+
         return ResponseEntity.ok()
                              .body(hospitalDetailResponse);
     }
