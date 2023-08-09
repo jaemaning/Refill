@@ -12,3 +12,16 @@ export type Loginstate = {
   islogin: boolean;
   token: string;
 };
+
+export type FindIdRequest = {
+  email: string;
+};
+
+export type FindPasswordRequest = {
+  loginId: string;
+  email: string;
+};
+
+export type FindResult = {
+  message: string;
+};
