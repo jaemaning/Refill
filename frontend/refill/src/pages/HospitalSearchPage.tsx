@@ -12,7 +12,7 @@ import homeMarker from "assets/homePin2.svg";
 import axios from "axios";
 import SearchCard from "components/search/SearchCard";
 import { useKakaoMapScript } from "hooks/UseKakaoMap";
-import { useSelector } from 'react-redux';
+import { useSelector } from "react-redux";
 import { RootState } from "store/reducers";
 
 const max_width = "1350";
@@ -158,9 +158,9 @@ export const HospitalSearch: React.FC = () => {
         name: searched,
         addr: dropSelected,
       };
-      const accessToken = token
+      const accessToken = token;
       const headers = { Authorization: `Bearer ${accessToken}` };
-  
+
       axios
         .get(url, { params: formData, headers: headers })
         .then((response) => {
@@ -173,9 +173,8 @@ export const HospitalSearch: React.FC = () => {
         });
       setSearched("");
     } else {
-      console.log('error')
+      console.log("error");
     }
-
   };
 
   // 거리순보기
@@ -235,25 +234,23 @@ export const HospitalSearch: React.FC = () => {
   // 지도 - 병원 마커 띄우기
   // 맵을 그 위치 중심으로 새로 만들고 배열을 바꾼 다음 띄우자!
   const makeHospitalMarker = () => {
-
     if (islogin === true) {
-
       // 정보를 가져오고 이 정보를 통해 추후 병원 데이터를 아래에 입력 진행 비동기로
       const center = map.current.getCenter();
       nowCenter.current = [center.Ma, center.La];
       console.log("now", nowCenter.current);
-  
+
       // 지도의 현재 영역을 얻어옵니다
       const bounds = map.current.getBounds();
-  
+
       // 영역의 남서쪽 좌표를 얻어옵니다
       const swLatLng = bounds.getSouthWest();
       console.log("sw", swLatLng);
-  
+
       // 영역의 북동쪽 좌표를 얻어옵니다
       const neLatLng = bounds.getNorthEast();
       console.log("ne", neLatLng);
-  
+
       const url = "api/v1/hospital/search/location";
       const formData: TypeRequestMap = {
         sLat: swLatLng.Ma,
@@ -266,10 +263,12 @@ export const HospitalSearch: React.FC = () => {
       const accessToken = token;
       const headers = { Authorization: `Bearer ${accessToken}` };
       // axios 요청으로 병원 데이터 변경하기
-      axios.get(url, { params: formData, headers: headers }).then((response) => {
-        console.log(response.data);
-        setHospitals(response.data);
-      });
+      axios
+        .get(url, { params: formData, headers: headers })
+        .then((response) => {
+          console.log(response.data);
+          setHospitals(response.data);
+        });
     }
   };
 
