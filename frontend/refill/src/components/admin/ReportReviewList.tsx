@@ -3,34 +3,9 @@ import axios from 'axios';
 import { RootState } from "store/reducers";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { ReportReviewResponse } from './adminTypes';
+import ReportDetailModal from './ReportDetailModal';
 
-interface ReviewResponse {
-    reviewId: number;
-    score: number;
-    content: string;
-    memberId: number;
-    nickname: string;
-    doctorId: number;
-    doctorName: string;
-    hospitalId: number;
-    hospitalName: string;
-    updateDate: string; 
-    category: string;
-  }
-  
-  enum Role {
-    MEMBER,
-    HOSPITAL
-  }
-  
-  interface ReportReviewResponse {
-    reportId: number;
-    reviewResponse: ReviewResponse;
-    reporterType: Role;
-    reporterId: number;
-    reporterName: string;
-    content: string;
-  }
 
 const ReportReviewList: React.FC = () => {
   const token: string = useSelector((state: RootState) => state.login.token);
@@ -39,6 +14,16 @@ const ReportReviewList: React.FC = () => {
 
   const [reports, setReports] = React.useState<ReportReviewResponse[]>([]);
   const [loading, setLoading] = React.useState(true);
+
+  const [selectedReport, setSelectedReport] = React.useState<ReportReviewResponse | null>(null);
+
+  const handleOpenModal = (report: ReportReviewResponse) => {
+    setSelectedReport(report);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedReport(null);
+  };
 
   const fetchReports = async () => {
     try {
@@ -70,28 +55,23 @@ const ReportReviewList: React.FC = () => {
   }
 
   return (
-    <table style={{ margin: 'auto' }}>
-      <thead>
-        <tr>
-          <th>Report ID</th>
-          <th>Reporter Type</th>
-          <th>Reporter ID</th>
-          <th>Reporter Name</th>
-          <th>Content</th>
-        </tr>
-      </thead>
-      <tbody>
-        {reports.map(report => (
-          <tr key={report.reportId}>
-            <td>{report.reportId}</td>
-            <td>{report.reporterType}</td>
-            <td>{report.reporterId}</td>
-            <td>{report.reporterName}</td>
-            <td>{report.content}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <>
+      <h2 className="text-2xl font-bold mb-4">리뷰 신고 목록</h2>
+
+      {reports.map(report => (
+        <div key={report.reportId} className="flex items-center justify-between mb-4 p-4 border-t border-b">
+          <div className="ml-4">
+            <div className="font-medium">{report.reporterName}</div>
+            <div className="text-sm text-gray-600">{report.content}</div>
+          </div>
+          <div className="flex space-x-2">
+            <button onClick={() => handleOpenModal(report)} className="text-blue-500 border rounded p-2 hover:bg-blue-100">상세</button>
+          </div>
+        </div>
+      ))}
+
+      {selectedReport && <ReportDetailModal report={selectedReport} onClose={handleCloseModal} />}
+    </>
   );
 }
 
