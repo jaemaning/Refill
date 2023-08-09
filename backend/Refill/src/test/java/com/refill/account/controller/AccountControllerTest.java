@@ -89,7 +89,7 @@ class AccountControllerTest extends ControllerTest {
                        preprocessRequest(prettyPrint()),
                        requestParts(
                            partWithName("memberJoinRequest").description("회원가입 폼"),
-                           partWithName("profImg").description("프로필 사진")
+                           partWithName("profileImg").description("프로필 사진")
                                                   .optional()
                        ),
                        requestPartFields("memberJoinRequest",
