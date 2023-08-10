@@ -234,6 +234,8 @@ public class AccountService {
     @Transactional
     public EmailVerifyResponse verifyEmail(EmailVerifyRequest emailVerifyRequest) {
 
+        isEmailDuplicated(emailVerifyRequest.email());
+
         String code = getRandomCode(6);
         amazonSESService.sendCode(emailVerifyRequest.email(), code);
 
