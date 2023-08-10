@@ -2,6 +2,7 @@ package com.refill.member.entity;
 
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.aidiagnosis.entity.AiDiagnosis;
+import com.refill.consulting.entity.Consulting;
 import com.refill.global.entity.Role;
 import com.refill.global.entity.UserInfo;
 import com.refill.member.dto.request.MemberInfoUpdateRequest;
@@ -52,6 +53,9 @@ public class Member extends UserInfo {
 
     @OneToMany(mappedBy = "member")
     private List<Reservation> reservationList;
+
+    @OneToMany(mappedBy = "member")
+    private List<Consulting> consultingList;
 
     public static Member from(MemberJoinRequest memberJoinRequest) {
         return Member.builder()

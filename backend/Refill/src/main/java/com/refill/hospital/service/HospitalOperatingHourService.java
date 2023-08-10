@@ -39,9 +39,9 @@ public class HospitalOperatingHourService {
     }
 
     @Transactional(readOnly = true)
-    public List<HospitalOperatingHourResponse> getOperatingHours(String loginId) {
+    public List<HospitalOperatingHourResponse> getOperatingHours(Long id) {
 
-        Hospital hospital = hospitalService.findByLoginId(loginId);
+        Hospital hospital = hospitalService.findById(id);
 
         return hospitalOperatingHourRepository.findAllByHospital(hospital)
                                               .stream()
@@ -50,10 +50,10 @@ public class HospitalOperatingHourService {
     }
 
     @Transactional(readOnly = true)
-    public HospitalDetailResponse getDetailHospitalInfo(Long loginId) {
+    public HospitalDetailResponse getDetailHospitalInfo(Long id) {
 
-        Hospital hospital = hospitalService.findById(loginId);
-        List<HospitalOperatingHourResponse> operatingHourResponses = getOperatingHours(hospital.getLoginId());
+        Hospital hospital = hospitalService.findById(id);
+        List<HospitalOperatingHourResponse> operatingHourResponses = getOperatingHours(id);
 
         return new HospitalDetailResponse(hospital, operatingHourResponses);
 
