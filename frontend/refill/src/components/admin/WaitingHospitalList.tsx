@@ -40,7 +40,9 @@ const WaitingHospitalList: React.FC = () => {
   }, []);
 
   const handleAccept = async (id: number) => {
+    if(confirm("정말 승인하시겠습니까?")){
     try {
+      
       const response = await axios.get<string>(`api/v1/admin/hospitals/accept/${id}`, {
         headers: {
           "Content-Type": "application/json",
@@ -53,9 +55,14 @@ const WaitingHospitalList: React.FC = () => {
     } catch (error) {
       console.error("Error accepting hospital:", error);
     }
+  }else {
+    alert("취소하셨습니다.");
+    return;
+  }
   }
 
   const handleReject = async (id: number) => {
+    if(confirm("정말 거절하시겠습니까?")){
     try {
       const response = await axios.get<string>(`api/v1/admin/hospitals/reject/${id}`, {
         headers: {
@@ -69,6 +76,11 @@ const WaitingHospitalList: React.FC = () => {
     } catch (error) {
       console.error("Error rejecting hospital:", error);
     }
+  }else {
+    alert("취소하셨습니다.");
+    return;
+  }
+
   }
 
   const [selectedHospital, setSelectedHospital] = React.useState<WaitingHospitalResponse | null>(null);
@@ -93,7 +105,7 @@ const WaitingHospitalList: React.FC = () => {
       <h2 className="text-2xl font-bold mb-4">병원 가입 대기</h2>
 
       {hospitals.map(hospital => (
-        <div key={hospital.id} className="flex items-center justify-between mb-4 p-4 border-t border-b min-w-[600px]">
+        <div key={hospital.id} className="flex items-center justify-between mb-4 p-4 border-t border-b min-w-[400px]">
           <img src={hospital.hospitalProfileImg} alt="Profile" width="50" onClick={() => handleOpenModal(hospital)} className="cursor-pointer" />
           <div className="ml-4">
             <div className="font-medium">{hospital.name}</div>
