@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import AuthService from "auth/auth-service";
 import jwt_decode from "jwt-decode";
@@ -17,7 +18,11 @@ interface User {
 }
 
 const authService = new AuthService();
-const UseLoginForm = (loginId: string, loginPassword: string) => {
+const UseLoginForm = (loginId: string, loginPassword: string, role: number) => {
+  const [check, setCheck] = useState({
+    status: 0,
+    data: { accessToken: "", refreshToken: "" },
+  });
   const dispatch = useDispatch();
 
   const login = async () => {
@@ -27,10 +32,16 @@ const UseLoginForm = (loginId: string, loginPassword: string) => {
     };
 
     try {
+      if (role === 0) {
+        setCheck(await authService.memberlogin(data));
+      } else if (role === 1) {
+        setCheck(await authService.hospitallogin(data));
+      }
+
       const {
         status,
         data: { accessToken, refreshToken },
-      } = await authService.memberlogin(data);
+      } = check;
 
       if (status === 200) {
         console.log("login Success");

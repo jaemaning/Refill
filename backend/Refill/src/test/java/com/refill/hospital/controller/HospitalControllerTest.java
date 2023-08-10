@@ -3,16 +3,21 @@ package com.refill.hospital.controller;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.refill.doctor.dto.request.DoctorJoinRequest;
+import com.refill.doctor.dto.request.DoctorUpdateRequest;
 import com.refill.doctor.entity.Doctor;
 import com.refill.doctor.entity.EducationBackground;
 import com.refill.doctor.entity.MajorArea;
@@ -148,8 +153,16 @@ class HospitalControllerTest extends ControllerTest {
                     .param("curLng", "126.9780")
                     .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
-                    .andDo(print())
                     .andDo(document("hospital/searchByLocation",
+                        preprocessResponse(prettyPrint()),
+                        requestParameters(
+                            parameterWithName("sLat").description("왼쪽 하단 위도"),
+                            parameterWithName("sLng").description("왼쪽 상단 경도"),
+                            parameterWithName("eLat").description("오른쪽 하단 위도"),
+                            parameterWithName("eLng").description("오른쪽 상단 경도"),
+                            parameterWithName("curLat").description("현재 내 위도"),
+                            parameterWithName("curLng").description("현재 내 경도")
+                        ),
                         responseFields(
                             fieldWithPath("[].hospitalResponse.hospitalId").description("병원아이디"),
                             fieldWithPath("[].hospitalResponse.name").description("병원이름"),
@@ -183,6 +196,11 @@ class HospitalControllerTest extends ControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andDo(document("hospital/searchByKeyword",
+                        preprocessResponse(prettyPrint()),
+                        requestParameters(
+                            parameterWithName("name").description("병원 이름"),
+                            parameterWithName("addr").description("병원 주소")
+                        ),
                         responseFields(
                             fieldWithPath("[].hospitalId").description("병원아이디"),
                             fieldWithPath("[].name").description("병원이름"),
@@ -211,6 +229,7 @@ class HospitalControllerTest extends ControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andDo(document("hospital/getHospitalDetail",
+                        preprocessResponse(prettyPrint()),
                         pathParameters(
                             parameterWithName("hospitalId").description("병원 아이디")
                         ),
@@ -266,7 +285,6 @@ class HospitalControllerTest extends ControllerTest {
     @Test
     @DisplayName("병원_정보_수정_테스트")
     public void testModifyHospitalInfo() throws Exception {
-        String requestBody = "{\"name\":\"Updated Hospital\", \"address\":\"Updated Address\"}";
 
         Long hospitalId = 1L;
         LoginInfo mockLoginInfo = new LoginInfo("sample_login_id", Role.ROLE_HOSPITAL);
@@ -301,8 +319,110 @@ class HospitalControllerTest extends ControllerTest {
                 .contentType(MediaType.MULTIPART_FORM_DATA))
                     .andExpect(status().isOk())
                     .andDo(document("hospital/modifyHospital",  // RestDocs를 사용한 문서화
+                        preprocessResponse(prettyPrint()),
                         pathParameters(
                             parameterWithName("hospitalId").description("병원 아이디")
+                        )
+                    ));
+    }
+
+    @Test
+    @DisplayName("의사 등록 테스트")
+    public void registerHospitalDoctor() throws Exception {
+        Long hospitalId = 1L;
+        Long doctorId = 1L;
+        LoginInfo mockLoginInfo = new LoginInfo("sample_login_id", Role.ROLE_HOSPITAL);
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        securityContext.setAuthentication(new TestingAuthenticationToken(mockLoginInfo, null));
+        SecurityContextHolder.setContext(securityContext);
+
+        DoctorJoinRequest mockRequest = new DoctorJoinRequest("신닥터", "상담 잘합니다.", Arrays.asList("서울대졸", "서울대병원"), Arrays.asList("모발이식", "컨설팅"), "123AC-LN-31313");
+        String requestContent = new ObjectMapper().writeValueAsString(mockRequest);
+
+        MockMultipartFile mockRequestPart = new MockMultipartFile("doctorJoinRequest",
+            "request.json", "application/json", requestContent.getBytes());
+        MockMultipartFile mockProfileImg = new MockMultipartFile("profileImg", "profile.jpg",
+            "image/jpeg", "some-image".getBytes());
+        MockMultipartFile mockLicenseImg = new MockMultipartFile("licenseImg",
+            "registration.jpg", "image/jpeg", "some-image".getBytes());
+
+        this.mockMvc.perform(
+            multipart("/api/v1/hospital/{hospitalId}/doctor", hospitalId)
+                .file(mockRequestPart)
+                .file(mockProfileImg)
+                .file(mockLicenseImg)
+                .with(request -> {
+                    request.setMethod("POST");
+                    return request;
+                })
+                .contentType(MediaType.MULTIPART_FORM_DATA))
+                    .andExpect(status().isOk())
+                    .andDo(document("hospital/doctor/register",  // RestDocs를 사용한 문서화
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                            parameterWithName("hospitalId").description("병원 아이디")
+                        )
+                    ));
+    }
+
+    @Test
+    @DisplayName("의사 정보 수정 테스트")
+    public void modifyHospitalDoctor() throws Exception {
+        Long hospitalId = 1L;
+        Long doctorId = 1L;
+        LoginInfo mockLoginInfo = new LoginInfo("sample_login_id", Role.ROLE_HOSPITAL);
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        securityContext.setAuthentication(new TestingAuthenticationToken(mockLoginInfo, null));
+        SecurityContextHolder.setContext(securityContext);
+
+        DoctorUpdateRequest mockRequest = new DoctorUpdateRequest("설명 수정된 설명", Arrays.asList("서울대졸", "서울대병원"), Arrays.asList("모발이식", "컨설팅"));
+        String requestContent = new ObjectMapper().writeValueAsString(mockRequest);
+
+        MockMultipartFile mockRequestPart = new MockMultipartFile("doctorUpdateRequest",
+            "request.json", "application/json", requestContent.getBytes());
+        MockMultipartFile mockProfileImg = new MockMultipartFile("profileImg", "profile.jpg",
+            "image/jpeg", "some-image".getBytes());
+
+        this.mockMvc.perform(
+                multipart("/api/v1/hospital/{hospitalId}/doctor/{doctorId}", hospitalId, doctorId)
+                    .file(mockRequestPart)
+                    .file(mockProfileImg)
+                    .with(request -> {
+                        request.setMethod("PUT");
+                        return request;
+                    })
+                    .contentType(MediaType.MULTIPART_FORM_DATA))
+                    .andExpect(status().isOk())
+                    .andDo(document("hospital/doctor/modify",  // RestDocs를 사용한 문서화
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                            parameterWithName("hospitalId").description("병원 아이디"),
+                            parameterWithName("doctorId").description("의사 아이디")
+                        )
+                    ));
+    }
+
+    @Test
+    @DisplayName("의사 정보 삭제 테스트")
+    public void deleteHospitalDoctor() throws Exception {
+
+        Long hospitalId = 1L;
+        Long doctorId = 1L;
+
+        LoginInfo mockLoginInfo = new LoginInfo("sample_login_id", Role.ROLE_HOSPITAL);
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        securityContext.setAuthentication(new TestingAuthenticationToken(mockLoginInfo, null));
+        SecurityContextHolder.setContext(securityContext);
+
+        this.mockMvc.perform(
+            delete("/api/v1/hospital/{hospitalId}/doctor/{doctorId}", hospitalId, doctorId)
+                    .contentType(MediaType.MULTIPART_FORM_DATA))
+                    .andExpect(status().isOk())
+                    .andDo(document("hospital/doctor/delete",  // RestDocs를 사용한 문서화
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                            parameterWithName("hospitalId").description("병원 아이디"),
+                            parameterWithName("doctorId").description("의사 아이디")
                         )
                     ));
     }

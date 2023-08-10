@@ -15,7 +15,9 @@ interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     | "menuUnselected"
     | "menuSelected"
     | "detailUnselected"
-    | "detailSelected"; // success : 긍정적 성공 파랑 , warning : 경고 노랑, disable : 사용할 수 없음 회색, dnager : 위험 빨강
+    | "detailSelected"
+    | "selectUnselected"
+    | "selectSelected"; // success : 긍정적 성공 파랑 , warning : 경고 노랑, disable : 사용할 수 없음 회색, dnager : 위험 빨강
   size?: "small" | "medium" | "large"; // 폰트 사이즈가 줄고 좌우 여백이 축소
   width?: string;
   customStyles?: CSSObject;
@@ -132,6 +134,14 @@ const TYPE_VARIANTS = {
   detailSelected: {
     backgroundColor: REFILL_COLORS["white"],
     color: REFILL_COLORS["black"],
+  },
+  selectUnselected: {
+    backgroundColor: REFILL_COLORS["grey-2"],
+    color: REFILL_COLORS["black"],
+  },
+  selectSelected: {
+    backgroundColor: REFILL_COLORS["white"],
+    color: REFILL_COLORS["rf-4"],
   },
 };
 
