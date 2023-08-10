@@ -22,7 +22,9 @@ import com.refill.review.exception.ReviewException;
 import com.refill.security.util.LoginInfo;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -69,20 +71,29 @@ public class ConsultingService {
 
 //    @Scheduled(cron = "0 15,45 8-18 * * ?")
 //    @Scheduled(fixedRate = 100000)
-    @Scheduled(cron = "0 35 8-18 * * ?")
+    @Scheduled(cron = "0 55 8-18 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
+
         LocalDateTime now = LocalDateTime.now();//.plusMinutes(BEFORE_CONSULTING_TIME);
         LocalDateTime tmp = LocalDateTime.of(2023, 8, 11, 10, 00);
 
         // 조건문 추가
         List<Reservation> reservationList = reservationRepository.findReservationReady(tmp);
+        log.info("{} makes consulgting", reservationList);
 
         // 돌아가면서 세션 생성 및 토큰 저장
         for (Reservation reservation : reservationList) {
             Member member = reservation.getMember();
             Doctor doctor = reservation.getDoctor();
 
-            Session session = openvidu.createSession();
+            Map<String, Object> params = new HashMap<>();
+            String customSessionId = "session" + reservation.getId().toString();
+            params.put("customSessionId",customSessionId);
+
+            SessionProperties properties = SessionProperties.fromJson(params).build();
+
+
+            Session session = openvidu.createSession(properties);
             String sessionId = session.getSessionId();
             String doctorToken = session.createConnection().getToken();
             String screenShareToken = session.createConnection().getToken();
@@ -97,6 +108,8 @@ public class ConsultingService {
                                               .screenShareToken(screenShareToken)
                                               .reservation(reservation)
                                               .build();
+
+            log.info("{} insert", consulting);
 
             consultingRepository.save(consulting);
         }
