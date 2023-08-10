@@ -69,10 +69,10 @@ public class ConsultingService {
 
 //    @Scheduled(cron = "0 15,45 8-18 * * ?")
 //    @Scheduled(fixedRate = 100000)
-    @Scheduled(cron = "0 56 8-18 * * ?")
+    @Scheduled(cron = "0 35 8-18 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
         LocalDateTime now = LocalDateTime.now();//.plusMinutes(BEFORE_CONSULTING_TIME);
-        LocalDateTime tmp = LocalDateTime.of(2023, 8, 10, 10, 00);
+        LocalDateTime tmp = LocalDateTime.of(2023, 8, 11, 10, 00);
 
         // 조건문 추가
         List<Reservation> reservationList = reservationRepository.findReservationReady(tmp);
@@ -85,6 +85,7 @@ public class ConsultingService {
             Session session = openvidu.createSession();
             String sessionId = session.getSessionId();
             String doctorToken = session.createConnection().getToken();
+            String screenShareToken = session.createConnection().getToken();
             String memberToken = session.createConnection().getToken();
 
             Consulting consulting = Consulting.builder()
@@ -93,6 +94,7 @@ public class ConsultingService {
                                               .sessionId(sessionId)
                                               .memberToken(memberToken)
                                               .doctorToken(doctorToken)
+                                              .screenShareToken(screenShareToken)
                                               .reservation(reservation)
                                               .build();
 
@@ -106,9 +108,10 @@ public class ConsultingService {
 
         String sessionId = "";
         String token = "";
+        String screenShareToken = "";
 
         if(consulting == null) {
-            return new ConnectionTokenResponse(sessionId, token);
+            return new ConnectionTokenResponse(sessionId, token, screenShareToken);
         }
         else {
             sessionId = consulting.getSessionId();
@@ -117,8 +120,9 @@ public class ConsultingService {
             }
             else {
                 token = consulting.getDoctorToken();
+                screenShareToken = consulting.getScreenShareToken();
             }
-            return new ConnectionTokenResponse(sessionId, token);
+            return new ConnectionTokenResponse(sessionId, token, screenShareToken);
         }
     }
 
