@@ -41,7 +41,13 @@ public enum ErrorCode {
     ALREADY_RESERVED("RES01", HttpStatus.BAD_REQUEST, "이미 예약된 시간입니다."),
     MEMBER_RESERVATION_DUPLICATED("RES02", HttpStatus.BAD_REQUEST, "이미 같은 시간에 예약하셨습니다."),
 
-    REPORT_NOT_FOUND("RPT01", HttpStatus.NOT_FOUND, "존재하지 않는 신고입니다.");
+    REPORT_NOT_FOUND("RPT01", HttpStatus.NOT_FOUND, "존재하지 않는 신고입니다."),
+
+    /* Consulting Exception */
+    CONSULTING_NOT_YET("CON01",HttpStatus.BAD_REQUEST,"방이 아직 생성되지 않았습니다."),
+    SESSION_FAIL("CON02",HttpStatus.BAD_REQUEST,"해당 세션이 존재하지 않습니다."),
+    CONSULTING_DETAIL_ERROR("CON03",HttpStatus.BAD_REQUEST,"해당 삼당 기록이 존재하지 않습니다.");
+
 
     private final String code;
     private final HttpStatus httpStatus;
