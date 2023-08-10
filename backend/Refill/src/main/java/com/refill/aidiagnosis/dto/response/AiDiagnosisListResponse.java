@@ -7,10 +7,14 @@ public record AiDiagnosisListResponse(
     Long id,
     LocalDate diagnosisDate,
     Integer hairLossScore,
+    String certainty,
     String diagnosisImage
 ) {
 
     public static AiDiagnosisListResponse from(AiDiagnosis aiDiagnosis) {
-        return new AiDiagnosisListResponse(aiDiagnosis.getId(), aiDiagnosis.getCreatedAt().toLocalDate(), aiDiagnosis.getHairLossScore(), aiDiagnosis.getDiagnosisImage());
+        return new AiDiagnosisListResponse(aiDiagnosis.getId(), aiDiagnosis.getCreatedAt()
+                                                                           .toLocalDate(),
+            aiDiagnosis.getHairLossScore(),
+            aiDiagnosis.getCertainty(), aiDiagnosis.getDiagnosisImage());
     }
 }
