@@ -14,7 +14,7 @@ import Button from "components/elements/Button";
 import styled from "@emotion/styled";
 import { useSelector } from "react-redux";
 import { RootState } from "store/reducers";
-import { PrevComponent } from "components/openvidu/prevComponent";
+import PrevComponent from "components/openvidu/prevComponent";
 // import { ScreenComponent } from "components/openvidu/screenComponent";
 import ChatLog from "components/openvidu/chatLogComponent";
 // import Chat from "../../components/openvidu/chatComponent";
@@ -505,14 +505,15 @@ const VideoChatPage: React.FC = () => {
                 display: "flex",
                 flexDirection: "column",
                 width: "48%",
-                minHeight: "500px",
-                position: 'relative'
+                minHeight: "100%",
               }}
             >
-              <PrevComponent/>
-                {toggleScreenPublisher && ishospital ? (
-                  <UserVideoComponent streamManager={screenPublisher} customStyle={{display: 'float', minHeight: '100%', cursor: 'none'}} />
-                ) : null}
+              <PrevComponent>
+                <div>
+                  {toggleScreenPublisher && ishospital ? (
+                    <UserVideoComponent streamManager={screenPublisher} />
+                  ) : null}
+                </div>
                 {ismember ? 
                 subscribers
                 .filter((sub)=>sub.stream.typeOfVideo === 'SCREEN')
@@ -520,19 +521,25 @@ const VideoChatPage: React.FC = () => {
                   <div
                     key={sub.id}
                   >
-                    <UserVideoComponent streamManager={sub} customStyle={{display: 'float', minHeight: '100%', cursor: 'none'}}/>
+                    <UserVideoComponent streamManager={sub}/>
                   </div>
                 ))
                 : null}
-              <div
+                <div style={{display : toggleScreenPublisher ? 'none' : 'block'}}>
+                  여기에 이제 진짜 이전 자료들이 들어옵니다.
+                </div>
+              </PrevComponent>
+              <textarea
+                placeholder= "진료 소견서를 작성해주세요. 소견서는 자동 저장됩니다."
                 style={{
                   marginTop: "20px",
                   height: "30%",
                   backgroundColor: "#eeeeee",
+                  border: "2px solid black",
                 }}
               >
-                안녕하세요?
-              </div>
+
+              </textarea>
             </div>
           </div>
           <div

@@ -13,7 +13,7 @@ const UserVideoComponent: React.FC<UserVideoComponentProps> = ({
   return (
     <>
       {streamManager !== undefined ? (
-        <OpenViduVideoComponent streamManager={streamManager} customStyle={customStyle}/>
+        <OpenViduVideoComponent streamManager={streamManager} />
       ) : null}
     </>
   );
