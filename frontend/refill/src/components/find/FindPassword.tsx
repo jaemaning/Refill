@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import UseFindPasswordForm from "hooks/UseFindPassword";
 import Button from "../../components/elements/Button";
 
-
 interface checkmember {
   ismember: boolean;
 }

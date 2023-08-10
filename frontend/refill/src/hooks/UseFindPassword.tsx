@@ -24,7 +24,6 @@ const UseFindPasswordForm = (loginId: string, email: string, role: boolean) => {
       } = check;
 
       if (status === 200) {
-        console.log("login Success");
         console.log(message);
       }
     } catch (error: any) {

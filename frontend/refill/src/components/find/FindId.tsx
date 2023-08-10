@@ -4,9 +4,10 @@ import Button from "../../components/elements/Button";
 
 interface checkmember {
   ismember: boolean;
+  toggleMembership: () => void;
 }
 
-const FindId: React.FC<checkmember> = ({ ismember }) => {
+const FindId: React.FC<checkmember> = ({ ismember, toggleMembership }) => {
   const [email, setEmail] = useState("");
   const [handleSubmitFindIdForm] = UseFindIdForm(email, ismember);
 
@@ -45,8 +46,14 @@ const FindId: React.FC<checkmember> = ({ ismember }) => {
         />
       </div>
       <div className="text-sm flex justify-center mt-4">
-        <span className="mx-2">일반 회원이 아니십니까?</span>
-        <a href="">병원회원 아이디 찾으러 가기</a>
+        <span className="mx-2">
+          {ismember ? "일반 회원이 아니십니까?" : "병원 회원이 아니십니까?"}
+        </span>
+        <a href="" onClick={toggleMembership}>
+          {ismember
+            ? "병원회원 아이디 찾으러 가기?"
+            : "일반회원 아이디 찾으러 가기"}
+        </a>
       </div>
     </form>
   );
