@@ -17,6 +17,9 @@ import com.refill.hospital.repository.HospitalOperatingHourRepository;
 import com.refill.hospital.repository.HospitalRepository;
 import com.refill.member.entity.Member;
 import com.refill.member.repository.MemberRepository;
+import com.refill.report.entity.Report;
+import com.refill.report.entity.TargetType;
+import com.refill.report.repository.ReportRepository;
 import com.refill.reservation.entity.Reservation;
 import com.refill.reservation.repository.ReservationRepository;
 import com.refill.review.entity.Review;
@@ -48,6 +51,7 @@ public class DataInitializer implements CommandLineRunner {
     private final HospitalOperatingHourRepository hospitalOperatingHourRepository;
     private final ReservationRepository reservationRepository;
     private final AiDiagnosisRepository aiDiagnosisRepository;
+    private final ReportRepository reportRepository;
 
     @Override
     @Transactional
@@ -124,7 +128,7 @@ public class DataInitializer implements CommandLineRunner {
                                         .loginId("hospital" + i)
                                         .loginPassword(
                                             bCryptPasswordEncoder.encode("1234")) //1234
-                                        .role(i == 4 ? Role.ROLE_GUEST : Role.ROLE_HOSPITAL)
+                                        .role(i % 4 == 0 ? Role.ROLE_GUEST : Role.ROLE_HOSPITAL)
                                         .tel("02-2345-3465")
                                         .hospitalBannerImg("https://picsum.photos/600/600/?random")
                                         .hospitalProfileImg("https://picsum.photos/600/600/?random")
@@ -195,6 +199,10 @@ public class DataInitializer implements CommandLineRunner {
                                           .isBlocked(false)
                                           .category(category[(j + k) % content.length]).build();
                     reviewRepository.save(review);
+
+                    Report report = new Report(member.getRole(), member.getId(), review.getId(), "내용이 추잡합니다.", TargetType.REVIEW);
+                    reportRepository.save(report);
+
                 }
 
                 // 예약
