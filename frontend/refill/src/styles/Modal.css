@@ -10,12 +10,15 @@
   align-items: center;
   z-index: 9999;
 }
+
+/* 예약 완료 모달 */
 .complete-modal {
   height: 600px;
   width: 400px;
   background-color: #EEFBF6;
   border: 3px solid #C0F8E3;
 }
+
 .complete-btn {
   border-radius: 10px;
   background-color: #AADAFF;
@@ -27,4 +30,16 @@
 
 .complete-font-color {
   color: #20A4F3;
+}
+
+/* AI진단 모달 */
+.AID-modal {
+  height: 400px;
+  width: 600px;
+}
+
+.AID-modal-font-color {
+  color: #AADAFF;
+  margin-left: 4px;
+  margin-right: 4px;
 }
