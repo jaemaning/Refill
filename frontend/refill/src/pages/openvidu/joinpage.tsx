@@ -1,12 +1,9 @@
 import * as React from 'react';
 import Button from 'components/elements/Button'
-import axios from 'axios';
+// import axios from 'axios';
 
-export interface IJoinPageProps {
 
-}
-
-export function JoinPage (props: IJoinPageProps) {
+const JoinPage = () => {
 
   // const joinSession = () => {
   //   axios
@@ -22,3 +19,5 @@ export function JoinPage (props: IJoinPageProps) {
     </div>
   );
 }
+
+export default JoinPage

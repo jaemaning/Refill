@@ -20,6 +20,7 @@ import ChatLog from "components/openvidu/chatLogComponent";
 // import Chat from "../../components/openvidu/chatComponent";
 
 interface MessageList {
+  connectionId : string;
   nickname: string;
   message: string;
 }
@@ -54,7 +55,7 @@ const VideoChatPage: React.FC = () => {
   const [showChat, setShowChat] = useState(false);
   const [sideOption, setSideOption] = useState<string>("prev");
 
-  const inputref = useRef<HTMLInputElement>(null);
+  const inputref = useRef<HTMLTextAreaElement>(null);
   const chatLogref = useRef<HTMLInputElement>(null);
   const [chat, setChat] = useState<Chat>({
     messageList: [],
@@ -216,14 +217,18 @@ const VideoChatPage: React.FC = () => {
     });
 
     mySession.on("signal:chat", (event) => {
-      console.log(event);
       if (typeof event.data === "string") {
         const data = JSON.parse(event.data);
-        messageList.push({
-          nickname: userData.nickname,
-          message: data.message,
-        });
-        setChat((prev) => ({ ...prev, messageList }));
+        console.log('데이터입니다!', data)
+        console.log('이벤트입니다!', event)
+        if(event.from) {
+          messageList.push({
+            connectionId: event.from.connectionId,
+            nickname: userData.nickname,
+            message: data.message,
+          });
+          setChat((prev) => ({ ...prev, messageList }));
+        }
         // scrollToBottom()
       }
     });
@@ -525,9 +530,18 @@ const VideoChatPage: React.FC = () => {
                   </div>
                 ))
                 : null}
-                <div style={{display : toggleScreenPublisher ? 'none' : 'block'}}>
-                  여기에 이제 진짜 이전 자료들이 들어옵니다.
-                </div>
+                { ishospital ? (
+                  <div style={{display : toggleScreenPublisher ? 'none' : 'block'}}>
+                    여기에 이제 진짜 이전 자료들이 들어옵니다.
+                  </div>
+                ) : null}
+                { ismember && subscribers
+                              .filter((sub)=>sub.stream.typeOfVideo === 'SCREEN')
+                              .length === 0 ? (
+                                                <div>
+                                                  여기에 이제 진짜 이전 자료들이 들어옵니다.
+                                                </div>
+                                              ) : null }
               </PrevComponent>
               <textarea
                 placeholder= "진료 소견서를 작성해주세요. 소견서는 자동 저장됩니다."
@@ -586,13 +600,16 @@ const VideoChatPage: React.FC = () => {
               backgroundColor: "#eeeeee",
               display: showChat ? "block" : "none",
               borderRadius: "7px",
+              border: '2px solid grey',
             }}
           >
-            <div ref={chatLogref}>
-              {messageList.map(({ message, nickname }, idx) => (
+            <div ref={chatLogref} style={{padding: "20px"}}>
+              {messageList.map(({ message, nickname, connectionId }, idx) => (
                 <ChatLog
                   key={idx}
                   chatData={{
+                    mySessionId : session.connection.connectionId,
+                    connectionId : connectionId,
                     nickname: nickname,
                     message: message,
                   }}
@@ -600,11 +617,12 @@ const VideoChatPage: React.FC = () => {
               ))}
             </div>
             <div>
-              <input
+              <textarea
                 onChange={handleChange}
                 onKeyUp={handlePresskey}
                 ref={inputref}
-              ></input>
+                style={{width:'100%', height:'100px', padding:'5px', borderBottomLeftRadius: "7px", borderBottomRightRadius: "7px", position:'absolute', bottom: '0'}}
+              ></textarea>
             </div>
           </div>
         </div>

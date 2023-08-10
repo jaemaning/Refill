@@ -17,6 +17,7 @@ import Logout from "pages/user/Logout";
 import FindIdPassword from "pages/user/FindIdPassword";
 // import WebRTC from "pages/WebRTC";
 import VideoChatPage from "pages/openvidu/VideoChatPage";
+import JoinPage from "pages/openvidu/joinpage";
 // import { OpenVidu } from "openvidu-browser";
 
 const App: React.FC = () => {
@@ -40,6 +41,7 @@ const App: React.FC = () => {
         <Route path="/find" element={<FindIdPassword />} />
         {/* <Route path="/webrtc" element={<WebRTC />} /> */}
         <Route path="/video" element={<VideoChatPage />} />
+        <Route path="/join" element={<JoinPage />} />
 
         <Route
           path="*"
