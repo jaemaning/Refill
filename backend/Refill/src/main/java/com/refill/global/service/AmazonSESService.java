@@ -84,6 +84,16 @@ public class AmazonSESService {
         sendEmailWithTemplate(email, data);
     }
 
+    public void sendCode(String email, String code) {
+        String subject = "요청하신 이메일 인증 코드입니다.";
+        String message = "코드 : { %s }".formatted(code);
+
+        Map<String, String> data = new HashMap<>();
+        data.put("Subject", subject);
+        data.put("Message", message);
+        sendEmailWithTemplate(email, data);
+    }
+
 //    public void sendTempPassword(String email, String tempPassword) {
 //        String subject = "요청하신 임시 비밀번호입니다.";
 //        String text = String.format("비밀번호는 '%s'입니다.", tempPassword);
