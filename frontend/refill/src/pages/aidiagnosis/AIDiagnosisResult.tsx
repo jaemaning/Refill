@@ -5,6 +5,7 @@ import ContentItem from "components/aidiagnosis/resultItems/ContentItem";
 import ChartItem from "components/aidiagnosis/resultItems/ChartItem";
 import RightImg from "assets/aidiagnosis/right_img.png";
 import ContentChild from "components/aidiagnosis/children/ContentChild";
+import { useLocation } from "react-router-dom";
 
 const AIDiagnosisResult: React.FC = () => {
   const colOneStart = "col-start-1";
@@ -13,6 +14,17 @@ const AIDiagnosisResult: React.FC = () => {
   const colFiveEnd = "col-end-5";
   const colFiveStart = "col-start-5";
   const colEightEnd = "col-end-8";
+  const location = useLocation();
+
+  // 전달된 state에서 jsonDataString을 추출
+  const jsonDataString = location.state?.jsonDataString;
+  const jsonData = JSON.parse(jsonDataString);
+
+  // jsonData의 각 정보를 변수에 저장
+  const hairLossScore = jsonData.hairLossScore;
+  const certainty = jsonData.certainty;
+  const diagnosisImage = jsonData.diagnosisImage;
+  const diagnosisDate = jsonData.diagnosisDate;
 
   useEffect(() => {
     window.scrollTo(0, 106);
@@ -25,7 +37,7 @@ const AIDiagnosisResult: React.FC = () => {
         <div className="grid grid-rows-2 gap-4 lg:mx-30 md:mx-20 sm:mx-10">
           <div className="aid-result-row grid grid-cols-7 gap-10">
             <ImgItem
-              src=""
+              src={`${diagnosisImage}`}
               title="현재 사진"
               colStart={colOneStart}
               colEnd={colThreeEnd}
@@ -61,7 +73,7 @@ const AIDiagnosisResult: React.FC = () => {
           </div>
           <div className="aid-result-row grid grid-cols-7 gap-10">
             <ChartItem
-              result={80}
+              result={certainty}
               title="AI 정확도"
               colStart={colOneStart}
               colEnd={colThreeEnd}
@@ -69,7 +81,7 @@ const AIDiagnosisResult: React.FC = () => {
 정확도를 계산한 수치입니다."
             />
             <ChartItem
-              result={75}
+              result={hairLossScore}
               title="탈모 진행도"
               colStart={colThreeStart}
               colEnd={colFiveEnd}

@@ -2,12 +2,18 @@ import React, { ChangeEvent, useState } from "react";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CompleteCompo from "./CompleteCompo";
+import "styles/Reservation.css";
+import axios from "axios";
+import { RootState } from "store/reducers";
+import { useSelector } from "react-redux";
 
 interface UploadImgProps {
   doctorName: string;
   selectedDate: string;
   selectedTime: string;
   setIsFirst: (isFirst: boolean) => void;
+  hospitalName: string;
+  doctorId: number;
 }
 
 const UploadImg: React.FC<UploadImgProps> = ({
@@ -15,12 +21,42 @@ const UploadImg: React.FC<UploadImgProps> = ({
   selectedDate,
   selectedTime,
   setIsFirst,
+  hospitalName,
+  doctorId,
 }) => {
   const [imgFile, setImgFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
-
+  const [requestData, setRequestData] = useState("");
+  const token = useSelector((state: RootState) => state.login.token);
   const nextProgress = () => {
+    const reservationDateTime = selectedDate+"T"+selectedTime+":00"
+    const reservationRequest = {
+      doctorId: doctorId,
+      startDateTime: reservationDateTime,
+      counselingDemands: requestData
+    }
+    const json = JSON.stringify(reservationRequest);
+    const jsonBlob = new Blob([json], { type: "application/json" });
+    const formData = new FormData();
+    formData.append("reservationRequest", jsonBlob);
+    if (imgFile) {
+      formData.append("hairImg", imgFile);
+    }
+
+    axios
+      .post(`/api/v1/reservation/`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
     setModalOpen(true);
     return;
   };
@@ -46,12 +82,29 @@ const UploadImg: React.FC<UploadImgProps> = ({
     }
   };
 
+  const handleTextareaChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setRequestData(event.target.value); // textarea의 값이 변경될 때 상태 업데이트
+  };
+
   return (
     <div>
-      <CompleteCompo ModalOpen={modalOpen}/>
-       <p className="text-xl font-black"> <CalendarMonthOutlinedIcon /> {selectedDate}</p>
+      <CompleteCompo
+        hospitalName={hospitalName}
+        ModalOpen={modalOpen}
+        selectedDate={selectedDate}
+        selectedTime={selectedTime}
+        doctorName={doctorName}
+      />
+      <p className="text-xl font-black">
+        {" "}
+        <CalendarMonthOutlinedIcon /> {selectedDate}
+      </p>
       <hr className="border-2 border-black my-2" />
-       <p className="text-xl font-black"><AccessTimeIcon /> {selectedTime}</p>
+      <p className="text-xl font-black">
+        <AccessTimeIcon /> {selectedTime}
+      </p>
       <hr className="border-2 border-black my-2" />
       <div>
         <h1>{doctorName}</h1>
@@ -85,9 +138,16 @@ const UploadImg: React.FC<UploadImgProps> = ({
         <div>
           <p className="text-2xl font-black">상담시 요청사항</p>
         </div>
+        <div>
+          <div className="px-8">
+            <textarea
+              onChange={handleTextareaChange}
+              className="reservation-textarea my-2 p-6 text-lg"
+            ></textarea>
+          </div>
+        </div>
+        <p className="font-black text-lg">📌 알립니다 [ 예약취소관련 ]</p>
         <div className="px-8">
-          <div></div>
-          <p>📌 알립니다 [ 예약취소관련 ]</p>
           <div>
             <ul className="list-disc">
               <li>

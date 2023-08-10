@@ -11,8 +11,20 @@
   z-index: 9999;
 }
 .complete-modal {
-  height: 500px;
+  height: 600px;
   width: 400px;
   background-color: #EEFBF6;
   border: 3px solid #C0F8E3;
+}
+.complete-btn {
+  border-radius: 10px;
+  background-color: #AADAFF;
+}
+
+.complete-round {
+  background-color: #AADAFF;
+}
+
+.complete-font-color {
+  color: #20A4F3;
 }

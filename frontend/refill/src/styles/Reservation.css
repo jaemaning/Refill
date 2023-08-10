@@ -1,4 +1,8 @@
 .bottom-selected-time {
     height: 160px;
 }
- 
+.reservation-textarea {
+    /* border: 2px solid black; */
+    border-radius: 5px;
+    background-color: #EEEEEE;
+}

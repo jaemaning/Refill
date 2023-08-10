@@ -27,9 +27,15 @@ type DisabledTimeItem = {
 // 만약 컴포넌트에서 여러 doctors를 props로 받는다면:
 type ComponentProps = {
   doctors: Doctor[];
+  hospitalId: string | undefined;
+  hospitalName: string
 };
 
-const SelectDoctorAndTime: React.FC<ComponentProps> = ({ doctors }) => {
+const SelectDoctorAndTime: React.FC<ComponentProps> = ({
+  doctors,
+  hospitalId,
+  hospitalName,
+}) => {
   // 의사 정보를 가져오는 axios
   // 병원 이름을 통해서 가져와야 할듯
   // 디테일 페이지를 들어오면 바로 랜더링 되어야 좋을듯
@@ -80,6 +86,7 @@ Returns: If true the date will be disabled.
   const [doctorDisabledTime, setDoctorDisabledTime] = useState<
     DisabledTimeItem[]
   >([]);
+  const [doctorId, setDoctorId] = useState(0)
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [disabledTimes, setDisabledTimes] = useState<string[]>([]);
@@ -104,6 +111,7 @@ Returns: If true the date will be disabled.
     const doctor = doctors.find((doc) => doc.name === selectedName);
     if (doctor) {
       console.log(doctor.doctorId);
+      setDoctorId(doctor.doctorId)
       disabledTime(doctor.doctorId);
     } else {
       console.log("해당 이름의 의사를 찾을 수 없습니다.");
@@ -154,7 +162,7 @@ Returns: If true the date will be disabled.
 
   const hospitalDetail = async () => {
     try {
-      const response = await axios.get(`/api/v1/hospital/hours`, {
+      const response = await axios.get(`/api/v1/hospital/hours/${hospitalId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -234,9 +242,11 @@ Returns: If true the date will be disabled.
             startTime={startTime}
             endTime={endTime}
           />
-                  <div className="text-center">
-          <h2 className="text-lg font-black mt-2">선택한 날짜 및 시간: {selectedDate} {selectedTime}</h2>
-        </div>
+          <div className="text-center">
+            <h2 className="text-lg font-black mt-2">
+              선택한 날짜 및 시간: {selectedDate} {selectedTime}
+            </h2>
+          </div>
           <hr className="border-2 border-black my-2" />
           <div className="flex items-center justify-center">
             <button
@@ -254,6 +264,8 @@ Returns: If true the date will be disabled.
           selectedDate={selectedDate}
           selectedTime={selectedTime}
           setIsFirst={setIsFirst}
+          hospitalName={hospitalName}
+          doctorId={doctorId}
         />
       )}
     </div>
