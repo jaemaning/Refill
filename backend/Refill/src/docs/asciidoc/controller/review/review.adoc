@@ -1,0 +1,43 @@
+=== 리뷰 전체 조회
+==== HTTP Request
+include::{snippets}/review/findAll/http-request.adoc[]
+---
+==== HTTP Response
+include::{snippets}/review/findAll/http-response.adoc[]
+---
+=== 리뷰 단건 조회
+==== HTTP Request
+include::{snippets}/review/getReviewById/path-parameters.adoc[]
+include::{snippets}/review/getReviewById/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/review/getReviewById/response-body.adoc[]
+---
+=== 리뷰 생성
+==== HTTP Request
+include::{snippets}/review/createReview/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/review/createReview/http-response.adoc[]
+---
+=== 리뷰 수정
+==== HTTP Request
+include::{snippets}/review/modify/path-parameters.adoc[]
+include::{snippets}/review/modify/http-request.adoc[]
+==== HTTP Response
+include::{snippets}/review/modify/http-response.adoc[]
+---
+=== 리뷰 삭제
+==== HTTP Request
+include::{snippets}/review/deleteReview/path-parameters.adoc[]
+include::{snippets}/review/deleteReview/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/review/deleteReview/http-response.adoc[]
+---
+=== 리뷰 신고
+==== HTTP Request
+include::{snippets}/review/report/path-parameters.adoc[]
+include::{snippets}/review/report/http-request.adoc[]
+==== HTTP Response
+include::{snippets}/review/report/http-response.adoc[]

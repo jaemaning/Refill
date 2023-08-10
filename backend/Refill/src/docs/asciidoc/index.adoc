@@ -32,3 +32,7 @@ include::controller/reservation/reservation.adoc[]
 [[HOSPITAL-API]]
 == Hospital API
 include::controller/hospital/hospital.adoc[]
+
+[[REVIEW-API]]
+== Review API
+include::controller/review/review.adoc[]
