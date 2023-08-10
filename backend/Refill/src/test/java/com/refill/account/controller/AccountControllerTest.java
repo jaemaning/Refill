@@ -21,6 +21,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.requestP
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.refill.account.dto.request.EmailVerifyRequest;
 import com.refill.account.dto.request.HospitalJoinRequest;
 import com.refill.account.dto.request.HospitalLoginRequest;
 import com.refill.account.dto.request.LoginIdFindRequest;
@@ -28,6 +29,7 @@ import com.refill.account.dto.request.LoginPasswordRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.dto.request.MemberLoginRequest;
 import com.refill.account.dto.request.RefreshRequest;
+import com.refill.account.dto.response.EmailVerifyResponse;
 import com.refill.account.dto.response.RefreshResponse;
 import com.refill.account.dto.response.TokenResponse;
 import com.refill.global.entity.Message;
@@ -466,5 +468,34 @@ class AccountControllerTest extends ControllerTest {
                 preprocessResponse(prettyPrint())
             ));
 
+    }
+
+    @DisplayName("회원가입시_이메일_인증_받아야한다")
+    @Test
+    void verify_email_when_join() throws Exception {
+
+        EmailVerifyRequest emailVerifyRequest = new EmailVerifyRequest("dnjsml10@gmail.com");
+        EmailVerifyResponse emailVerifyResponse = new EmailVerifyResponse("123456");
+
+        when(accountService.verifyEmail(emailVerifyRequest)).thenReturn(emailVerifyResponse);
+
+        mockMvc.perform(
+            post(baseUrl + "/verify/join")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(emailVerifyRequest))
+               )
+               .andExpect(status().isOk())
+               .andDo(
+                   document("account/verify/join",
+                       preprocessRequest(prettyPrint()),
+                       preprocessResponse(prettyPrint()),
+                       requestFields(
+                           fieldWithPath("email").description("가입 시 작성한 이메일")
+                       ),
+                       responseFields(
+                           fieldWithPath("code").description("인증 코드")
+                       )
+                   )
+               );
     }
 }

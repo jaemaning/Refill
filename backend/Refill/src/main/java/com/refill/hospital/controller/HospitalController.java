@@ -78,8 +78,9 @@ public class HospitalController {
     public ResponseEntity<HospitalDetailResponse> getHospitalDetail(@PathVariable Long hospitalId)
     {
         log.debug("hospitalId: {}", hospitalId);
-        HospitalDetailResponse hospitalDetailResponse = hospitalService.getHospitalDetail(
-            hospitalId);
+        HospitalDetailResponse hospitalDetailResponse = hospitalOperatingHourService.getDetailHospitalInfo(hospitalId);
+
+
         return ResponseEntity.ok()
                              .body(hospitalDetailResponse);
     }
@@ -155,12 +156,11 @@ public class HospitalController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/hours")
-    public ResponseEntity<List<HospitalOperatingHourResponse>> getHospitalOperatingHour(
-        @AuthenticationPrincipal LoginInfo loginInfo)
+    @GetMapping("/hours/{id}")
+    public ResponseEntity<List<HospitalOperatingHourResponse>> getHospitalOperatingHour(@AuthenticationPrincipal LoginInfo loginInfo, @PathVariable Long id)
     {
-        log.debug("'{}' hospital request hospitalOperatingHour", loginInfo.loginId());
-        List<HospitalOperatingHourResponse> hourResponseList = hospitalOperatingHourService.getOperatingHours(loginInfo.loginId());
+        log.debug("'{}' member request hospitalOperatingHour", loginInfo.loginId());
+        List<HospitalOperatingHourResponse> hourResponseList = hospitalOperatingHourService.getOperatingHours(id);
 
         return ResponseEntity.ok().body(hourResponseList);
     }

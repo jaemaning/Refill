@@ -10,7 +10,8 @@ import javax.validation.constraints.NotNull;
 public record HospitalDetailResponse(
     @NotNull HospitalResponse hospitalResponse,
     @NotNull List<DoctorResponse> doctorResponses,
-    @NotNull List<ReviewResponse> reviewResponses
+    @NotNull List<ReviewResponse> reviewResponses,
+    @NotNull List<HospitalOperatingHourResponse> operatingHourResponses
 ) {
 
     public HospitalDetailResponse(Hospital hospital) {
@@ -22,7 +23,23 @@ public record HospitalDetailResponse(
                     .collect(Collectors.toList()),
             hospital.getReviews()
                     .stream()
-                    .map(ReviewResponse::new).collect(Collectors.toList())
+                    .map(ReviewResponse::new).collect(Collectors.toList()),
+            null
         );
     }
+
+    public HospitalDetailResponse(Hospital hospital, List<HospitalOperatingHourResponse> hourResponseList) {
+        this(
+            new HospitalResponse(hospital),
+            hospital.getDoctors()
+                    .stream()
+                    .map(DoctorResponse::new)
+                    .collect(Collectors.toList()),
+            hospital.getReviews()
+                    .stream()
+                    .map(ReviewResponse::new).collect(Collectors.toList()),
+            hourResponseList
+        );
+    }
+
 }

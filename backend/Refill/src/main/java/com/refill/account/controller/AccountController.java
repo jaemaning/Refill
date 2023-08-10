@@ -1,5 +1,6 @@
 package com.refill.account.controller;
 
+import com.refill.account.dto.request.EmailVerifyRequest;
 import com.refill.account.dto.request.HospitalJoinRequest;
 import com.refill.account.dto.request.HospitalLoginRequest;
 import com.refill.account.dto.request.LoginIdFindRequest;
@@ -7,6 +8,7 @@ import com.refill.account.dto.request.LoginPasswordRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.dto.request.MemberLoginRequest;
 import com.refill.account.dto.request.RefreshRequest;
+import com.refill.account.dto.response.EmailVerifyResponse;
 import com.refill.account.dto.response.RefreshResponse;
 import com.refill.account.dto.response.TokenResponse;
 import com.refill.account.service.AccountService;
@@ -121,6 +123,15 @@ public class AccountController {
 
         accountService.logout(loginInfo);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/verify/join")
+    public ResponseEntity<EmailVerifyResponse> verifyEmail(@RequestBody final EmailVerifyRequest emailVerifyRequest) {
+
+        log.debug("'{}' member request verifyEmail", emailVerifyRequest.email());
+        EmailVerifyResponse emailVerifyResponse = accountService.verifyEmail(emailVerifyRequest);
+
+        return ResponseEntity.ok().body(emailVerifyResponse);
     }
 
 
