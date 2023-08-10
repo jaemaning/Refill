@@ -69,7 +69,7 @@ public class ConsultingService {
 
 //    @Scheduled(cron = "0 15,45 8-18 * * ?")
 //    @Scheduled(fixedRate = 100000)
-    @Scheduled(cron = "0 35 8-18 * * ?")
+    @Scheduled(cron = "0 15 8-18 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
         LocalDateTime now = LocalDateTime.now();//.plusMinutes(BEFORE_CONSULTING_TIME);
         LocalDateTime tmp = LocalDateTime.of(2023, 8, 11, 10, 00);
