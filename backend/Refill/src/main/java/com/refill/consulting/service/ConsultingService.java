@@ -73,11 +73,11 @@ public class ConsultingService {
 
 //    @Scheduled(cron = "0 15,45 8-18 * * ?")
 //    @Scheduled(fixedRate = 100000)
-    @Scheduled(cron = "0 55 8-18 * * ?")
+    @Scheduled(cron = "0 33 2 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
 
         LocalDateTime now = LocalDateTime.now();//.plusMinutes(BEFORE_CONSULTING_TIME);
-        LocalDateTime tmp = LocalDateTime.of(2023, 8, 11, 10, 00);
+        LocalDateTime tmp = LocalDateTime.of(2023, 8, 12, 10, 00);
 
         // 조건문 추가
         List<Reservation> reservationList = reservationRepository.findReservationReady(tmp);
@@ -129,12 +129,13 @@ public class ConsultingService {
     public ConnectionTokenResponse getConnectionToken(Long reservationId, LoginInfo loginInfo){
         Consulting consulting = consultingRepository.findConsultingByReservationId(reservationId);
 
+        Long consultingId = consulting.getId();
         String sessionId = "";
         String token = "";
         String screenShareToken = "";
 
         if(consulting == null) {
-            return new ConnectionTokenResponse(sessionId, token, screenShareToken);
+            return new ConnectionTokenResponse(consultingId, sessionId, token, screenShareToken);
         }
         else {
             sessionId = consulting.getSessionId();
@@ -145,22 +146,26 @@ public class ConsultingService {
                 token = consulting.getDoctorToken();
                 screenShareToken = consulting.getScreenShareToken();
             }
-            return new ConnectionTokenResponse(sessionId, token, screenShareToken);
+            return new ConnectionTokenResponse(consultingId, sessionId, token, screenShareToken);
         }
     }
 
+
     @Transactional
-    public void leaveSession(ConsultingCloseRequest consultingCloseRequest, LoginInfo loginInfo) {
+    public void leaveSession(ConsultingCloseRequest consultingCloseRequest, LoginInfo loginInfo)
+        throws OpenViduJavaClientException, OpenViduHttpException {
 
         if(loginInfo.role().equals(ROLE_MEMBER)) {
             throw new ConsultingException(ErrorCode.UNAUTHORIZED_REQUEST);
         }
 
-        Consulting consulting = consultingRepository.findConsultingBySessionId(consultingCloseRequest.sessionId());
+        Consulting consulting = findById(consultingCloseRequest.consultingId());
 
-        if (consulting == null) {
-            throw new ConsultingException(ErrorCode.SESSION_FAIL);
-        }
+        // 세션 close
+        openvidu.getActiveSession(consultingCloseRequest.sessionId()).close();
+
+        // token, 세션 빈값으로 바꾸기
+        consulting.closeSession();
 
         consulting.updateConsultingInfo(consultingCloseRequest.consultingDetailInfo());
     }
