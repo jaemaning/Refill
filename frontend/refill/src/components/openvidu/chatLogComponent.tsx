@@ -1,4 +1,4 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 
 interface chatLogProps {
   chatData: {
@@ -9,6 +9,15 @@ interface chatLogProps {
   };
 }
 
+const messageStyle :CSSProperties = {
+  fontSize: '18px',
+  padding: '5px 10px',
+  border: '1px solid darkgrey',
+  whiteSpace: 'pre-wrap',
+  wordWrap: 'break-word', 
+  maxWidth: '250px',
+  display: 'inline-block',
+};
 
 const ChatLog: React.FC<chatLogProps> = ({ chatData }) => {
   // const check = textData.connectionId !== textData.myStreamId
@@ -18,16 +27,14 @@ const ChatLog: React.FC<chatLogProps> = ({ chatData }) => {
       {
         chatData.mySessionId === chatData.connectionId 
         ?
-        <div style={{textAlign: 'right', marginBottom: '5px'}}>
-          <span style={{color: 'blue', backgroundColor: 'white', padding: '5px 10px'}}> {chatData.message}</span>
+        <div style={{textAlign: 'right', margin: '10px 0px'}}>
+          <span style={{ ...messageStyle, color: 'black', backgroundColor: 'white', borderTopLeftRadius: '5px', borderBottomLeftRadius: '5px', borderBottomRightRadius: '5px'}}> {chatData.message}</span>
         </div>
         :
         <div style={{marginBottom: '5px'}}>
-          <span style={{color: 'red', backgroundColor: 'yellow', padding: '5px 10px'}}> {chatData.message}</span>
+          <span style={{ ...messageStyle, color: 'black', backgroundColor: 'yellow', borderTopRightRadius: '5px', borderBottomLeftRadius: '5px', borderBottomRightRadius: '5px'}}> {chatData.message}</span>
         </div>
       }
-      {/* <span> {chatData.mySessionId} </span> */}
-      {/* <span> {chatData.connectionId} </span> */}
     </>
   );
 };
