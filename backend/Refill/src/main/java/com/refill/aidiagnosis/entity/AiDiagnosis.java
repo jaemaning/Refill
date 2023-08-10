@@ -36,15 +36,19 @@ public class AiDiagnosis extends BaseEntity {
     @Column
     private String diagnosisImage;
 
+    @Column
+    private String certainty;
+
     @Column(columnDefinition = "TEXT")
     private String diagnosisResult;
 
     @Builder
-    public AiDiagnosis(Member member, HairLossType hairLossType, String surveyResult, Integer hairLossScore) {
+    public AiDiagnosis(Member member, HairLossType hairLossType, String surveyResult, Integer hairLossScore, String certainty) {
         this.member = member;
         this.hairLossType = hairLossType;
         this.hairLossScore = hairLossScore;
         this.surveyResult = surveyResult;
+        this.certainty = certainty;
     }
 
     public void updateFileAddress(String address) {
