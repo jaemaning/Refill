@@ -48,11 +48,10 @@ const UploadImg: React.FC<UploadImgProps> = ({
 
   return (
     <div>
-      <CompleteCompo ModalOpen={modalOpen} />
-      <CalendarMonthOutlinedIcon /> {selectedDate}
+      <CompleteCompo ModalOpen={modalOpen}/>
+       <p className="text-xl font-black"> <CalendarMonthOutlinedIcon /> {selectedDate}</p>
       <hr className="border-2 border-black my-2" />
-      <AccessTimeIcon />
-      {selectedTime}
+       <p className="text-xl font-black"><AccessTimeIcon /> {selectedTime}</p>
       <hr className="border-2 border-black my-2" />
       <div>
         <h1>{doctorName}</h1>

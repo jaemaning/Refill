@@ -20,6 +20,9 @@ type Doctor = {
   licenseImg: string;
   // 필요한 경우 여기에 추가적인 필드를 추가하세요
 };
+type DisabledTimeItem = {
+  startDateTime: string;
+};
 
 // 만약 컴포넌트에서 여러 doctors를 props로 받는다면:
 type ComponentProps = {
@@ -74,7 +77,26 @@ day The date to test.
 Returns: If true the date will be disabled.
   */
   const [nowWeekday, setNowWeekday] = useState(0);
-  const [doctorDisabledTime, setdoctorDisabledTime] = useState<string[]>([]);
+  const [doctorDisabledTime, setDoctorDisabledTime] = useState<
+    DisabledTimeItem[]
+  >([]);
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [disabledTimes, setDisabledTimes] = useState<string[]>([]);
+  const handleDateChange = (date: string) => {
+    const extractedDate = date.split("T")[0];
+    setSelectedDate(extractedDate);
+    extractDisabledTimesForDate(extractedDate);
+  };
+
+  const extractDisabledTimesForDate = (date: string) => {
+    const disabledTimesForDate = doctorDisabledTime
+      .filter((item) => item.startDateTime.includes(date))
+      .map((item) => item.startDateTime.split("T")[1]);
+    console.log(disabledTimesForDate);
+    setDisabledTimes(disabledTimesForDate);
+  };
+
   const ishandleChange = (event: SelectChangeEvent) => {
     const selectedName = event.target.value as string;
     setSelectedDoctor(selectedName);
@@ -97,7 +119,7 @@ Returns: If true the date will be disabled.
       })
       .then((response) => {
         console.log(response.data);
-        setdoctorDisabledTime(response.data);
+        setDoctorDisabledTime(response.data);
         // 이제 오늘 날짜랑 비교해서 오늘 날짜인 date를 가져오고 시간을 추출한 다음에 list에 보관
       })
       .catch((error) => {
@@ -111,41 +133,37 @@ Returns: If true the date will be disabled.
 
   const token = useSelector((state: RootState) => state.login.token);
 
-  /*
-  operatingHourResponses": [
-        {
-            "dayOfWeek": "MONDAY",
-            "startTime": "09:00:00",
-            "endTime": "19:00:00"
-        },
-  
-  */
   useEffect(() => {
-    // 이 부분의 코드는 `doctor` state가 변경될 때마다 실행됩니다.
     console.log("이번 주에 해당하는 번호는?", nowWeekday);
 
-    // 여기에 원하는 다른 함수를 호출할 수 있습니다.
-    // disableTime도 보내줘야함
-    hospitalDetail();
+    const fetchDetailsAndUpdateState = async () => {
+      const times = await hospitalDetail();
+      if (times && times[nowWeekday]) {
+        setStartTime(times[nowWeekday].startTime);
+        setEndTime(times[nowWeekday].endTime);
+      }
+      // 이제 disabled 시간을 골라줘야함
+    };
+
+    fetchDetailsAndUpdateState();
   }, [nowWeekday]);
 
-  const hospitalDetail = () => {
-    axios
-      .get(`/api/v1/hospital/hours`, {
+  useEffect(() => {
+    handleDateChange(selectedDate);
+  }, [selectedDate]);
+
+  const hospitalDetail = async () => {
+    try {
+      const response = await axios.get(`/api/v1/hospital/hours`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-      .then((response) => {
-        console.log(response.data);
-        // 이제 여기서 받은 값을 바탕으로 해당 요일에 맞는 날짜를 가져와서 startTime이랑 endTime을 하위 컴포넌트로 보내줘야함
-        // 보내주면 하위 컴포넌트에서 받아서 안되는 시간을 분류해서 색칠해줘야함.
-
-
-      })
-      .catch((error) => {
-        console.error("Error fetching hospital details:", error);
       });
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching hospital details:", error);
+    }
   };
 
   const doctorsName = doctors.map((doctor) => doctor.name);
@@ -210,7 +228,15 @@ Returns: If true the date will be disabled.
             setNowWeekday={setNowWeekday}
           />
           <hr className="border-2 border-black my-2" />
-          <SelectTime setSelectedTime={setSelectedTime} />
+          <SelectTime
+            disabledTimes={disabledTimes}
+            setSelectedTime={setSelectedTime}
+            startTime={startTime}
+            endTime={endTime}
+          />
+                  <div className="text-center">
+          <h2 className="text-lg font-black mt-2">선택한 날짜 및 시간: {selectedDate} {selectedTime}</h2>
+        </div>
           <hr className="border-2 border-black my-2" />
           <div className="flex items-center justify-center">
             <button

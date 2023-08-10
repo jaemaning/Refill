@@ -1,15 +1,71 @@
-import React from "react";
+import React, { useState } from "react";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import "styles/Reservation.css";
 
-// 선택 불가능은 빨강 처리 선택도 불가능하게 처리 클릭 불가능처리라고 해야 할듯
-// 
-
 interface SelectTimeProps {
-  setSelectedTime: (time: string) => void
+  setSelectedTime: (time: string) => void;
+  startTime: string;
+  endTime: string;
+  disabledTimes: string[];
 }
 
-const SelectTime: React.FC<SelectTimeProps> = ({ setSelectedTime }) => {
+const SelectTime: React.FC<SelectTimeProps> = ({
+  setSelectedTime,
+  startTime,
+  endTime,
+  disabledTimes,
+}) => {
+  const times = [
+    "08:00",
+    "08:30",
+    "09:00",
+    "09:30",
+    "10:00",
+    "10:30",
+    "11:00",
+    "11:30",
+    "12:00",
+    "12:30",
+    "13:00",
+    "13:30",
+    "14:00",
+    "14:30",
+    "15:00",
+    "15:30",
+    "16:00",
+    "16:30",
+    "17:00",
+    "17:30",
+    "18:00",
+    "18:30",
+    "19:00",
+    "19:30",
+  ];
+
+  const convertToMinutes = (time: string) => {
+    const [hours, minutes] = time.split(":");
+    return parseInt(hours) * 60 + parseInt(minutes);
+  };
+  const [nowTime, setNowTime] = useState<string | null>(null); // 추가된 상태
+  const isDisabled = (time: string) => {
+    const timeInMinutes = convertToMinutes(time);
+    // startTime과 endTime을 기준으로 비활성화 판단
+    const outOfBounds =
+      timeInMinutes < convertToMinutes(startTime) ||
+      timeInMinutes >= convertToMinutes(endTime);
+
+    // disabledTimes에서 시간만 추출하고 해당 시간이 포함되어 있는지 확인
+    const isTimeDisabled = disabledTimes
+      .map((t) => t.slice(0, 5))
+      .includes(time);
+
+    return outOfBounds || isTimeDisabled;
+  };
+  const handleTimeClick = (time: string) => {
+    setSelectedTime(time);
+    setNowTime(time); // nowTime 상태 업데이트
+    console.log(time);
+  };
   return (
     <div className="mb-12">
       <div className="m-1 text-xl mb-2">
@@ -17,207 +73,47 @@ const SelectTime: React.FC<SelectTimeProps> = ({ setSelectedTime }) => {
       </div>
       <div className="mx-4">
         {/* 오전 */}
-
         <div className="mb-2">오전</div>
         <div className="h-20 m-2 grid grid-cols-4 gap-1">
-          <button className="bg-black hover:bg-slate-400">
-            <div
-              id="08:00"
-              className=" text-white flex items-center justify-center"
+          {times.slice(0, 8).map((time) => (
+            <button
+              key={time}
+              onClick={() => handleTimeClick(time)}
+              className={`bg-${
+                isDisabled(time) ? "red" : "black"
+              } hover:bg-slate-400`}
+              disabled={isDisabled(time)}
             >
-              08:00
-            </div>
-          </button>
-          <button className="bg-black hover:bg-slate-400">
-            <div
-              id="08:30"
-              className="text-white flex items-center justify-center"
-            >
-              08:30
-            </div>
-          </button>
-          <button className="bg-black hover:bg-slate-400">
-            <div
-              id="09:00"
-              className=" text-white flex items-center justify-center"
-            >
-              09:00
-            </div>
-          </button>
-          <button className="bg-black hover:bg-slate-400">
-            <div
-              id="09:30"
-              className="text-white flex items-center justify-center"
-            >
-              09:30
-            </div>
-          </button>
-          <button className="bg-black hover:bg-slate-400">
-            <div
-              id="10:00"
-              className="text-white flex items-center justify-center"
-            >
-              10:00
-            </div>
-          </button>
-          <button className="bg-black hover:bg-slate-400">
-            <div
-              id="10:30"
-              className="text-white flex items-center justify-center"
-            >
-              10:30
-            </div>
-          </button>
-          <button className="bg-black hover:bg-slate-400">
-            <div
-              id="11:00"
-              className="text-white flex items-center justify-center"
-            >
-              11:00
-            </div>
-          </button>
-          <button className="bg-black hover:bg-slate-400">
-            <div
-              id="11:30"
-              className="text-white flex items-center justify-center"
-            >
-              11:30
-            </div>
-          </button>
+              <div
+                id={time}
+                className="text-white flex items-center justify-center"
+              >
+                {time}
+              </div>
+            </button>
+          ))}
         </div>
-
         {/* 오후 */}
-
         <div className="mb-2">오후</div>
         <div className="bottom-selected-time m-2 grid grid-cols-4 gap-1">
-        <button className="bg-black hover:bg-slate-400">
-            <div
-              id="00:00"
-              className="text-white flex items-center justify-center"
+          {times.slice(8).map((time) => (
+            <button
+              key={time}
+              onClick={() => handleTimeClick(time)}
+              className={`bg-${
+                isDisabled(time) ? "red" : "black"
+              } hover:bg-slate-400`
+            }
+              disabled={isDisabled(time)}
             >
-              00:00
-            </div>
-          </button>
-          <button className="bg-black hover:bg-slate-400">
-            <div
-              id="00:30"
-              className="text-white flex items-center justify-center"
-            >
-              00:30
-            </div>
-          </button>
-          <button className="bg-black hover:bg-slate-400">
-            <div
-              id="01:00"
-              className="text-white flex items-center justify-center"
-            >
-              01:00
-            </div>
-          </button>
-          <button className="bg-black hover:bg-slate-400">
-            <div
-              id="01:30"
-              className="text-white flex items-center justify-center"
-            >
-              01:30
-            </div>
-          </button>
-          <button className="bg-black hover:bg-slate-400">
-            <div
-              id="02:00"
-              className="text-white flex items-center justify-center"
-            >
-              02:00
-            </div>
-          </button>
-          <button className="bg-black hover:bg-slate-400">
-            <div
-              id="02:30"
-              className="text-white flex items-center justify-center"
-            >
-              02:30
-            </div>
-          </button>
-          <button className="bg-black hover:bg-slate-400">
-            <div
-              id="03:00"
-              className="text-white flex items-center justify-center"
-            >
-              03:00
-            </div>
-          </button>
-          <button className="bg-black hover:bg-slate-400">
-            <div
-              id="03:30"
-              className="text-white flex items-center justify-center"
-            >
-              03:30
-            </div>
-          </button>
-          <button className="bg-black hover:bg-slate-400">
-            <div
-              id="04:00"
-              className="text-white flex items-center justify-center"
-            >
-              04:00
-            </div>
-          </button>
-          <button className="bg-black hover:bg-slate-400">
-            <div
-              id="04:30"
-              className="text-white flex items-center justify-center"
-            >
-              04:30
-            </div>
-          </button>
-          <button className="bg-black hover:bg-slate-400">
-            <div
-              id="05:00"
-              className="text-white flex items-center justify-center"
-            >
-              05:00
-            </div>
-          </button>
-          <button className="bg-black hover:bg-slate-400">
-            <div
-              id="05:30"
-              className="text-white flex items-center justify-center"
-            >
-              05:30
-            </div>
-          </button>
-          <button className="bg-black hover:bg-slate-400">
-            <div
-              id="06:00"
-              className="text-white flex items-center justify-center"
-            >
-              06:00
-            </div>
-          </button>
-          <button className="bg-black hover:bg-slate-400">
-            <div
-              id="06:30"
-              className="text-white flex items-center justify-center"
-            >
-              06:30
-            </div>
-          </button>
-          <button className="bg-black hover:bg-slate-400">
-            <div
-              id="07:00"
-              className="text-white flex items-center justify-center"
-            >
-              07:00
-            </div>
-          </button>
-          <button className="bg-black hover:bg-slate-400">
-            <div
-              id="07:30"
-              className="text-white flex items-center justify-center"
-            >
-              07:30
-            </div>
-          </button>
+              <div
+                id={time}
+                className="text-white flex items-center justify-center"
+              >
+                {time}
+              </div>
+            </button>
+          ))}
         </div>
         <div className="flex items-center justify-end">
           <div className="h-3 w-3 mx-1 bg-black"></div> 선택 가능

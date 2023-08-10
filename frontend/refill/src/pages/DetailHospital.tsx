@@ -19,7 +19,7 @@ import { useSelector } from "react-redux";
 
 // [taeseong]
 import SelectDoctorAndTime from "components/consultReservation/SelectDoctorAndTime";
-
+import { useParams } from 'react-router-dom';
 // import StarRatings from "react-star-ratings";
 
 interface DivProps {
@@ -154,6 +154,8 @@ const Doctor_res_icon = styled.span`
 `;
 
 const DetailHospital: React.FC = () => {
+  const { hospitalId } = useParams();
+
   // 배너이미지 갈아끼울때마다 적용
   const [doctorData, setDoctorData] = useState<Doctor[]>([]);
   const [reviewData, setReviewData] = useState<Review[]>([]);
