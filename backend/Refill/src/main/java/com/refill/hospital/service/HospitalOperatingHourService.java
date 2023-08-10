@@ -50,9 +50,9 @@ public class HospitalOperatingHourService {
     }
 
     @Transactional(readOnly = true)
-    public HospitalDetailResponse getDetailHospitalInfo(Long loginId) {
+    public HospitalDetailResponse getDetailHospitalInfo(Long id) {
 
-        Hospital hospital = hospitalService.findById(loginId);
+        Hospital hospital = hospitalService.findById(id);
         List<HospitalOperatingHourResponse> operatingHourResponses = getOperatingHours(hospital.getLoginId());
 
         return new HospitalDetailResponse(hospital, operatingHourResponses);
