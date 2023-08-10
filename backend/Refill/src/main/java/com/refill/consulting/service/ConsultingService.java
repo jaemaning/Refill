@@ -20,6 +20,8 @@ import com.refill.reservation.repository.ReservationRepository;
 import com.refill.review.entity.Review;
 import com.refill.review.exception.ReviewException;
 import com.refill.security.util.LoginInfo;
+import io.openvidu.java.client.ConnectionType;
+import io.openvidu.java.client.OpenViduRole;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,18 +88,26 @@ public class ConsultingService {
             Member member = reservation.getMember();
             Doctor doctor = reservation.getDoctor();
 
+            // 세션 생성
             Map<String, Object> params = new HashMap<>();
             String customSessionId = "session" + reservation.getId().toString();
             params.put("customSessionId",customSessionId);
 
             SessionProperties properties = SessionProperties.fromJson(params).build();
 
-
             Session session = openvidu.createSession(properties);
             String sessionId = session.getSessionId();
-            String doctorToken = session.createConnection().getToken();
-            String screenShareToken = session.createConnection().getToken();
-            String memberToken = session.createConnection().getToken();
+
+            // connection 생성
+            ConnectionProperties connectionProperties = new ConnectionProperties.Builder()
+                .type(ConnectionType.WEBRTC)
+                .role(OpenViduRole.PUBLISHER)
+                .data("user_data")
+                .build();
+
+            String doctorToken = session.createConnection(connectionProperties).getToken();
+            String screenShareToken = session.createConnection(connectionProperties).getToken();
+            String memberToken = session.createConnection(connectionProperties).getToken();
 
             Consulting consulting = Consulting.builder()
                                               .member(member)
