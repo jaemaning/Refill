@@ -23,6 +23,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
@@ -171,13 +172,22 @@ public class ReviewControllerTest extends ControllerTest {
 
     @Test
     @DisplayName("리뷰 삭제 테스트")
-    public void deleteReview(){
+    public void deleteReview() throws Exception {
 
+        this.mockMvc.perform(delete("/api/v1/review/{reviewId}", 1L))
+                    .andExpect(status().isNoContent())
+                    .andDo(document("review/deleteReview",
+                            preprocessResponse(prettyPrint()),
+                            pathParameters(
+                                parameterWithName("reviewId").description("리뷰ID")
+                            ))
+                    );
     }
     
     @Test
     @DisplayName("리뷰 신고 테스트")
     public void reportReview(){
+
 
     }
     
