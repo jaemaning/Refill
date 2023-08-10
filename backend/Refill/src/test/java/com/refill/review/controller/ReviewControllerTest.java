@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import com.refill.global.entity.Role;
 import com.refill.review.dto.request.ReviewCreateRequest;
 import com.refill.review.dto.request.ReviewModifyRequest;
+import com.refill.review.dto.request.ReviewReportRequest;
 import com.refill.review.dto.response.ReviewResponse;
 import com.refill.security.util.LoginInfo;
 import com.refill.util.ControllerTest;
@@ -30,12 +31,10 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestBody;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -155,7 +154,7 @@ public class ReviewControllerTest extends ControllerTest {
 
         this.mockMvc.perform(
                 put("/api/v1/review/{reviewId}", 1L).contentType(MediaType.APPLICATION_JSON).content(
-                    objectMapper.writeValueAsBytes(mockRequest)))
+                    objectMapper.writeValueAsString(mockRequest)))
                     .andExpect(status().isNoContent())
                     .andDo(document("review/modify",
                         preprocessResponse(prettyPrint()),
@@ -186,12 +185,24 @@ public class ReviewControllerTest extends ControllerTest {
     
     @Test
     @DisplayName("리뷰 신고 테스트")
-    public void reportReview(){
+    public void reportReview() throws Exception{
 
+        ReviewReportRequest mockRequest = new ReviewReportRequest("너무 자극적인 리뷰에요.");
 
+        this.mockMvc.perform(post("/api/v1/review/report/{reviewId}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(mockRequest)))
+                    .andExpect(status().isOk())
+                    .andDo(document("review/report",
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                            parameterWithName("reviewId").description("리뷰ID")
+                        ),
+                        requestFields(
+                            fieldWithPath("content").description("신고 내용")
+                        )
+                    ));
     }
-    
-    
-    
+
 
 }
