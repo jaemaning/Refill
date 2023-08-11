@@ -22,6 +22,7 @@ interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   width?: string;
   customStyles?: CSSObject;
   onClick?: () => void;
+  authClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
 // content : 버튼 안에 들어갈 내용, size 크기정하기, width 넓이 직접설정 가능, customstyles : 위 적용후 후 커스텀스타일, onclick 이벤트연결
