@@ -33,17 +33,16 @@ const JoinPage = () => {
       }))
       .then(()=> {
         setLoading(false)
-        console.log(tokenData)
       })
       .catch((err)=> console.log("에러:", err))
     } else {
       alert('로그인을 해주세요.')
       navigate('/login');
     }
+    console.log('토큰 데이터 확인', tokenData)
   },[])
 
   const joinSession = ( { consultingId, sessionId, token, shareToken }: TypeToken ) => {
-    console.log(token, shareToken, consultingId, sessionId)
     navigate('/video', {state : {sessionPk: sessionId, token: token, shareToken: shareToken, consultingId: consultingId}})
   }
 
@@ -57,7 +56,6 @@ const JoinPage = () => {
           Authorization: `Bearer ${loginToken}`,
         },
       });
-      console.log(response.data)
       setTokenData(prevTokenData => [...prevTokenData, response.data])
     } catch(err) {
       console.log("에러:", err);
@@ -71,11 +69,11 @@ const JoinPage = () => {
       { isLoading ? (        
         <div>Loading...</div>
       ) : (
-        tokenData.map(({ sessionId, token, shareToken }, idx) => (
+        tokenData.map(({ sessionId, token, shareToken, consultingId }, idx) => (
           sessionId ? (
             <div key={idx}>
               {idx}, {sessionId} :
-              <Button variant='normal' content='입장 가능' onClick={()=>{joinSession({token, shareToken})}}/>
+              <Button variant='normal' content='입장 가능' onClick={()=>{joinSession({token, shareToken, sessionId, consultingId})}}/>
             </div>
           )
           : (

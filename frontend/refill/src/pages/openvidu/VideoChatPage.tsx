@@ -55,7 +55,7 @@ const StylePreSession = styled.div`
 ` 
 
 const VideoChatPage: React.FC = () => {
-  const [mySessionId, setMySessionId] = useState("sessionA");
+  // const [mySessionId, setMySessionId] = useState("sessionA");
   const [myUserName, setMyUserName] = useState(
     "Participant" + Math.floor(Math.random() * 100),
   );
@@ -212,13 +212,13 @@ const VideoChatPage: React.FC = () => {
     leaveSession();
   };
 
-  const handleChangeSessionId = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMySessionId(e.target.value);
-  };
+  // const handleChangeSessionId = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setMySessionId(e.target.value);
+  // };
 
-  const handleChangeUserName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMyUserName(e.target.value);
-  };
+  // const handleChangeUserName = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setMyUserName(e.target.value);
+  // };
   //
 
   // 메인 스트림과 클릭된 서브 스트림을 전환하는 함수
@@ -253,15 +253,24 @@ const VideoChatPage: React.FC = () => {
     mySession.on("streamCreated", (event) => {
       const subscriber = mySession.subscribe(event.stream, undefined);
       setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
+      console.log("비디오 엘레먼트 등록시 이벤트 :", event)
 
       console.log('구독자?? :', subscriber)
-
-      subscriber.on('videoElementCreated', (event) => {
-        console.log("비디오 엘레먼트 등록시 이벤트 :",event)
-        const videoElement = event.element;
-        console.log("비디오 엘레먼트 등록시 이벤트2 :",videoElement)
-      })
+      // subscriber.stream.on('videoElementCreated', (event) => {
+      //   console.log('New video element created:', event.element);
+      // });
     });
+
+    console.log(mySession)
+
+
+    // mySession.on('videoElementCreated', (event) => {
+    //   if (event.stream.typeOfVideo !== 'SCREEN') {
+    //     console.log("비디오 엘레먼트 등록시 이벤트 :", event)
+    //     // const videoElement = event.element;
+    //     console.log("비디오 엘레먼트 등록시 이벤트2 :", videoElement)
+    //   }
+    // })
 
     mySession.on("streamDestroyed", (event) => {
       deleteSubscriber(event.stream.streamManager);
@@ -363,37 +372,50 @@ const VideoChatPage: React.FC = () => {
     }
   }
 
-  const leaveSession = async () => {
+  const leaveSession = () => {
     if (session) {
       session.disconnect();
     }
-    if (screenSession) {
-      screenSession.disconnect();
-    }
+    // console.log('스크린세션',screenSession)
+    // if (screenSession) {
+    //   console.log(screenSession)
+    //   screenSession.disconnect();
+    // }
 
     // Empty all properties...
     setSession(undefined);
     setScreenSession(undefined);
     setSubscribers([]);
-    setMySessionId("SessionA");
+    // setMySessionId("SessionA");
     setMyUserName("Participant" + Math.floor(Math.random() * 100));
     setMainStreamManager(undefined);
     setPublisher(undefined);
     setScreenPublisher(undefined);
 
     if ( ishospital ) {
-      console.log("여기",consultingId,sessionPk,consultingDetailInfo)
-      await axios
-        .put('api/v1/consulting/leave', { params : {
-          consultingId : consultingId,
-          sessionId : sessionPk,
-          consultingDetailInfo : consultingDetailInfo // 이건 상담 기록 내용
+      console.log('로그인토큰',loginToken)
+      console.log('데이터들', consultingId, sessionPk, consultingDetailInfo)
+      axios
+      .post(
+        'api/v1/consulting/leave',
+        {
+          consultingId: consultingId,
+          sessionId: sessionPk,
+          consultingDetailInfo: consultingDetailInfo // 이건 상담 기록 내용
         },
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${loginToken}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${loginToken}`,
+          }
         }
+      )
+      .then((response) => {
+        console.log(response.data);
       })
+      .catch((error) => {
+        console.log("에러:", error);
+      });
     }
 
     navigate('/')
@@ -431,35 +453,35 @@ const VideoChatPage: React.FC = () => {
     "Content-Type": "application/json",
   };
 
-  const getToken = async () => {
-    const sessionId = await createSession(mySessionId);
-    return await createToken(sessionId);
-  };
+  // const getToken = async () => {
+  //   const sessionId = await createSession(mySessionId);
+  //   return await createToken(sessionId);
+  // };
 
-  const createSession = async (sessionId: string) => {
-    const response = await axios.post(
-      APPLICATION_SERVER_URL + "api/sessions",
-      { customSessionId: sessionId },
-      {
-        headers: headers,
-      },
-    );
+  // const createSession = async (sessionId: string) => {
+  //   const response = await axios.post(
+  //     APPLICATION_SERVER_URL + "api/sessions",
+  //     { customSessionId: sessionId },
+  //     {
+  //       headers: headers,
+  //     },
+  //   );
 
-    console.log(response.data);
+  //   console.log(response.data);
 
-    return response.data; // The sessionId
-  };
+  //   return response.data; // The sessionId
+  // };
 
-  const createToken = async (sessionId: string) => {
-    const response = await axios.post(
-      APPLICATION_SERVER_URL + "api/sessions/" + sessionId + "/connections",
-      {},
-      {
-        headers: headers,
-      },
-    );
-    return response.data; // The token
-  };
+  // const createToken = async (sessionId: string) => {
+  //   const response = await axios.post(
+  //     APPLICATION_SERVER_URL + "api/sessions/" + sessionId + "/connections",
+  //     {},
+  //     {
+  //       headers: headers,
+  //     },
+  //   );
+  //   return response.data; // The token
+  // };
 
   const handleShowBox = () => {
     setShowChat(!showChat);
@@ -612,7 +634,7 @@ const VideoChatPage: React.FC = () => {
                 style={{ width: "100%" }}
               >
                 <h1 id="session-title" className="text-xl font-bold">
-                  {mySessionId}
+                  {sessionPk}
                 </h1>
                 <div>
                   {
