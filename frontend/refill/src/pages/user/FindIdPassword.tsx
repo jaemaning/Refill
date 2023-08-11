@@ -64,7 +64,10 @@ const FindIdPassword: React.FC = () => {
           ></FindSelect>
           <FindForm className="rounded-b-2xl">
             {isfindid ? (
-              <FindId ismember={ismember} />
+              <FindId
+                ismember={ismember}
+                toggleMembership={handleToggleMember}
+              />
             ) : (
               <FindPassword ismember={ismember} />
             )}

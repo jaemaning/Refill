@@ -16,6 +16,8 @@ import com.refill.member.repository.MemberRepository;
 import com.refill.member.service.MemberService;
 import com.refill.reservation.controller.ReservationController;
 import com.refill.reservation.service.ReservationService;
+import com.refill.review.controller.ReviewController;
+import com.refill.review.service.ReviewService;
 import com.refill.security.util.JwtProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -23,6 +25,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -42,6 +45,7 @@ import org.springframework.test.web.servlet.MockMvc;
     MemberController.class,
     HospitalController.class,
     AdminController.class,
+    ReviewController.class,
     ReservationController.class,
     AiDiagnosisController.class
 })
@@ -64,6 +68,7 @@ public class ControllerTest {
     @MockBean protected AiDiagnosisService aiDiagnosisService;
     @MockBean protected ReservationService reservationService;
     @MockBean protected HospitalOperatingHourService hospitalOperatingHourService;
+    @MockBean protected ReviewService reviewService;
 
     // Repository
     @MockBean protected MemberRepository memberRepository;

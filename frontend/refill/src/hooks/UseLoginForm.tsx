@@ -9,6 +9,7 @@ import {
   loginAdmin,
 } from "store/reducers/loginReducer";
 import { setCookie } from "auth/cookie";
+import { useNavigate } from "react-router-dom";
 
 interface User {
   loginId?: string;
@@ -23,6 +24,11 @@ const UseLoginForm = (loginId: string, loginPassword: string, role: number) => {
     status: 0,
     data: { accessToken: "", refreshToken: "" },
   });
+
+  const navigate = useNavigate();
+  const [openModal, setopenModal] = useState(true);
+  const [message, setMessage] = useState("");
+
   const dispatch = useDispatch();
 
   const login = async () => {
@@ -62,19 +68,20 @@ const UseLoginForm = (loginId: string, loginPassword: string, role: number) => {
         } else if (decode_token.role === "ROLOE_ADMIN") {
           dispatch(loginAdmin());
         }
+
+        setMessage("yes");
       }
     } catch (error: any) {
-      // 이후 모달 처리
-      console.log(error.response.data.message);
+      setMessage(error.response.data.message);
+      setopenModal(true);
     }
   };
 
-  const handleSubmitLoginForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    login();
+  const handleSubmitLoginForm = async () => {
+    await login();
   };
 
-  return [handleSubmitLoginForm];
+  return { handleSubmitLoginForm, message, openModal };
 };
 
 export default UseLoginForm;

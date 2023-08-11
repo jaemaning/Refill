@@ -2,6 +2,7 @@ package com.refill.util;
 
 import com.refill.account.service.AccountService;
 import com.refill.aidiagnosis.service.AiDiagnosisService;
+import com.refill.consulting.service.ConsultingService;
 import com.refill.doctor.entity.Doctor;
 import com.refill.doctor.entity.EducationBackground;
 import com.refill.doctor.entity.MajorArea;
@@ -50,6 +51,8 @@ public class ServiceTest {
     protected ReservationService reservationService;
     @Autowired
     protected DoctorService doctorService;
+    @Autowired
+    protected ConsultingService consultingService;
 
     @Autowired
     protected MajorAreaRepository majorAreaRepository;

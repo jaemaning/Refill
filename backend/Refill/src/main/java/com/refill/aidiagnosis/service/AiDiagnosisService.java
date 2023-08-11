@@ -75,14 +75,14 @@ public class AiDiagnosisService {
         AiServerResponse aiServerResponse = imageSendToAiServer(hairImg);
 
         HairLossType hairLossType = HairLossType.getType(aiServerResponse.result());
-        Integer hairLossScore = HairLossType.scoreGenerator(hairLossType,
-            aiDiagnosisRequest.surveyResult());
+        Integer hairLossScore = HairLossType.scoreGenerator(hairLossType, aiDiagnosisRequest.surveyResult());
 
         AiDiagnosis aiDiagnosis = AiDiagnosis.builder()
                                              .member(member)
                                              .hairLossScore(hairLossScore)
                                              .hairLossType(hairLossType)
                                              .surveyResult(aiDiagnosisRequest.surveyResult())
+                                             .certainty(aiServerResponse.certainty())
                                              .build();
 
         String address = amazonS3Service.uploadFile(hairImg);
