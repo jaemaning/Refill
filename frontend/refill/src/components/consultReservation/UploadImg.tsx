@@ -30,12 +30,12 @@ const UploadImg: React.FC<UploadImgProps> = ({
   const [requestData, setRequestData] = useState("");
   const token = useSelector((state: RootState) => state.login.token);
   const nextProgress = () => {
-    const reservationDateTime = selectedDate+"T"+selectedTime+":00"
+    const reservationDateTime = selectedDate + "T" + selectedTime + ":00";
     const reservationRequest = {
       doctorId: doctorId,
       startDateTime: reservationDateTime,
-      counselingDemands: requestData
-    }
+      counselingDemands: requestData,
+    };
     const json = JSON.stringify(reservationRequest);
     const jsonBlob = new Blob([json], { type: "application/json" });
     const formData = new FormData();
@@ -83,7 +83,7 @@ const UploadImg: React.FC<UploadImgProps> = ({
   };
 
   const handleTextareaChange = (
-    event: React.ChangeEvent<HTMLTextAreaElement>
+    event: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
     setRequestData(event.target.value); // textarea의 값이 변경될 때 상태 업데이트
   };

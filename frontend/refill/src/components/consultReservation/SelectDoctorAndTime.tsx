@@ -28,7 +28,7 @@ type DisabledTimeItem = {
 type ComponentProps = {
   doctors: Doctor[];
   hospitalId: string | undefined;
-  hospitalName: string
+  hospitalName: string;
 };
 
 const SelectDoctorAndTime: React.FC<ComponentProps> = ({
@@ -40,7 +40,7 @@ const SelectDoctorAndTime: React.FC<ComponentProps> = ({
   const [doctorDisabledTime, setDoctorDisabledTime] = useState<
     DisabledTimeItem[]
   >([]);
-  const [doctorId, setDoctorId] = useState(0)
+  const [doctorId, setDoctorId] = useState(0);
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [disabledTimes, setDisabledTimes] = useState<string[]>([]);
@@ -65,7 +65,7 @@ const SelectDoctorAndTime: React.FC<ComponentProps> = ({
     const doctor = doctors.find((doc) => doc.name === selectedName);
     if (doctor) {
       console.log(doctor.doctorId);
-      setDoctorId(doctor.doctorId)
+      setDoctorId(doctor.doctorId);
       disabledTime(doctor.doctorId);
     } else {
       console.log("해당 이름의 의사를 찾을 수 없습니다.");

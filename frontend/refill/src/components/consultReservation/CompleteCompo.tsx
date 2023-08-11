@@ -86,7 +86,9 @@ const CompleteCompo: React.FC<CompleteCompoProps> = ({
           </div>
           <div className="mx-6">
             <ul className="list-disc">
-              <li className="complete-font-color">상담 일정에 불참시향후 상담 예약이 어려울 수 있습니다.</li>
+              <li className="complete-font-color">
+                상담 일정에 불참시향후 상담 예약이 어려울 수 있습니다.
+              </li>
               <li>
                 부득이하게 해당 상담이 어려울 경우 즉시 해당 병원에 직접
                 전화하여 취소하시기 바랍니다.

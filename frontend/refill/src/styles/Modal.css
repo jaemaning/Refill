@@ -15,21 +15,21 @@
 .complete-modal {
   height: 600px;
   width: 400px;
-  background-color: #EEFBF6;
-  border: 3px solid #C0F8E3;
+  background-color: #eefbf6;
+  border: 3px solid #c0f8e3;
 }
 
 .complete-btn {
   border-radius: 10px;
-  background-color: #AADAFF;
+  background-color: #aadaff;
 }
 
 .complete-round {
-  background-color: #AADAFF;
+  background-color: #aadaff;
 }
 
 .complete-font-color {
-  color: #20A4F3;
+  color: #20a4f3;
 }
 
 /* AI진단 모달 */
@@ -39,7 +39,7 @@
 }
 
 .AID-modal-font-color {
-  color: #AADAFF;
+  color: #aadaff;
   margin-left: 4px;
   margin-right: 4px;
 }

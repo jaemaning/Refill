@@ -19,7 +19,7 @@ import { useSelector } from "react-redux";
 
 // [taeseong]
 import SelectDoctorAndTime from "components/consultReservation/SelectDoctorAndTime";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 // import StarRatings from "react-star-ratings";
 
 interface DivProps {
@@ -282,13 +282,13 @@ const DetailHospital: React.FC = () => {
       })
 
       .then((response) => {
-        console.log(1)
+        console.log(1);
         const { hospitalResponse, doctorResponses, reviewResponses } =
           response.data;
         setHospitalData(hospitalResponse);
         setDoctorData(doctorResponses);
         setReviewData(reviewResponses);
-        setHospitalName(hospitalResponse.name)
+        setHospitalName(hospitalResponse.name);
       })
 
       .catch((error) => {
@@ -560,7 +560,11 @@ const DetailHospital: React.FC = () => {
           </Content>
           <Content style={{ width: "350px" }}>
             {/* merge 하거나 git pull 하기 전에 삭제 */}
-            <SelectDoctorAndTime doctors={doctorData} hospitalId={hospitalId} hospitalName={hospitalName}/>
+            <SelectDoctorAndTime
+              doctors={doctorData}
+              hospitalId={hospitalId}
+              hospitalName={hospitalName}
+            />
           </Content>
         </Layout>
       </Containers>

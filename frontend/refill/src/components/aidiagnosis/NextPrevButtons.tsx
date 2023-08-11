@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import Button from "components/elements/Button";
 import { useNavigate } from "react-router-dom";
@@ -18,13 +18,13 @@ const NextPrevButtons: React.FC<LinkProps> = ({
   imgFile,
   arrayString,
 }) => {
-
   // 탈모진행도, 정확도 useState
   // const [hairLossScore, setHairLossScore] = useState(0)
   // const [certainty, setCertainty] = useState(0)
   // const [diagnosisImage, setDiagnosisImage] = useState("")
 
-  const [jsonDataString, setJsonDataString] = useState("");
+  const [jsonDataString, setJsonDataString] = useState({});
+
   const navigate = useNavigate();
 
   const ConnectPrevLink = () => {
@@ -48,8 +48,7 @@ const NextPrevButtons: React.FC<LinkProps> = ({
     axios
       .post("api/v1/diagnosis/", formData, {
         headers: {
-          Authorization:
-          `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
@@ -57,7 +56,7 @@ const NextPrevButtons: React.FC<LinkProps> = ({
         console.log(response.data);
         const jsonData = response.data;
         const newJsonDataString = JSON.stringify(jsonData);
-        setJsonDataString(newJsonDataString); // Update jsonDataString state
+        setJsonDataString(newJsonDataString); // Update jsonDataString state // Update jsonDataString state
         // setHairLossScore(response.data.hairLossScore)
         // setCertainty(response.data.certainty)
         // setDiagnosisImage(response.data.diagnosisImage)
@@ -75,7 +74,7 @@ const NextPrevButtons: React.FC<LinkProps> = ({
       console.log(arrayString);
       handleSubmit();
 
-      navigate(nextLink)
+      navigate(nextLink);
     } else {
       if (jsonDataString) {
         navigate(nextLink, { state: { jsonDataString } }); // 이동할 경로 전달

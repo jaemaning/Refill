@@ -39,7 +39,7 @@ const SelectDate: React.FC<SelectDateProps> = ({
               console.log(formattedDate);
               const weekday = dayjs(date).tz("Asia/Seoul").day();
               setNowWeekday(weekday);
-              console.log(weekday)
+              console.log(weekday);
             }
           }}
         />
