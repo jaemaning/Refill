@@ -3,6 +3,7 @@ import axios from "axios";
 import Social from "components/common/Social";
 import Button from "../elements/Button";
 import "../../styles/Loginsignup.css";
+import { useNavigate } from "react-router-dom";
 
 declare global {
   interface Window {
@@ -15,6 +16,7 @@ interface Addr {
 }
 
 const SingUp: React.FC = () => {
+  const navigate = useNavigate();
   // 회원가입 할 때 필요한 데이터
   const [inputData, setInputData] = useState({
     loginId: "",
@@ -27,10 +29,15 @@ const SingUp: React.FC = () => {
     email: "",
   });
 
+  // 비밀번호 확인
   const [checkPassword, setCheckPassword] = useState("");
+
+  // 이메일 인증에 필요한 변수들
   const [code, setCode] = useState("");
   const [checkCode, setCheckCode] = useState("");
   const [check, setCheck] = useState(false);
+
+  // 회원가입 성공, 실패를 알려주는 모달
 
   const passwordError =
     checkPassword.length > 0 && inputData.loginPassword !== checkPassword;
@@ -53,10 +60,6 @@ const SingUp: React.FC = () => {
   const checkemail = () => {
     if (checkCode === code) setCheck(true);
     else setCheck(false);
-
-    console.log(code);
-    console.log(checkCode);
-    console.log(check);
   };
 
   const onClickAddr = () => {
@@ -70,22 +73,22 @@ const SingUp: React.FC = () => {
   };
 
   // 이메일 인증 요청
-  const emailCertify = async () => {
+  const emailCertify = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
     const data = { email: inputData.email };
 
-    axios
-      .post("api/v1/account/verify/join", data, {
+    try {
+      const response = await axios.post("api/v1/account/verify/join", data, {
         headers: {
           "Content-Type": "application/json",
         },
-      })
-      .then((response) => {
-        console.log(response.data);
-        setCheckCode(response.data.code);
-      })
-      .catch((err) => {
-        console.log(err.response.data);
       });
+
+      console.log(response.data);
+      setCheckCode(response.data.code);
+    } catch (err: any) {
+      console.log(err.response.data);
+    }
   };
 
   // 회원가입 axios 요청
@@ -120,6 +123,7 @@ const SingUp: React.FC = () => {
       })
       .then((response) => {
         console.log(response.data);
+        navigate("/login");
       })
       .catch((err) => {
         console.log(err.response.data);
@@ -259,7 +263,7 @@ const SingUp: React.FC = () => {
                 variant="success"
                 type="button"
                 customStyles={{ height: "41.6px", width: "30%" }}
-                onClick={emailCertify}
+                authClick={emailCertify}
               />
             </div>
           </div>

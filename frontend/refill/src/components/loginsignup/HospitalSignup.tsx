@@ -3,6 +3,7 @@ import axios from "axios";
 import Button from "../elements/Button";
 import Social from "components/common/Social";
 import "../../styles/Loginsignup.css";
+import { useNavigate } from "react-router-dom";
 
 declare global {
   interface Window {
@@ -20,6 +21,7 @@ interface InputImageState {
 }
 
 const HospitalSignup: React.FC = () => {
+  const navigate = useNavigate();
   // 회원가입 할 때 필요한 데이터
   const [inputData, setInputData] = useState({
     loginId: "",
@@ -167,6 +169,7 @@ const HospitalSignup: React.FC = () => {
       })
       .then((response) => {
         console.log(response.data);
+        navigate("/login");
       })
       .catch((err) => {
         console.log(hospitalJoinRequest);
