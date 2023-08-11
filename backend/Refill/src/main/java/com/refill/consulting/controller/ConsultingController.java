@@ -45,10 +45,14 @@ public class ConsultingController {
     }
 
     /* 세션 종료 및 상담 소견 내용 저장 */
-    @PutMapping("/leave")
-    public ResponseEntity<String> leaveConsult(@AuthenticationPrincipal LoginInfo loginInfo,@RequestPart("consultingCloseRequest") final ConsultingCloseRequest consultingCloseRequest)
+    @PostMapping("/leave")
+    public ResponseEntity<String> leaveConsult(@AuthenticationPrincipal LoginInfo loginInfo,@RequestBody final ConsultingCloseRequest consultingCloseRequest)
         throws OpenViduJavaClientException, OpenViduHttpException {
+        log.info("=======================================================");
+        log.info("=======================================================");
         log.info("Close Session");
+        log.info("=======================================================");
+        log.info("=======================================================");
         // 세션 닫기 & 상담 실행 여부 변경
         consultingService.leaveSession(consultingCloseRequest ,loginInfo);
 
