@@ -1,5 +1,6 @@
 package com.refill.account.service;
 
+import com.refill.account.dto.request.EmailVerifyRequest;
 import com.refill.account.dto.request.HospitalJoinRequest;
 import com.refill.account.dto.request.HospitalLoginRequest;
 import com.refill.account.dto.request.LoginIdFindRequest;
@@ -7,6 +8,7 @@ import com.refill.account.dto.request.LoginPasswordRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.account.dto.request.MemberLoginRequest;
 import com.refill.account.dto.request.RefreshRequest;
+import com.refill.account.dto.response.EmailVerifyResponse;
 import com.refill.account.dto.response.RefreshResponse;
 import com.refill.account.dto.response.TokenResponse;
 import com.refill.account.exception.AccountException;
@@ -29,6 +31,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
@@ -179,7 +182,7 @@ public class AccountService {
 
         Member member = memberService.findByLoginIdAndEmail(loginPasswordRequest.loginId(),
             loginPasswordRequest.email());
-        String newPassword = getTempPassword();
+        String newPassword = getRandomCode(10);
         amazonSESService.sendTempPassword(loginPasswordRequest.email(), newPassword);
         member.encodePassword(passwordEncoder.encode(newPassword));
 
@@ -191,26 +194,24 @@ public class AccountService {
 
         Hospital hospital = hospitalService.findByLoginIdAndEmail(loginPasswordRequest.loginId(),
             loginPasswordRequest.email());
-        String newPassword = getTempPassword();
+        String newPassword = getRandomCode(10);
         amazonSESService.sendTempPassword(loginPasswordRequest.email(), newPassword);
         hospital.encodePassword(passwordEncoder.encode(newPassword));
 
         return Message.FIND_PASSWORD.getMessage();
     }
 
-    private String getTempPassword() {
+    private String getRandomCode(int length) {
         // 숫자 0
         final int leftLimit = 48;
         // 소문자 'z'
         final int rightLimit = 122;
-        final int passwordLength = 10;
 
         Random random = new Random();
         return random.ints(leftLimit, rightLimit + 1)
                      .filter(x -> (x <= 57 || x >= 65) && (x <= 90 || x >= 97))
-                     .limit(passwordLength)
-                     .collect(StringBuilder::new, StringBuilder::appendCodePoint,
-                         StringBuilder::append)
+                     .limit(length)
+                     .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                      .toString();
     }
 
@@ -228,5 +229,16 @@ public class AccountService {
         if(tokenExists ) {
             redisTemplate.delete(loginInfo.loginId());
         }
+    }
+
+    @Transactional
+    public EmailVerifyResponse verifyEmail(EmailVerifyRequest emailVerifyRequest) {
+
+        isEmailDuplicated(emailVerifyRequest.email());
+
+        String code = getRandomCode(6);
+        amazonSESService.sendCode(emailVerifyRequest.email(), code);
+
+        return new EmailVerifyResponse(code);
     }
 }

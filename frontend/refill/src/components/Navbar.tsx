@@ -30,7 +30,7 @@ const Navbar = React.forwardRef<HTMLDivElement>((props, ref) => {
         setMenuList([
           ...menuList,
           ["로그아웃", "/logout"],
-          ["마이페이지", "/mypage"],
+          ["마이페이지", "/DetailHospital"],
         ]);
       } else if (isAdmin === true) {
         setMenuList([
