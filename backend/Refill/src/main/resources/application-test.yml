@@ -40,3 +40,6 @@ jwt:
 flask:
   server:
     url: "helloWorld!!!"
+
+OPENVIDU_URL: "https://i9c201.p.ssafy.io:4441"
+OPENVIDU_SECRET: "openvidu"

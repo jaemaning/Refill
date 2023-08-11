@@ -23,6 +23,7 @@
     "http-proxy-middleware": "^2.0.6",
     "jsonwebtoken": "^9.0.1",
     "jwt-decode": "^3.1.2",
+    "openvidu-browser": "^2.28.0",
     "postcss": "^8.4.27",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",
@@ -54,7 +55,10 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "@typescript-eslint/no-unused-vars": "off"
+    }
   },
   "browserslist": {
     "production": [

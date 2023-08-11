@@ -46,7 +46,7 @@ class AiDiagnosisControllerTest extends ControllerTest {
     void ai_diagnosis_list_checked_by_member() throws Exception {
 
         List<AiDiagnosisListResponse> mockList = new ArrayList<>();
-        AiDiagnosisListResponse mockResponse = new AiDiagnosisListResponse(1L, LocalDate.now(), 100, "imageS3Address");
+        AiDiagnosisListResponse mockResponse = new AiDiagnosisListResponse(1L, LocalDate.now(), 100, "12.123","imageS3Address");
 
         mockList.add(mockResponse);
 
