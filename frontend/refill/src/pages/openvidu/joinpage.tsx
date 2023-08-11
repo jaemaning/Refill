@@ -28,18 +28,22 @@ const JoinPage = () => {
   useEffect(() => {
     if ( islogin && loginToken ) {
       console.log('로그인확인')
-      Promise.all(testReservationIds.map((testReservationId) => {
-        getToken(testReservationId)
-      }))
-      .then(()=> {
-        setLoading(false)
-      })
-      .catch((err)=> console.log("에러:", err))
+
+      const promises = testReservationIds.map((testReservationId) => getToken(testReservationId));
+
+      Promise.all(promises)
+        .then(() => {
+          setLoading(false);
+        })
+        .catch(err => console.log("에러:", err));
+
+
+        console.log('토큰 데이터 확인', tokenData)
     } else {
       alert('로그인을 해주세요.')
       navigate('/login');
     }
-    console.log('토큰 데이터 확인', tokenData)
+    
   },[])
 
   const joinSession = ( { consultingId, sessionId, token, shareToken }: TypeToken ) => {
@@ -57,6 +61,7 @@ const JoinPage = () => {
         },
       });
       setTokenData(prevTokenData => [...prevTokenData, response.data])
+      console.log(response.data)
     } catch(err) {
       console.log("에러:", err);
     }

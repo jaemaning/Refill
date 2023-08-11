@@ -376,11 +376,10 @@ const VideoChatPage: React.FC = () => {
     if (session) {
       session.disconnect();
     }
-    // console.log('스크린세션',screenSession)
-    // if (screenSession) {
-    //   console.log(screenSession)
-    //   screenSession.disconnect();
-    // }
+    if (screenSession) {
+      console.log(screenSession)
+      screenSession.disconnect();
+    }
 
     // Empty all properties...
     setSession(undefined);
@@ -393,8 +392,6 @@ const VideoChatPage: React.FC = () => {
     setScreenPublisher(undefined);
 
     if ( ishospital ) {
-      console.log('로그인토큰',loginToken)
-      console.log('데이터들', consultingId, sessionPk, consultingDetailInfo)
       axios
       .post(
         'api/v1/consulting/leave',
