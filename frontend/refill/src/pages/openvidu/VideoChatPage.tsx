@@ -253,6 +253,14 @@ const VideoChatPage: React.FC = () => {
     mySession.on("streamCreated", (event) => {
       const subscriber = mySession.subscribe(event.stream, undefined);
       setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
+
+      console.log('구독자?? :', subscriber)
+
+      subscriber.on('videoElementCreated', (event) => {
+        console.log("비디오 엘레먼트 등록시 이벤트 :",event)
+        const videoElement = event.element;
+        console.log("비디오 엘레먼트 등록시 이벤트2 :",videoElement)
+      })
     });
 
     mySession.on("streamDestroyed", (event) => {
@@ -281,8 +289,6 @@ const VideoChatPage: React.FC = () => {
     try {
       if ( token ) {
         await mySession.connect(token)
-        console.log('마이세션',mySession)
-        console.log('토큰',token)
         
         const myPublisher = await OV.initPublisherAsync("container-video", {
           audioSource: undefined,
@@ -327,8 +333,6 @@ const VideoChatPage: React.FC = () => {
         (device: any) => device.kind === "videoinput",
       );
       if (publisher) {
-        console.log(1111)
-        console.log(publisher);
         const currentVideoDeviceId = publisher.stream
           .getMediaStream()
           .getVideoTracks()[0]
@@ -340,8 +344,6 @@ const VideoChatPage: React.FC = () => {
         setMainStreamManager(publisher);
         setPublisher(publisher);
 
-        console.log(publisher);
-        console.log(subscribers);
       }
     } catch (error) {
       console.log("There was an error connecting to the session:", error);
@@ -648,7 +650,7 @@ const VideoChatPage: React.FC = () => {
               style={{
                 position: "absolute",
                 bottom: "70px",
-                right: "70px",
+                right: "50px",
                 width: "350px",
                 height: "500px",
                 backgroundColor: "#eeeeee",
