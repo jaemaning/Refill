@@ -12,9 +12,6 @@ public record AiDiagnosisListResponse(
 ) {
 
     public static AiDiagnosisListResponse from(AiDiagnosis aiDiagnosis) {
-        return new AiDiagnosisListResponse(aiDiagnosis.getId(), aiDiagnosis.getCreatedAt()
-                                                                           .toLocalDate(),
-            aiDiagnosis.getHairLossScore(),
-            aiDiagnosis.getCertainty(), aiDiagnosis.getDiagnosisImage());
+        return new AiDiagnosisListResponse(aiDiagnosis.getId(), aiDiagnosis.getCreatedAt().toLocalDate(), aiDiagnosis.getHairLossScore(), aiDiagnosis.getCertainty(), aiDiagnosis.getDiagnosisImage());
     }
 }
