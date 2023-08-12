@@ -415,8 +415,7 @@ class HospitalControllerTest extends ControllerTest {
         SecurityContextHolder.setContext(securityContext);
 
         this.mockMvc.perform(
-            delete("/api/v1/hospital/{hospitalId}/doctor/{doctorId}", hospitalId, doctorId)
-                    .contentType(MediaType.MULTIPART_FORM_DATA))
+            delete("/api/v1/hospital/{hospitalId}/doctor/{doctorId}", hospitalId, doctorId))
                     .andExpect(status().isOk())
                     .andDo(document("hospital/doctor/delete",  // RestDocs를 사용한 문서화
                         preprocessResponse(prettyPrint()),
