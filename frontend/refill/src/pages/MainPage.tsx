@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 import styled from "@emotion/styled";
 import app_logo from "../assets/app_logo.png";
 import MainComponent from "components/MainComponent";
-import DetailReservation from "components/detailReservation/DetailReservation";
+
 const Container = styled.div`
   display: flex;
   align-items: center;
@@ -74,7 +74,7 @@ const MainApp: React.FC = () => {
       </Container>
       <GreyLine />
       <Footer />
-      <DetailReservation />
+      
     </div>
   );
 };

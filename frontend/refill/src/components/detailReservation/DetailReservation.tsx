@@ -11,6 +11,12 @@ import ReservationDoctor from "./ReservationDoctor";
 // css
 import "styles/Reservation.css";
 
+type ComponentProps = {
+  doctors: Doctor[];
+  hospitalId: string | undefined;
+  hospitalName: string;
+};
+
 type Doctor = {
   doctorId: number;
   name: string;
@@ -24,12 +30,14 @@ type Reservation = {
   counselingDemands: string;
 };
 
-const DetailReservation: React.FC = () => {
+const DetailReservation: React.FC<ComponentProps> = ({
+  doctors,
+  hospitalId,
+  hospitalName,
+}) => {
   const token = useSelector((state: RootState) => state.login.token);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
-  
-  const [doctors, setDoctors] = useState<Doctor[]>([]);
 
   const [doctorId, setDoctorId] = useState(0);
 
@@ -41,34 +49,6 @@ const DetailReservation: React.FC = () => {
   const [selectedMember, setSelectedMember] = useState<Reservation | null>(
     null
   );
-
-  // reservation List
-
-  // axios로 detail hospital 호출
-  const requestDoctors = () => {
-    axios
-      .get("/api/v1/hospital/{hospitalId}", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        // doctorResponses에서 필요한 정보만 추출해서 저장
-        const doctorList = response.data.doctorResponses.map((doctor: any) => ({
-          doctorId: doctor.doctorId,
-          name: doctor.name,
-        }));
-        setDoctors(doctorList);
-      })
-      .catch((error) => {
-        console.error("error", error);
-      });
-  };
-  // 바로 호출해서 데이터를 가져옴
-  useEffect(() => {
-    requestDoctors();
-  }, []);
   /*
   상담 내역 받아오기
   @GetMapping("/{memberId}")
@@ -97,8 +77,10 @@ const DetailReservation: React.FC = () => {
   */
   // 예약 정보 다 가져와 지면 자기 예약정보 가져오기
   useEffect(() => {
-    getReservation(doctorId);
-  }, [myReservations]);
+    if (doctorId > 0) {
+      getReservation(doctorId);
+    }
+  }, [doctorId]); // doctorId 값의 변경을 감지하여 실행합니다.
   // 의사를 선택하면 악시오스 호출하기
   const getReservation = (doctorId: number) => {
     axios
@@ -139,7 +121,7 @@ const DetailReservation: React.FC = () => {
           <p>나의 상담 일정</p>
         </div>
         <div>
-          <ReservationDoctor doctors={doctors}/>
+          <ReservationDoctor setDoctorId={setDoctorId} doctors={doctors} />
         </div>
         <div>
           <ReservationDate setSelectedDate={setSelectedDate} />

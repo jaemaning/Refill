@@ -20,6 +20,7 @@ import { useSelector } from "react-redux";
 // [taeseong]
 import SelectDoctorAndTime from "components/consultReservation/SelectDoctorAndTime";
 import { useParams } from "react-router-dom";
+import DetailReservation from "components/detailReservation/DetailReservation";
 // import StarRatings from "react-star-ratings";
 
 interface DivProps {
@@ -262,7 +263,7 @@ const DetailHospital: React.FC = () => {
     // dreview 값에 따라 리뷰 정보를 필터링
     if (dreview !== 0) {
       filteredData = filteredData.filter(
-        (review) => review.doctorId === dreview,
+        (review) => review.doctorId === dreview
       );
     }
 
@@ -405,7 +406,7 @@ const DetailHospital: React.FC = () => {
                               <li className="text-lg" key={index}>
                                 {background}
                               </li>
-                            ),
+                            )
                           )}
                         </ul>
                       </Doctor_common>
@@ -547,7 +548,7 @@ const DetailHospital: React.FC = () => {
                     <Stack spacing={2}>
                       <Pagination
                         count={Math.ceil(
-                          filteredReviewData.length / reviewPerPage,
+                          filteredReviewData.length / reviewPerPage
                         )}
                         page={page}
                         onChange={handleChange}
@@ -561,6 +562,11 @@ const DetailHospital: React.FC = () => {
           <Content style={{ width: "350px" }}>
             {/* merge 하거나 git pull 하기 전에 삭제 */}
             <SelectDoctorAndTime
+              doctors={doctorData}
+              hospitalId={hospitalId}
+              hospitalName={hospitalName}
+            />
+            <DetailReservation
               doctors={doctorData}
               hospitalId={hospitalId}
               hospitalName={hospitalName}
