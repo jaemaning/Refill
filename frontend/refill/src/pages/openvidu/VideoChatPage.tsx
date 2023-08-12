@@ -647,7 +647,7 @@ const VideoChatPage: React.FC = () => {
                 style={{ width: "100%" }}
               >
                 <h1 id="session-title" className="text-xl font-bold" style={{ display: 'flex' , alignItems: 'flex-end'}}>
-                  {mySessionId}
+                  병원이름
                 </h1>
                 <div style={{ display: 'flex' , alignItems: 'flex-end'}}>
                   {
