@@ -84,7 +84,7 @@ const DetailReservation: React.FC<ComponentProps> = ({
   // 의사를 선택하면 악시오스 호출하기
   const getReservation = (doctorId: number) => {
     axios
-      .get(`api/v1/reservation/list/${doctorId}`, {
+      .get(`/api/v1/reservation/list/${doctorId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
