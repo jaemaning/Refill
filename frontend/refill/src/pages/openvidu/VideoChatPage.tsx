@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   OpenVidu,
@@ -28,6 +28,10 @@ import ChatIcon from '@mui/icons-material/Chat';
 import MarkUnreadChatAltIcon from '@mui/icons-material/MarkUnreadChatAlt'; // 채팅 온거 확인 하라는 아이콘 채팅 뒤집기 가능 ?
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import StopScreenShareIcon from '@mui/icons-material/StopScreenShare';
+import { Slider } from '@mui/material';
+import { Box } from '@mui/material';
+import { Subscriber } from 'openvidu-browser'; 
+import NotificationImportantIcon from "@mui/icons-material/NotificationImportant";
 
 interface MessageList {
   connectionId : string;
@@ -75,6 +79,7 @@ const VideoChatPage: React.FC = () => {
   >(undefined);
   const [showChat, setShowChat] = useState(false);
   const location = useLocation();
+  const [vol, setVol] = useState(30);
   //받는애
   const { consultingId, sessionPk, token, shareToken  } = location.state;
 
@@ -101,7 +106,7 @@ const VideoChatPage: React.FC = () => {
   // icon관련
   const [isMicOn, setIsMicOn] = useState(true);
   const [isCamOn, setIsCamOn] = useState(true);
-  const [isChatOn, setIsChatOn] = useState(true);
+  const [isSoundOn, seIsSoundOn] = useState(false);
   //
 
   const loginToken = useSelector((state: RootState) => state.login.token);
@@ -193,10 +198,14 @@ const VideoChatPage: React.FC = () => {
 
   // 강제로 창 종료시 동작
   useEffect(() => {
-    window.addEventListener("beforeunload", onbeforeunload);
-    return () => {
-      window.removeEventListener("beforeunload", onbeforeunload);
-    };
+    if (!session) {
+      window.addEventListener("beforeunload", onbeforeunload);
+      joinSession()
+    } else {
+      return () => {
+        window.removeEventListener("beforeunload", onbeforeunload);
+      };
+    }
   }, []);
 
   // mainStreamManager가 없을 경우 publisher로 설정
@@ -255,12 +264,8 @@ const VideoChatPage: React.FC = () => {
       setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
 
       console.log('구독자?? :', subscriber)
+      console.log('소리?? :', subscriber)
 
-      subscriber.on('videoElementCreated', (event) => {
-        console.log("비디오 엘레먼트 등록시 이벤트 :",event)
-        const videoElement = event.element;
-        console.log("비디오 엘레먼트 등록시 이벤트2 :",videoElement)
-      })
     });
 
     mySession.on("streamDestroyed", (event) => {
@@ -382,6 +387,7 @@ const VideoChatPage: React.FC = () => {
     setScreenPublisher(undefined);
 
     if ( ishospital ) {
+      // 병원 제출
       console.log("여기",consultingId,sessionPk,consultingDetailInfo)
       await axios
         .put('api/v1/consulting/leave', { params : {
@@ -394,6 +400,9 @@ const VideoChatPage: React.FC = () => {
           Authorization: `Bearer ${loginToken}`,
         }
       })
+    } else {
+      // 환자 제출
+      console.log('환자')
     }
 
     navigate('/')
@@ -422,6 +431,7 @@ const VideoChatPage: React.FC = () => {
     if (session) {
       console.log(session);
       console.log(publisher);
+      seIsSoundOn(!isSoundOn)
     }
   };
 
@@ -464,6 +474,12 @@ const VideoChatPage: React.FC = () => {
   const handleShowBox = () => {
     setShowChat(!showChat);
   };
+  
+  function preventHorizontalKeyboardNavigation(event: React.KeyboardEvent) {
+    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+      event.preventDefault();
+    }
+  }
 
   return (
     <div>
@@ -473,10 +489,11 @@ const VideoChatPage: React.FC = () => {
           className="container"
           style={{
             minWidth: "100%",
-            minHeight: "100%",
-            backgroundColor: "white",
+            minHeight: "100vh",
+            backgroundColor: "#2E5077",
             padding: "20px 20px",
             boxSizing: "border-box",
+            color: 'white'
           }}
         >
           <div
@@ -491,7 +508,7 @@ const VideoChatPage: React.FC = () => {
           >
             <div className="flex justify-between" style={{ width: "100%" }}>
               <div
-                style={{ position: "relative", width: "50%", minWidth: "500px" }}
+                style={{ position: "relative", width: "50%", minWidth: "500px", borderRadius: '3px', border: '5px solid black' }}
               >
                 <UserVideoComponent streamManager={mainStreamManager} />
                 {subscribers && mainStreamManager === publisher ? (
@@ -574,9 +591,9 @@ const VideoChatPage: React.FC = () => {
                         marginTop: "20px",
                         height: "30%",
                         backgroundColor: "#eeeeee",
-                        border: "2px solid black",
                         padding: "15px",
-                        fontSize: "25px"
+                        fontSize: "25px",
+                        borderRadius: '3px', border: '5px solid black'
                       }}
                     >
                     </textarea>
@@ -608,39 +625,58 @@ const VideoChatPage: React.FC = () => {
             >
               <div
                 id="session-footer"
-                className="flex justify-between items-center"
+                className="flex justify-between"
                 style={{ width: "100%" }}
               >
-                <h1 id="session-title" className="text-xl font-bold">
+                <h1 id="session-title" className="text-xl font-bold" style={{ display: 'flex' , alignItems: 'flex-end'}}>
                   {mySessionId}
                 </h1>
-                <div>
+                <div style={{ display: 'flex' , alignItems: 'flex-end'}}>
                   {
                     isCamOn ? 
-                    <VideocamOffIcon onClick={camOnOff} fontSize='large' sx={{ margin:"0px 13px", cursor:"pointer"}}></VideocamOffIcon>
-                    :
                     <VideocamIcon onClick={camOnOff} fontSize='large' sx={{ margin:"0px 13px", cursor:"pointer"}}></VideocamIcon>
+                    :
+                    <VideocamOffIcon onClick={camOnOff} fontSize='large' sx={{ margin:"0px 13px", cursor:"pointer"}}></VideocamOffIcon>
                   }
                   {
                     isMicOn ?
-                    <MicOffIcon onClick={soundOnOff} fontSize='large' sx={{ margin:"0px 13px", cursor:"pointer"}}></MicOffIcon>
-                    :
                     <MicIcon onClick={soundOnOff} fontSize='large' sx={{ margin:"0px 13px", cursor:"pointer"}}></MicIcon>
+                    :
+                    <MicOffIcon onClick={soundOnOff} fontSize='large' sx={{ margin:"0px 13px", cursor:"pointer"}}></MicOffIcon>
                   }
-                  <VolumeUpIcon onClick={soundControl} fontSize='large' sx={{ margin:"0px 13px", cursor:"pointer"}}></VolumeUpIcon>
+                  <div style={{display: 'flex', flexDirection: 'column'}}>
+                    <Box sx={{ height: 60, display: 'flex', alignItems: 'center', flexDirection: 'column-reverse', marginBottom: '15px' }}>
+                      <Slider
+                        sx={{
+                          color: 'skyblue',
+                          display: isSoundOn ? 'block' : 'none',
+                          '& input[type="range"]': {
+                            WebkitAppearance: 'slider-vertical',
+                          },
+                        }}
+                        orientation="vertical"
+                        defaultValue={30}
+                        aria-label="Volume"
+                        valueLabelDisplay="auto"
+                        onKeyDown={preventHorizontalKeyboardNavigation}
+                      />
+                    </Box>
+                    <VolumeUpIcon onClick={soundControl} fontSize='large' sx={{ margin:"0px 13px", cursor:"pointer"}}></VolumeUpIcon>
+                  </div>
                   {
                     ishospital ?
                     (
                       toggleScreenPublisher ?
-                      <StopScreenShareIcon onClick={toggleScreenShare} fontSize='large' sx={{ margin:"0px 13px", cursor:"pointer"}}></StopScreenShareIcon>
-                      :
                       <ScreenShareIcon onClick={toggleScreenShare} fontSize='large' sx={{ margin:"0px 13px", cursor:"pointer"}}></ScreenShareIcon>
+                      :
+                      <StopScreenShareIcon onClick={toggleScreenShare} fontSize='large' sx={{ margin:"0px 13px", cursor:"pointer"}}></StopScreenShareIcon>
                     )
                     : null
                   }
+                  <NotificationImportantIcon fontSize='large' sx={{ margin:"0px 13px", color: 'red' }}/>
                   <LogoutIcon onClick={leaveSession} fontSize='large' sx={{ margin:"0px 13px", cursor:"pointer", color: "red"}}></LogoutIcon>
                 </div>
-                <div>
+                <div style={{ display: 'flex' , alignItems: 'flex-end'}}>
                   <ChatIcon fontSize='large' onClick={handleShowBox} sx={{cursor: "pointer", transform: 'scaleX(-1)'}}></ChatIcon>
                   {/* <Button content="채팅" onClick={handleShowBox} /> */}
                 </div>
@@ -684,8 +720,7 @@ const VideoChatPage: React.FC = () => {
         </div>
         ) : (
           <StylePreSession>
-            <h1>입장 하시겠습니까 ? </h1>
-            <button onClick={joinSession}>입장</button>
+            상담 준비 중 입니다 ...
           </StylePreSession>
         )
       }
