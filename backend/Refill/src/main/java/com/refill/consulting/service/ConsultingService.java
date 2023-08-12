@@ -126,15 +126,17 @@ public class ConsultingService {
     public ConnectionTokenResponse getConnectionToken(Long reservationId, LoginInfo loginInfo){
         Consulting consulting = consultingRepository.findConsultingByReservationId(reservationId);
 
+        Long consultingId = 0L;
         String sessionId = "";
         String token = "";
         String screenShareToken = "";
 
         if(consulting == null) {
-            return new ConnectionTokenResponse(reservationId, sessionId, token, screenShareToken);
+            return new ConnectionTokenResponse(consultingId, sessionId, token, screenShareToken);
         }
         else {
             sessionId = consulting.getSessionId();
+            consultingId = consulting.getId();
             if(loginInfo.role() == ROLE_MEMBER){
                 token = consulting.getMemberToken();
             }
@@ -142,7 +144,7 @@ public class ConsultingService {
                 token = consulting.getDoctorToken();
                 screenShareToken = consulting.getScreenShareToken();
             }
-            return new ConnectionTokenResponse(reservationId, sessionId, token, screenShareToken);
+            return new ConnectionTokenResponse(consultingId, sessionId, token, screenShareToken);
         }
     }
 
