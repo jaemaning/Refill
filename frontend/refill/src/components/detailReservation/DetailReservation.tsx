@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 // 토큰가져오기
 import { RootState } from "store/reducers";
@@ -7,50 +7,68 @@ import { useSelector } from "react-redux";
 import ReservationDate from "./ReservationDate";
 import ReservationTime from "./ReservationTime";
 import DetailPatient from "./DetailPatient";
+import ReservationDoctor from "./ReservationDoctor";
 // css
 import "styles/Reservation.css";
 
 type Doctor = {
   doctorId: number;
   name: string;
-  profileImg: string;
-  licenseNumber: string;
-  licenseImg: string;
-  // 필요한 경우 여기에 추가적인 필드를 추가하세요
+};
+
+type Reservation = {
+  startDate: string;
+  memberName: string;
+  birthDay: string;
+  tel: string;
+  counselingDemands: string;
 };
 
 const DetailReservation: React.FC = () => {
   const token = useSelector((state: RootState) => state.login.token);
   const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
+  
   const [doctors, setDoctors] = useState<Doctor[]>([]);
+
+  const [doctorId, setDoctorId] = useState(0);
+
+  const [myReservations, setMyReservations] = useState<Reservation[]>([]);
+  const [selectedDateReservations, setSelectedDateReservations] = useState<
+    Reservation[]
+  >([]);
+  // 환자 선택하기
+  const [selectedMember, setSelectedMember] = useState<Reservation | null>(
+    null
+  );
+
+  // reservation List
 
   // axios로 detail hospital 호출
   const requestDoctors = () => {
     axios
-      .get("/api/v1/reservation/", {
+      .get("/api/v1/hospital/{hospitalId}", {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       })
       .then((response) => {
-        console.log(response.data);
-        setDoctors(response.data);
+        // doctorResponses에서 필요한 정보만 추출해서 저장
+        const doctorList = response.data.doctorResponses.map((doctor: any) => ({
+          doctorId: doctor.doctorId,
+          name: doctor.name,
+        }));
+        setDoctors(doctorList);
       })
       .catch((error) => {
         console.error("error", error);
       });
   };
-
-  // 의사 Id로 reservation List 호출
-  const clickDoctor = (doctorId: number) => {
-    return;
-  };
-
-  // 호출된 내용을 바탕으로 날짜별 시간 만들고
-
-  // 날짜랑 시간 클릭하면 환자 정보가 나옴
-
+  // 바로 호출해서 데이터를 가져옴
+  useEffect(() => {
+    requestDoctors();
+  }, []);
   /*
   상담 내역 받아오기
   @GetMapping("/{memberId}")
@@ -59,18 +77,81 @@ const DetailReservation: React.FC = () => {
   @GetMapping("/")
   */
 
+  /* 
+  api/v1/reservation/list/{dictorid}
+  parameter : doctorId
+  Description : 의사 PK값
+
+  Content-Type : application/json
+
+  [
+    {
+      "startDate": "2023-08-11T14:58:17.6790553",
+      "memberName": "상원",
+      "birthDay": "2023-08-11",
+      "tel": "010-1234-5678",
+      "counselingDemands": "상담 요청합니다."
+    }
+  ]
+  
+  */
+  // 예약 정보 다 가져와 지면 자기 예약정보 가져오기
+  useEffect(() => {
+    getReservation(doctorId);
+  }, [myReservations]);
+  // 의사를 선택하면 악시오스 호출하기
+  const getReservation = (doctorId: number) => {
+    axios
+      .get(`api/v1/reservation/list/${doctorId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        setMyReservations(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  //  날짜를 고르면 해당 시간에 맞는 배열 찾아서 넣기
+  useEffect(() => {
+    const filteredReservations = myReservations.filter((reservation) => {
+      const reservationDate = new Date(reservation.startDate).setHours(
+        0,
+        0,
+        0,
+        0
+      );
+      const targetDate = new Date(selectedDate).setHours(0, 0, 0, 0);
+      return reservationDate === targetDate;
+    });
+
+    setSelectedDateReservations(filteredReservations);
+  }, [selectedDate]);
+
   return (
-    <div className="detail-reservation-box p-8">
+    <div className="detail-reservation-box p-3">
       <div>
         <div>
           <p>나의 상담 일정</p>
+        </div>
+        <div>
+          <ReservationDoctor doctors={doctors}/>
         </div>
         <div>
           <ReservationDate setSelectedDate={setSelectedDate} />
         </div>
         <hr />
         <div>
-          <ReservationTime />
+          <ReservationTime
+            selectedDate={selectedDate}
+            setSelectedTime={setSelectedTime}
+            reservations={selectedDateReservations}
+            setSelectedMember={setSelectedMember}
+          />
         </div>
         <hr />
         <div>
