@@ -79,7 +79,7 @@ const JoinPage = () => {
         tokenData.map(({ sessionId, token, shareToken, consultingId }, idx) => (
           sessionId ? (
             <div key={idx}>
-              {idx}, {sessionId} :
+              {idx}, {sessionId} {consultingId}:
               <Button variant='normal' content='입장 가능' onClick={()=>{joinSession({token, shareToken, sessionId, consultingId})}}/>
             </div>
           )

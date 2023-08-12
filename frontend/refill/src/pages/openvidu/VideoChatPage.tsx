@@ -32,6 +32,10 @@ import { Slider } from '@mui/material';
 import { Box } from '@mui/material';
 import { Subscriber } from 'openvidu-browser'; 
 import NotificationImportantIcon from "@mui/icons-material/NotificationImportant";
+import OutModal from 'components/openvidu/OutModal'
+import ReportModal from 'components/openvidu/ReportModal'
+import Modal from '@mui/material/Modal';
+import ReviewModal from 'components/openvidu/ReviewModal'
 
 interface MessageList {
   connectionId : string;
@@ -108,6 +112,21 @@ const VideoChatPage: React.FC = () => {
   const [isCamOn, setIsCamOn] = useState(true);
   const [isSoundOn, seIsSoundOn] = useState(false);
   //
+
+  // modal
+  const [openOutModal, setOpenOutModal] = React.useState(false);
+  const handleOpenOutModal = () => setOpenOutModal(true);
+  const handleCloseOutModal = () => setOpenOutModal(false);
+
+  const [openReportModal, setOpenReportModal] = React.useState(false);
+  const handleOpenReportModal = () => setOpenReportModal(true);
+  const handleCloseReportModal = () => setOpenReportModal(false);
+
+  const [openReviewModal, setOpenReviewModal] = React.useState(false);
+  const handleOpenRviewtModal = () => setOpenReviewModal(true);
+  const handleCloseReviewModal = () => setOpenReviewModal(false);
+  //
+
 
   const loginToken = useSelector((state: RootState) => state.login.token);
   const islogin = useSelector((state: RootState) => state.login.islogin);
@@ -608,10 +627,11 @@ const VideoChatPage: React.FC = () => {
                       style={{
                         marginTop: "20px",
                         height: "30%",
-                        backgroundColor: "#eeeeee",
+                        backgroundColor: "#222222",
                         padding: "15px",
                         fontSize: "25px",
-                        borderRadius: '3px', border: '5px solid black'
+                        borderRadius: '3px', 
+                        border: '5px solid black',
                       }}
                     >
                     </textarea>
@@ -622,10 +642,11 @@ const VideoChatPage: React.FC = () => {
                       style={{
                         marginTop: "20px",
                         height: "30%",
-                        backgroundColor: "#eeeeee",
-                        border: "2px solid black",
+                        backgroundColor: "#222222",
                         padding: "15px",
-                        fontSize: "25px"
+                        fontSize: "25px",
+                        borderRadius: '3px', 
+                        border: '5px solid black',
                       }}
                     >
                     </textarea>
@@ -647,7 +668,7 @@ const VideoChatPage: React.FC = () => {
                 style={{ width: "100%" }}
               >
                 <h1 id="session-title" className="text-xl font-bold" style={{ display: 'flex' , alignItems: 'flex-end'}}>
-                  병원이름
+                  {sessionPk}
                 </h1>
                 <div style={{ display: 'flex' , alignItems: 'flex-end'}}>
                   {
@@ -691,12 +712,56 @@ const VideoChatPage: React.FC = () => {
                     )
                     : null
                   }
-                  <NotificationImportantIcon fontSize='large' sx={{ margin:"0px 13px", color: 'red' }}/>
-                  <LogoutIcon onClick={leaveSession} fontSize='large' sx={{ margin:"0px 13px", cursor:"pointer", color: "red"}}></LogoutIcon>
+                  <NotificationImportantIcon onClick={handleOpenReportModal} fontSize='large' sx={{ margin:"0px 13px", color: 'red', cursor: 'pointer' }}/>
+                  <LogoutIcon onClick={handleOpenOutModal} fontSize='large' sx={{ margin:"0px 13px", cursor:"pointer", color: "#ff8d13"}}></LogoutIcon>
+                  <Modal
+                    open={openOutModal}
+                    onClose={handleCloseOutModal}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                    sx={{  
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <OutModal onClose={handleCloseOutModal} onOpen={handleOpenRviewtModal}></OutModal>
+                  </Modal>
+
+                  <Modal
+                    open={openReportModal}
+                    onClose={handleCloseReportModal}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                    sx={{  
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <ReportModal onClose={handleCloseReportModal} consultingId={consultingId}></ReportModal>
+                  </Modal>
+                  
+                  <Modal
+                    open={openReviewModal}
+                    onClose={handleCloseReviewModal}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                    sx={{  
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <ReviewModal consultingId={consultingId} consultingDetailInfo={consultingDetailInfo} consultingReviewInfo={consultingReviewInfo}></ReviewModal>
+                  </Modal>
+
                 </div>
                 <div style={{ display: 'flex' , alignItems: 'flex-end'}}>
                   <ChatIcon fontSize='large' onClick={handleShowBox} sx={{cursor: "pointer", transform: 'scaleX(-1)'}}></ChatIcon>
-                  {/* <Button content="채팅" onClick={handleShowBox} /> */}
                 </div>
               </div>
             </div>
@@ -707,14 +772,15 @@ const VideoChatPage: React.FC = () => {
                 right: "50px",
                 width: "350px",
                 height: "500px",
-                backgroundColor: "#eeeeee",
+                // backgroundColor: "#eeeeee",
                 display: showChat ? "block" : "none",
                 borderRadius: "7px",
                 overflow: 'hidden',
                 border: '2px solid grey',
+                backgroundColor: '#282829'
               }}
             >
-              <div ref={chatLogref} style={{padding: "20px", maxHeight: "400px", overflowY: 'auto'}}>
+              <div ref={chatLogref} style={{padding: "20px", maxHeight: "400px", overflowY: 'auto', display: 'flex', flexDirection: 'column-reverse'}}>
                 {messageList.map(({ message, nickname, connectionId }, idx) => (
                   <ChatLog
                     key={idx}
@@ -731,7 +797,7 @@ const VideoChatPage: React.FC = () => {
                   onChange={handleChange}
                   onKeyUp={handlePresskey}
                   ref={inputref}
-                  style={{position:'absolute', bottom: '0',width:'100%', height:'100px', padding:'5px', borderBottomLeftRadius: "7px", borderBottomRightRadius: "7px", borderTop: '1px solid darkgrey'}}
+                  style={{position:'absolute', bottom: '0',width:'100%', height:'100px', padding:'5px', borderBottomLeftRadius: "7px", borderBottomRightRadius: "7px", borderTop: '1px solid darkgrey', backgroundColor: '#343434'}}
                 ></textarea>
             </div>
           </div>
