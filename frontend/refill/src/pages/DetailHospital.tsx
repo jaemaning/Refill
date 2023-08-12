@@ -274,7 +274,7 @@ const DetailHospital: React.FC = () => {
     // dreview 값에 따라 리뷰 정보를 필터링
     if (dreview !== 0) {
       filteredData = filteredData.filter(
-        (review) => review.doctorId === dreview
+        (review) => review.doctorId === dreview,
       );
     }
 
@@ -440,7 +440,7 @@ const DetailHospital: React.FC = () => {
                               <li className="text-lg" key={index}>
                                 {background}
                               </li>
-                            )
+                            ),
                           )}
                         </ul>
                       </Doctor_common>
@@ -593,7 +593,7 @@ const DetailHospital: React.FC = () => {
                     <Stack spacing={2}>
                       <Pagination
                         count={Math.ceil(
-                          filteredReviewData.length / reviewPerPage
+                          filteredReviewData.length / reviewPerPage,
                         )}
                         page={page}
                         onChange={handleChange}

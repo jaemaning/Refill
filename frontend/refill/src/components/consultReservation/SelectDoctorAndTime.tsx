@@ -44,7 +44,7 @@ const SelectDoctorAndTime: React.FC<ComponentProps> = ({
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [disabledTimes, setDisabledTimes] = useState<string[]>([]);
-  
+
   const handleDateChange = (date: string) => {
     const extractedDate = date.split("T")[0];
     setSelectedDate(extractedDate);

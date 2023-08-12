@@ -66,7 +66,7 @@ const NextPrevButtons: React.FC<LinkProps> = ({
         console.log(response);
         const jsonData = response;
         const newJsonDataString = JSON.stringify(jsonData);
-        navigate(nextLink, { state: { jsonDataString : newJsonDataString } });
+        navigate(nextLink, { state: { jsonDataString: newJsonDataString } });
       })
       .catch((err) => {
         console.log(aiDiagnosisRequest);

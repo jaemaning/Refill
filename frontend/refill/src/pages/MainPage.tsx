@@ -74,7 +74,6 @@ const MainApp: React.FC = () => {
       </Container>
       <GreyLine />
       <Footer />
-      
     </div>
   );
 };

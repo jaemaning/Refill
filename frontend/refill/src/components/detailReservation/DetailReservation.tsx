@@ -47,7 +47,7 @@ const DetailReservation: React.FC<ComponentProps> = ({
   >([]);
   // 환자 선택하기
   const [selectedMember, setSelectedMember] = useState<Reservation | null>(
-    null
+    null,
   );
   /*
   상담 내역 받아오기
@@ -105,7 +105,7 @@ const DetailReservation: React.FC<ComponentProps> = ({
         0,
         0,
         0,
-        0
+        0,
       );
       const targetDate = new Date(selectedDate).setHours(0, 0, 0, 0);
       return reservationDate === targetDate;

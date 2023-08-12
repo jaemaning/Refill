@@ -12,7 +12,7 @@ interface ReservationTimeProps {
   selectedDate: string;
   setSelectedTime: (time: string) => void;
   reservations: Reservation[];
-  setSelectedMember: (member: Reservation) => void
+  setSelectedMember: (member: Reservation) => void;
 }
 
 const ReservationTime: React.FC<ReservationTimeProps> = ({
@@ -21,9 +21,6 @@ const ReservationTime: React.FC<ReservationTimeProps> = ({
   reservations,
   setSelectedMember,
 }) => {
-  
-
-
   return <></>;
 };
 export default ReservationTime;
