@@ -27,7 +27,6 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-@ToString(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter

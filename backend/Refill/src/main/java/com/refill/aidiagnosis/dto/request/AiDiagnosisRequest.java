@@ -1,9 +1,10 @@
 package com.refill.aidiagnosis.dto.request;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public record AiDiagnosisRequest (
-    @NotBlank String surveyResult
+    @NotNull String surveyResult
 ) {
 
 }
