@@ -1,10 +1,18 @@
 package com.refill.member.controller;
 
+import com.refill.aidiagnosis.dto.response.AiDiagnosisListResponse;
+import com.refill.aidiagnosis.service.AiDiagnosisService;
+import com.refill.consulting.dto.response.ConsultingListResponse;
+import com.refill.consulting.service.ConsultingService;
 import com.refill.member.dto.request.MemberInfoUpdateRequest;
 import com.refill.member.dto.request.MemberPasswordUpdateRequest;
 import com.refill.member.dto.response.MemberInfoResponse;
+import com.refill.member.entity.Member;
 import com.refill.member.service.MemberService;
+import com.refill.reservation.dto.response.ReservationListResponse;
+import com.refill.reservation.service.ReservationService;
 import com.refill.security.util.LoginInfo;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,14 +33,19 @@ import org.springframework.web.multipart.MultipartFile;
 public class MemberController {
 
     private final MemberService memberService;
-
+    private final AiDiagnosisService aiDiagnosisService;
+    private final ReservationService reservationService;
+    private final ConsultingService consultingService;
     @GetMapping("/mypage")
     public ResponseEntity<MemberInfoResponse> getMemberInfo(@AuthenticationPrincipal LoginInfo loginInfo) {
 
         log.debug("'{}' member request mypage", loginInfo.loginId());
-        MemberInfoResponse memberInfoResponse = memberService.getMemberByLoginId(loginInfo.loginId());
+        Member member = memberService.findByLoginId(loginInfo.loginId());
+        List<AiDiagnosisListResponse> aiDiagnosisList = aiDiagnosisService.findAllByMember(loginInfo.loginId());
+        List<ReservationListResponse> reservationList = reservationService.findAllByMember(loginInfo.loginId());
+        List<ConsultingListResponse> consultingList = consultingService.getConsultingList(member.getId());
 
-        return ResponseEntity.ok().body(memberInfoResponse);
+        return ResponseEntity.ok().body(new MemberInfoResponse(member, aiDiagnosisList, reservationList, consultingList));
     }
 
     @PutMapping("/mypage")

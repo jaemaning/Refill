@@ -107,6 +107,7 @@ public class DataInitializer implements CommandLineRunner {
                                                  .member(member)
                                                  .hairLossScore(40)
                                                  .hairLossType(HairLossType.TYPE3)
+                                                 .certainty("60")
                                                  .surveyResult("1010100000")
                                                  .build();
 
