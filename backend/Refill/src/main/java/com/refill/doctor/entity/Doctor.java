@@ -19,13 +19,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.DynamicUpdate;
 
 @Getter
-@ToString(callSuper = true)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -47,11 +45,11 @@ public class Doctor extends BaseEntity {
     @Builder.Default
     List<EducationBackground> educationBackgrounds = new ArrayList<>();
 
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor", orphanRemoval = true)
     @Builder.Default
     List<Reservation> reservationList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor", orphanRemoval = true)
     @Builder.Default
     List<Review> reviews = new ArrayList<>();
 

@@ -25,6 +25,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final AmazonS3Service amazonS3Service;
+
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 

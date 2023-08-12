@@ -22,4 +22,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @Query("SELECT r FROM Reservation r WHERE r.startDateTime = :ready and r.isCanceled = false ")
     List<Reservation> findReservationReady(@Param("ready") LocalDateTime ready);
+
+    List<Reservation> findByDoctorAndStartDateTimeAfter(Doctor doctor, LocalDateTime dateTime);
 }

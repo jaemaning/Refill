@@ -19,6 +19,7 @@ spring:
       cache-null-values: false
       host: redis
       port: 6377
+      password: ${REDIS_PASSWORD}
 
 flask:
   server:

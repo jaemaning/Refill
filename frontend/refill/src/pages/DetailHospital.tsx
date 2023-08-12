@@ -5,7 +5,7 @@ import Footer from "components/Footer";
 import Cloud2 from "../assets/cloud.png";
 import styled from "@emotion/styled";
 import Button from "../components/elements/Button";
-import Arrow from "../assets/icons/reservation_arrow_icon.png";
+import Arrow from "../assets/reservation_arrow_icon.png";
 import { Rating, Pagination, Stack, Grid } from "@mui/material";
 import Container from "@mui/material/Container";
 import InputLabel from "@mui/material/InputLabel";
@@ -16,6 +16,9 @@ import NotificationImportantIcon from "@mui/icons-material/NotificationImportant
 import { red } from "@mui/material/colors";
 import { RootState } from "store/reducers";
 import { useSelector } from "react-redux";
+import HosInfo from "components/hospital/HosInfo";
+import RegisterDoctor from "./hospital/RegisterDoctor";
+import AddIcon from "@mui/icons-material/Add";
 
 // [taeseong]
 import SelectDoctorAndTime from "components/consultReservation/SelectDoctorAndTime";
@@ -50,6 +53,12 @@ interface Review {
   hospitalName: string;
   updateDate: string;
   category: string;
+}
+
+interface Time {
+  dayOfWeek: string;
+  startTime: string;
+  endTime: string;
 }
 
 const Containers = styled.div`
@@ -161,6 +170,7 @@ const DetailHospital: React.FC = () => {
   const [hospitalName, setHospitalName] = useState("");
   const [doctorData, setDoctorData] = useState<Doctor[]>([]);
   const [reviewData, setReviewData] = useState<Review[]>([]);
+  const [timeData, setTimeData] = useState<Time[]>([]);
   const [hospitalData, setHospitalData] = useState({
     id: 0,
     name: "",
@@ -172,6 +182,7 @@ const DetailHospital: React.FC = () => {
     tel: "",
     score: 0,
     email: "",
+    operatingHourResponses: [],
   });
 
   // 버튼누르는거에 따른 상태값
@@ -272,6 +283,16 @@ const DetailHospital: React.FC = () => {
 
   const filteredReviewData = getFilteredReviewData();
   const token = useSelector((state: RootState) => state.login.token);
+  const ishospital = useSelector((state: RootState) => state.login.ishospital);
+
+  // 모달 오픈
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   // 테스트용
   useEffect(() => {
@@ -283,13 +304,19 @@ const DetailHospital: React.FC = () => {
       })
 
       .then((response) => {
-        console.log(1);
-        const { hospitalResponse, doctorResponses, reviewResponses } =
-          response.data;
+        const {
+          hospitalResponse,
+          doctorResponses,
+          reviewResponses,
+          operatingHourResponses,
+        } = response.data;
+
+        console.log(response.data);
         setHospitalData(hospitalResponse);
         setDoctorData(doctorResponses);
         setReviewData(reviewResponses);
         setHospitalName(hospitalResponse.name);
+        setTimeData(operatingHourResponses);
       })
 
       .catch((error) => {
@@ -301,7 +328,8 @@ const DetailHospital: React.FC = () => {
     console.log(hospitalData);
     console.log(doctorData);
     console.log(reviewData);
-  }, [hospitalData, doctorData, reviewData]);
+    console.log(timeData);
+  }, [hospitalData, doctorData, reviewData, timeData]);
 
   // image onclick 이벤트 => 배너이미지 변경
 
@@ -360,7 +388,13 @@ const DetailHospital: React.FC = () => {
             </ButtonList>
             <hr style={{ border: "0.1rem solid #888888" }} />
             <HospitalInfo buttonData={buttonData}>
-              <h1 className="text-4xl font-bold">병원 정보</h1>
+              <h1 className="text-4xl font-bold pb-6">병원 정보</h1>
+              <HosInfo
+                timeData={timeData}
+                address={hospitalData.address}
+                tel={hospitalData.tel}
+                email={hospitalData.email}
+              />
             </HospitalInfo>
             <DoctorInfo buttonData={buttonData}>
               <h1 className="text-4xl font-bold">의사 정보</h1>
@@ -413,10 +447,21 @@ const DetailHospital: React.FC = () => {
                     </Doctors>
                     <Doctor_res_icon>
                       <img src={Arrow} alt="" />
-                      <span>상담 예약 하기</span>
+                      <a href="">
+                        {ishospital ? "내 상담 확인하기" : "상담 예약 하기"}
+                      </a>
                     </Doctor_res_icon>
                   </div>
                 ))}
+                <div className="flex items-center justify-center flex-col">
+                  <AddIcon sx={{ fontSize: 80 }}></AddIcon>
+                  <RegisterDoctor
+                    open={open}
+                    handleMOpen={handleOpen}
+                    handleMClose={handleClose}
+                    hospitalname={hospitalData.name}
+                  ></RegisterDoctor>
+                </div>
               </div>
             </DoctorInfo>
             <Review buttonData={buttonData}>
@@ -559,6 +604,8 @@ const DetailHospital: React.FC = () => {
               </Container>
             </Review>
           </Content>
+          {/* 상담 예약 들어가는 곳 */}
+          <Content style={{ width: "350px" }}></Content>
           <Content style={{ width: "350px" }}>
             {/* merge 하거나 git pull 하기 전에 삭제 */}
             <SelectDoctorAndTime
