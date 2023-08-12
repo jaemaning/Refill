@@ -81,7 +81,7 @@ public class DataInitializer implements CommandLineRunner {
 
 
 
-        for(int i=0; i<20; i++){
+        for(int i=1; i<=20; i++){
 
             Random random = new Random();
             double randomDouble = random.nextDouble();
