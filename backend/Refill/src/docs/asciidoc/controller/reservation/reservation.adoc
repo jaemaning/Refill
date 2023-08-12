@@ -39,3 +39,13 @@ include::{snippets}/reservation/delete/path-parameters.adoc[]
 
 ==== HTTP Response
 include::{snippets}/reservation/delete/http-response.adoc[]
+
+=== 의사 별 예약 현황 조회
+
+==== HTTP Request
+include::{snippets}/reservation/doctor/list/http-request.adoc[]
+include::{snippets}/reservation/doctor/list/path-parameters.adoc[]
+
+==== HTTP Response
+include::{snippets}/reservation/doctor/list/http-response.adoc[]
+include::{snippets}/reservation/doctor/list/response-fields.adoc[]
