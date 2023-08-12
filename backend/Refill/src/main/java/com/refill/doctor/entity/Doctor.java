@@ -45,11 +45,11 @@ public class Doctor extends BaseEntity {
     @Builder.Default
     List<EducationBackground> educationBackgrounds = new ArrayList<>();
 
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor", orphanRemoval = true)
     @Builder.Default
     List<Reservation> reservationList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor", orphanRemoval = true)
     @Builder.Default
     List<Review> reviews = new ArrayList<>();
 
