@@ -20,7 +20,7 @@ import ChatLog from "components/openvidu/chatLogComponent";
 // import Chat from "../../components/openvidu/chatComponent";
 
 interface MessageList {
-  connectionId : string;
+  connectionId: string;
   nickname: string;
   message: string;
 }
@@ -47,8 +47,11 @@ const BEVideoChatPage: React.FC = () => {
     StreamManager | undefined
   >(undefined);
   const [publisher, setPublisher] = useState<Publisher | undefined>(undefined);
-  const [screenPublisher, setScreenPublisher] = useState<Publisher|undefined>(undefined);
-  const [toggleScreenPublisher, setToggleScreenPublisher] = useState<boolean>(true);
+  const [screenPublisher, setScreenPublisher] = useState<Publisher | undefined>(
+    undefined,
+  );
+  const [toggleScreenPublisher, setToggleScreenPublisher] =
+    useState<boolean>(true);
   const [subscribers, setSubscribers] = useState<StreamManager[]>([]);
   const [currentVideoDevice, setCurrentVideoDevice] = useState<
     Device | undefined
@@ -78,14 +81,13 @@ const BEVideoChatPage: React.FC = () => {
   const ismember = useSelector((state: RootState) => state.login.ismember);
   const ishospital = useSelector((state: RootState) => state.login.ishospital);
 
-
   // 유저 정보 가져오기
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('멤버야?',ismember)
-    console.log('병원???',ishospital)
-    console.log('islogin 은 ????',islogin)
+    console.log("멤버야?", ismember);
+    console.log("병원???", ishospital);
+    console.log("islogin 은 ????", islogin);
     if (islogin && ismember) {
       axios
         .get("api/v1/member/mypage", {
@@ -103,13 +105,12 @@ const BEVideoChatPage: React.FC = () => {
           console.log("에러:", error);
         });
     } else if (islogin && ishospital) {
-      console.log('병원입니다.')
+      console.log("병원입니다.");
     } else {
       navigate("/");
       alert("접근 권한이 없습니다.");
     }
   }, []);
-
 
   function handleChange(event: any) {
     if (typeof event.target.value === "string") {
@@ -195,7 +196,6 @@ const BEVideoChatPage: React.FC = () => {
     );
   };
 
-
   // 의사전용 joinsession
   const joinSession = async () => {
     // console.log("엥???????????????",token_v2)
@@ -220,7 +220,7 @@ const BEVideoChatPage: React.FC = () => {
     mySession.on("signal:chat", (event) => {
       if (typeof event.data === "string") {
         const data = JSON.parse(event.data);
-        if(event.from) {
+        if (event.from) {
           messageList.push({
             connectionId: event.from.connectionId,
             nickname: userData.nickname,
@@ -246,10 +246,10 @@ const BEVideoChatPage: React.FC = () => {
         insertMode: "APPEND",
         mirror: false,
       });
-      
+
       mySession.publish(publisher);
-      console.log(publisher)
-      
+      console.log(publisher);
+
       // 이제부터 screen 부분
       const OVS = await new OpenVidu();
       const myScreenSession = await OVS.initSession();
@@ -286,7 +286,6 @@ const BEVideoChatPage: React.FC = () => {
       setMainStreamManager(publisher);
       setPublisher(publisher);
       console.log(subscribers);
-
     } catch (error) {
       console.log("There was an error connecting to the session:", error);
     }
@@ -294,16 +293,16 @@ const BEVideoChatPage: React.FC = () => {
 
   // screenShare 토글 버튼
   const toggleScreenShare = () => {
-    if( screenSession && screenPublisher && toggleScreenPublisher ) {
+    if (screenSession && screenPublisher && toggleScreenPublisher) {
       // disconnect
       setToggleScreenPublisher(false);
       screenSession.unpublish(screenPublisher);
-    } else if ( screenSession && screenPublisher ) {
+    } else if (screenSession && screenPublisher) {
       // connect
       setToggleScreenPublisher(true);
       screenSession.publish(screenPublisher);
     }
-  }
+  };
 
   const leaveSession = () => {
     if (session) {
@@ -323,7 +322,7 @@ const BEVideoChatPage: React.FC = () => {
     setPublisher(undefined);
     setScreenPublisher(undefined);
 
-    navigate('/')
+    navigate("/");
   };
 
   const camOnOff = () => {
@@ -391,9 +390,8 @@ const BEVideoChatPage: React.FC = () => {
 
   return (
     <div>
-      {
-        session ? (
-          <div
+      {session ? (
+        <div
           className="container"
           style={{
             minWidth: "100%",
@@ -415,27 +413,31 @@ const BEVideoChatPage: React.FC = () => {
           >
             <div className="flex justify-between" style={{ width: "100%" }}>
               <div
-                style={{ position: "relative", width: "50%", minWidth: "500px" }}
+                style={{
+                  position: "relative",
+                  width: "50%",
+                  minWidth: "500px",
+                }}
               >
                 <UserVideoComponent streamManager={mainStreamManager} />
                 {subscribers && mainStreamManager === publisher ? (
                   subscribers
-                  .filter((sub)=> sub.stream.typeOfVideo !== 'SCREEN')
-                  .map((sub) => (
-                    <div
-                      key={sub.id}
-                      style={{
-                        width: "25%",
-                        minWidth: "150px",
-                        position: "absolute",
-                        top: "30px",
-                        left: "30px",
-                      }}
-                      onClick={() => toggleMainAndSubStream(sub)}
-                    >
-                      <UserVideoComponent streamManager={sub} />
-                    </div>
-                  ))
+                    .filter((sub) => sub.stream.typeOfVideo !== "SCREEN")
+                    .map((sub) => (
+                      <div
+                        key={sub.id}
+                        style={{
+                          width: "25%",
+                          minWidth: "150px",
+                          position: "absolute",
+                          top: "30px",
+                          left: "30px",
+                        }}
+                        onClick={() => toggleMainAndSubStream(sub)}
+                      >
+                        <UserVideoComponent streamManager={sub} />
+                      </div>
+                    ))
                 ) : publisher !== undefined ? (
                   <div
                     style={{
@@ -465,40 +467,40 @@ const BEVideoChatPage: React.FC = () => {
                       <UserVideoComponent streamManager={screenPublisher} />
                     ) : null}
                   </div>
-                  {ismember ? 
-                  subscribers
-                  .filter((sub)=>sub.stream.typeOfVideo === 'SCREEN')
-                  .map((sub) => (
+                  {ismember
+                    ? subscribers
+                        .filter((sub) => sub.stream.typeOfVideo === "SCREEN")
+                        .map((sub) => (
+                          <div key={sub.id}>
+                            <UserVideoComponent streamManager={sub} />
+                          </div>
+                        ))
+                    : null}
+                  {ishospital ? (
                     <div
-                      key={sub.id}
+                      style={{
+                        display: toggleScreenPublisher ? "none" : "block",
+                      }}
                     >
-                      <UserVideoComponent streamManager={sub}/>
-                    </div>
-                  ))
-                  : null}
-                  { ishospital ? (
-                    <div style={{display : toggleScreenPublisher ? 'none' : 'block'}}>
                       여기에 이제 진짜 이전 자료들이 들어옵니다.
                     </div>
                   ) : null}
-                  { ismember && subscribers
-                                .filter((sub)=>sub.stream.typeOfVideo === 'SCREEN')
-                                .length === 0 ? (
-                                                  <div>
-                                                    여기에 이제 진짜 이전 자료들이 들어옵니다.
-                                                  </div>
-                                                ) : null }
+                  {ismember &&
+                  subscribers.filter(
+                    (sub) => sub.stream.typeOfVideo === "SCREEN",
+                  ).length === 0 ? (
+                    <div>여기에 이제 진짜 이전 자료들이 들어옵니다.</div>
+                  ) : null}
                 </PrevComponent>
                 <textarea
-                  placeholder= "진료 소견서를 작성해주세요. 소견서는 자동 저장됩니다."
+                  placeholder="진료 소견서를 작성해주세요. 소견서는 자동 저장됩니다."
                   style={{
                     marginTop: "20px",
                     height: "30%",
                     backgroundColor: "#eeeeee",
                     border: "2px solid black",
                   }}
-                >
-                </textarea>
+                ></textarea>
               </div>
             </div>
             <div
@@ -526,7 +528,9 @@ const BEVideoChatPage: React.FC = () => {
                     width="60px"
                     content="화면"
                     onClick={toggleScreenShare}
-                    customStyles={{display: ishospital ? 'inline-block' : 'none'}}
+                    customStyles={{
+                      display: ishospital ? "inline-block" : "none",
+                    }}
                   />
                   <Button content="상담 나가기" onClick={leaveSession} />
                 </div>
@@ -545,16 +549,16 @@ const BEVideoChatPage: React.FC = () => {
                 backgroundColor: "#eeeeee",
                 display: showChat ? "block" : "none",
                 borderRadius: "7px",
-                border: '2px solid grey',
+                border: "2px solid grey",
               }}
             >
-              <div ref={chatLogref} style={{padding: "20px"}}>
+              <div ref={chatLogref} style={{ padding: "20px" }}>
                 {messageList.map(({ message, nickname, connectionId }, idx) => (
                   <ChatLog
                     key={idx}
                     chatData={{
-                      mySessionId : session.connection.connectionId,
-                      connectionId : connectionId,
+                      mySessionId: session.connection.connectionId,
+                      connectionId: connectionId,
                       nickname: nickname,
                       message: message,
                     }}
@@ -566,56 +570,63 @@ const BEVideoChatPage: React.FC = () => {
                   onChange={handleChange}
                   onKeyUp={handlePresskey}
                   ref={inputref}
-                  style={{width:'100%', height:'100px', padding:'5px', borderBottomLeftRadius: "7px", borderBottomRightRadius: "7px", position:'absolute', bottom: '0'}}
+                  style={{
+                    width: "100%",
+                    height: "100px",
+                    padding: "5px",
+                    borderBottomLeftRadius: "7px",
+                    borderBottomRightRadius: "7px",
+                    position: "absolute",
+                    bottom: "0",
+                  }}
                 ></textarea>
               </div>
             </div>
           </div>
         </div>
-        ) : (
-          <div id="join">
-            <div
-              id="join-dialog"
-              className="bg-white rounded p-4 mx-auto"
-              style={{ backgroundColor: "#e8e8e8" }}
-            >
-              <h1 className="text-center"> Join a video session </h1>
-              <form className="space-y-4" onSubmit={joinSession}>
-                <div>
-                  <label>Participant: </label>
-                  <input
-                    className="form-input block w-full"
-                    type="text"
-                    id="userName"
-                    value={myUserName}
-                    onChange={handleChangeUserName}
-                    required
-                  />
-                </div>
-                <div>
-                  <label> Session: </label>
-                  <input
-                    className="form-input block w-full"
-                    type="text"
-                    id="sessionId"
-                    value={mySessionId}
-                    onChange={handleChangeSessionId}
-                    required
-                  />
-                </div>
-                <div className="text-center">
-                  <input
-                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                    name="commit"
-                    type="submit"
-                    value="JOIN"
-                  />
-                </div>
-              </form>
-            </div>
+      ) : (
+        <div id="join">
+          <div
+            id="join-dialog"
+            className="bg-white rounded p-4 mx-auto"
+            style={{ backgroundColor: "#e8e8e8" }}
+          >
+            <h1 className="text-center"> Join a video session </h1>
+            <form className="space-y-4" onSubmit={joinSession}>
+              <div>
+                <label>Participant: </label>
+                <input
+                  className="form-input block w-full"
+                  type="text"
+                  id="userName"
+                  value={myUserName}
+                  onChange={handleChangeUserName}
+                  required
+                />
+              </div>
+              <div>
+                <label> Session: </label>
+                <input
+                  className="form-input block w-full"
+                  type="text"
+                  id="sessionId"
+                  value={mySessionId}
+                  onChange={handleChangeSessionId}
+                  required
+                />
+              </div>
+              <div className="text-center">
+                <input
+                  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                  name="commit"
+                  type="submit"
+                  value="JOIN"
+                />
+              </div>
+            </form>
           </div>
-        )
-      }
+        </div>
+      )}
     </div>
   );
 };

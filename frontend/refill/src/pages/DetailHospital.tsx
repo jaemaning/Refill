@@ -19,6 +19,11 @@ import { useSelector } from "react-redux";
 import HosInfo from "components/hospital/HosInfo";
 import RegisterDoctor from "./hospital/RegisterDoctor";
 import AddIcon from "@mui/icons-material/Add";
+
+// [taeseong]
+import SelectDoctorAndTime from "components/consultReservation/SelectDoctorAndTime";
+import { useParams } from "react-router-dom";
+import DetailReservation from "components/detailReservation/DetailReservation";
 // import StarRatings from "react-star-ratings";
 
 interface DivProps {
@@ -159,7 +164,10 @@ const Doctor_res_icon = styled.span`
 `;
 
 const DetailHospital: React.FC = () => {
+  const { hospitalId } = useParams();
+
   // 배너이미지 갈아끼울때마다 적용
+  const [hospitalName, setHospitalName] = useState("");
   const [doctorData, setDoctorData] = useState<Doctor[]>([]);
   const [reviewData, setReviewData] = useState<Review[]>([]);
   const [timeData, setTimeData] = useState<Time[]>([]);
@@ -289,7 +297,7 @@ const DetailHospital: React.FC = () => {
   // 테스트용
   useEffect(() => {
     axios
-      .get("api/v1/hospital/1", {
+      .get(`/api/v1/hospital/${hospitalId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -307,6 +315,7 @@ const DetailHospital: React.FC = () => {
         setHospitalData(hospitalResponse);
         setDoctorData(doctorResponses);
         setReviewData(reviewResponses);
+        setHospitalName(hospitalResponse.name);
         setTimeData(operatingHourResponses);
       })
 
@@ -597,6 +606,19 @@ const DetailHospital: React.FC = () => {
           </Content>
           {/* 상담 예약 들어가는 곳 */}
           <Content style={{ width: "350px" }}></Content>
+          <Content style={{ width: "350px" }}>
+            {/* merge 하거나 git pull 하기 전에 삭제 */}
+            <SelectDoctorAndTime
+              doctors={doctorData}
+              hospitalId={hospitalId}
+              hospitalName={hospitalName}
+            />
+            <DetailReservation
+              doctors={doctorData}
+              hospitalId={hospitalId}
+              hospitalName={hospitalName}
+            />
+          </Content>
         </Layout>
       </Containers>
       <Footer />

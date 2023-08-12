@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import React, { ReactNode } from 'react';
+import React, { ReactNode } from "react";
 
 const StylePrev = styled.div`
   min-width: 100%;
@@ -10,17 +10,12 @@ const StylePrev = styled.div`
   background-color: #ffffff; // 남는 공간의 배경색을 흰색으로 설정 (또는 검은색 등 원하는 색상)
 `;
 
-
 type MyComponentProps = {
   children: ReactNode; // children prop의 타입을 ReactNode로 지정
 };
 
-const PrevComponent : React.FC<MyComponentProps> = ({children}) => {
-  return (
-    <StylePrev>
-      {children}
-    </StylePrev>
-  )
-}
+const PrevComponent: React.FC<MyComponentProps> = ({ children }) => {
+  return <StylePrev>{children}</StylePrev>;
+};
 
 export default PrevComponent;
