@@ -14,8 +14,7 @@ public record ReviewResponse(
     @NotNull String doctorName,
     @NotNull Long hospitalId,
     @NotNull String hospitalName,
-    @NotNull String updateDate,
-    @NotNull String category
+    @NotNull String updateDate
     ) {
 
     public ReviewResponse(Review review) {
@@ -30,8 +29,7 @@ public record ReviewResponse(
             review.getDoctor().getName(),
             review.getHospital().getId(),
             review.getHospital().getName(),
-            review.getUpdatedAt().format(DateTimeFormatter.ofPattern("YYYY.MM.dd")),
-            review.getCategory()
+            review.getUpdatedAt().format(DateTimeFormatter.ofPattern("YYYY.MM.dd"))
         );
     }
 }
