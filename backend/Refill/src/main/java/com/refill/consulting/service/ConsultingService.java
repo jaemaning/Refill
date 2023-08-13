@@ -79,8 +79,8 @@ public class ConsultingService {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime minute = LocalDateTime.now();
         minute = minute.plusMinutes(BEFORE_CONSULTING_TIME);
-        LocalDateTime startDateTime = LocalDateTime.of(nonth(),now.getDow.getYear(),now.getMayOfMonth(),now.getHour(),
-            minute.getMinute());
+        LocalDateTime startDateTime = LocalDateTime.of(now.getYear(),now.getMonth(),now.getDayOfMonth(),now.getHour(),minute.getMinute());
+
         // 조건문 추가
 
         log.info("'{}' == time", startDateTime);
