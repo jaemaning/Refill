@@ -37,7 +37,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Profile({"prod"})
+@Profile({"local"})
 @Component
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
@@ -222,21 +222,21 @@ public class DataInitializer implements CommandLineRunner {
 //
 //                reservationRepository.save(reservation);
 
-                LocalDate localDate = LocalDate.now();
-                LocalTime localTime = LocalTime.of(17, 20);
-                LocalDateTime startDateTime = LocalDateTime.of(localDate, localTime);
-                LocalDateTime endDateTime = startDateTime.plusMinutes(30);
-                String counselingDemands = "상담 요청합니다.";
+                // LocalDate localDate = LocalDate.now();
+                // LocalTime localTime = LocalTime.of(17, 20);
+                // LocalDateTime startDateTime = LocalDateTime.of(localDate, localTime);
+                // LocalDateTime endDateTime = startDateTime.plusMinutes(30);
+                // String counselingDemands = "상담 요청합니다.";
 
-                Reservation reservation = Reservation.builder()
-                                                     .member(member)
-                                                     .doctor(doctor)
-                                                     .startDateTime(startDateTime)
-                                                     .endDateTime(endDateTime)
-                                                     .counselingDemands(counselingDemands)
-                                                     .build();
+                // Reservation reservation = Reservation.builder()
+                //                                      .member(member)
+                //                                      .doctor(doctor)
+                //                                      .startDateTime(startDateTime)
+                //                                      .endDateTime(endDateTime)
+                //                                      .counselingDemands(counselingDemands)
+                //                                      .build();
 
-                reservationRepository.save(reservation);
+                // reservationRepository.save(reservation);
 
 //                LocalDate localDate1 = LocalDate.now();
 //                LocalTime localTime1 = LocalTime.of(13, 30);
