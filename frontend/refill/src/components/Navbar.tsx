@@ -39,7 +39,7 @@ const Navbar = React.forwardRef<HTMLDivElement>((props, ref) => {
         ]);
       }
     } else {
-      setMenuList([...menuList, ["로그인", "/login"], ["회원가입", "/signup"]]);
+      setMenuList([...menuList, ["로그인", "/loginsignup"]]);
     }
 
     console.log(isAdmin);

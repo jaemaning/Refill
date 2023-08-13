@@ -12,6 +12,8 @@ interface TypeToken {
   shareToken?: string | null;
 }
 
+const testReservationIds = [...Array(20)].map((_, i) => i);
+
 const JoinPage = () => {
   // 여기에 토큰들 담아둘거임 예약 순서대로 가자
   const [tokenData, setTokenData] = useState<TypeToken[]>([]);
@@ -21,9 +23,7 @@ const JoinPage = () => {
 
   const navigate = useNavigate();
   // 일단 테스트를 위해 1번만 그러나 여러개 일경우가 많으므로 배열에 있을 확률 up
-  const testReservationIds = [
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-  ];
+
   const [isLoading, setLoading] = useState(true); // 로딩 상태 추가
 
   useEffect(() => {
@@ -92,7 +92,7 @@ const JoinPage = () => {
         tokenData.map(({ sessionId, token, shareToken, consultingId }, idx) =>
           sessionId ? (
             <div key={idx}>
-              {idx}, {sessionId} :
+              {idx}, {sessionId} {consultingId}:
               <Button
                 variant="normal"
                 content="입장 가능"
