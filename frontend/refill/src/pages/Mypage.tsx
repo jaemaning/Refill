@@ -89,7 +89,9 @@ const Mypage: React.FC = () => {
   });
 
   const token: string = useSelector((state: RootState) => state.login.token);
-  const islogin: boolean = useSelector((state: RootState) => state.login.islogin);
+  const islogin: boolean = useSelector(
+    (state: RootState) => state.login.islogin,
+  );
 
   const navigate = useNavigate();
 
