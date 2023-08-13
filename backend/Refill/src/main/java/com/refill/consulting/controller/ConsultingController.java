@@ -48,11 +48,8 @@ public class ConsultingController {
     @PostMapping("/leave")
     public ResponseEntity<String> leaveConsult(@AuthenticationPrincipal LoginInfo loginInfo,@RequestBody final ConsultingCloseRequest consultingCloseRequest)
         throws OpenViduJavaClientException, OpenViduHttpException {
-        log.info("=======================================================");
-        log.info("=======================================================");
+
         log.info("Close Session");
-        log.info("=======================================================");
-        log.info("=======================================================");
         // 세션 닫기 & 상담 실행 여부 변경
         consultingService.leaveSession(consultingCloseRequest ,loginInfo);
 

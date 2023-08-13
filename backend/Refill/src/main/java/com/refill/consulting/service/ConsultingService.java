@@ -22,6 +22,7 @@ import com.refill.review.exception.ReviewException;
 import com.refill.security.util.LoginInfo;
 import io.openvidu.java.client.ConnectionType;
 import io.openvidu.java.client.OpenViduRole;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -72,15 +73,18 @@ public class ConsultingService {
     private final int BEFORE_CONSULTING_TIME = 15;
 
 
-    @Scheduled(cron = "0 52 * * * ?")
+    @Scheduled(cron = "0 15,45 8-18 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
 
-//        LocalDateTime now = LocalDateTime.now().plusMinutes(BEFORE_CONSULTING_TIME);
-        LocalDateTime tmp = LocalDateTime.of(2023, 8, 12, 10, 00);
-
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime startDateTime = LocalDateTime.of(now.getYear(),now.getMonth(),now.getDayOfMonth(),now.getHour(),now.getMinute());
         // 조건문 추가
-        List<Reservation> reservationList = reservationRepository.findReservationReady(tmp);
-        log.info("{} makes consulgting", reservationList);
+
+        log.info("'{}' == time", startDateTime);
+        List<Reservation> reservationList = reservationRepository.findReservationReady(startDateTime);
+        log.info("{} makes consulting", reservationList);
+        log.info("{} => reservationList" , reservationList);
+
 
         // 돌아가면서 세션 생성 및 토큰 저장
         for (Reservation reservation : reservationList) {

@@ -206,8 +206,24 @@ public class DataInitializer implements CommandLineRunner {
                 }
 
                 // 예약
-                LocalDate localDate = LocalDate.now().plusDays(1L);
-                LocalTime localTime = LocalTime.of(10, 0);
+//                LocalDate localDate = LocalDate.now().plusDays(1L);
+//                LocalTime localTime = LocalTime.of(10, 0);
+//                LocalDateTime startDateTime = LocalDateTime.of(localDate, localTime);
+//                LocalDateTime endDateTime = startDateTime.plusMinutes(30);
+//                String counselingDemands = "상담 요청합니다.";
+//
+//                Reservation reservation = Reservation.builder()
+//                                                     .member(member)
+//                                                     .doctor(doctor)
+//                                                     .startDateTime(startDateTime)
+//                                                     .endDateTime(endDateTime)
+//                                                     .counselingDemands(counselingDemands)
+//                                                     .build();
+//
+//                reservationRepository.save(reservation);
+
+                LocalDate localDate = LocalDate.now();
+                LocalTime localTime = LocalTime.of(5, 22);
                 LocalDateTime startDateTime = LocalDateTime.of(localDate, localTime);
                 LocalDateTime endDateTime = startDateTime.plusMinutes(30);
                 String counselingDemands = "상담 요청합니다.";
@@ -222,22 +238,6 @@ public class DataInitializer implements CommandLineRunner {
 
                 reservationRepository.save(reservation);
 
-//                LocalDate localDate = LocalDate.now();
-//                LocalTime localTime = LocalTime.of(13, 0);
-//                LocalDateTime startDateTime = LocalDateTime.of(localDate, localTime);
-//                LocalDateTime endDateTime = startDateTime.plusMinutes(30);
-//                String counselingDemands = "상담 요청합니다.";
-//
-//                Reservation reservation = Reservation.builder()
-//                                                     .member(member)
-//                                                     .doctor(doctor)
-//                                                     .startDateTime(startDateTime)
-//                                                     .endDateTime(endDateTime)
-//                                                     .counselingDemands(counselingDemands)
-//                                                     .build();
-//
-//                reservationRepository.save(reservation);
-//
 //                LocalDate localDate1 = LocalDate.now();
 //                LocalTime localTime1 = LocalTime.of(13, 30);
 //                LocalDateTime startDateTime1 = LocalDateTime.of(localDate1, localTime1);
