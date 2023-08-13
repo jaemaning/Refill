@@ -80,8 +80,7 @@ public class ReviewControllerTest extends ControllerTest {
                             fieldWithPath("[].doctorName").description("의사 이름"),
                             fieldWithPath("[].hospitalId").description("병원 ID"),
                             fieldWithPath("[].hospitalName").description("병원 이름"),
-                            fieldWithPath("[].updateDate").description("업데이트 날짜"),
-                            fieldWithPath("[].category").description("리뷰 카테고리")
+                            fieldWithPath("[].updateDate").description("업데이트 날짜")
                         )
                         )
                     );
@@ -112,8 +111,7 @@ public class ReviewControllerTest extends ControllerTest {
                             fieldWithPath("doctorName").description("의사 이름"),
                             fieldWithPath("hospitalId").description("병원 ID"),
                             fieldWithPath("hospitalName").description("병원 이름"),
-                            fieldWithPath("updateDate").description("업데이트 날짜"),
-                            fieldWithPath("category").description("리뷰 카테고리")
+                            fieldWithPath("updateDate").description("업데이트 날짜")
                         )));
     }
 
@@ -122,7 +120,7 @@ public class ReviewControllerTest extends ControllerTest {
     public void createReview() throws Exception {
 
         ReviewCreateRequest reviewCreateRequest = new ReviewCreateRequest(1L, 1L, 1L, "좋았습니다.",
-            "모발이식", 4);
+            4);
         doNothing().when(reviewService).createReview(reviewCreateRequest);
 
         this.mockMvc.perform(post("/api/v1/review").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(reviewCreateRequest)))
@@ -133,8 +131,7 @@ public class ReviewControllerTest extends ControllerTest {
                             fieldWithPath("content").description("리뷰 내용"),
                             fieldWithPath("memberId").description("작성자 ID"),
                             fieldWithPath("doctorId").description("의사 ID"),
-                            fieldWithPath("hospitalId").description("병원 ID"),
-                            fieldWithPath("category").description("리뷰 카테고리")
+                            fieldWithPath("hospitalId").description("병원 ID")
                         )
                     ));
     }

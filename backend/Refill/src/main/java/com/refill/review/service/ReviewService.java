@@ -64,8 +64,7 @@ public class ReviewService {
         Member member = memberService.findById(reviewCreateRequest.memberId());
         Integer score = reviewCreateRequest.score();
         String content = reviewCreateRequest.content();
-        String category = reviewCreateRequest.category();
-        Review review = Review.from(hospital, doctor, member, score, content, category);
+        Review review = Review.from(hospital, doctor, member, score, content);
         reviewRepository.save(review);
     }
 

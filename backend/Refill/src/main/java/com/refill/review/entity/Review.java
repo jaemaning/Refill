@@ -46,17 +46,13 @@ public class Review extends BaseEntity {
     @Column(name = "is_blocked")
     Boolean isBlocked;
 
-    @Column(name ="category")
-    String category;
-
-    public static Review from(Hospital hospital, Doctor doctor, Member member, Integer score, String content, String category) {
+    public static Review from(Hospital hospital, Doctor doctor, Member member, Integer score, String content) {
         return Review.builder()
             .doctor(doctor)
             .member(member)
             .hospital(hospital)
             .score(score)
             .content(content)
-            .category(category)
             .isBlocked(false)
             .build();
     }

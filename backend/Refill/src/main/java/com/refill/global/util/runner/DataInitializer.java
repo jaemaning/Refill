@@ -188,7 +188,6 @@ public class DataInitializer implements CommandLineRunner {
 
                 /* 리뷰 생성 - 의사 한명당 3개의 리뷰 생성 */
                 String[] content = {"이분이 진짜 최고", "모발이식 상담을 너무 잘해요!!", "난 좀 별로인듯..."};
-                String[] category = {"모발이식", "컨설팅", "탈모케어"};
                 for(int k=0; k < 4; k++){
                     Review review = Review.builder()
                                           .doctor(doctor)
@@ -197,7 +196,7 @@ public class DataInitializer implements CommandLineRunner {
                                           .member(member)
                                           .score(random.nextInt(6))
                                           .isBlocked(false)
-                                          .category(category[(j + k) % content.length]).build();
+                                          .build();
                     reviewRepository.save(review);
 
                     Report report = new Report(member.getRole(), member.getId(), review.getId(), "내용이 추잡합니다.", TargetType.REVIEW);

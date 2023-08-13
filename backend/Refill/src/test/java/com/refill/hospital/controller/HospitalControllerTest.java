@@ -275,7 +275,6 @@ class HospitalControllerTest extends ControllerTest {
                             fieldWithPath("reviewResponses.[].hospitalName").description("병원 이름"),
                             fieldWithPath("reviewResponses.[].updateDate").description(
                                 "리뷰 업데이트 일시"),
-                            fieldWithPath("reviewResponses.[].category").description("카테고리"),
                             fieldWithPath("operatingHourResponses[].dayOfWeek").description("요일"),
                             fieldWithPath("operatingHourResponses[].startTime").description("진료 시작 시간"),
                             fieldWithPath("operatingHourResponses[].endTime").description("진료 종료 시간")
