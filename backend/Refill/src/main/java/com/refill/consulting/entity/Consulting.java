@@ -38,13 +38,13 @@ public class Consulting extends BaseEntity {
     @Column(nullable = false)
     private String sessionId;
 
-    @Column(nullable = false)
+    @Column
     private String memberToken;
 
-    @Column(nullable = false)
+    @Column
     private String doctorToken;
 
-    @Column(nullable = false)
+    @Column
     private String screenShareToken;
 
     @Column(columnDefinition = "TEXT")
@@ -68,5 +68,12 @@ public class Consulting extends BaseEntity {
     public void updateConsultingInfo(String consultingDetailInfo) {
         this.isExecuted = true;
         this.consultingDetailInfo = consultingDetailInfo;
+    }
+
+    public void closeSession() {
+        this.sessionId = "";
+        this.screenShareToken = "";
+        this.doctorToken = "";
+        this.memberToken = "";
     }
 }
