@@ -7,6 +7,8 @@ import com.refill.consulting.dto.response.ConsultingDetailResponse;
 import com.refill.consulting.dto.response.ConsultingListResponse;
 import com.refill.consulting.service.ConsultingService;
 import com.refill.security.util.LoginInfo;
+import io.openvidu.java.client.OpenViduHttpException;
+import io.openvidu.java.client.OpenViduJavaClientException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -43,8 +45,10 @@ public class ConsultingController {
     }
 
     /* 세션 종료 및 상담 소견 내용 저장 */
-    @PutMapping("/leave")
-    public ResponseEntity<String> leaveConsult(@AuthenticationPrincipal LoginInfo loginInfo,@RequestPart("consultingCloseRequest") final ConsultingCloseRequest consultingCloseRequest) {
+    @PostMapping("/leave")
+    public ResponseEntity<String> leaveConsult(@AuthenticationPrincipal LoginInfo loginInfo,@RequestBody final ConsultingCloseRequest consultingCloseRequest)
+        throws OpenViduJavaClientException, OpenViduHttpException {
+
         log.info("Close Session");
         // 세션 닫기 & 상담 실행 여부 변경
         consultingService.leaveSession(consultingCloseRequest ,loginInfo);

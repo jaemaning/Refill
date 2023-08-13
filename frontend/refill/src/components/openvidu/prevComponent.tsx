@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import React, { ReactNode } from 'react';
+import React, { ReactNode } from "react";
 
 const StylePrev = styled.div`
   min-width: 100%;
@@ -16,12 +16,8 @@ type MyComponentProps = {
   children: ReactNode; // children prop의 타입을 ReactNode로 지정
 };
 
-const PrevComponent : React.FC<MyComponentProps> = ({children}) => {
-  return (
-    <StylePrev>
-      {children}
-    </StylePrev>
-  )
-}
+const PrevComponent: React.FC<MyComponentProps> = ({ children }) => {
+  return <StylePrev>{children}</StylePrev>;
+};
 
 export default PrevComponent;

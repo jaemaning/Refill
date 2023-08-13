@@ -9,14 +9,14 @@ interface chatLogProps {
   };
 }
 
-const messageStyle :CSSProperties = {
-  fontSize: '18px',
-  padding: '5px 10px',
-  border: '1px solid darkgrey',
-  whiteSpace: 'pre-wrap',
-  wordWrap: 'break-word', 
-  maxWidth: '250px',
-  display: 'inline-block',
+const messageStyle: CSSProperties = {
+  fontSize: "18px",
+  padding: "5px 10px",
+  border: "1px solid darkgrey",
+  whiteSpace: "pre-wrap",
+  wordWrap: "break-word",
+  maxWidth: "250px",
+  display: "inline-block",
 };
 
 const ChatLog: React.FC<chatLogProps> = ({ chatData }) => {
@@ -34,7 +34,7 @@ const ChatLog: React.FC<chatLogProps> = ({ chatData }) => {
         <div style={{marginBottom: '5px'}}>
           <span style={{ ...messageStyle, color: 'white', backgroundColor: '#626264', borderTopRightRadius: '5px', borderBottomLeftRadius: '5px', borderBottomRightRadius: '5px'}}> {chatData.message}</span>
         </div>
-      }
+      )}
     </>
   );
 };

@@ -52,7 +52,7 @@ class MemberControllerTest extends ControllerTest {
         securityContext.setAuthentication(new TestingAuthenticationToken(loginInfo, null));
         SecurityContextHolder.setContext(securityContext);
         MemberInfoResponse response = new MemberInfoResponse("testName", "testAddress",
-            LocalDate.now(), "testTel", "testNick", "testEmail", "testImg");
+            LocalDate.now(), "testTel", "testNick", "testEmail", "testImg", null, null, null);
 
         given(memberService.getMemberByLoginId(any())).willReturn(response);
 

@@ -1,5 +1,6 @@
 package com.refill.reservation.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.refill.doctor.entity.Doctor;
 import com.refill.global.entity.BaseEntity;
 import com.refill.member.entity.Member;
@@ -20,6 +21,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Entity
 public class Reservation extends BaseEntity {
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Member member;

@@ -1,5 +1,6 @@
 package com.refill.aidiagnosis.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.refill.global.entity.BaseEntity;
 import com.refill.member.entity.Member;
 import javax.persistence.Column;
@@ -19,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class AiDiagnosis extends BaseEntity {
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Member member;
