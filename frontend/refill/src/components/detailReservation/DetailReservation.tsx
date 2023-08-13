@@ -91,7 +91,10 @@ const DetailReservation: React.FC<ComponentProps> = ({
       })
       .then((res) => {
         console.log(res);
-        setMyReservations(res.data);
+        if (res.data) {
+          setMyReservations(res.data);
+          console.log(res.data)
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -112,6 +115,7 @@ const DetailReservation: React.FC<ComponentProps> = ({
     });
 
     setSelectedDateReservations(filteredReservations);
+    console.log(myReservations)
   }, [selectedDate]);
 
   return (

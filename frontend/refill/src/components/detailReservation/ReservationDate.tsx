@@ -6,9 +6,9 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 
-// dayjs.extend(utc);
-// dayjs.extend(timezone);
-// dayjs.tz.setDefault("Asia/Seoul");
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("Asia/Seoul");
 
 interface ReservationDateProps {
   setSelectedDate: (date: string) => void;
@@ -17,23 +17,21 @@ interface ReservationDateProps {
 const ReservationDate: React.FC<ReservationDateProps> = ({
   setSelectedDate,
 }) => {
-  const [selectedDateValue, setSelectedDateValue] = useState("");
+  const [selectedDateValue, setSelectedDateValue] = useState<Date | null>(null);
   return (
     <div>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DateCalendar
           disablePast={true}
-          //   value={selectedDateValue}
-          //   onChange={(date, selectionState) => {
-          //     if (date !== null) {
-          //         const formattedDate = dayjs(date).tz("Asia/Seoul").format();
-          //         setSelectedDate(formattedDate);
-          //         setSelectedDateValue(date);
-          //         console.log(formattedDate);
-          //         // const weekday = dayjs(date).tz("Asia/Seoul").day();
-          //         // setNowWeekday(weekday);
-          //       }
-          //   }}
+            value={selectedDateValue}
+            onChange={(date, selectionState) => {
+              if (selectionState === "finish") {
+                const formattedDate = dayjs(date).tz("Asia/Seoul").format();
+                setSelectedDate(formattedDate);
+                setSelectedDateValue(date);
+                console.log(formattedDate);
+              }
+            }}
         />
       </LocalizationProvider>
     </div>
