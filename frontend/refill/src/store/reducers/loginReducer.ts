@@ -16,7 +16,7 @@ const initialState: LoginState = {
   ismember: false,
   ishospital: false,
   isadmin: false,
-  hosid: 0,
+  hosid: 1,
 };
 
 const loginSlice = createSlice({

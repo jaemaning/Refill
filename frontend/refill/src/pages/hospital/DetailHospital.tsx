@@ -285,6 +285,9 @@ const DetailHospital: React.FC = () => {
   const filteredReviewData = getFilteredReviewData();
   const token = useSelector((state: RootState) => state.login.token);
   const ishospital = useSelector((state: RootState) => state.login.ishospital);
+  const hospitalId: number = useSelector(
+    (state: RootState) => state.login.hosid,
+  );
 
   // 의사 등록 모달 오픈
   const [registerOpen, setRegisterOpen] = useState(false);
@@ -361,11 +364,11 @@ const DetailHospital: React.FC = () => {
     setDeleteOpen(false);
   };
 
-  const DeleteDoc = async (hospitalid: number, doctorid: number) => {
+  const DeleteDoc = async (doctorid: number) => {
     axios
-      .delete(`api/v1/hospital/${hospitalid}/doctor/${doctorid}`, {
+      .delete(`api/v1/hospital/${hospitalId}/doctor/${doctorid}`, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          // "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
         },
       })
@@ -381,11 +384,7 @@ const DetailHospital: React.FC = () => {
       });
   };
 
-  const hospitalId: number = useSelector(
-    (state: RootState) => state.login.hosid,
-  );
-
-  console.log(hospitalId);
+  // console.log(hospitalId);
   // 테스트용
   useEffect(() => {
     axios
@@ -514,11 +513,8 @@ const DetailHospital: React.FC = () => {
             <DoctorInfo buttonData={buttonData}>
               <h1 className="text-4xl font-bold">의사 정보</h1>
               <div>
-                {doctorData.map((doctor) => (
-                  <div
-                    key={doctor.doctorId}
-                    className="flex justify-around items-center"
-                  >
+                {doctorData.map((doctor, index) => (
+                  <div key={index} className="flex justify-around items-center">
                     <Doctors>
                       <Doctor_common
                         className=" items-center"
@@ -562,16 +558,9 @@ const DetailHospital: React.FC = () => {
                               open={deleteOpen}
                               handleMOpen={handleDMOpen}
                               handleMClose={handleDMClose}
-                              hospitalId={hospitalData.hospitalId}
-                              DoctorId={doctor.doctorId}
                               hospitalname={hospitalData.name}
                               doctorname={doctor.name}
-                              onDeleteDoctor={() =>
-                                DeleteDoc(
-                                  hospitalData.hospitalId,
-                                  doctor.doctorId,
-                                )
-                              }
+                              onDeleteDoctor={() => DeleteDoc(doctor.doctorId)}
                             ></DeleteDoctor>
                           </div>
                         </div>
