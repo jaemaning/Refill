@@ -223,7 +223,7 @@ public class DataInitializer implements CommandLineRunner {
 //                reservationRepository.save(reservation);
 
                 LocalDate localDate = LocalDate.now();
-                LocalTime localTime = LocalTime.of(17, 00);
+                LocalTime localTime = LocalTime.of(17, 20);
                 LocalDateTime startDateTime = LocalDateTime.of(localDate, localTime);
                 LocalDateTime endDateTime = startDateTime.plusMinutes(30);
                 String counselingDemands = "상담 요청합니다.";
