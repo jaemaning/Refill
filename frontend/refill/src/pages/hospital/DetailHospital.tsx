@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
-import Navbar from "../components/Navbar";
+import axios, { AxiosHeaders } from "axios";
+import Navbar from "../../components/Navbar";
 import Footer from "components/Footer";
-import Cloud2 from "../assets/cloud.png";
+import Cloud2 from "../../assets/cloud.png";
 import styled from "@emotion/styled";
-import Button from "../components/elements/Button";
-import Arrow from "../assets/reservation_arrow_icon.png";
+import Button from "../../components/elements/Button";
+import Arrow from "../../assets/reservation_arrow_icon.png";
 import { Rating, Pagination, Stack, Grid } from "@mui/material";
 import Container from "@mui/material/Container";
 import InputLabel from "@mui/material/InputLabel";
@@ -17,8 +17,11 @@ import { red } from "@mui/material/colors";
 import { RootState } from "store/reducers";
 import { useSelector } from "react-redux";
 import HosInfo from "components/hospital/HosInfo";
-import RegisterDoctor from "./hospital/RegisterDoctor";
+import RegisterDoctor from "./RegisterDoctor";
 import AddIcon from "@mui/icons-material/Add";
+import ModifyDoctor from "./ModifyDoctor";
+import DeleteDoctor from "./DeleteDoctor";
+
 // import StarRatings from "react-star-ratings";
 
 interface DivProps {
@@ -56,6 +59,10 @@ interface Time {
   endTime: string;
 }
 
+interface InputImageState {
+  bannerImg: File | null;
+}
+
 const Containers = styled.div`
   border 0;
   min-width: 100%;
@@ -82,7 +89,8 @@ const Profileimg = styled.img`
   width: 200px;
   height: 200px;
   top: 80px;
-  margin-left: 300px;
+  margin-left: 150px;
+  border-radius: 40px;
 `;
 
 const Content = styled.div`
@@ -164,7 +172,7 @@ const DetailHospital: React.FC = () => {
   const [reviewData, setReviewData] = useState<Review[]>([]);
   const [timeData, setTimeData] = useState<Time[]>([]);
   const [hospitalData, setHospitalData] = useState({
-    id: 0,
+    hospitalId: 0,
     name: "",
     longitude: 0,
     latitude: 0,
@@ -277,15 +285,100 @@ const DetailHospital: React.FC = () => {
   const token = useSelector((state: RootState) => state.login.token);
   const ishospital = useSelector((state: RootState) => state.login.ishospital);
 
-  // 모달 오픈
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => {
-    setOpen(true);
+  // 의사 등록 모달 오픈
+  const [registerOpen, setRegisterOpen] = useState(false);
+  const handleRMOpen = () => {
+    setRegisterOpen(true);
   };
-  const handleClose = () => {
-    setOpen(false);
+  const handleRMClose = () => {
+    setRegisterOpen(false);
   };
 
+  const RegistDoc = async (hospitalid: number, formData: any) => {
+    console.log(formData);
+    axios
+      .post(`api/v1/hospital/${hospitalid}/doctor`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      .then((response) => {
+        console.log(response);
+        console.log(1);
+        setRegisterOpen(false);
+      })
+
+      .catch((error) => {
+        console.log(1);
+        handleRMClose();
+      });
+  };
+
+  // 의사 수정
+
+  const [modifyOpen, setModifyOpen] = useState(false);
+  const handleMMOpen = () => {
+    setModifyOpen(true);
+  };
+  const handleMMClose = () => {
+    setModifyOpen(false);
+  };
+
+  const ModifyDoc = async (
+    hospitalid: number,
+    doctorid: number,
+    formData: any,
+  ) => {
+    console.log(formData);
+    axios
+      .put(`api/v1/hospital/${hospitalid}/doctor/${doctorid}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      .then((response) => {
+        console.log(response);
+        setModifyOpen(false);
+      })
+
+      .catch((error) => {
+        console.log(1);
+        handleMMClose();
+      });
+  };
+
+  // 의사 삭제
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const handleDMOpen = () => {
+    setDeleteOpen(true);
+  };
+  const handleDMClose = () => {
+    setDeleteOpen(false);
+  };
+
+  const DeleteDoc = async (hospitalid: number, doctorid: number) => {
+    axios
+      .delete(`api/v1/hospital/${hospitalid}/doctor/${doctorid}`, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      .then((response) => {
+        console.log(response);
+        setDeleteOpen(false);
+      })
+
+      .catch((error) => {
+        console.log(1);
+        handleDMClose();
+      });
+  };
   // 테스트용
   useEffect(() => {
     axios
@@ -323,16 +416,39 @@ const DetailHospital: React.FC = () => {
   }, [hospitalData, doctorData, reviewData, timeData]);
 
   // image onclick 이벤트 => 배너이미지 변경
+  const [inputImage, setInputImage] = useState<InputImageState>({
+    bannerImg: null,
+  });
+
+  const handleImgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null; // 선택한 파일을 가져옵니다. 없으면 null로 설정합니다.
+
+    setInputImage((prevInputImage) => ({
+      ...prevInputImage,
+      [e.target.name]: file,
+    }));
+    if (file) {
+      if (e.target.name === "bannerImg") {
+        (document.getElementById("bannerImg") as HTMLInputElement).value =
+          file.name;
+      }
+    }
+  };
 
   return (
     <div>
       <Navbar />
       {/* 배너이미지 변경해주는거 적용해야함 */}
       <BannerContainer>
-        <Bannerimg src={Cloud2} />
-        {/* <ProfileContainer> */}
-        <Profileimg src={Cloud2} />
-        {/* </ProfileContainer> */}
+        <Bannerimg
+          src={
+            hospitalData.bannerProfileImg
+              ? hospitalData.bannerProfileImg
+              : Cloud2
+          }
+        />
+
+        <Profileimg src={hospitalData.hospitalProfileImg} />
       </BannerContainer>
       <Containers>
         <Layout>
@@ -414,7 +530,43 @@ const DetailHospital: React.FC = () => {
                         className="justify-center"
                         style={{ width: "400px" }}
                       >
-                        <Bigspan>약력</Bigspan>
+                        <div className="flex justify-between">
+                          <Bigspan>약력</Bigspan>
+                          <div className="flex">
+                            <ModifyDoctor
+                              open={modifyOpen}
+                              handleMOpen={handleMMOpen}
+                              handleMClose={handleMMClose}
+                              description={doctor.description}
+                              education={doctor.educationBackgrounds}
+                              major={doctor.majorAreas}
+                              profile={doctor.profileImg}
+                              hospitalname={hospitalData.name}
+                              onModify={(formData) =>
+                                ModifyDoc(
+                                  hospitalData.hospitalId,
+                                  doctor.doctorId,
+                                  formData,
+                                )
+                              }
+                            ></ModifyDoctor>
+                            <DeleteDoctor
+                              open={deleteOpen}
+                              handleMOpen={handleDMOpen}
+                              handleMClose={handleDMClose}
+                              hospitalId={hospitalData.hospitalId}
+                              DoctorId={doctor.doctorId}
+                              hospitalname={hospitalData.name}
+                              doctorname={doctor.name}
+                              onDeleteDoctor={() =>
+                                DeleteDoc(
+                                  hospitalData.hospitalId,
+                                  doctor.doctorId,
+                                )
+                              }
+                            ></DeleteDoctor>
+                          </div>
+                        </div>
                         <p className="text-lg">{doctor.description}</p>
                         <Bigspan>주요 분야</Bigspan>
                         <ul>
@@ -438,21 +590,26 @@ const DetailHospital: React.FC = () => {
                     </Doctors>
                     <Doctor_res_icon>
                       <img src={Arrow} alt="" />
-                      <a href="">
+                      <a href="" className="mt-4 text-xl">
                         {ishospital ? "내 상담 확인하기" : "상담 예약 하기"}
                       </a>
                     </Doctor_res_icon>
                   </div>
                 ))}
-                <div className="flex items-center justify-center flex-col">
-                  <AddIcon sx={{ fontSize: 80 }}></AddIcon>
-                  <RegisterDoctor
-                    open={open}
-                    handleMOpen={handleOpen}
-                    handleMClose={handleClose}
-                    hospitalname={hospitalData.name}
-                  ></RegisterDoctor>
-                </div>
+                {doctorData.length < 3 && (
+                  <div className="flex items-center justify-center flex-col">
+                    <AddIcon sx={{ fontSize: 80 }}></AddIcon>
+                    <RegisterDoctor
+                      open={registerOpen}
+                      handleMOpen={handleRMOpen}
+                      handleMClose={handleRMClose}
+                      hospitalname={hospitalData.name}
+                      onRegist={(formData) =>
+                        RegistDoc(hospitalData.hospitalId, formData)
+                      }
+                    ></RegisterDoctor>
+                  </div>
+                )}
               </div>
             </DoctorInfo>
             <Review buttonData={buttonData}>
