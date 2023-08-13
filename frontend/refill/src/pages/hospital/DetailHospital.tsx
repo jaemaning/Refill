@@ -22,7 +22,6 @@ import AddIcon from "@mui/icons-material/Add";
 import ModifyDoctor from "./ModifyDoctor";
 import DeleteDoctor from "./DeleteDoctor";
 import SelectDoctorAndTime from "components/consultReservation/SelectDoctorAndTime";
-import { useParams } from "react-router-dom";
 import DetailReservation from "components/detailReservation/DetailReservation";
 // import StarRatings from "react-star-ratings";
 
@@ -52,7 +51,6 @@ interface Review {
   hospitalId: number;
   hospitalName: string;
   updateDate: string;
-  category: string;
 }
 
 interface Time {
@@ -169,8 +167,6 @@ const Doctor_res_icon = styled.span`
 `;
 
 const DetailHospital: React.FC = () => {
-  const { hospitalId } = useParams();
-
   // 배너이미지 갈아끼울때마다 적용
   const [hospitalName, setHospitalName] = useState("");
   const [doctorData, setDoctorData] = useState<Doctor[]>([]);
@@ -384,6 +380,12 @@ const DetailHospital: React.FC = () => {
         handleDMClose();
       });
   };
+
+  const hospitalId: number = useSelector(
+    (state: RootState) => state.login.hosid,
+  );
+
+  console.log(hospitalId);
   // 테스트용
   useEffect(() => {
     axios
@@ -725,16 +727,16 @@ const DetailHospital: React.FC = () => {
                               <Grid item xs={2}>
                                 <h1>{review.doctorName}</h1>
                               </Grid>
-                              <Grid item xs={2}>
+                              <Grid item xs={10}>
                                 <h1 className="text-gray-500">
                                   {review.updateDate}
                                 </h1>
                               </Grid>
-                              <Grid item xs={8}>
+                              {/* <Grid item xs={8}>
                                 <h1 className="text-gray-500">
                                   {review.category}
                                 </h1>
-                              </Grid>
+                              </Grid> */}
                               <Grid item xs={12}>
                                 <h1 className="text-2xl">{review.content}</h1>
                               </Grid>
@@ -764,12 +766,12 @@ const DetailHospital: React.FC = () => {
             {/* merge 하거나 git pull 하기 전에 삭제 */}
             <SelectDoctorAndTime
               doctors={doctorData}
-              hospitalId={hospitalId}
+              hospitalId={hospitalData.hospitalId}
               hospitalName={hospitalName}
             />
             <DetailReservation
               doctors={doctorData}
-              hospitalId={hospitalId}
+              hospitalId={hospitalData.hospitalId}
               hospitalName={hospitalName}
             />
           </Content>

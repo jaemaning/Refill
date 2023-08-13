@@ -27,7 +27,7 @@ type DisabledTimeItem = {
 // 만약 컴포넌트에서 여러 doctors를 props로 받는다면:
 type ComponentProps = {
   doctors: Doctor[];
-  hospitalId: string | undefined;
+  hospitalId: number | undefined;
   hospitalName: string;
 };
 

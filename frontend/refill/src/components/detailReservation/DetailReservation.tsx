@@ -13,7 +13,7 @@ import "styles/Reservation.css";
 
 type ComponentProps = {
   doctors: Doctor[];
-  hospitalId: string | undefined;
+  hospitalId: number | undefined;
   hospitalName: string;
 };
 
