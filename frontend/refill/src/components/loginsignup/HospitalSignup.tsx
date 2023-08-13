@@ -78,7 +78,9 @@ const HospitalSignup: React.FC = () => {
   };
 
   // 이메일 인증 요청
-  const emailCertify = async () => {
+  const emailCertify = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    // event.preventDefault();
+
     const data = { email: inputData.email };
 
     axios
@@ -169,10 +171,9 @@ const HospitalSignup: React.FC = () => {
       })
       .then((response) => {
         console.log(response.data);
-        navigate("/login");
+        navigate("/");
       })
       .catch((err) => {
-        console.log(hospitalJoinRequest);
         console.log(err.response.data);
       });
   };
@@ -332,18 +333,19 @@ const HospitalSignup: React.FC = () => {
               }}
               style={{ width: "65%" }}
             ></input>
-            <Button
-              content="인증하기"
-              variant="warning"
+            <button
+              className="button-style hbutton"
               type="button"
-              customStyles={{ height: "41.6px", width: "30%" }}
+              style={{ height: "41.6px", width: "30%" }}
               onClick={emailCertify}
-            />
+            >
+              인증하기
+            </button>
           </div>
         </div>
         <br />
         {checkCode && (
-          <div className="flex justify-between">
+          <div className="flex justify- between">
             <input
               type="text"
               className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
@@ -354,13 +356,14 @@ const HospitalSignup: React.FC = () => {
               readOnly={check}
               style={{ width: "65%" }}
             />
-            <Button
-              content="확인하기"
-              variant="warning"
+            <button
+              className="button-style hbutton"
               type="button"
-              customStyles={{ height: "41.6px", width: "30%" }}
+              style={{ height: "41.6px", width: "30%" }}
               onClick={checkemail}
-            />
+            >
+              확인하기
+            </button>
           </div>
         )}
         <br />
@@ -379,13 +382,14 @@ const HospitalSignup: React.FC = () => {
               placeholder="조회를 눌러주세요"
               style={{ width: "65%" }}
             ></input>
-            <Button
-              content="조회하기"
-              variant="warning"
-              type="submit"
-              customStyles={{ height: "41.6px", width: "30%" }}
+            <button
+              className="button-style hbutton"
+              type="button"
+              style={{ height: "41.6px", width: "30%" }}
               onClick={onClickAddr}
-            />
+            >
+              조회하기
+            </button>
           </div>
           <input
             id="addrDetail"

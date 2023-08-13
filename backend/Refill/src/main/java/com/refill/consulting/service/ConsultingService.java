@@ -20,9 +20,14 @@ import com.refill.reservation.repository.ReservationRepository;
 import com.refill.review.entity.Review;
 import com.refill.review.exception.ReviewException;
 import com.refill.security.util.LoginInfo;
+import io.openvidu.java.client.ConnectionType;
+import io.openvidu.java.client.OpenViduRole;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -67,28 +72,48 @@ public class ConsultingService {
 
     private final int BEFORE_CONSULTING_TIME = 15;
 
-//    @Scheduled(cron = "0 15,45 8-18 * * ?")
-//    @Scheduled(fixedRate = 100000)
-    // @Scheduled(cron = "0 15 8-18 * * ?")
+
+    @Scheduled(cron = "0 15,45 8-18 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
-        LocalDateTime now = LocalDateTime.now();//.plusMinutes(BEFORE_CONSULTING_TIME);
-        LocalDateTime tmp = LocalDateTime.of(2023, 8, 11, 10, 00);
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime minute = LocalDateTime.now();
+        minute = minute.plusMinutes(BEFORE_CONSULTING_TIME);
+        LocalDateTime startDateTime = LocalDateTime.of(now.getYear(),now.getMonth(),now.getDayOfMonth(),now.getHour(),minute.getMinute());
 
         // 조건문 추가
-        List<Reservation> reservationList = reservationRepository.findReservationReady(tmp);
 
-        log.info("{} makes consulgting", reservationList);
+        log.info("'{}' == time", startDateTime);
+        List<Reservation> reservationList = reservationRepository.findReservationReady(startDateTime);
+        log.info("{} makes consulting", reservationList);
+        log.info("{} => reservationList" , reservationList);
+
 
         // 돌아가면서 세션 생성 및 토큰 저장
         for (Reservation reservation : reservationList) {
             Member member = reservation.getMember();
             Doctor doctor = reservation.getDoctor();
 
-            Session session = openvidu.createSession();
+            // 세션 생성
+            Map<String, Object> params = new HashMap<>();
+            String customSessionId = "session" + reservation.getId().toString();
+            params.put("customSessionId",customSessionId);
+
+            SessionProperties properties = SessionProperties.fromJson(params).build();
+
+            Session session = openvidu.createSession(properties);
             String sessionId = session.getSessionId();
-            String doctorToken = session.createConnection().getToken();
-            String screenShareToken = session.createConnection().getToken();
-            String memberToken = session.createConnection().getToken();
+
+            // connection 생성
+            ConnectionProperties connectionProperties = new ConnectionProperties.Builder()
+                .type(ConnectionType.WEBRTC)
+                .role(OpenViduRole.PUBLISHER)
+                .data("user_data")
+                .build();
+
+            String doctorToken = session.createConnection(connectionProperties).getToken();
+            String screenShareToken = session.createConnection(connectionProperties).getToken();
+            String memberToken = session.createConnection(connectionProperties).getToken();
 
             Consulting consulting = Consulting.builder()
                                               .member(member)
@@ -108,15 +133,17 @@ public class ConsultingService {
     public ConnectionTokenResponse getConnectionToken(Long reservationId, LoginInfo loginInfo){
         Consulting consulting = consultingRepository.findConsultingByReservationId(reservationId);
 
+        Long consultingId = 0L;
         String sessionId = "";
         String token = "";
         String screenShareToken = "";
 
         if(consulting == null) {
-            return new ConnectionTokenResponse(sessionId, token, screenShareToken);
+            return new ConnectionTokenResponse(consultingId, sessionId, token, screenShareToken);
         }
         else {
             sessionId = consulting.getSessionId();
+            consultingId = consulting.getId();
             if(loginInfo.role() == ROLE_MEMBER){
                 token = consulting.getMemberToken();
             }
@@ -124,7 +151,7 @@ public class ConsultingService {
                 token = consulting.getDoctorToken();
                 screenShareToken = consulting.getScreenShareToken();
             }
-            return new ConnectionTokenResponse(sessionId, token, screenShareToken);
+            return new ConnectionTokenResponse(consultingId, sessionId, token, screenShareToken);
         }
     }
 
@@ -140,6 +167,8 @@ public class ConsultingService {
         if (consulting == null) {
             throw new ConsultingException(ErrorCode.SESSION_FAIL);
         }
+
+        consulting.closeSession();
 
         consulting.updateConsultingInfo(consultingCloseRequest.consultingDetailInfo());
     }

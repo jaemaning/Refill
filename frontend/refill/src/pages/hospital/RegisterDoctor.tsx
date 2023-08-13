@@ -3,6 +3,8 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Button from "@mui/material/Button";
 import { Container, Grid } from "@mui/material";
+import "../../styles/Loginsignup.css";
+import styled from "@emotion/styled";
 
 const style = {
   position: "absolute",
@@ -17,11 +19,21 @@ const style = {
   pb: 3,
 };
 
+const Clickbutton = styled.button`
+  width: 90px;
+  color: white;
+  font-size: 15px;
+  border: 1px solid;
+  height: 40px;
+  border-radius: 5px;
+`;
+
 interface RegisterModal {
   open: boolean;
   handleMOpen: () => void;
   handleMClose: () => void;
   hospitalname: string;
+  onRegist: (formData: any) => void;
 }
 
 interface InputImageState {
@@ -34,12 +46,13 @@ const RegisterDoctor: React.FC<RegisterModal> = ({
   handleMOpen,
   handleMClose,
   hospitalname,
+  onRegist,
 }) => {
   const [inputData, setInputData] = useState({
     name: "",
     description: "",
-    educationBackgrounds: [],
-    majorAreas: [],
+    education: "",
+    major: "",
     licenseNumber: "",
   });
 
@@ -67,29 +80,45 @@ const RegisterDoctor: React.FC<RegisterModal> = ({
         (document.getElementById("profilename") as HTMLInputElement).value =
           file.name;
       } else if (e.target.name === "licenseImg") {
-        (document.getElementById("regname") as HTMLInputElement).value =
+        (document.getElementById("licensename") as HTMLInputElement).value =
           file.name;
       }
     }
   };
+  const makeFormdata = () => {
+    const tempEdu: string[] = inputData.education.split(",");
+    const tempMaj: string[] = inputData.education.split(",");
 
-  const [ecount, setEcount] = useState(0);
-  const [mcount, setMcount] = useState(0);
+    const doctorJoinRequest = {
+      name: inputData.name,
+      description: inputData.description,
+      educationBackgrounds: tempEdu,
+      majorAreas: tempMaj,
+      licenseNumber: inputData.licenseNumber,
+    };
 
-  // const addEducationBackground = () => {
-  //   setInputData({
-  //     ...inputData,
-  //     educationBackgrounds: [...inputData.educationBackgrounds, ""],
-  //   });
+    console.log(doctorJoinRequest);
+    const json = JSON.stringify(doctorJoinRequest);
+    const jsonBlob = new Blob([json], { type: "application/json" });
+    const formData = new FormData();
 
-  // };
+    formData.append("doctorJoinRequest", jsonBlob);
 
-  // const addMajorArea = () => {
-  //   setInputData({
-  //     ...inputData,
-  //     majorAreas: [...inputData.majorAreas, ""],
-  //   });
-  // };
+    if (inputImage.profileImg) {
+      formData.append("profileImg", inputImage.profileImg);
+    }
+    if (inputImage.licenseImg) {
+      formData.append("licenseImg", inputImage.licenseImg);
+    }
+    console.log(formData);
+    return formData;
+  };
+
+  const finalresgist = () => {
+    const temp = makeFormdata();
+
+    onRegist(temp);
+  };
 
   return (
     <div>
@@ -171,7 +200,7 @@ const RegisterDoctor: React.FC<RegisterModal> = ({
               </Grid>
               <Grid item xs={6}>
                 <input
-                  id="licenseImg"
+                  id="licensename"
                   readOnly
                   type="text"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
@@ -192,7 +221,7 @@ const RegisterDoctor: React.FC<RegisterModal> = ({
                 </label>
               </Grid>
               <Grid item xs={4}>
-                <h1 className="text-lg font-bold">약력</h1>
+                <h1 className="text-lg font-bold">약력(선택)</h1>
               </Grid>
               <Grid item xs={8}>
                 <input
@@ -207,30 +236,55 @@ const RegisterDoctor: React.FC<RegisterModal> = ({
                 ></input>
               </Grid>
               <Grid item xs={4}>
-                <h1 className="text-lg font-bold">학력</h1>
+                <h1 className="text-lg font-bold">학력/자격면허(선택)</h1>
               </Grid>
-              <Grid item xs={6}>
-                <input
-                  id="educationBackgrounds"
-                  type="text"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                  placeholder="면허 사진을 등록해주세요"
-                ></input>
-              </Grid>
-              <Grid item xs={2}>
-                <label htmlFor="licenseImg" className="file-input-btn">
-                  업로드
+              <Grid item xs={8}>
+                <div className="flex-col">
                   <input
-                    type="file"
-                    accept="image/*"
-                    id="licenseImg"
-                    name="licenseImg"
-                    className="file-input"
-                    onChange={handleImgChange}
-                  />
-                </label>
+                    type="text"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                    placeholder="학력을 등록해주세요"
+                    onChange={(e) => {
+                      changeInput(e);
+                    }}
+                    name="education"
+                    value={inputData.education}
+                  ></input>
+                </div>
+              </Grid>
+              <Grid item xs={4}>
+                <h1 className="text-lg font-bold">주요분야(선택)</h1>
+              </Grid>
+              <Grid item xs={8}>
+                <div className="flex-col">
+                  <input
+                    type="text"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                    placeholder="주요분야을 등록해주세요"
+                    onChange={(e) => {
+                      changeInput(e);
+                    }}
+                    name="major"
+                    value={inputData.major}
+                  ></input>
+                </div>
               </Grid>
             </Grid>
+            <div className="flex justify-end">
+              <Clickbutton
+                style={{ backgroundColor: "#2E5077" }}
+                onClick={finalresgist}
+              >
+                등록하기
+              </Clickbutton>
+              <Clickbutton
+                className="ml-4"
+                style={{ backgroundColor: "#F8A300" }}
+                onClick={handleMClose}
+              >
+                취소하기
+              </Clickbutton>
+            </div>
           </Container>
         </Box>
       </Modal>

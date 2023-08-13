@@ -161,6 +161,8 @@ public class HospitalService {
 
     private Hospital checkAccessHospital(String loginId, Long hospitalId) {
         Hospital hospital = findByLoginId(loginId);
+        log.error("{}", hospital.getId());
+        log.error("{}", hospitalId);
         if (!hospital.getId()
                      .equals(hospitalId)) {
             throw new MemberException(ErrorCode.ACCESS_DENIED);
