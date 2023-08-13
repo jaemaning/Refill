@@ -47,7 +47,7 @@ const App: React.FC = () => {
         {/* <Route path="/RegisterDoctor" element={<RegisterDoctor />} /> */}
         {/* <Route path="/webrtc" element={<WebRTC />} /> */}
         {/* <Route path="/video" element={<VideoChatPage />} /> */}
-        <Route path="admin" element={<Admin/>} />
+        <Route path="admin" element={<Admin />} />
         <Route path="/video" element={<VideoChatPage />} />
         {/* <Route path="/video" element={<BEVideoChatPage />} /> */}
         <Route path="/join" element={<JoinPage />} />

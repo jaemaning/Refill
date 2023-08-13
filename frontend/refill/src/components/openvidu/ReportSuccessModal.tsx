@@ -1,7 +1,6 @@
-import * as React from 'react';
-import { Box } from '@mui/material';
-import Alert from '@mui/material/Alert';
-
+import * as React from "react";
+import { Box } from "@mui/material";
+import Alert from "@mui/material/Alert";
 
 const ReportSuccessModal = () => {
   return (

@@ -18,24 +18,24 @@ import PrevComponent from "components/openvidu/prevComponent";
 // import { ScreenComponent } from "components/openvidu/screenComponent";
 import ChatLog from "components/openvidu/chatLogComponent";
 // import Chat from "../../components/openvidu/chatComponent";
-import MicIcon from '@mui/icons-material/Mic';
-import MicOffIcon from '@mui/icons-material/MicOff';
-import VideocamIcon from '@mui/icons-material/Videocam';
-import VideocamOffIcon from '@mui/icons-material/VideocamOff';
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import LogoutIcon from '@mui/icons-material/Logout';
-import ChatIcon from '@mui/icons-material/Chat';
-import MarkUnreadChatAltIcon from '@mui/icons-material/MarkUnreadChatAlt'; // 채팅 온거 확인 하라는 아이콘 채팅 뒤집기 가능 ?
-import ScreenShareIcon from '@mui/icons-material/ScreenShare';
-import StopScreenShareIcon from '@mui/icons-material/StopScreenShare';
-import { Slider } from '@mui/material';
-import { Box } from '@mui/material';
-import { Subscriber } from 'openvidu-browser'; 
+import MicIcon from "@mui/icons-material/Mic";
+import MicOffIcon from "@mui/icons-material/MicOff";
+import VideocamIcon from "@mui/icons-material/Videocam";
+import VideocamOffIcon from "@mui/icons-material/VideocamOff";
+import VolumeUpIcon from "@mui/icons-material/VolumeUp";
+import LogoutIcon from "@mui/icons-material/Logout";
+import ChatIcon from "@mui/icons-material/Chat";
+import MarkUnreadChatAltIcon from "@mui/icons-material/MarkUnreadChatAlt"; // 채팅 온거 확인 하라는 아이콘 채팅 뒤집기 가능 ?
+import ScreenShareIcon from "@mui/icons-material/ScreenShare";
+import StopScreenShareIcon from "@mui/icons-material/StopScreenShare";
+import { Slider } from "@mui/material";
+import { Box } from "@mui/material";
+import { Subscriber } from "openvidu-browser";
 import NotificationImportantIcon from "@mui/icons-material/NotificationImportant";
-import OutModal from 'components/openvidu/OutModal'
-import ReportModal from 'components/openvidu/ReportModal'
-import Modal from '@mui/material/Modal';
-import ReviewModal from 'components/openvidu/ReviewModal'
+import OutModal from "components/openvidu/OutModal";
+import ReportModal from "components/openvidu/ReportModal";
+import Modal from "@mui/material/Modal";
+import ReviewModal from "components/openvidu/ReviewModal";
 
 interface MessageList {
   connectionId: string;
@@ -130,7 +130,6 @@ const VideoChatPage: React.FC = () => {
   const handleCloseReviewModal = () => setOpenReviewModal(false);
   //
 
-
   const loginToken = useSelector((state: RootState) => state.login.token);
   const islogin = useSelector((state: RootState) => state.login.islogin);
   const ismember = useSelector((state: RootState) => state.login.ismember);
@@ -220,7 +219,7 @@ const VideoChatPage: React.FC = () => {
   useEffect(() => {
     if (!session) {
       window.addEventListener("beforeunload", onbeforeunload);
-      joinSession()
+      joinSession();
     } else {
       return () => {
         window.removeEventListener("beforeunload", onbeforeunload);
@@ -283,9 +282,8 @@ const VideoChatPage: React.FC = () => {
       setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
       console.log("비디오 엘레먼트 등록시 이벤트 :", event);
 
-      console.log('구독자?? :', subscriber)
-      console.log('소리?? :', subscriber)
-
+      console.log("구독자?? :", subscriber);
+      console.log("소리?? :", subscriber);
     });
 
     console.log(mySession);
@@ -419,8 +417,8 @@ const VideoChatPage: React.FC = () => {
     setPublisher(undefined);
     setScreenPublisher(undefined);
 
-    navigate('/')
-  }
+    navigate("/");
+  };
 
   const camOnOff = () => {
     if (session) {
@@ -445,7 +443,7 @@ const VideoChatPage: React.FC = () => {
     if (session) {
       console.log(session);
       console.log(publisher);
-      seIsSoundOn(!isSoundOn)
+      seIsSoundOn(!isSoundOn);
     }
   };
 
@@ -488,9 +486,9 @@ const VideoChatPage: React.FC = () => {
   const handleShowBox = () => {
     setShowChat(!showChat);
   };
-  
+
   function preventHorizontalKeyboardNavigation(event: React.KeyboardEvent) {
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
       event.preventDefault();
     }
   }
@@ -506,7 +504,7 @@ const VideoChatPage: React.FC = () => {
             backgroundColor: "#2E5077",
             padding: "20px 20px",
             boxSizing: "border-box",
-            color: 'white'
+            color: "white",
           }}
         >
           <div
@@ -521,7 +519,13 @@ const VideoChatPage: React.FC = () => {
           >
             <div className="flex justify-between" style={{ width: "100%" }}>
               <div
-                style={{ position: "relative", width: "50%", minWidth: "500px", borderRadius: '3px', border: '5px solid black' }}
+                style={{
+                  position: "relative",
+                  width: "50%",
+                  minWidth: "500px",
+                  borderRadius: "3px",
+                  border: "5px solid black",
+                }}
               >
                 <UserVideoComponent streamManager={mainStreamManager} />
                 {subscribers && mainStreamManager === publisher ? (
@@ -596,38 +600,35 @@ const VideoChatPage: React.FC = () => {
                     <div>여기에 이제 진짜 이전 자료들이 들어옵니다.</div>
                   ) : null}
                 </PrevComponent>
-                {
-                  ishospital ?
-                    <textarea
-                      onChange={handleConsultingDetailInfo}
-                      placeholder= "진료 소견서를 작성해주세요. 소견서는 자동 저장됩니다."
-                      style={{
-                        marginTop: "20px",
-                        height: "30%",
-                        backgroundColor: "#222222",
-                        padding: "15px",
-                        fontSize: "25px",
-                        borderRadius: '3px', 
-                        border: '5px solid black',
-                      }}
-                    >
-                    </textarea>
-                  :
-                    <textarea
-                      onChange={handleconsultingReviewInfo}
-                      placeholder= "상담 리뷰를 이곳에서 미리 작성해 둘 수 있어요!"
-                      style={{
-                        marginTop: "20px",
-                        height: "30%",
-                        backgroundColor: "#222222",
-                        padding: "15px",
-                        fontSize: "25px",
-                        borderRadius: '3px', 
-                        border: '5px solid black',
-                      }}
-                    >
-                    </textarea>
-                }
+                {ishospital ? (
+                  <textarea
+                    onChange={handleConsultingDetailInfo}
+                    placeholder="진료 소견서를 작성해주세요. 소견서는 자동 저장됩니다."
+                    style={{
+                      marginTop: "20px",
+                      height: "30%",
+                      backgroundColor: "#222222",
+                      padding: "15px",
+                      fontSize: "25px",
+                      borderRadius: "3px",
+                      border: "5px solid black",
+                    }}
+                  ></textarea>
+                ) : (
+                  <textarea
+                    onChange={handleconsultingReviewInfo}
+                    placeholder="상담 리뷰를 이곳에서 미리 작성해 둘 수 있어요!"
+                    style={{
+                      marginTop: "20px",
+                      height: "30%",
+                      backgroundColor: "#222222",
+                      padding: "15px",
+                      fontSize: "25px",
+                      borderRadius: "3px",
+                      border: "5px solid black",
+                    }}
+                  ></textarea>
+                )}
               </div>
             </div>
             <div
@@ -644,30 +645,56 @@ const VideoChatPage: React.FC = () => {
                 className="flex justify-between"
                 style={{ width: "100%" }}
               >
-                <h1 id="session-title" className="text-xl font-bold" style={{ display: 'flex' , alignItems: 'flex-end'}}>
+                <h1
+                  id="session-title"
+                  className="text-xl font-bold"
+                  style={{ display: "flex", alignItems: "flex-end" }}
+                >
                   {sessionPk}
                 </h1>
-                <div style={{ display: 'flex' , alignItems: 'flex-end'}}>
-                  {
-                    isCamOn ? 
-                    <VideocamIcon onClick={camOnOff} fontSize='large' sx={{ margin:"0px 13px", cursor:"pointer"}}></VideocamIcon>
-                    :
-                    <VideocamOffIcon onClick={camOnOff} fontSize='large' sx={{ margin:"0px 13px", cursor:"pointer"}}></VideocamOffIcon>
-                  }
-                  {
-                    isMicOn ?
-                    <MicIcon onClick={soundOnOff} fontSize='large' sx={{ margin:"0px 13px", cursor:"pointer"}}></MicIcon>
-                    :
-                    <MicOffIcon onClick={soundOnOff} fontSize='large' sx={{ margin:"0px 13px", cursor:"pointer"}}></MicOffIcon>
-                  }
-                  <div style={{display: 'flex', flexDirection: 'column'}}>
-                    <Box sx={{ height: 60, display: 'flex', alignItems: 'center', flexDirection: 'column-reverse', marginBottom: '15px' }}>
+                <div style={{ display: "flex", alignItems: "flex-end" }}>
+                  {isCamOn ? (
+                    <VideocamIcon
+                      onClick={camOnOff}
+                      fontSize="large"
+                      sx={{ margin: "0px 13px", cursor: "pointer" }}
+                    ></VideocamIcon>
+                  ) : (
+                    <VideocamOffIcon
+                      onClick={camOnOff}
+                      fontSize="large"
+                      sx={{ margin: "0px 13px", cursor: "pointer" }}
+                    ></VideocamOffIcon>
+                  )}
+                  {isMicOn ? (
+                    <MicIcon
+                      onClick={soundOnOff}
+                      fontSize="large"
+                      sx={{ margin: "0px 13px", cursor: "pointer" }}
+                    ></MicIcon>
+                  ) : (
+                    <MicOffIcon
+                      onClick={soundOnOff}
+                      fontSize="large"
+                      sx={{ margin: "0px 13px", cursor: "pointer" }}
+                    ></MicOffIcon>
+                  )}
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <Box
+                      sx={{
+                        height: 60,
+                        display: "flex",
+                        alignItems: "center",
+                        flexDirection: "column-reverse",
+                        marginBottom: "15px",
+                      }}
+                    >
                       <Slider
                         sx={{
-                          color: 'skyblue',
-                          display: isSoundOn ? 'block' : 'none',
+                          color: "skyblue",
+                          display: isSoundOn ? "block" : "none",
                           '& input[type="range"]': {
-                            WebkitAppearance: 'slider-vertical',
+                            WebkitAppearance: "slider-vertical",
                           },
                         }}
                         orientation="vertical"
@@ -677,33 +704,57 @@ const VideoChatPage: React.FC = () => {
                         onKeyDown={preventHorizontalKeyboardNavigation}
                       />
                     </Box>
-                    <VolumeUpIcon onClick={soundControl} fontSize='large' sx={{ margin:"0px 13px", cursor:"pointer"}}></VolumeUpIcon>
+                    <VolumeUpIcon
+                      onClick={soundControl}
+                      fontSize="large"
+                      sx={{ margin: "0px 13px", cursor: "pointer" }}
+                    ></VolumeUpIcon>
                   </div>
-                  {
-                    ishospital ?
-                    (
-                      toggleScreenPublisher ?
-                      <ScreenShareIcon onClick={toggleScreenShare} fontSize='large' sx={{ margin:"0px 13px", cursor:"pointer"}}></ScreenShareIcon>
-                      :
-                      <StopScreenShareIcon onClick={toggleScreenShare} fontSize='large' sx={{ margin:"0px 13px", cursor:"pointer"}}></StopScreenShareIcon>
+                  {ishospital ? (
+                    toggleScreenPublisher ? (
+                      <ScreenShareIcon
+                        onClick={toggleScreenShare}
+                        fontSize="large"
+                        sx={{ margin: "0px 13px", cursor: "pointer" }}
+                      ></ScreenShareIcon>
+                    ) : (
+                      <StopScreenShareIcon
+                        onClick={toggleScreenShare}
+                        fontSize="large"
+                        sx={{ margin: "0px 13px", cursor: "pointer" }}
+                      ></StopScreenShareIcon>
                     )
-                    : null
-                  }
-                  <NotificationImportantIcon onClick={handleOpenReportModal} fontSize='large' sx={{ margin:"0px 13px", color: 'red', cursor: 'pointer' }}/>
-                  <LogoutIcon onClick={handleOpenOutModal} fontSize='large' sx={{ margin:"0px 13px", cursor:"pointer", color: "#ff8d13"}}></LogoutIcon>
+                  ) : null}
+                  <NotificationImportantIcon
+                    onClick={handleOpenReportModal}
+                    fontSize="large"
+                    sx={{ margin: "0px 13px", color: "red", cursor: "pointer" }}
+                  />
+                  <LogoutIcon
+                    onClick={handleOpenOutModal}
+                    fontSize="large"
+                    sx={{
+                      margin: "0px 13px",
+                      cursor: "pointer",
+                      color: "#ff8d13",
+                    }}
+                  ></LogoutIcon>
                   <Modal
                     open={openOutModal}
                     onClose={handleCloseOutModal}
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
-                    sx={{  
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center'
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
                     }}
                   >
-                    <OutModal onClose={handleCloseOutModal} onOpen={handleOpenRviewtModal}></OutModal>
+                    <OutModal
+                      onClose={handleCloseOutModal}
+                      onOpen={handleOpenRviewtModal}
+                    ></OutModal>
                   </Modal>
 
                   <Modal
@@ -711,34 +762,46 @@ const VideoChatPage: React.FC = () => {
                     onClose={handleCloseReportModal}
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
-                    sx={{  
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center'
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
                     }}
                   >
-                    <ReportModal onClose={handleCloseReportModal} consultingId={consultingId}></ReportModal>
+                    <ReportModal
+                      onClose={handleCloseReportModal}
+                      consultingId={consultingId}
+                    ></ReportModal>
                   </Modal>
-                  
+
                   <Modal
                     open={openReviewModal}
                     onClose={handleCloseReviewModal}
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
-                    sx={{  
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center'
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
                     }}
                   >
-                    <ReviewModal consultingId={consultingId} consultingDetailInfo={consultingDetailInfo} consultingReviewInfo={consultingReviewInfo} sessionPk={sessionPk} leaveSession={leaveSession}></ReviewModal>
+                    <ReviewModal
+                      consultingId={consultingId}
+                      consultingDetailInfo={consultingDetailInfo}
+                      consultingReviewInfo={consultingReviewInfo}
+                      sessionPk={sessionPk}
+                      leaveSession={leaveSession}
+                    ></ReviewModal>
                   </Modal>
-
                 </div>
-                <div style={{ display: 'flex' , alignItems: 'flex-end'}}>
-                  <ChatIcon fontSize='large' onClick={handleShowBox} sx={{cursor: "pointer", transform: 'scaleX(-1)'}}></ChatIcon>
+                <div style={{ display: "flex", alignItems: "flex-end" }}>
+                  <ChatIcon
+                    fontSize="large"
+                    onClick={handleShowBox}
+                    sx={{ cursor: "pointer", transform: "scaleX(-1)" }}
+                  ></ChatIcon>
                 </div>
               </div>
             </div>
@@ -752,12 +815,21 @@ const VideoChatPage: React.FC = () => {
                 // backgroundColor: "#eeeeee",
                 display: showChat ? "block" : "none",
                 borderRadius: "7px",
-                overflow: 'hidden',
-                border: '2px solid grey',
-                backgroundColor: '#282829'
+                overflow: "hidden",
+                border: "2px solid grey",
+                backgroundColor: "#282829",
               }}
             >
-              <div ref={chatLogref} style={{padding: "20px", maxHeight: "400px", overflowY: 'auto', display: 'flex', flexDirection: 'column-reverse'}}>
+              <div
+                ref={chatLogref}
+                style={{
+                  padding: "20px",
+                  maxHeight: "400px",
+                  overflowY: "auto",
+                  display: "flex",
+                  flexDirection: "column-reverse",
+                }}
+              >
                 {messageList.map(({ message, nickname, connectionId }, idx) => (
                   <ChatLog
                     key={idx}
@@ -770,21 +842,28 @@ const VideoChatPage: React.FC = () => {
                   ></ChatLog>
                 ))}
               </div>
-                <textarea
-                  onChange={handleChange}
-                  onKeyUp={handlePresskey}
-                  ref={inputref}
-                  style={{position:'absolute', bottom: '0',width:'100%', height:'100px', padding:'5px', borderBottomLeftRadius: "7px", borderBottomRightRadius: "7px", borderTop: '1px solid darkgrey', backgroundColor: '#343434'}}
-                ></textarea>
+              <textarea
+                onChange={handleChange}
+                onKeyUp={handlePresskey}
+                ref={inputref}
+                style={{
+                  position: "absolute",
+                  bottom: "0",
+                  width: "100%",
+                  height: "100px",
+                  padding: "5px",
+                  borderBottomLeftRadius: "7px",
+                  borderBottomRightRadius: "7px",
+                  borderTop: "1px solid darkgrey",
+                  backgroundColor: "#343434",
+                }}
+              ></textarea>
             </div>
           </div>
         </div>
-        ) : (
-          <StylePreSession>
-            상담 준비 중 입니다 ...
-          </StylePreSession>
-        )
-      }
+      ) : (
+        <StylePreSession>상담 준비 중 입니다 ...</StylePreSession>
+      )}
     </div>
   );
 };

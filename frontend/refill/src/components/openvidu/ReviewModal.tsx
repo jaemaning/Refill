@@ -1,15 +1,14 @@
-import React from 'react';
+import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "store/reducers";
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import CheckIcon from '@mui/icons-material/Check';
-import styled from '@emotion/styled';
-import CloseIcon from '@mui/icons-material/Close';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
-import axios from 'axios';
-
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import CheckIcon from "@mui/icons-material/Check";
+import styled from "@emotion/styled";
+import CloseIcon from "@mui/icons-material/Close";
+import TextareaAutosize from "@mui/material/TextareaAutosize";
+import axios from "axios";
 
 const StyleContainer = styled.div`
   display: grid;
@@ -21,7 +20,7 @@ const StyleContainer = styled.div`
   justify-items: center;
   width: 700px;
   background-color: #e8ffea;
-  border-radius : 5px;
+  border-radius: 5px;
 `;
 
 const StyledTextarea = styled(TextareaAutosize)`
@@ -51,25 +50,28 @@ const Footer = styled.div`
 `;
 
 type OutModalProps = {
-  consultingId : number;
-  consultingDetailInfo? : string;
-  consultingReviewInfo? : string;
-  sessionPk : string;
+  consultingId: number;
+  consultingDetailInfo?: string;
+  consultingReviewInfo?: string;
+  sessionPk: string;
   leaveSession: () => void;
 };
 
-const ReviewModal : React.FC<OutModalProps> = (props) => {
-
+const ReviewModal: React.FC<OutModalProps> = (props) => {
   const ismember = useSelector((state: RootState) => state.login.ismember);
   const ishospital = useSelector((state: RootState) => state.login.ishospital);
   const loginToken = useSelector((state: RootState) => state.login.token);
 
-  const [detailText, setDetailText] = React.useState(props.consultingDetailInfo || '');
-  const [reviewText, setReviewText] = React.useState(props.consultingReviewInfo || '');
+  const [detailText, setDetailText] = React.useState(
+    props.consultingDetailInfo || "",
+  );
+  const [reviewText, setReviewText] = React.useState(
+    props.consultingReviewInfo || "",
+  );
   const [score, setScore] = React.useState(0);
 
-  const reviewUrl = 'api/v1/review'
-  const doctorDatailUrl = ''
+  const reviewUrl = "api/v1/review";
+  const doctorDatailUrl = "";
 
   const submitReview = () => {
     // if (reviewText) {
@@ -86,9 +88,7 @@ const ReviewModal : React.FC<OutModalProps> = (props) => {
     //   )
     //   .then(async () => {
     //     await handleOpenReportSuccessModal()
-
     //     await openAlert(1500)
-
     //     props.onClose()
     //   })
     //   .catch((error) => {
@@ -97,98 +97,120 @@ const ReviewModal : React.FC<OutModalProps> = (props) => {
     // } else {
     //   alert('리뷰 내용을 작성해주세요.')
     // }
-
   };
 
   const submitDoctorPaper = () => {
     if (detailText) {
       axios
-      .post(
-        'api/v1/consulting/leave',
-        {
-          consultingId: props.consultingId,
-          sessionId: props.sessionPk,
-          consultingDetailInfo: detailText, // 이건 상담 기록 내용
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${loginToken}`,
-          }
-        }
-      )
-      .then((response) => {
-        console.log(response.data);
-        props.leaveSession()
-      })
-      .catch((error) => {
-        console.log("에러:", error);
-      });
+        .post(
+          "api/v1/consulting/leave",
+          {
+            consultingId: props.consultingId,
+            sessionId: props.sessionPk,
+            consultingDetailInfo: detailText, // 이건 상담 기록 내용
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${loginToken}`,
+            },
+          },
+        )
+        .then((response) => {
+          console.log(response.data);
+          props.leaveSession();
+        })
+        .catch((error) => {
+          console.log("에러:", error);
+        });
     } else {
-      alert('소견서 내용을 작성해주세요.')
+      alert("소견서 내용을 작성해주세요.");
     }
-
   };
 
   const handleOut = () => {
-    console.log('나가기');
+    console.log("나가기");
   };
 
   const handleReturn = () => {
-    console.log('상담 돌아가기');
+    console.log("상담 돌아가기");
   };
 
-  const handleReviewChange = (event : any) => {
+  const handleReviewChange = (event: any) => {
     setReviewText(event.target.value);
   };
 
-  const handleDetailChange = (event : any) => {
+  const handleDetailChange = (event: any) => {
     setDetailText(event.target.value);
   };
 
-
   return (
     <>
-    {
-      ismember ?
-      <Box>
-        <StyleContainer>
-          <Header>
-            <CheckIcon fontSize='large' sx={{color: 'green'}} />
-            <Typography id="modal-modal-title" variant="h6" component="h2" sx={{fontWeight: '700', justifySelf: 'left'}}>
-              상담 리뷰를 남겨 주세요!
-            </Typography>
-            <div></div>
-          </Header>
-          <StyledTextarea value={reviewText} onChange={handleReviewChange} placeholder="리뷰를 작성해주세요." />
-          <Footer>
-          <div> </div>
-            <Button onClick={submitReview} variant="contained" color="primary">
-              확인
-            </Button>
-          </Footer>
-        </StyleContainer>
-      </Box>
-      :
-      <Box>
-        <StyleContainer>
-          <Header>
-            <CheckIcon fontSize='large' sx={{color: 'green'}} />
-            <Typography id="modal-modal-title" variant="h6" component="h2" sx={{fontWeight: '700', justifySelf: 'left'}}>
-              상담 소견서 작성 해주세요
-            </Typography>
-            <div></div>
-          </Header>
-          <StyledTextarea value={detailText} onChange={handleDetailChange} placeholder="상담 소견서를 작성해주세요." />
-          <Footer>
-            <div></div>
-            <Button onClick={submitDoctorPaper} variant="contained" color="primary">
-              확인
-            </Button>
-          </Footer>
-        </StyleContainer>
-      </Box>
-    }
+      {ismember ? (
+        <Box>
+          <StyleContainer>
+            <Header>
+              <CheckIcon fontSize="large" sx={{ color: "green" }} />
+              <Typography
+                id="modal-modal-title"
+                variant="h6"
+                component="h2"
+                sx={{ fontWeight: "700", justifySelf: "left" }}
+              >
+                상담 리뷰를 남겨 주세요!
+              </Typography>
+              <div></div>
+            </Header>
+            <StyledTextarea
+              value={reviewText}
+              onChange={handleReviewChange}
+              placeholder="리뷰를 작성해주세요."
+            />
+            <Footer>
+              <div> </div>
+              <Button
+                onClick={submitReview}
+                variant="contained"
+                color="primary"
+              >
+                확인
+              </Button>
+            </Footer>
+          </StyleContainer>
+        </Box>
+      ) : (
+        <Box>
+          <StyleContainer>
+            <Header>
+              <CheckIcon fontSize="large" sx={{ color: "green" }} />
+              <Typography
+                id="modal-modal-title"
+                variant="h6"
+                component="h2"
+                sx={{ fontWeight: "700", justifySelf: "left" }}
+              >
+                상담 소견서 작성 해주세요
+              </Typography>
+              <div></div>
+            </Header>
+            <StyledTextarea
+              value={detailText}
+              onChange={handleDetailChange}
+              placeholder="상담 소견서를 작성해주세요."
+            />
+            <Footer>
+              <div></div>
+              <Button
+                onClick={submitDoctorPaper}
+                variant="contained"
+                color="primary"
+              >
+                확인
+              </Button>
+            </Footer>
+          </StyleContainer>
+        </Box>
+      )}
     </>
   );
 };
