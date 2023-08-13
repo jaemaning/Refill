@@ -20,6 +20,7 @@ import com.refill.member.repository.MemberRepository;
 import com.refill.report.entity.Report;
 import com.refill.report.entity.TargetType;
 import com.refill.report.repository.ReportRepository;
+import com.refill.reservation.entity.Reservation;
 import com.refill.reservation.repository.ReservationRepository;
 import com.refill.review.entity.Review;
 import com.refill.review.repository.ReviewRepository;
