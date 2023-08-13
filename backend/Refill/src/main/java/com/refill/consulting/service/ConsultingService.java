@@ -83,7 +83,7 @@ public class ConsultingService {
         List<Reservation> reservationList = reservationRepository.findReservationReady(now.minusMinutes(10),now.plusMinutes(10));
         log.info("{} makes consulting", reservationList);
         log.info("{} => reservationList" , reservationList);
-        log.info("{} => reservationList.size()" , reservationList.size());g
+        log.info("{} => reservationList.size()" , reservationList.size());
 
 
         // 돌아가면서 세션 생성 및 토큰 저장
