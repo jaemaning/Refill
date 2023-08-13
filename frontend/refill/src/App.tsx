@@ -16,6 +16,9 @@ import Logout from "pages/user/Logout";
 import FindIdPassword from "pages/user/FindIdPassword";
 import RegisterDoctor from "pages/hospital/RegisterDoctor";
 // import WebRTC from "pages/WebRTC";
+// import VideoChatPage from "pages/openvidu/VideoChatPage";
+// import { OpenVidu } from "openvidu-browser";
+import Admin from "pages/admin";
 import VideoChatPage from "pages/openvidu/VideoChatPage";
 import JoinPage from "pages/openvidu/joinpage";
 import BEVideoChatPage from "pages/openvidu/VideoChatPage";
@@ -42,6 +45,8 @@ const App: React.FC = () => {
         <Route path="/find" element={<FindIdPassword />} />
         {/* <Route path="/RegisterDoctor" element={<RegisterDoctor />} /> */}
         {/* <Route path="/webrtc" element={<WebRTC />} /> */}
+        {/* <Route path="/video" element={<VideoChatPage />} /> */}
+        <Route path="admin" element={<Admin/>} />
         <Route path="/video" element={<VideoChatPage />} />
         {/* <Route path="/video" element={<BEVideoChatPage />} /> */}
         <Route path="/join" element={<JoinPage />} />

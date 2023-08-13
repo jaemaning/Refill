@@ -35,13 +35,14 @@ const Navbar = React.forwardRef<HTMLDivElement>((props, ref) => {
       } else if (isAdmin === true) {
         setMenuList([
           ["로그아웃", "/logout"],
-          ["Admin관리", "/"],
+          ["Admin관리", "/admin"],
         ]);
       }
     } else {
       setMenuList([...menuList, ["로그인", "/loginsignup"]]);
     }
 
+    console.log(isAdmin);
     console.log(menuList);
     console.log(isLogin);
   }, []);
