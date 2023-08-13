@@ -25,11 +25,11 @@ const Admin: React.FC = () => {
   return (
     <div className="flex flex-col h-full">
       <Navbar />
-      <main className="mx-80 grid grid-cols-2 flex-grow flex justify-center mt-8 px-4 lg:px-0">
-        <div className="flex-shrink-0 mr-1000px"> 
+      <main className="mx-60 grid grid-cols-2 flex-grow flex justify-center mt-8 px-4 lg:px-0">
+        <div className="flex-shrink-0 mr-1000px pr-6"> 
           <WaitingHospitalList />
         </div>
-        <div className="flex-shrink-0">
+        <div className="flex-shrink-0 ml-30 pl-6">
           <ReportReviewList />
         </div>
       </main>
