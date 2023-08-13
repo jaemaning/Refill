@@ -23,6 +23,7 @@ import ModifyDoctor from "./ModifyDoctor";
 import DeleteDoctor from "./DeleteDoctor";
 import SelectDoctorAndTime from "components/consultReservation/SelectDoctorAndTime";
 import DetailReservation from "components/detailReservation/DetailReservation";
+import { useParams } from "react-router-dom";
 // import StarRatings from "react-star-ratings";
 
 interface DivProps {
@@ -167,6 +168,8 @@ const Doctor_res_icon = styled.span`
 `;
 
 const DetailHospital: React.FC = () => {
+  const { hospitalId } = useParams();
+
   // 배너이미지 갈아끼울때마다 적용
   const [hospitalName, setHospitalName] = useState("");
   const [doctorData, setDoctorData] = useState<Doctor[]>([]);
@@ -361,11 +364,11 @@ const DetailHospital: React.FC = () => {
     setDeleteOpen(false);
   };
 
-  const DeleteDoc = async (hospitalid: number, doctorid: number) => {
+  const DeleteDoc = async (doctorid: number) => {
     axios
-      .delete(`api/v1/hospital/${hospitalid}/doctor/${doctorid}`, {
+      .delete(`api/v1/hospital/${hospitalId}/doctor/${doctorid}`, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          // "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
         },
       })
@@ -381,13 +384,15 @@ const DetailHospital: React.FC = () => {
       });
   };
 
-  const hospitalId: number = useSelector(
-    (state: RootState) => state.login.hosid,
-  );
+  const [mypage, setMypage] = useState(false);
+  const MyId: number = useSelector((state: RootState) => state.login.hosid);
 
-  console.log(hospitalId);
-  // 테스트용
   useEffect(() => {
+    if (ishospital === true) {
+      if (MyId === hospitalData.hospitalId) {
+        setMypage(true);
+      }
+    }
     axios
       .get(`/api/v1/hospital/${hospitalId}`, {
         headers: {
@@ -514,11 +519,8 @@ const DetailHospital: React.FC = () => {
             <DoctorInfo buttonData={buttonData}>
               <h1 className="text-4xl font-bold">의사 정보</h1>
               <div>
-                {doctorData.map((doctor) => (
-                  <div
-                    key={doctor.doctorId}
-                    className="flex justify-around items-center"
-                  >
+                {doctorData.map((doctor, index) => (
+                  <div key={index} className="flex justify-around items-center">
                     <Doctors>
                       <Doctor_common
                         className=" items-center"
@@ -562,16 +564,9 @@ const DetailHospital: React.FC = () => {
                               open={deleteOpen}
                               handleMOpen={handleDMOpen}
                               handleMClose={handleDMClose}
-                              hospitalId={hospitalData.hospitalId}
-                              DoctorId={doctor.doctorId}
                               hospitalname={hospitalData.name}
                               doctorname={doctor.name}
-                              onDeleteDoctor={() =>
-                                DeleteDoc(
-                                  hospitalData.hospitalId,
-                                  doctor.doctorId,
-                                )
-                              }
+                              onDeleteDoctor={() => DeleteDoc(doctor.doctorId)}
                             ></DeleteDoctor>
                           </div>
                         </div>
@@ -599,12 +594,12 @@ const DetailHospital: React.FC = () => {
                     <Doctor_res_icon>
                       <img src={Arrow} alt="" />
                       <a href="" className="mt-4 text-xl">
-                        {ishospital ? "내 상담 확인하기" : "상담 예약 하기"}
+                        {mypage ? "내 상담 확인하기" : "상담 예약 하기"}
                       </a>
                     </Doctor_res_icon>
                   </div>
                 ))}
-                {doctorData.length < 3 && (
+                {mypage && doctorData.length < 3 && (
                   <div className="flex items-center justify-center flex-col">
                     <AddIcon sx={{ fontSize: 80 }}></AddIcon>
                     <RegisterDoctor

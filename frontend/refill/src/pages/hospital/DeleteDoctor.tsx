@@ -31,8 +31,6 @@ const style = {
 };
 
 interface DeleteModal {
-  hospitalId: number;
-  DoctorId: number;
   open: boolean;
   handleMOpen: () => void;
   handleMClose: () => void;
@@ -42,8 +40,6 @@ interface DeleteModal {
 }
 
 const DeleteDoctor: React.FC<DeleteModal> = ({
-  hospitalId,
-  DoctorId,
   open,
   handleMOpen,
   handleMClose,
