@@ -37,7 +37,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Profile({"local"})
+@Profile({"prod"})
 @Component
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
@@ -224,7 +224,7 @@ public class DataInitializer implements CommandLineRunner {
 //                reservationRepository.save(reservation);
 
                 LocalDate localDate = LocalDate.now();
-                LocalTime localTime = LocalTime.of(5, 22);
+                LocalTime localTime = LocalTime.of(17, 00);
                 LocalDateTime startDateTime = LocalDateTime.of(localDate, localTime);
                 LocalDateTime endDateTime = startDateTime.plusMinutes(30);
                 String counselingDemands = "상담 요청합니다.";
