@@ -3,20 +3,16 @@ import Button from "../../components/elements/Button";
 import "../../styles/Loginsignup.css";
 import UseLoginForm from "hooks/UseLoginForm";
 import Social from "components/common/Social";
-import LoginSignupModal from "components/loginsignup/LoginSignupModal";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
 const MemberLogin: React.FC = () => {
-  const navigate = useNavigate();
   const [loginId, setLoginId] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
-  const {
-    handleSubmitLoginForm,
-    message: msg,
-    openModal: open,
-  } = UseLoginForm(loginId, loginPassword, 0);
-  const [showModal, setShowModal] = useState(false);
+  const { handleSubmitLoginForm, message: msg } = UseLoginForm(
+    loginId,
+    loginPassword,
+    0,
+  );
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLoginId(event.target.value);
@@ -26,20 +22,10 @@ const MemberLogin: React.FC = () => {
     setLoginPassword(event.target.value);
   };
 
-  const handleCloseForm = () => {
-    setShowModal(false);
-  };
-
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log(msg);
     handleSubmitLoginForm();
-
-    if (msg === "yes") {
-      setShowModal(false);
-      navigate("/");
-    } else {
-      setShowModal(true);
-    }
   };
 
   const middle = "flex justify-center items-center";
@@ -76,7 +62,8 @@ const MemberLogin: React.FC = () => {
               onChange={handlePasswordChange}
             ></input>
           </div>
-          <div className="flex justify-end my-3">
+          <div className="flex justify-between my-3">
+            {msg && <span className="text-sm text-red font-medium">{msg}</span>}
             <Link to="/find" className="text-sm font-medium text-blue-600">
               아이디 & 비밀번호 찾기
             </Link>
@@ -107,9 +94,6 @@ const MemberLogin: React.FC = () => {
           </div>
         </form>
       </div>
-      {showModal && (
-        <LoginSignupModal message={msg} open={open} onClose={handleCloseForm} />
-      )}
     </div>
   );
 };
