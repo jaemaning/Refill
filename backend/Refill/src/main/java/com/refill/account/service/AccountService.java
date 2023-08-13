@@ -130,7 +130,7 @@ public class AccountService {
         String accessToken = jwtProvider.createToken(member.getLoginId(), member.getRole(), secretKey);
         String refreshToken = jwtProvider.createRefreshToken(member.getLoginId(), member.getRole(), secretKey);
 
-        return new TokenResponse(accessToken, refreshToken);
+        return new TokenResponse(member.getId(), accessToken, refreshToken);
 
     }
 
@@ -155,7 +155,7 @@ public class AccountService {
         String accessToken = jwtProvider.createToken(hospital.getLoginId(), hospital.getRole(), secretKey);
         String refreshToken = jwtProvider.createRefreshToken(hospital.getLoginId(), hospital.getRole(), secretKey);
 
-        return new TokenResponse(accessToken, refreshToken);
+        return new TokenResponse(hospital.getId(), accessToken, refreshToken);
     }
 
 
