@@ -1,6 +1,6 @@
 import axios from "axios";
 import { AxiosInstance, AxiosResponse } from "axios";
-import { LoginRequest, LoginResult } from "./types";
+import { LoginRequest, LoginResult, HLoginResult } from "./types";
 import { FindIdRequest, FindPasswordRequest, FindResult } from "./types";
 
 class AuthService {
@@ -32,7 +32,7 @@ class AuthService {
     const headers = {
       "Content-Type": "application/json",
     };
-    const response: AxiosResponse<LoginResult> = await axios.post(
+    const response: AxiosResponse<HLoginResult> = await axios.post(
       hospitallogin,
       data,
       { headers },
