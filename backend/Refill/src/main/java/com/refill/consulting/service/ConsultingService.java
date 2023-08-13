@@ -73,17 +73,17 @@ public class ConsultingService {
     private final int BEFORE_CONSULTING_TIME = 15;
 
 
-    @Scheduled(cron = "0 15,45 8-18 * * ?")
+    @Scheduled(cron = "0 0-59 8-21 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
 
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime startDateTime = LocalDateTime.of(now.getYear(),now.getMonth(),now.getDayOfMonth(),now.getHour(),now.getMinute());
         // 조건문 추가
 
-        log.info("'{}' == time", startDateTime);
-        List<Reservation> reservationList = reservationRepository.findReservationReady(startDateTime);
+        log.info("'{}' == time", now);
+        List<Reservation> reservationList = reservationRepository.findReservationReady(now.minusMinutes(1),now.plusMinutes(1));
         log.info("{} makes consulting", reservationList);
         log.info("{} => reservationList" , reservationList);
+        log.info("{} => reservationList.size()" , reservationList.size());
 
 
         // 돌아가면서 세션 생성 및 토큰 저장
