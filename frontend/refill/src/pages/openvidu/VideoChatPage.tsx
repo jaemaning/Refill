@@ -418,30 +418,6 @@ const VideoChatPage: React.FC = () => {
     setPublisher(undefined);
     setScreenPublisher(undefined);
 
-    if ( ishospital ) {
-      axios
-      .post(
-        'api/v1/consulting/leave',
-        {
-          consultingId: consultingId,
-          sessionId: sessionPk,
-          consultingDetailInfo: consultingDetailInfo // 이건 상담 기록 내용
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${loginToken}`,
-          }
-        }
-      )
-      .then((response) => {
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.log("에러:", error);
-      });
-    }
-
     navigate('/')
   }
 
@@ -756,7 +732,7 @@ const VideoChatPage: React.FC = () => {
                       justifyContent: 'center'
                     }}
                   >
-                    <ReviewModal consultingId={consultingId} consultingDetailInfo={consultingDetailInfo} consultingReviewInfo={consultingReviewInfo}></ReviewModal>
+                    <ReviewModal consultingId={consultingId} consultingDetailInfo={consultingDetailInfo} consultingReviewInfo={consultingReviewInfo} sessionPk={sessionPk} leaveSession={leaveSession}></ReviewModal>
                   </Modal>
 
                 </div>
