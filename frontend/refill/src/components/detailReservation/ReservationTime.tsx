@@ -21,12 +21,17 @@ const ReservationTime: React.FC<ReservationTimeProps> = ({
   reservations,
   setSelectedMember,
 }) => {
+  const clickDate = (res: Reservation) => {
+    setSelectedMember(res);
+    console.log(res)
+  };
+
   return (
     <div>
       {reservations.map((res) => (
-        <div key={res.startDate}>
-          {res.startDate} - {res.memberName}
-        </div>
+        <button onClick={() => clickDate(res)} key={res.startDate}>
+          <p>{res.startDate}</p>
+        </button>
       ))}
     </div>
   );

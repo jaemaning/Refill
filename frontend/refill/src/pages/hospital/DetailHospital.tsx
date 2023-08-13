@@ -764,12 +764,12 @@ const DetailHospital: React.FC = () => {
             {/* merge 하거나 git pull 하기 전에 삭제 */}
             <SelectDoctorAndTime
               doctors={doctorData}
-              hospitalId={hospitalId}
+              hospitalId={hospitalData.hospitalId}
               hospitalName={hospitalName}
             />
             <DetailReservation
               doctors={doctorData}
-              hospitalId={hospitalId}
+              hospitalId={hospitalData.hospitalId}
               hospitalName={hospitalName}
             />
           </Content>

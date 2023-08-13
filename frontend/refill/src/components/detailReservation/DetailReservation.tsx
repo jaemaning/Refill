@@ -13,7 +13,7 @@ import "styles/Reservation.css";
 
 type ComponentProps = {
   doctors: Doctor[];
-  hospitalId: string | undefined;
+  hospitalId: number | undefined;
   hospitalName: string;
 };
 
@@ -118,7 +118,6 @@ const DetailReservation: React.FC<ComponentProps> = ({
     console.log("마이레저베이션")
     console.log(filteredReservations)
   }, [selectedDate]);
-
   return (
     <div className="detail-reservation-box p-3">
       <div>
@@ -143,7 +142,7 @@ const DetailReservation: React.FC<ComponentProps> = ({
         </div>
         <hr className="border-2 border-black my-2" />
         <div>
-          <DetailPatient />
+        {selectedMember && <DetailPatient selectedMember={selectedMember} />}
         </div>
       </div>
     </div>

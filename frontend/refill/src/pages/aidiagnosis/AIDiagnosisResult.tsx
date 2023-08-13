@@ -24,8 +24,17 @@ const AIDiagnosisResult: React.FC = () => {
   // jsonData의 각 정보를 변수에 저장
   const hairLossScore = jsonData.hairLossScore;
   const certainty = jsonData.certainty;
+  const modelConfidence = jsonData.modelConfidence;
   const diagnosisImage = jsonData.diagnosisImage;
   const diagnosisDate = jsonData.diagnosisDate;
+
+  const is_valid = (conf: number) => {
+    if (conf < 80) {
+      return "부적합입니다. 올바른 사진에 가까운 사진을 업로드하여 다시 진단 받으시길 바랍니다."
+    }
+    return "적합"
+  }
+
 
   useEffect(() => {
     window.scrollTo(0, 106);
@@ -104,8 +113,7 @@ const AIDiagnosisResult: React.FC = () => {
                 <ContentChild
                   service={false}
                   content="AI 탈모 진행도"
-                  subContent="현재 사진을 분석한 결과 원형탈모의 진행률이 65%로 평균
-              보다 높은 수치에 속합니다. 자세한 병명 및 진단을 원하시면 병원 내원을 추천드립니다."
+                  subContent={is_valid(modelConfidence)}
                 />
               }
             />
