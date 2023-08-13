@@ -51,15 +51,8 @@ body {
 
 .MLogin {
   background-color: white;
-  height: 500px;
+  height: 550px;
   width: 400px;
-}
-
-.MSignup {
-  background-color: white;
-  height: 1200px;
-  width: 400px;
-  margin-bottom: 100px;
 }
 
 .file-input-btn {

@@ -6,6 +6,7 @@ import java.time.LocalDate;
 public record AiDiagnosisResponse (
 
     Integer hairLossScore,
+    String certainty,
     String diagnosisImage,
     LocalDate diagnosisDate
 
@@ -14,6 +15,7 @@ public record AiDiagnosisResponse (
     public AiDiagnosisResponse(AiDiagnosis aiDiagnosis) {
         this (
             aiDiagnosis.getHairLossScore(),
+            aiDiagnosis.getCertainty(),
             aiDiagnosis.getDiagnosisImage(),
             aiDiagnosis.getCreatedAt().toLocalDate()
         );

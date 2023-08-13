@@ -1,5 +1,6 @@
 package com.refill.review.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.refill.doctor.entity.Doctor;
 import com.refill.global.entity.BaseEntity;
 import com.refill.hospital.entity.Hospital;
@@ -30,6 +31,7 @@ public class Review extends BaseEntity {
     Doctor doctor;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "member_id")
     Member member;
 

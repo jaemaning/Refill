@@ -1,7 +1,9 @@
 package com.refill.member.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.refill.account.dto.request.MemberJoinRequest;
 import com.refill.aidiagnosis.entity.AiDiagnosis;
+import com.refill.consulting.entity.Consulting;
 import com.refill.global.entity.Role;
 import com.refill.global.entity.UserInfo;
 import com.refill.member.dto.request.MemberInfoUpdateRequest;
@@ -20,13 +22,11 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-@ToString(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -44,14 +44,21 @@ public class Member extends UserInfo {
     @Column(nullable = false)
     private String nickname;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<AiDiagnosis> aiDiagnosisList;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "member")
     List<Review> reviews;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "member")
     private List<Reservation> reservationList;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "member")
+    private List<Consulting> consultingList;
 
     public static Member from(MemberJoinRequest memberJoinRequest) {
         return Member.builder()
@@ -67,6 +74,7 @@ public class Member extends UserInfo {
                      .aiDiagnosisList(new ArrayList<>())
                      .reviews(new ArrayList<>())
                      .reservationList(new ArrayList<>())
+                     .consultingList(new ArrayList<>())
                      .build();
 
     }

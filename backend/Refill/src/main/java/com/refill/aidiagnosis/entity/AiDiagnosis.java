@@ -1,5 +1,6 @@
 package com.refill.aidiagnosis.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.refill.global.entity.BaseEntity;
 import com.refill.member.entity.Member;
 import javax.persistence.Column;
@@ -19,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class AiDiagnosis extends BaseEntity {
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Member member;
@@ -36,15 +38,19 @@ public class AiDiagnosis extends BaseEntity {
     @Column
     private String diagnosisImage;
 
+    @Column
+    private String certainty;
+
     @Column(columnDefinition = "TEXT")
     private String diagnosisResult;
 
     @Builder
-    public AiDiagnosis(Member member, HairLossType hairLossType, String surveyResult, Integer hairLossScore) {
+    public AiDiagnosis(Member member, HairLossType hairLossType, String surveyResult, Integer hairLossScore, String certainty) {
         this.member = member;
         this.hairLossType = hairLossType;
         this.hairLossScore = hairLossScore;
         this.surveyResult = surveyResult;
+        this.certainty = certainty;
     }
 
     public void updateFileAddress(String address) {

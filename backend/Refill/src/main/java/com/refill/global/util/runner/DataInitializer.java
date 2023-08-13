@@ -17,6 +17,9 @@ import com.refill.hospital.repository.HospitalOperatingHourRepository;
 import com.refill.hospital.repository.HospitalRepository;
 import com.refill.member.entity.Member;
 import com.refill.member.repository.MemberRepository;
+import com.refill.report.entity.Report;
+import com.refill.report.entity.TargetType;
+import com.refill.report.repository.ReportRepository;
 import com.refill.reservation.entity.Reservation;
 import com.refill.reservation.repository.ReservationRepository;
 import com.refill.review.entity.Review;
@@ -48,6 +51,7 @@ public class DataInitializer implements CommandLineRunner {
     private final HospitalOperatingHourRepository hospitalOperatingHourRepository;
     private final ReservationRepository reservationRepository;
     private final AiDiagnosisRepository aiDiagnosisRepository;
+    private final ReportRepository reportRepository;
 
     @Override
     @Transactional
@@ -77,7 +81,7 @@ public class DataInitializer implements CommandLineRunner {
 
 
 
-        for(int i=0; i<20; i++){
+        for(int i=1; i<=20; i++){
 
             Random random = new Random();
             double randomDouble = random.nextDouble();
@@ -103,6 +107,7 @@ public class DataInitializer implements CommandLineRunner {
                                                  .member(member)
                                                  .hairLossScore(40)
                                                  .hairLossType(HairLossType.TYPE3)
+                                                 .certainty("60")
                                                  .surveyResult("1010100000")
                                                  .build();
 
@@ -124,7 +129,7 @@ public class DataInitializer implements CommandLineRunner {
                                         .loginId("hospital" + i)
                                         .loginPassword(
                                             bCryptPasswordEncoder.encode("1234")) //1234
-                                        .role(i == 4 ? Role.ROLE_GUEST : Role.ROLE_HOSPITAL)
+                                        .role(i % 4 == 0 ? Role.ROLE_GUEST : Role.ROLE_HOSPITAL)
                                         .tel("02-2345-3465")
                                         .hospitalBannerImg("https://picsum.photos/600/600/?random")
                                         .hospitalProfileImg("https://picsum.photos/600/600/?random")
@@ -195,11 +200,31 @@ public class DataInitializer implements CommandLineRunner {
                                           .isBlocked(false)
                                           .category(category[(j + k) % content.length]).build();
                     reviewRepository.save(review);
+
+                    Report report = new Report(member.getRole(), member.getId(), review.getId(), "내용이 추잡합니다.", TargetType.REVIEW);
+                    reportRepository.save(report);
+
                 }
 
                 // 예약
-                LocalDate localDate = LocalDate.now().plusDays(1L);
-                LocalTime localTime = LocalTime.of(10, 0);
+//                LocalDate localDate = LocalDate.now().plusDays(1L);
+//                LocalTime localTime = LocalTime.of(10, 0);
+//                LocalDateTime startDateTime = LocalDateTime.of(localDate, localTime);
+//                LocalDateTime endDateTime = startDateTime.plusMinutes(30);
+//                String counselingDemands = "상담 요청합니다.";
+//
+//                Reservation reservation = Reservation.builder()
+//                                                     .member(member)
+//                                                     .doctor(doctor)
+//                                                     .startDateTime(startDateTime)
+//                                                     .endDateTime(endDateTime)
+//                                                     .counselingDemands(counselingDemands)
+//                                                     .build();
+//
+//                reservationRepository.save(reservation);
+
+                LocalDate localDate = LocalDate.now();
+                LocalTime localTime = LocalTime.of(5, 22);
                 LocalDateTime startDateTime = LocalDateTime.of(localDate, localTime);
                 LocalDateTime endDateTime = startDateTime.plusMinutes(30);
                 String counselingDemands = "상담 요청합니다.";
@@ -213,6 +238,166 @@ public class DataInitializer implements CommandLineRunner {
                                                      .build();
 
                 reservationRepository.save(reservation);
+
+//                LocalDate localDate1 = LocalDate.now();
+//                LocalTime localTime1 = LocalTime.of(13, 30);
+//                LocalDateTime startDateTime1 = LocalDateTime.of(localDate1, localTime1);
+//                LocalDateTime endDateTime1 = startDateTime1.plusMinutes(30);
+//                String counselingDemands1 = "상담 요청합니다.";
+//
+//                Reservation reservation1 = Reservation.builder()
+//                                                     .member(member)
+//                                                     .doctor(doctor)
+//                                                     .startDateTime(startDateTime1)
+//                                                     .endDateTime(endDateTime1)
+//                                                     .counselingDemands(counselingDemands1)
+//                                                     .build();
+//
+//                reservationRepository.save(reservation1);
+//
+//                LocalDate localDate2 = LocalDate.now();
+//                LocalTime localTime2 = LocalTime.of(14, 0);
+//                LocalDateTime startDateTime2 = LocalDateTime.of(localDate2, localTime2);
+//                LocalDateTime endDateTime2 = startDateTime2.plusMinutes(30);
+//                String counselingDemands2 = "상담 요청합니다.";
+//
+//                Reservation reservation2 = Reservation.builder()
+//                                                     .member(member)
+//                                                     .doctor(doctor)
+//                                                     .startDateTime(startDateTime2)
+//                                                     .endDateTime(endDateTime2)
+//                                                     .counselingDemands(counselingDemands2)
+//                                                     .build();
+//
+//                reservationRepository.save(reservation2);
+//
+//                LocalDate localDate3 = LocalDate.now();
+//                LocalTime localTime3 = LocalTime.of(14, 30);
+//                LocalDateTime startDateTime3 = LocalDateTime.of(localDate3, localTime3);
+//                LocalDateTime endDateTime3 = startDateTime3.plusMinutes(30);
+//                String counselingDemands3 = "상담 요청합니다.";
+//
+//                Reservation reservation3 = Reservation.builder()
+//                                                     .member(member)
+//                                                     .doctor(doctor)
+//                                                     .startDateTime(startDateTime3)
+//                                                     .endDateTime(endDateTime3)
+//                                                     .counselingDemands(counselingDemands3)
+//                                                     .build();
+//
+//                reservationRepository.save(reservation3);
+//
+//                LocalDate localDate4 = LocalDate.now();
+//                LocalTime localTime4 = LocalTime.of(15, 0);
+//                LocalDateTime startDateTime4 = LocalDateTime.of(localDate4, localTime4);
+//                LocalDateTime endDateTime4 = startDateTime4.plusMinutes(30);
+//                String counselingDemands4 = "상담 요청합니다.";
+//
+//                Reservation reservation4 = Reservation.builder()
+//                                                     .member(member)
+//                                                     .doctor(doctor)
+//                                                     .startDateTime(startDateTime4)
+//                                                     .endDateTime(endDateTime4)
+//                                                     .counselingDemands(counselingDemands4)
+//                                                     .build();
+//
+//                reservationRepository.save(reservation4);
+//
+//                LocalDate localDate5 = LocalDate.now();
+//                LocalTime localTime5 = LocalTime.of(15, 30);
+//                LocalDateTime startDateTime5 = LocalDateTime.of(localDate5, localTime5);
+//                LocalDateTime endDateTime5 = startDateTime5.plusMinutes(30);
+//                String counselingDemands5 = "상담 요청합니다.";
+//
+//                Reservation reservation5 = Reservation.builder()
+//                                                     .member(member)
+//                                                     .doctor(doctor)
+//                                                     .startDateTime(startDateTime5)
+//                                                     .endDateTime(endDateTime5)
+//                                                     .counselingDemands(counselingDemands5)
+//                                                     .build();
+//
+//                reservationRepository.save(reservation5);
+//
+//                LocalDate localDate6 = LocalDate.now();
+//                LocalTime localTime6 = LocalTime.of(16, 00);
+//                LocalDateTime startDateTime6 = LocalDateTime.of(localDate6, localTime6);
+//                LocalDateTime endDateTime6 = startDateTime6.plusMinutes(30);
+//                String counselingDemands6 = "상담 요청합니다.";
+//
+//                Reservation reservation6 = Reservation.builder()
+//                                                      .member(member)
+//                                                      .doctor(doctor)
+//                                                      .startDateTime(startDateTime6)
+//                                                      .endDateTime(endDateTime6)
+//                                                      .counselingDemands(counselingDemands6)
+//                                                      .build();
+//
+//                reservationRepository.save(reservation6);
+//
+//                LocalDate localDate7 = LocalDate.now();
+//                LocalTime localTime7 = LocalTime.of(16, 30);
+//                LocalDateTime startDateTime7 = LocalDateTime.of(localDate7, localTime7);
+//                LocalDateTime endDateTime7 = startDateTime7.plusMinutes(30);
+//                String counselingDemands7 = "상담 요청합니다.";
+//
+//                Reservation reservation7 = Reservation.builder()
+//                                                      .member(member)
+//                                                      .doctor(doctor)
+//                                                      .startDateTime(startDateTime7)
+//                                                      .endDateTime(endDateTime7)
+//                                                      .counselingDemands(counselingDemands7)
+//                                                      .build();
+//
+//                reservationRepository.save(reservation7);
+//
+//                LocalDate localDate8 = LocalDate.now();
+//                LocalTime localTime8 = LocalTime.of(17, 00);
+//                LocalDateTime startDateTime8 = LocalDateTime.of(localDate8, localTime8);
+//                LocalDateTime endDateTime8 = startDateTime8.plusMinutes(30);
+//                String counselingDemands8 = "상담 요청합니다.";
+//
+//                Reservation reservation8 = Reservation.builder()
+//                                                      .member(member)
+//                                                      .doctor(doctor)
+//                                                      .startDateTime(startDateTime8)
+//                                                      .endDateTime(endDateTime8)
+//                                                      .counselingDemands(counselingDemands8)
+//                                                      .build();
+//
+//                reservationRepository.save(reservation8);
+//
+//                LocalDate localDate9 = LocalDate.now();
+//                LocalTime localTime9 = LocalTime.of(17, 30);
+//                LocalDateTime startDateTime9 = LocalDateTime.of(localDate9, localTime9);
+//                LocalDateTime endDateTime9 = startDateTime9.plusMinutes(30);
+//                String counselingDemands9 = "상담 요청합니다.";
+//
+//                Reservation reservation9 = Reservation.builder()
+//                                                      .member(member)
+//                                                      .doctor(doctor)
+//                                                      .startDateTime(startDateTime9)
+//                                                      .endDateTime(endDateTime9)
+//                                                      .counselingDemands(counselingDemands9)
+//                                                      .build();
+//
+//                reservationRepository.save(reservation9);
+//
+//                LocalDate localDate10 = LocalDate.now();
+//                LocalTime localTime10 = LocalTime.of(18, 00);
+//                LocalDateTime startDateTime10 = LocalDateTime.of(localDate10, localTime10);
+//                LocalDateTime endDateTime10 = startDateTime10.plusMinutes(30);
+//                String counselingDemands10 = "상담 요청합니다.";
+//
+//                Reservation reservation10 = Reservation.builder()
+//                                                      .member(member)
+//                                                      .doctor(doctor)
+//                                                      .startDateTime(startDateTime10)
+//                                                      .endDateTime(endDateTime10)
+//                                                      .counselingDemands(counselingDemands10)
+//                                                      .build();
+//
+//                reservationRepository.save(reservation10);
             }
 
 

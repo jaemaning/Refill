@@ -19,9 +19,13 @@ spring:
       cache-null-values: false
       host: localhost
       port: 6379
+      password: ${REDIS_PASSWORD}
 
 flask:
   server:
-    url: "localhost:5000/predict"
+    url: ${FLASK_URL}
+
+OPENVIDU_URL: "https://i9c201.p.ssafy.io:4441"
+OPENVIDU_SECRET: "openvidu"
 
 

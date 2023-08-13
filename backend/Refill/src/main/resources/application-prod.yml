@@ -18,7 +18,8 @@ spring:
       time-to-live: 3600
       cache-null-values: false
       host: redis
-      port: 6379
+      port: 6377
+      password: ${REDIS_PASSWORD}
 
 flask:
   server:

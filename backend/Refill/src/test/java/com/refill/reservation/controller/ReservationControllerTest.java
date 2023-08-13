@@ -23,11 +23,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.refill.global.entity.Role;
 import com.refill.reservation.dto.request.ReservationRequest;
 import com.refill.reservation.dto.response.DisabledReservationTimeResponse;
+import com.refill.reservation.dto.response.ReservationInfoResponse;
 import com.refill.reservation.dto.response.ReservationListResponse;
 import com.refill.reservation.dto.response.ReservationResultResponse;
 import com.refill.security.util.LoginInfo;
 import com.refill.util.ControllerTest;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -196,6 +198,36 @@ class ReservationControllerTest extends ControllerTest {
                     pathParameters(
                         parameterWithName("reservationId").description("삭제 할 예약의 PK")
                     ))
+            );
+    }
+
+    @DisplayName("의사 별 오늘 이후 예약상황 조회된다")
+    @Test
+    void get_reservation_info_list_by_doctor() throws Exception{
+
+        List<ReservationInfoResponse> list = new ArrayList<>();
+        list.add(new ReservationInfoResponse(LocalDateTime.now(), "상원", LocalDate.now(), "010-1234-5678", "상담 요청합니다."));
+
+        when(reservationService.findReservationByDoctor(any(), any())).thenReturn(list);
+
+        mockMvc.perform(
+            get(baseUrl + "/list/{doctorId}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(status().isOk())
+            .andDo(
+                document("reservation/doctor/list",
+                preprocessResponse(prettyPrint()),
+                pathParameters(
+                    parameterWithName("doctorId").description("의사 PK값")
+                ),
+                responseFields(
+                    fieldWithPath("[]").description("어제 이후의 의사별 예약 리스트"),
+                    fieldWithPath("[].startDate").description("예약 요일시간"),
+                    fieldWithPath("[].memberName").description("상담 요청자 이름"),
+                    fieldWithPath("[].birthDay").description("상담 요청자 생일"),
+                    fieldWithPath("[].tel").description("핸드폰번호"),
+                    fieldWithPath("[].counselingDemands").description("상담 시 요청사항")
+                ))
             );
     }
 

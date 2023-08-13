@@ -1,26 +1,18 @@
 package com.refill.hospital.controller;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.multipart;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.authentication;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,8 +24,8 @@ import com.refill.doctor.entity.MajorArea;
 import com.refill.global.entity.Role;
 import com.refill.hospital.dto.request.HospitalInfoUpdateRequest;
 import com.refill.hospital.dto.request.HospitalLocationRequest;
-import com.refill.hospital.dto.request.HospitalSearchByLocationRequest;
 import com.refill.hospital.dto.response.HospitalDetailResponse;
+import com.refill.hospital.dto.response.HospitalOperatingHourResponse;
 import com.refill.hospital.dto.response.HospitalResponse;
 import com.refill.hospital.dto.response.HospitalSearchByLocationResponse;
 import com.refill.hospital.entity.Hospital;
@@ -42,14 +34,15 @@ import com.refill.review.entity.Review;
 import com.refill.security.util.LoginInfo;
 import com.refill.util.ControllerTest;
 import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import javax.validation.constraints.NotNull;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.stubbing.Answer;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.authentication.TestingAuthenticationToken;
@@ -227,8 +220,10 @@ class HospitalControllerTest extends ControllerTest {
     @DisplayName("병원_상세_조회_테스트")
     public void testGetHospitalDetail() throws Exception {
 
-        HospitalDetailResponse mockResponse = new HospitalDetailResponse(mockHospital);
-        when(hospitalService.getHospitalDetail(1L)).thenReturn(mockResponse);
+        List<HospitalOperatingHourResponse> list = new ArrayList<>();
+        list.add(new HospitalOperatingHourResponse(DayOfWeek.MONDAY, LocalTime.now(), LocalTime.now()));
+        HospitalDetailResponse mockResponse = new HospitalDetailResponse(mockHospital, list);
+        when(hospitalOperatingHourService.getDetailHospitalInfo(1L)).thenReturn(mockResponse);
 
         this.mockMvc.perform(get("/api/v1/hospital/{hospitalId}", 1L)
                 .accept(MediaType.APPLICATION_JSON))
@@ -280,7 +275,10 @@ class HospitalControllerTest extends ControllerTest {
                             fieldWithPath("reviewResponses.[].hospitalName").description("병원 이름"),
                             fieldWithPath("reviewResponses.[].updateDate").description(
                                 "리뷰 업데이트 일시"),
-                            fieldWithPath("reviewResponses.[].category").description("카테고리")
+                            fieldWithPath("reviewResponses.[].category").description("카테고리"),
+                            fieldWithPath("operatingHourResponses[].dayOfWeek").description("요일"),
+                            fieldWithPath("operatingHourResponses[].startTime").description("진료 시작 시간"),
+                            fieldWithPath("operatingHourResponses[].endTime").description("진료 종료 시간")
                         )));
     }
 
@@ -417,8 +415,7 @@ class HospitalControllerTest extends ControllerTest {
         SecurityContextHolder.setContext(securityContext);
 
         this.mockMvc.perform(
-            delete("/api/v1/hospital/{hospitalId}/doctor/{doctorId}", hospitalId, doctorId)
-                    .contentType(MediaType.MULTIPART_FORM_DATA))
+            delete("/api/v1/hospital/{hospitalId}/doctor/{doctorId}", hospitalId, doctorId))
                     .andExpect(status().isOk())
                     .andDo(document("hospital/doctor/delete",  // RestDocs를 사용한 문서화
                         preprocessResponse(prettyPrint()),
