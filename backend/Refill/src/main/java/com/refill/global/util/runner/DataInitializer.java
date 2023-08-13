@@ -81,7 +81,7 @@ public class DataInitializer implements CommandLineRunner {
 
 
 
-        for(int i=0; i<20; i++){
+        for(int i=1; i<=20; i++){
 
             Random random = new Random();
             double randomDouble = random.nextDouble();
@@ -107,6 +107,7 @@ public class DataInitializer implements CommandLineRunner {
                                                  .member(member)
                                                  .hairLossScore(40)
                                                  .hairLossType(HairLossType.TYPE3)
+                                                 .certainty("60")
                                                  .surveyResult("1010100000")
                                                  .build();
 

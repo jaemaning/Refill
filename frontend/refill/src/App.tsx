@@ -18,7 +18,7 @@ import RegisterDoctor from "pages/hospital/RegisterDoctor";
 // import WebRTC from "pages/WebRTC";
 import VideoChatPage from "pages/openvidu/VideoChatPage";
 import JoinPage from "pages/openvidu/joinpage";
-import BEVideoChatPage from 'pages/openvidu/VideoChatPage';
+import BEVideoChatPage from "pages/openvidu/VideoChatPage";
 // import { OpenVidu } from "openvidu-browser";
 
 const App: React.FC = () => {
@@ -32,7 +32,10 @@ const App: React.FC = () => {
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/mypage" element={<Mypage />} />
-        <Route path="/DetailHospital" element={<DetailHospital />} />
+        <Route
+          path="/DetailHospital/:hospitalId"
+          element={<DetailHospital />}
+        />
         <Route path="/diagnosis" element={<AIDiagnosis />} />
         <Route path="/diagnosisSecond" element={<AIDiagnosisSecond />} />
         <Route path="/diagnosisResult" element={<AIDiagnosisResult />} />
@@ -43,7 +46,6 @@ const App: React.FC = () => {
         <Route path="/video" element={<VideoChatPage />} />
         {/* <Route path="/video" element={<BEVideoChatPage />} /> */}
         <Route path="/join" element={<JoinPage />} />
-        
 
         <Route
           path="*"
