@@ -20,7 +20,6 @@ import com.refill.member.repository.MemberRepository;
 import com.refill.report.entity.Report;
 import com.refill.report.entity.TargetType;
 import com.refill.report.repository.ReportRepository;
-import com.refill.reservation.entity.Reservation;
 import com.refill.reservation.repository.ReservationRepository;
 import com.refill.review.entity.Review;
 import com.refill.review.repository.ReviewRepository;
@@ -142,8 +141,8 @@ public class DataInitializer implements CommandLineRunner {
             hospitalRepository.save(hospital);
 
             // 운영시간 넣기
-            LocalTime startTime = LocalTime.of(9, 0);
-            LocalTime endTime = LocalTime.of(19, 0);
+            LocalTime startTime = LocalTime.of(5, 0);
+            LocalTime endTime = LocalTime.of(23, 0);
 
             DayOfWeek[] weeks = DayOfWeek.values();
 

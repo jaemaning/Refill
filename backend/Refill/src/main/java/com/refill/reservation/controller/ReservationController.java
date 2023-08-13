@@ -49,7 +49,7 @@ public class ReservationController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<ReservationResultResponse> makeReservation(@AuthenticationPrincipal LoginInfo loginInfo, @RequestPart("reservationRequest") final ReservationRequest reservationRequest, @RequestPart(value = "image", required = false) MultipartFile hairImage) {
+    public ResponseEntity<ReservationResultResponse> makeReservation(@AuthenticationPrincipal LoginInfo loginInfo, @RequestPart("reservationRequest") final ReservationRequest reservationRequest, @RequestPart(value = "hairImg", required = false) MultipartFile hairImage) {
 
         log.debug("'{}' member request reservation to '{}' doctor", loginInfo.loginId(), reservationRequest.doctorId());
         ReservationResultResponse reservationResultResponse = reservationService.makeReservation(loginInfo.loginId(), reservationRequest, hairImage);
