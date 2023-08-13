@@ -39,9 +39,9 @@ const loginSlice = createSlice({
       state.isadmin = false;
     },
     loginAdmin: (state) => {
-      state.isadmin = true;
+      state.ishospital = false;
       state.ismember = false;
-      state.isadmin = false;
+      state.isadmin = true;
     },
     loginFail: () => initialState,
   },
