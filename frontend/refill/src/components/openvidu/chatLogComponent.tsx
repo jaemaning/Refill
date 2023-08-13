@@ -34,7 +34,7 @@ const ChatLog: React.FC<chatLogProps> = ({ chatData }) => {
         <div style={{marginBottom: '5px'}}>
           <span style={{ ...messageStyle, color: 'white', backgroundColor: '#626264', borderTopRightRadius: '5px', borderBottomLeftRadius: '5px', borderBottomRightRadius: '5px'}}> {chatData.message}</span>
         </div>
-      )}
+      }
     </>
   );
 };
