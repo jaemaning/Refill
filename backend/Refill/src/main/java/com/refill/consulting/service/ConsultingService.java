@@ -73,7 +73,7 @@ public class ConsultingService {
     private final int BEFORE_CONSULTING_TIME = 15;
 
 
-    @Scheduled(cron = "0 0-59 8-21 * * ?")
+    @Scheduled(cron = "0 */10 8-23 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
 
         LocalDateTime now = LocalDateTime.now();
@@ -88,18 +88,27 @@ public class ConsultingService {
 
         // 돌아가면서 세션 생성 및 토큰 저장
         for (Reservation reservation : reservationList) {
+            log.info("iter come in");
             Member member = reservation.getMember();
             Doctor doctor = reservation.getDoctor();
+
+            log.info("'{}',  '{}' made", member, doctor);
 
             // 세션 생성
             Map<String, Object> params = new HashMap<>();
             String customSessionId = "session" + reservation.getId().toString();
             params.put("customSessionId",customSessionId);
 
+            log.info("{} => customSessionId", customSessionId);
+
             SessionProperties properties = SessionProperties.fromJson(params).build();
 
+            log.info("==============================");
+            log.info("before CreateSession");
             Session session = openvidu.createSession(properties);
             String sessionId = session.getSessionId();
+            log.info("after CreateSession");
+            log.info("==============================");
 
             // connection 생성
             ConnectionProperties connectionProperties = new ConnectionProperties.Builder()
