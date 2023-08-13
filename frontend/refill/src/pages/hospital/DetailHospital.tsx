@@ -385,6 +385,8 @@ const DetailHospital: React.FC = () => {
   const hospitalId: number = useSelector(
     (state: RootState) => state.login.hosid,
   );
+
+  console.log(hospitalId);
   // 테스트용
   useEffect(() => {
     axios

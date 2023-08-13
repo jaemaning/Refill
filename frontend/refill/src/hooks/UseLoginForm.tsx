@@ -59,7 +59,8 @@ const UseLoginForm = (loginId: string, loginPassword: string, role: number) => {
       if (decode_token.role === "ROLE_MEMBER") {
         dispatch(loginMember());
       } else if (decode_token.role === "ROLE_HOSPITAL") {
-        dispatch(loginHospital(checked.data.id));
+        console.log(checked.data.id);
+        dispatch(loginHospital({ hosid: checked.data.id }));
       } else if (decode_token.role === "ROLE_ADMIN") {
         dispatch(loginAdmin());
       }

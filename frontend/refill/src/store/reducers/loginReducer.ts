@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Loginstate, Hosstate } from "auth/types";
+import { Hosstate, Loginstate } from "auth/types";
 
 interface LoginState {
   token: string;
@@ -37,7 +37,9 @@ const loginSlice = createSlice({
     },
     loginHospital: (state, action: PayloadAction<Hosstate>) => {
       const { hosid } = action.payload;
+      console.log(hosid);
       state.hosid = hosid;
+      console.log(state.hosid);
       state.ismember = false;
       state.ishospital = true;
       state.isadmin = false;
