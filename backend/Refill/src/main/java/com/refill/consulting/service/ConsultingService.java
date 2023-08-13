@@ -73,60 +73,57 @@ public class ConsultingService {
     private final int BEFORE_CONSULTING_TIME = 15;
 
 
-    @Scheduled(cron = "0 1,2,3,4,5,6,7,8,9,10,11,12,13,14 8-21 * * ?")
+    @Scheduled(cron = "0 0-59 8-21 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
 
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime minute = LocalDateTime.now();
-        minute = minute.plusMinutes(BEFORE_CONSULTING_TIME);
-        LocalDateTime startDateTime = LocalDateTime.of(now.getYear(),now.getMonth(),now.getDayOfMonth(),now.getHour(),minute.getMinute());
-
         // 조건문 추가
 
-        log.info("'{}' == time", startDateTime);
-        List<Reservation> reservationList = reservationRepository.findReservationReady(startDateTime);
+        log.info("'{}' == time", now);
+        List<Reservation> reservationList = reservationRepository.findReservationReady(now.minusMinutes(1),now.plusMinutes(1));
         log.info("{} makes consulting", reservationList);
         log.info("{} => reservationList" , reservationList);
+        log.info("{} => reservationList.size()" , reservationList.size());
 
 
         // 돌아가면서 세션 생성 및 토큰 저장
-        // for (Reservation reservation : reservationList) {
-        //     Member member = reservation.getMember();
-        //     Doctor doctor = reservation.getDoctor();
+        for (Reservation reservation : reservationList) {
+            Member member = reservation.getMember();
+            Doctor doctor = reservation.getDoctor();
 
-        //     // 세션 생성
-        //     Map<String, Object> params = new HashMap<>();
-        //     String customSessionId = "session" + reservation.getId().toString();
-        //     params.put("customSessionId",customSessionId);
+            // 세션 생성
+            Map<String, Object> params = new HashMap<>();
+            String customSessionId = "session" + reservation.getId().toString();
+            params.put("customSessionId",customSessionId);
 
-        //     SessionProperties properties = SessionProperties.fromJson(params).build();
+            SessionProperties properties = SessionProperties.fromJson(params).build();
 
-        //     Session session = openvidu.createSession(properties);
-        //     String sessionId = session.getSessionId();
+            Session session = openvidu.createSession(properties);
+            String sessionId = session.getSessionId();
 
-        //     // connection 생성
-        //     ConnectionProperties connectionProperties = new ConnectionProperties.Builder()
-        //         .type(ConnectionType.WEBRTC)
-        //         .role(OpenViduRole.PUBLISHER)
-        //         .data("user_data")
-        //         .build();
+            // connection 생성
+            ConnectionProperties connectionProperties = new ConnectionProperties.Builder()
+                .type(ConnectionType.WEBRTC)
+                .role(OpenViduRole.PUBLISHER)
+                .data("user_data")
+                .build();
 
-        //     String doctorToken = session.createConnection(connectionProperties).getToken();
-        //     String screenShareToken = session.createConnection(connectionProperties).getToken();
-        //     String memberToken = session.createConnection(connectionProperties).getToken();
+            String doctorToken = session.createConnection(connectionProperties).getToken();
+            String screenShareToken = session.createConnection(connectionProperties).getToken();
+            String memberToken = session.createConnection(connectionProperties).getToken();
 
-        //     Consulting consulting = Consulting.builder()
-        //                                       .member(member)
-        //                                       .doctor(doctor)
-        //                                       .sessionId(sessionId)
-        //                                       .memberToken(memberToken)
-        //                                       .doctorToken(doctorToken)
-        //                                       .screenShareToken(screenShareToken)
-        //                                       .reservation(reservation)
-        //                                       .build();
+            Consulting consulting = Consulting.builder()
+                                              .member(member)
+                                              .doctor(doctor)
+                                              .sessionId(sessionId)
+                                              .memberToken(memberToken)
+                                              .doctorToken(doctorToken)
+                                              .screenShareToken(screenShareToken)
+                                              .reservation(reservation)
+                                              .build();
 
-        //     consultingRepository.save(consulting);
-        // }
+            consultingRepository.save(consulting);
+        }
     }
 
     @Transactional(readOnly = true)
