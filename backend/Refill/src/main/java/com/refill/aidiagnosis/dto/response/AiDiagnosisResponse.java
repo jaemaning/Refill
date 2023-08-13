@@ -7,6 +7,7 @@ public record AiDiagnosisResponse (
 
     Integer hairLossScore,
     String certainty,
+    String modelConfidence,
     String diagnosisImage,
     LocalDate diagnosisDate
 
@@ -16,6 +17,7 @@ public record AiDiagnosisResponse (
         this (
             aiDiagnosis.getHairLossScore(),
             aiDiagnosis.getCertainty(),
+            aiDiagnosis.getModelConfidence(),
             aiDiagnosis.getDiagnosisImage(),
             aiDiagnosis.getCreatedAt().toLocalDate()
         );
