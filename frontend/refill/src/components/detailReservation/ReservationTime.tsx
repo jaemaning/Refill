@@ -21,6 +21,14 @@ const ReservationTime: React.FC<ReservationTimeProps> = ({
   reservations,
   setSelectedMember,
 }) => {
-  return <></>;
+  return (
+    <div>
+      {reservations.map((res) => (
+        <div key={res.startDate}>
+          {res.startDate} - {res.memberName}
+        </div>
+      ))}
+    </div>
+  );
 };
 export default ReservationTime;

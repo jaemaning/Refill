@@ -115,7 +115,8 @@ const DetailReservation: React.FC<ComponentProps> = ({
     });
 
     setSelectedDateReservations(filteredReservations);
-    console.log(myReservations)
+    console.log("마이레저베이션")
+    console.log(filteredReservations)
   }, [selectedDate]);
 
   return (
@@ -127,10 +128,11 @@ const DetailReservation: React.FC<ComponentProps> = ({
         <div>
           <ReservationDoctor setDoctorId={setDoctorId} doctors={doctors} />
         </div>
+        <hr className="border-2 border-black my-2" />
         <div>
           <ReservationDate setSelectedDate={setSelectedDate} />
         </div>
-        <hr />
+        <hr className="border-2 border-black my-2" />
         <div>
           <ReservationTime
             selectedDate={selectedDate}
@@ -139,7 +141,7 @@ const DetailReservation: React.FC<ComponentProps> = ({
             setSelectedMember={setSelectedMember}
           />
         </div>
-        <hr />
+        <hr className="border-2 border-black my-2" />
         <div>
           <DetailPatient />
         </div>
