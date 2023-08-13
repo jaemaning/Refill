@@ -2,6 +2,7 @@ package com.refill.reservation.controller;
 
 import com.refill.reservation.dto.request.ReservationRequest;
 import com.refill.reservation.dto.response.DisabledReservationTimeResponse;
+import com.refill.reservation.dto.response.ReservationInfoResponse;
 import com.refill.reservation.dto.response.ReservationListResponse;
 import com.refill.reservation.dto.response.ReservationResultResponse;
 import com.refill.reservation.service.ReservationService;
@@ -63,5 +64,14 @@ public class ReservationController {
         reservationService.deleteReservation(loginInfo.loginId(), reservationId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/list/{doctorId}")
+    public ResponseEntity<List<ReservationInfoResponse>> getReservationListByDoctor(@AuthenticationPrincipal LoginInfo loginInfo, @PathVariable("doctorId") Long doctorId) {
+
+        log.debug("'{}' hospital request reservation info by doctor");
+        List<ReservationInfoResponse> reservationInfoResponseList = reservationService.findReservationByDoctor(loginInfo, doctorId);
+
+        return ResponseEntity.ok().body(reservationInfoResponseList);
     }
 }

@@ -29,16 +29,18 @@ const JoinPage = () => {
   useEffect(() => {
     if (islogin && loginToken) {
       console.log("로그인확인");
-      Promise.all(
-        testReservationIds.map((testReservationId) => {
-          getToken(testReservationId);
-        }),
-      )
+
+      const promises = testReservationIds.map((testReservationId) =>
+        getToken(testReservationId),
+      );
+
+      Promise.all(promises)
         .then(() => {
           setLoading(false);
-          console.log(tokenData);
         })
         .catch((err) => console.log("에러:", err));
+
+      console.log("토큰 데이터 확인", tokenData);
     } else {
       alert("로그인을 해주세요.");
       navigate("/login");
@@ -51,7 +53,6 @@ const JoinPage = () => {
     token,
     shareToken,
   }: TypeToken) => {
-    console.log(token, shareToken, consultingId, sessionId);
     navigate("/video", {
       state: {
         sessionPk: sessionId,
@@ -74,8 +75,8 @@ const JoinPage = () => {
           },
         },
       );
-      console.log(response.data);
       setTokenData((prevTokenData) => [...prevTokenData, response.data]);
+      console.log(response.data);
     } catch (err) {
       console.log("에러:", err);
     }
@@ -88,7 +89,7 @@ const JoinPage = () => {
       {isLoading ? (
         <div>Loading...</div>
       ) : (
-        tokenData.map(({ sessionId, token, shareToken }, idx) =>
+        tokenData.map(({ sessionId, token, shareToken, consultingId }, idx) =>
           sessionId ? (
             <div key={idx}>
               {idx}, {sessionId} :
@@ -96,7 +97,7 @@ const JoinPage = () => {
                 variant="normal"
                 content="입장 가능"
                 onClick={() => {
-                  joinSession({ token, shareToken });
+                  joinSession({ token, shareToken, sessionId, consultingId });
                 }}
               />
             </div>

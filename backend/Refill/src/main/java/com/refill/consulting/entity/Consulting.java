@@ -1,5 +1,6 @@
 package com.refill.consulting.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.refill.doctor.entity.Doctor;
 import com.refill.global.entity.BaseEntity;
 import com.refill.member.entity.Member;
@@ -21,6 +22,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Entity
 public class Consulting extends BaseEntity {
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private Member member;
@@ -36,13 +38,13 @@ public class Consulting extends BaseEntity {
     @Column(nullable = false)
     private String sessionId;
 
-    @Column(nullable = false)
+    @Column
     private String memberToken;
 
-    @Column(nullable = false)
+    @Column
     private String doctorToken;
 
-    @Column(nullable = false)
+    @Column
     private String screenShareToken;
 
     @Column(columnDefinition = "TEXT")
@@ -66,5 +68,12 @@ public class Consulting extends BaseEntity {
     public void updateConsultingInfo(String consultingDetailInfo) {
         this.isExecuted = true;
         this.consultingDetailInfo = consultingDetailInfo;
+    }
+
+    public void closeSession() {
+        this.sessionId = "";
+        this.screenShareToken = "";
+        this.doctorToken = "";
+        this.memberToken = "";
     }
 }
