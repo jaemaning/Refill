@@ -51,7 +51,6 @@ interface Review {
   hospitalId: number;
   hospitalName: string;
   updateDate: string;
-  category: string;
 }
 
 interface Time {
@@ -728,16 +727,16 @@ const DetailHospital: React.FC = () => {
                               <Grid item xs={2}>
                                 <h1>{review.doctorName}</h1>
                               </Grid>
-                              <Grid item xs={2}>
+                              <Grid item xs={10}>
                                 <h1 className="text-gray-500">
                                   {review.updateDate}
                                 </h1>
                               </Grid>
-                              <Grid item xs={8}>
+                              {/* <Grid item xs={8}>
                                 <h1 className="text-gray-500">
                                   {review.category}
                                 </h1>
-                              </Grid>
+                              </Grid> */}
                               <Grid item xs={12}>
                                 <h1 className="text-2xl">{review.content}</h1>
                               </Grid>
