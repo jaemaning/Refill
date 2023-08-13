@@ -189,7 +189,6 @@ public class DataInitializer implements CommandLineRunner {
 
                 /* 리뷰 생성 - 의사 한명당 3개의 리뷰 생성 */
                 String[] content = {"이분이 진짜 최고", "모발이식 상담을 너무 잘해요!!", "난 좀 별로인듯..."};
-                String[] category = {"모발이식", "컨설팅", "탈모케어"};
                 for(int k=0; k < 4; k++){
                     Review review = Review.builder()
                                           .doctor(doctor)
@@ -198,7 +197,7 @@ public class DataInitializer implements CommandLineRunner {
                                           .member(member)
                                           .score(random.nextInt(6))
                                           .isBlocked(false)
-                                          .category(category[(j + k) % content.length]).build();
+                                          .build();
                     reviewRepository.save(review);
 
                     Report report = new Report(member.getRole(), member.getId(), review.getId(), "내용이 추잡합니다.", TargetType.REVIEW);
@@ -223,21 +222,21 @@ public class DataInitializer implements CommandLineRunner {
 //
 //                reservationRepository.save(reservation);
 
-                LocalDate localDate = LocalDate.now();
-                LocalTime localTime = LocalTime.of(5, 22);
-                LocalDateTime startDateTime = LocalDateTime.of(localDate, localTime);
-                LocalDateTime endDateTime = startDateTime.plusMinutes(30);
-                String counselingDemands = "상담 요청합니다.";
+                // LocalDate localDate = LocalDate.now();
+                // LocalTime localTime = LocalTime.of(17, 20);
+                // LocalDateTime startDateTime = LocalDateTime.of(localDate, localTime);
+                // LocalDateTime endDateTime = startDateTime.plusMinutes(30);
+                // String counselingDemands = "상담 요청합니다.";
 
-                Reservation reservation = Reservation.builder()
-                                                     .member(member)
-                                                     .doctor(doctor)
-                                                     .startDateTime(startDateTime)
-                                                     .endDateTime(endDateTime)
-                                                     .counselingDemands(counselingDemands)
-                                                     .build();
+                // Reservation reservation = Reservation.builder()
+                //                                      .member(member)
+                //                                      .doctor(doctor)
+                //                                      .startDateTime(startDateTime)
+                //                                      .endDateTime(endDateTime)
+                //                                      .counselingDemands(counselingDemands)
+                //                                      .build();
 
-                reservationRepository.save(reservation);
+                // reservationRepository.save(reservation);
 
 //                LocalDate localDate1 = LocalDate.now();
 //                LocalTime localTime1 = LocalTime.of(13, 30);

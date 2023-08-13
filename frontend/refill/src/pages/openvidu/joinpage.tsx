@@ -12,7 +12,7 @@ interface TypeToken {
   shareToken?: string | null;
 }
 
-const testReservationIds = [...Array(20)].map((_, i) => i);
+const testReservationIds = [...Array(100)].map((_, i) => i);
 
 const JoinPage = () => {
   // 여기에 토큰들 담아둘거임 예약 순서대로 가자

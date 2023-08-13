@@ -8,9 +8,19 @@ export type LoginResult = {
   accessToken: string;
 };
 
+export type HLoginResult = {
+  refreshToken: string;
+  accessToekn: string;
+  id: number;
+};
+
 export type Loginstate = {
   islogin: boolean;
   token: string;
+};
+
+export type Hosstate = {
+  hosid: number;
 };
 
 export type FindIdRequest = {

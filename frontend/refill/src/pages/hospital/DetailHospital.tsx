@@ -22,8 +22,8 @@ import AddIcon from "@mui/icons-material/Add";
 import ModifyDoctor from "./ModifyDoctor";
 import DeleteDoctor from "./DeleteDoctor";
 import SelectDoctorAndTime from "components/consultReservation/SelectDoctorAndTime";
-import { useParams } from "react-router-dom";
 import DetailReservation from "components/detailReservation/DetailReservation";
+import { useParams } from "react-router-dom";
 // import StarRatings from "react-star-ratings";
 
 interface DivProps {
@@ -52,7 +52,6 @@ interface Review {
   hospitalId: number;
   hospitalName: string;
   updateDate: string;
-  category: string;
 }
 
 interface Time {
@@ -365,11 +364,11 @@ const DetailHospital: React.FC = () => {
     setDeleteOpen(false);
   };
 
-  const DeleteDoc = async (hospitalid: number, doctorid: number) => {
+  const DeleteDoc = async (doctorid: number) => {
     axios
-      .delete(`api/v1/hospital/${hospitalid}/doctor/${doctorid}`, {
+      .delete(`api/v1/hospital/${hospitalId}/doctor/${doctorid}`, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          // "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
         },
       })
@@ -384,8 +383,16 @@ const DetailHospital: React.FC = () => {
         handleDMClose();
       });
   };
-  // 테스트용
+
+  const [mypage, setMypage] = useState(false);
+  const MyId: number = useSelector((state: RootState) => state.login.hosid);
+
   useEffect(() => {
+    if (ishospital === true) {
+      if (MyId === hospitalData.hospitalId) {
+        setMypage(true);
+      }
+    }
     axios
       .get(`/api/v1/hospital/${hospitalId}`, {
         headers: {
@@ -512,11 +519,8 @@ const DetailHospital: React.FC = () => {
             <DoctorInfo buttonData={buttonData}>
               <h1 className="text-4xl font-bold">의사 정보</h1>
               <div>
-                {doctorData.map((doctor) => (
-                  <div
-                    key={doctor.doctorId}
-                    className="flex justify-around items-center"
-                  >
+                {doctorData.map((doctor, index) => (
+                  <div key={index} className="flex justify-around items-center">
                     <Doctors>
                       <Doctor_common
                         className=" items-center"
@@ -560,16 +564,9 @@ const DetailHospital: React.FC = () => {
                               open={deleteOpen}
                               handleMOpen={handleDMOpen}
                               handleMClose={handleDMClose}
-                              hospitalId={hospitalData.hospitalId}
-                              DoctorId={doctor.doctorId}
                               hospitalname={hospitalData.name}
                               doctorname={doctor.name}
-                              onDeleteDoctor={() =>
-                                DeleteDoc(
-                                  hospitalData.hospitalId,
-                                  doctor.doctorId,
-                                )
-                              }
+                              onDeleteDoctor={() => DeleteDoc(doctor.doctorId)}
                             ></DeleteDoctor>
                           </div>
                         </div>
@@ -597,12 +594,12 @@ const DetailHospital: React.FC = () => {
                     <Doctor_res_icon>
                       <img src={Arrow} alt="" />
                       <a href="" className="mt-4 text-xl">
-                        {ishospital ? "내 상담 확인하기" : "상담 예약 하기"}
+                        {mypage ? "내 상담 확인하기" : "상담 예약 하기"}
                       </a>
                     </Doctor_res_icon>
                   </div>
                 ))}
-                {doctorData.length < 3 && (
+                {mypage && doctorData.length < 3 && (
                   <div className="flex items-center justify-center flex-col">
                     <AddIcon sx={{ fontSize: 80 }}></AddIcon>
                     <RegisterDoctor
@@ -725,16 +722,16 @@ const DetailHospital: React.FC = () => {
                               <Grid item xs={2}>
                                 <h1>{review.doctorName}</h1>
                               </Grid>
-                              <Grid item xs={2}>
+                              <Grid item xs={10}>
                                 <h1 className="text-gray-500">
                                   {review.updateDate}
                                 </h1>
                               </Grid>
-                              <Grid item xs={8}>
+                              {/* <Grid item xs={8}>
                                 <h1 className="text-gray-500">
                                   {review.category}
                                 </h1>
-                              </Grid>
+                              </Grid> */}
                               <Grid item xs={12}>
                                 <h1 className="text-2xl">{review.content}</h1>
                               </Grid>
