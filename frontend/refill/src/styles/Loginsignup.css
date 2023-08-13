@@ -78,3 +78,28 @@ body {
 .file-input {
   display: none;
 }
+
+.button-style {
+  outline: "none";
+  border: "1 solid transparent";
+  border-radius: 7px;
+  cursor: "pointer";
+  transition: "background .2s ease, color .1s ease";
+  font-weight: 600;
+  line-height: 26px;
+  font-size: 15px;
+  box-shadow: "4px 4px 5px rgba(0, 0, 0, 0.3)";
+  padding: "11px";
+  color: white;
+}
+
+.mbutton {
+  background-color: #142cf9;
+}
+
+.hbutton {
+  background-color: #f2981f;
+}
+
+/* customStyles={{  }}
+                onClick={emailCertify} */

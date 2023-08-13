@@ -3,18 +3,16 @@ import Social from "components/common/Social";
 import Button from "../elements/Button";
 import "../../styles/Loginsignup.css";
 import UseLoginForm from "hooks/UseLoginForm";
-import LoginSignupModal from "components/loginsignup/LoginSignupModal";
 import { Link } from "react-router-dom";
 
 const HospitalLogin: React.FC = () => {
   const [loginId, setLoginId] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
-  const {
-    handleSubmitLoginForm,
-    message: msg,
-    openModal: open,
-  } = UseLoginForm(loginId, loginPassword, 1);
-  const [showModal, setShowModal] = useState(false);
+  const { handleSubmitLoginForm, message: msg } = UseLoginForm(
+    loginId,
+    loginPassword,
+    1,
+  );
 
   const handleIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLoginId(event.target.value);
@@ -24,16 +22,11 @@ const HospitalLogin: React.FC = () => {
     setLoginPassword(event.target.value);
   };
 
-  const handleCloseForm = () => {
-    setShowModal(false);
-  };
-
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     handleSubmitLoginForm(); // 로그인 함수 호출
 
     // 로그인 시도 후 모달 데이터가 설정되면 모달 표시
-    setShowModal(true);
   };
 
   const middle = "flex justify-center items-center";
@@ -71,7 +64,8 @@ const HospitalLogin: React.FC = () => {
               onChange={handlePasswordChange}
             ></input>
           </div>
-          <div className="flex justify-end my-3">
+          <div className="flex justify-between my-3">
+            {msg && <span className="text-sm text-red font-medium">{msg}</span>}
             <Link to="/find" className="text-sm font-medium text-blue-600">
               아이디 & 비밀번호 찾기
             </Link>
@@ -102,9 +96,6 @@ const HospitalLogin: React.FC = () => {
           </div>
         </form>
       </div>
-      {showModal && (
-        <LoginSignupModal message={msg} open={open} onClose={handleCloseForm} />
-      )}
     </div>
   );
 };
