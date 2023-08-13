@@ -70,16 +70,17 @@ public class ConsultingService {
     private final ConsultingRepository consultingRepository;
     private final ReportService reportService;
 
-    private final int BEFORE_CONSULTING_TIME = 2;
+    private final int BEFORE_CONSULTING_TIME = 3;
 
 
-    @Scheduled(cron = "0 58 8-18 * * ?")
+    @Scheduled(cron = "0 17 8-18 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
 
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime minute = LocalDateTime.now();
-        minute.plusMinutes(BEFORE_CONSULTING_TIME);
+        minute = minute.plusMinutes(BEFORE_CONSULTING_TIME);
         LocalDateTime startDateTime = LocalDateTime.of(now.getYear(),now.getMonth(),now.getDayOfMonth(),now.getHour(),
+            minute.getMinute()); = LocalDateTime.of(now.getYear(),now.getMonth(),now.getDayOfMonth(),now.getHour(),
             minute.getMinute());
         // 조건문 추가
 
