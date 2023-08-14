@@ -31,17 +31,17 @@ const ReservationDate: React.FC<ReservationDateProps> = ({
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DateCalendar
           disablePast={true}
-            value={selectedDateValue}
-            onChange={(date, selectionState) => {
-              if (selectionState === "finish") {
-                const formattedDate = dayjs(date).tz("Asia/Seoul").format();
-                setSelectedDate(formattedDate);
-                setSelectedDateValue(date);
-                setIsSelectedDate(true)
-                setIsSelectedTime(false)
-                console.log(formattedDate);
-              }
-            }}
+          value={selectedDateValue}
+          onChange={(date, selectionState) => {
+            if (selectionState === "finish") {
+              const formattedDate = dayjs(date).tz("Asia/Seoul").format();
+              setSelectedDate(formattedDate);
+              setSelectedDateValue(date);
+              setIsSelectedDate(true);
+              setIsSelectedTime(false);
+              console.log(formattedDate);
+            }
+          }}
         />
       </LocalizationProvider>
     </div>

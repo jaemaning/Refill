@@ -93,17 +93,20 @@ const ReviewModal: React.FC<OutModalProps> = (props) => {
   const reviewUrl = "api/v1/review";
   const doctorDatailUrl = "";
 
-  const handleRating = (event: React.ChangeEvent<unknown>, val : number | null) => {
+  const handleRating = (
+    event: React.ChangeEvent<unknown>,
+    val: number | null,
+  ) => {
     if (val) {
-      console.log(score)
+      console.log(score);
       setScore(val);
     }
-    console.log(val)
+    console.log(val);
   };
 
   const submitReview = () => {
-    console.log(score)
-    console.log('a??')
+    console.log(score);
+    console.log("a??");
     // if (reviewText) {
     //   axios
     //   .post(

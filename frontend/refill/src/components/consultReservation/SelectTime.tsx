@@ -79,9 +79,10 @@ const SelectTime: React.FC<SelectTimeProps> = ({
             <button
               key={time}
               onClick={() => handleTimeClick(time)}
-              className={`bg-${
-                isDisabled(time) ? "red" : "black"
-              } hover:bg-slate-400`+` rounded-md`}
+              className={
+                `bg-${isDisabled(time) ? "red" : "black"} hover:bg-slate-400` +
+                ` rounded-md`
+              }
               disabled={isDisabled(time)}
             >
               <div
@@ -100,9 +101,10 @@ const SelectTime: React.FC<SelectTimeProps> = ({
             <button
               key={time}
               onClick={() => handleTimeClick(time)}
-              className={`bg-${
-                isDisabled(time) ? "red" : "black"
-              } hover:bg-slate-400`+` rounded-md`}
+              className={
+                `bg-${isDisabled(time) ? "red" : "black"} hover:bg-slate-400` +
+                ` rounded-md`
+              }
               disabled={isDisabled(time)}
             >
               <div

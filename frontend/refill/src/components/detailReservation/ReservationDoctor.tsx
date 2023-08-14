@@ -32,7 +32,7 @@ const ReservationDoctor: React.FC<ReservationDoctorProps> = ({
     if (doctor) {
       console.log(doctor.doctorId);
       setDoctorId(doctor.doctorId);
-      setIsSelectedDoctor(true)
+      setIsSelectedDoctor(true);
     } else {
       console.log("해당 이름의 의사를 찾을 수 없습니다.");
     }
