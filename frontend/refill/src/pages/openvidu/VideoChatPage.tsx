@@ -88,10 +88,19 @@ const VideoChatPage: React.FC = () => {
   const location = useLocation();
   const [vol, setVol] = useState(30);
   //받는애
-  const { consultingId, sessionPk, token, shareToken } = location.state;
+  const {
+    consultingId,
+    sessionPk,
+    token,
+    shareToken,
+    memberId,
+    hospitalId,
+    doctorId,
+    hospitalName,
+  } = location.state;
 
   const inputref = useRef<HTMLTextAreaElement>(null);
-  const chatLogref = useRef<HTMLInputElement>(null);
+  const chatLogRef = useRef<HTMLInputElement>(null);
   const [chat, setChat] = useState<Chat>({
     messageList: [],
     message: "",
@@ -128,6 +137,8 @@ const VideoChatPage: React.FC = () => {
   const [openReviewModal, setOpenReviewModal] = React.useState(false);
   const handleOpenRviewtModal = () => setOpenReviewModal(true);
   const handleCloseReviewModal = () => setOpenReviewModal(false);
+
+  
   //
 
   const loginToken = useSelector((state: RootState) => state.login.token);
@@ -159,10 +170,20 @@ const VideoChatPage: React.FC = () => {
     } else if (islogin && ishospital) {
       console.log("병원입니다.");
     } else {
-      navigate("/");
+      // navigate("/");
       alert("접근 권한이 없습니다.");
     }
   }, []);
+
+  // 스크롤바 내리기
+  useEffect(() => {
+    if (chatLogRef.current) {
+      console.log('Scrolling to:', chatLogRef.current.scrollHeight);
+      chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight;
+    } else {
+      console.log('chatLogRef.current is null or undefined');
+    }
+  }, [messageList]);
 
   function handleChange(event: any) {
     if (typeof event.target.value === "string") {
@@ -218,13 +239,26 @@ const VideoChatPage: React.FC = () => {
   // 강제로 창 종료시 동작
   useEffect(() => {
     if (!session) {
-      window.addEventListener("beforeunload", onbeforeunload);
+      // window.addEventListener("beforeunload", onbeforeunload);
       joinSession();
-    } else {
-      return () => {
-        window.removeEventListener("beforeunload", onbeforeunload);
-      };
     }
+  }, []);
+
+  // 새로고침 막기
+  useEffect(() => {
+    const handleBeforeUnload = (e: any) => {
+      e.preventDefault();
+      // e.returnValue = "";
+      handleOpenOutModal();
+    };
+
+    // 컴포넌트가 마운트될 때 이벤트 리스너 추가
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
   }, []);
 
   // mainStreamManager가 없을 경우 publisher로 설정
@@ -245,7 +279,7 @@ const VideoChatPage: React.FC = () => {
   // 나갈때 동작
   const onbeforeunload = () => {
     // session 떠나기
-    leaveSession();
+    // leaveSession();
   };
 
   // const handleChangeSessionId = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -275,9 +309,6 @@ const VideoChatPage: React.FC = () => {
 
   // 의사전용 joinsession
   const joinSession = async () => {
-    console.log("토큰 위치입니다!!!!!!!!", token);
-    console.log("토큰 위치입니다!!!!!!!!", shareToken);
-
     // const token_v2 = getToken();
     // console.log("엥???????????????",token_v2)
     const OV = new OpenVidu();
@@ -288,21 +319,7 @@ const VideoChatPage: React.FC = () => {
     mySession.on("streamCreated", (event) => {
       const subscriber = mySession.subscribe(event.stream, undefined);
       setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
-      console.log("비디오 엘레먼트 등록시 이벤트 :", event);
-
-      console.log("구독자?? :", subscriber);
-      console.log("소리?? :", subscriber);
     });
-
-    console.log(mySession);
-
-    // mySession.on('videoElementCreated', (event) => {
-    //   if (event.stream.typeOfVideo !== 'SCREEN') {
-    //     console.log("비디오 엘레먼트 등록시 이벤트 :", event)
-    //     // const videoElement = event.element;
-    //     console.log("비디오 엘레먼트 등록시 이벤트2 :", videoElement)
-    //   }
-    // })
 
     mySession.on("streamDestroyed", (event) => {
       deleteSubscriber(event.stream.streamManager);
@@ -432,11 +449,8 @@ const VideoChatPage: React.FC = () => {
 
   const camOnOff = () => {
     if (session) {
-      console.log(publisher);
-      console.log(subscribers);
       publisher?.publishVideo(!publisher?.stream?.videoActive);
       setIsCamOn(!isCamOn);
-      // console.log(subscribers);
     }
   };
 
@@ -802,6 +816,10 @@ const VideoChatPage: React.FC = () => {
                       consultingDetailInfo={consultingDetailInfo}
                       consultingReviewInfo={consultingReviewInfo}
                       sessionPk={sessionPk}
+                      memberId={memberId}
+                      hospitalId={hospitalId}
+                      doctorId={doctorId}
+                      hospitalName={hospitalName}
                       leaveSession={leaveSession}
                     ></ReviewModal>
                   </Modal>
@@ -831,13 +849,11 @@ const VideoChatPage: React.FC = () => {
               }}
             >
               <div
-                ref={chatLogref}
+                ref={chatLogRef}
                 style={{
                   padding: "20px",
                   maxHeight: "400px",
                   overflowY: "auto",
-                  display: "flex",
-                  flexDirection: "column-reverse",
                 }}
               >
                 {messageList.map(({ message, nickname, connectionId }, idx) => (

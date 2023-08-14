@@ -74,6 +74,10 @@ type OutModalProps = {
   consultingDetailInfo?: string;
   consultingReviewInfo?: string;
   sessionPk: string;
+  memberId: number;
+  doctorId: number;
+  hospitalId: number;
+  hospitalName: string;
   leaveSession: () => void;
 };
 
@@ -90,50 +94,58 @@ const ReviewModal: React.FC<OutModalProps> = (props) => {
   );
   const [score, setScore] = React.useState<number | null>(0);
 
-  const reviewUrl = "api/v1/review";
-  const doctorDatailUrl = "";
+  const reviewUrl = "/api/v1/review";
+  const doctorDatailUrl = "/api/v1/consulting/leave";
 
-  const handleRating = (event: React.ChangeEvent<unknown>, val : number | null) => {
+  const handleRating = (
+    event: React.ChangeEvent<unknown>,
+    val: number | null,
+  ) => {
     if (val) {
-      console.log(score)
+      console.log(score);
       setScore(val);
     }
-    console.log(val)
+    console.log(val);
   };
 
   const submitReview = () => {
-    console.log(score)
-    console.log('a??')
-    // if (reviewText) {
-    //   axios
-    //   .post(
-    //     url,
-    //     {content : reviewText},
-    //     {
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //         "Authorization": `Bearer ${loginToken}`,
-    //       }
-    //     }
-    //   )
-    //   .then(async () => {
-    //     await handleOpenReportSuccessModal()
-    //     await openAlert(1500)
-    //     props.onClose()
-    //   })
-    //   .catch((error) => {
-    //     console.log("에러:", error);
-    //   });
-    // } else {
-    //   alert('리뷰 내용을 작성해주세요.')
-    // }
+    console.log(score);
+    console.log("a??");
+    if (reviewText) {
+      axios
+        .post(
+          reviewUrl,
+          {
+            hospitalId: props.hospitalId,
+            doctorId: props.doctorId,
+            memberId: props.memberId,
+            content: reviewText,
+            score: score,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${loginToken}`,
+            },
+          },
+        )
+        .then((response) => {
+          console.log(response.data);
+          props.leaveSession();
+        })
+        .catch((error) => {
+          console.log("에러:", error);
+        });
+    } else {
+      alert("리뷰 내용을 작성해주세요.");
+    }
   };
 
   const submitDoctorPaper = () => {
     if (detailText) {
       axios
         .post(
-          "api/v1/consulting/leave",
+          doctorDatailUrl,
           {
             consultingId: props.consultingId,
             sessionId: props.sessionPk,
