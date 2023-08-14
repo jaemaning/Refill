@@ -83,6 +83,7 @@ public class AiDiagnosisService {
                                              .hairLossType(hairLossType)
                                              .surveyResult(aiDiagnosisRequest.surveyResult())
                                              .certainty(aiServerResponse.certainty())
+                                             .modelConfidence(aiServerResponse.modelConfidence())
                                              .build();
 
         String address = amazonS3Service.uploadFile(hairImg);
@@ -133,6 +134,7 @@ public class AiDiagnosisService {
             throw new AiDiagnosisException(ErrorCode.AI_SERVER_ERROR);
         }
 
+        log.info("##### {} #####", aiServerResponse.toString());
         return aiServerResponse;
     }
 

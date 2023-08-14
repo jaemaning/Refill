@@ -73,33 +73,43 @@ public class ConsultingService {
     private final int BEFORE_CONSULTING_TIME = 15;
 
 
-    @Scheduled(cron = "0 15,45 8-18 * * ?")
+    @Scheduled(cron = "0 */3 8-23 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
 
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime startDateTime = LocalDateTime.of(now.getYear(),now.getMonth(),now.getDayOfMonth(),now.getHour(),now.getMinute());
         // 조건문 추가
 
-        log.info("'{}' == time", startDateTime);
-        List<Reservation> reservationList = reservationRepository.findReservationReady(startDateTime);
+        log.info("'{}' == time", now);
+        List<Reservation> reservationList = reservationRepository.findReservationReady(now.minusMinutes(50),now.plusMinutes(50));
         log.info("{} makes consulting", reservationList);
         log.info("{} => reservationList" , reservationList);
+        log.info("{} => reservationList.size()" , reservationList.size());
 
 
-        // 돌아가면서 세션 생성 및 토큰 저장
+        // 돌아가면서 세션 생성 및 토큰 저장 .
         for (Reservation reservation : reservationList) {
+            log.info("iter come in");
             Member member = reservation.getMember();
             Doctor doctor = reservation.getDoctor();
+
+            log.info("'{}',  '{}' made", member, doctor);
 
             // 세션 생성
             Map<String, Object> params = new HashMap<>();
             String customSessionId = "session" + reservation.getId().toString();
             params.put("customSessionId",customSessionId);
 
+            log.info("{} => customSessionId", customSessionId);
+
             SessionProperties properties = SessionProperties.fromJson(params).build();
 
-            Session session = openvidu.createSession(properties);
+            log.info("==============================");
+            log.info("before CreateSession");
+//            Session session = openvidu.createSession(properties);
+            Session session = openvidu.createSession();
             String sessionId = session.getSessionId();
+            log.info("after CreateSession");
+            log.info("==============================");
 
             // connection 생성
             ConnectionProperties connectionProperties = new ConnectionProperties.Builder()

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Loginstate } from "auth/types";
+import { Hosstate, Loginstate } from "auth/types";
 
 interface LoginState {
   token: string;
@@ -7,6 +7,7 @@ interface LoginState {
   ismember: boolean;
   ishospital: boolean;
   isadmin: boolean;
+  hosid: number;
 }
 
 const initialState: LoginState = {
@@ -15,6 +16,7 @@ const initialState: LoginState = {
   ismember: false,
   ishospital: false,
   isadmin: false,
+  hosid: 0,
 };
 
 const loginSlice = createSlice({
@@ -33,7 +35,11 @@ const loginSlice = createSlice({
       state.ishospital = false;
       state.isadmin = false;
     },
-    loginHospital: (state) => {
+    loginHospital: (state, action: PayloadAction<Hosstate>) => {
+      const { hosid } = action.payload;
+      console.log(hosid);
+      state.hosid = hosid;
+      console.log(state.hosid);
       state.ismember = false;
       state.ishospital = true;
       state.isadmin = false;

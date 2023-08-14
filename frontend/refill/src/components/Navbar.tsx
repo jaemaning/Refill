@@ -11,6 +11,7 @@ const Navbar = React.forwardRef<HTMLDivElement>((props, ref) => {
   const isMember = useSelector((state: RootState) => state.login.ismember);
   const isHospital = useSelector((state: RootState) => state.login.ishospital);
   const isAdmin = useSelector((state: RootState) => state.login.isadmin);
+  const hospitalId = useSelector((state: RootState) => state.login.hosid);
 
   const [menuList, setMenuList] = useState([
     ["예약", "#"],
@@ -30,7 +31,7 @@ const Navbar = React.forwardRef<HTMLDivElement>((props, ref) => {
         setMenuList([
           ...menuList,
           ["로그아웃", "/logout"],
-          ["마이페이지", "/DetailHospital"],
+          ["마이페이지", `/DetailHospital/${hospitalId}`],
         ]);
       } else if (isAdmin === true) {
         setMenuList([
