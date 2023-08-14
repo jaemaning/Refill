@@ -76,7 +76,7 @@ public class ConsultingService {
 
 
     /* 상담 세션 생성 */
-    @Scheduled(cron = "0 40, 8-18 * * ?")
+    @Scheduled(cron = "0 50 8-18 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
 
 //        LocalDateTime now = LocalDateTime.now();
