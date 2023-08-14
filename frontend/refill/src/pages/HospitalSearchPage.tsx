@@ -49,6 +49,7 @@ interface TypeSearchedData {
   address?: string;
   tel?: string;
   score?: number;
+  email?:string;
 }
 
 interface TypeRequestMap {
@@ -145,6 +146,7 @@ export const HospitalSearch: React.FC = () => {
   const islogin = useSelector((state: RootState) => state.login.islogin);
   const ismember = useSelector((state: RootState) => state.login.ismember);
   const ishospital = useSelector((state: RootState) => state.login.ishospital);
+  const hosid = useSelector((state: RootState) => state.login.hosid);
 
   const kakaoMapBox = useRef<HTMLDivElement>(null); // 지도를 담을 div element를 위한 ref
   const map = useRef<any>(null); // map 객체를 관리할 ref
@@ -234,7 +236,20 @@ export const HospitalSearch: React.FC = () => {
           }
           // geocoder 로 확인하기
         } else if (ishospital) {
-          // 내 정보 가져오기
+          // 내 병원 lonlat정보 가져오기
+          const url = `/api/v1/hospital/${hosid}`
+          axios
+            .get(url, {headers :{
+              Authorization: `Bearer ${token}`
+            }})
+            .then((res)=>{
+              // console.log(res.data.hospitalResponse.latitude)
+              // console.log(res.data.hospitalResponse.longitude)
+              setLatLon([res.data.hospitalResponse.latitude, res.data.hospitalResponse.longitude])
+            })
+            .catch((err)=>{
+              console.log(err)
+            })
         }
   
         const loadMap = () => {
@@ -664,8 +679,9 @@ export const HospitalSearch: React.FC = () => {
                     <div key={i} style={{ marginTop: "20px" }}>
                       <div style={{ margin: "20px", paddingLeft: "100px" }}>
                         <h1>{data.name}</h1>
-                        <p>{data.longitude}</p>
-                        <p>{data.latitude}</p>
+                        {/* <p>{data.longitude}</p>
+                        <p>{data.latitude}</p> */}
+                        <p>{data.email}</p>
                         <p>{data.hospitalProfileImg}</p>
                         <a>{data.address}</a>
                         <p>{data.tel}</p>
