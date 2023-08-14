@@ -105,8 +105,10 @@ public class ConsultingService {
 
             log.info("==============================");
             log.info("before CreateSession");
-//            Session session = openvidu.createSession(properties);
-            Session session = openvidu.createSession();
+            Session session = openvidu.createSession(properties);
+//            Session session = openvidu.createSession();
+            log.info("==============================");
+            log.info(" getSessionId");
             String sessionId = session.getSessionId();
             log.info("after CreateSession");
             log.info("==============================");
