@@ -182,7 +182,7 @@ class AccountControllerTest extends ControllerTest {
 
         MemberLoginRequest memberLoginRequest = new MemberLoginRequest("loginId", "loginPassword");
 
-        TokenResponse tokenResponse = new TokenResponse("accessToken", "refreshToken");
+        TokenResponse tokenResponse = new TokenResponse(1L, "accessToken", "refreshToken");
         when(accountService.memberLogin(any())).thenReturn(tokenResponse);
 
         mockMvc.perform(
@@ -213,7 +213,7 @@ class AccountControllerTest extends ControllerTest {
         HospitalLoginRequest hospitalLoginRequest = new HospitalLoginRequest("loginId",
             "loginPassword");
 
-        TokenResponse tokenResponse = new TokenResponse("accessToken", "refreshToken");
+        TokenResponse tokenResponse = new TokenResponse(1L, "accessToken", "refreshToken");
         when(accountService.hospitalLogin(any())).thenReturn(tokenResponse);
 
         mockMvc.perform(

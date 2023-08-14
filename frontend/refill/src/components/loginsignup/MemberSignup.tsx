@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import axios from "axios";
 import Social from "components/common/Social";
 import Button from "../elements/Button";
@@ -18,7 +18,7 @@ interface SignUpType {
   handleChecklogin: () => void;
 }
 
-const SingUp: React.FC<SignUpType> = (props) => {
+const MemberSignup: React.FC<SignUpType> = (props) => {
   // 회원가입 할 때 필요한 데이터
   const [inputData, setInputData] = useState({
     loginId: "",
@@ -36,12 +36,100 @@ const SingUp: React.FC<SignUpType> = (props) => {
   const [checkCode, setCheckCode] = useState("");
   const [check, setCheck] = useState(false);
 
+  // 입력 패스워드와 확인 패스워드 일치하는지 검사
   const passwordError =
     checkPassword.length > 0 && inputData.loginPassword !== checkPassword;
 
   const handleCheckPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCheckPassword(event.target.value);
   };
+
+  // 아이디 형식에 맞는지 판단
+  const [validId, setValidId] = useState(false);
+  const validateId = (id: string) => {
+    const alphanumericRegex = /^(?=.*[a-z])(?=.*\d)[a-z\d]{6,14}$/;
+    const isValidId = alphanumericRegex.test(id);
+    setValidId(isValidId);
+  };
+
+  // 비밀번호 형식에 맞는지 판단
+  const [validPw, setValidPw] = useState(false);
+  const validatePw = (pw: string) => {
+    const complexRegex =
+      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{6,14}$/;
+    const isValidPw = complexRegex.test(pw);
+    setValidPw(isValidPw);
+  };
+
+  // 생년월일 형식에 맞는지 판단
+  const [validBD, setValidBD] = useState(false);
+  const validateBD = (bD: string) => {
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+
+    if (!dateRegex.test(bD)) {
+      setValidBD(false);
+    } else {
+      const year = parseInt(bD.substring(0, 4));
+      const month = parseInt(bD.substring(5, 7));
+      const day = parseInt(bD.substring(8, 10));
+
+      if (
+        isNaN(year) ||
+        isNaN(month) ||
+        isNaN(day) ||
+        year < 1900 ||
+        month < 1 ||
+        month > 12 ||
+        day < 1 ||
+        day > 31
+      ) {
+        setValidBD(false);
+      } else {
+        console.log(1);
+        setValidBD(true);
+      }
+    }
+  };
+
+  // 이메일 형식에 맞는지 판단
+  const [validEmail, setValidEmail] = useState(false);
+  const validateEmail = (Email: string) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9]+\.(com|net)$/;
+    const isEmail = emailRegex.test(Email);
+    setValidEmail(isEmail);
+  };
+
+  // 폰넘버 형식에 맞는지 판단
+  const [validPN, setValidPN] = useState(false);
+  const validatePN = (PN: string) => {
+    const numberRegex = /^\d{3}-\d{4}-\d{4}$/;
+
+    if (!numberRegex.test(PN)) {
+      setValidPN(false);
+    } else {
+      const PhoneHead = PN.substring(0, 3);
+
+      if (PhoneHead === "010") {
+        setValidPN(true);
+      } else {
+        setValidPN(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    validateId(inputData.loginId);
+    validatePw(inputData.loginPassword);
+    validateBD(inputData.birthDay);
+    validateEmail(inputData.email);
+    validatePN(inputData.tel);
+  }, [
+    inputData.loginId,
+    inputData.loginPassword,
+    inputData.birthDay,
+    inputData.email,
+    inputData.tel,
+  ]);
 
   const changeInput = (e: ChangeEvent<HTMLInputElement>) => {
     setInputData({
@@ -175,6 +263,11 @@ const SingUp: React.FC<SignUpType> = (props) => {
               }}
             ></input>
           </div>
+          {inputData.loginId.length > 0 && !validId && (
+            <p className="text-sm ml-2 mt-1" style={{ color: "red" }}>
+              영소문자와 숫자 조합으로 6글자 이상 20글자 이하로 입력해주세요.
+            </p>
+          )}
           <br />
           <div>
             <div className="flex justify-start">
@@ -192,6 +285,12 @@ const SingUp: React.FC<SignUpType> = (props) => {
               name="loginPassword"
               value={inputData.loginPassword}
             ></input>
+            {inputData.loginPassword.length > 0 && !validPw && (
+              <p className="text-sm ml-2 mt-1" style={{ color: "red" }}>
+                영문자,숫자,특수문자 조합으로 6글자 이상 14글자 이하로
+                입력해주세요.
+              </p>
+            )}
             <br />
             {/* 비밀번호 입력 확인 Logic구성해서 적용해야함 */}
             <input
@@ -202,7 +301,7 @@ const SingUp: React.FC<SignUpType> = (props) => {
               onChange={handleCheckPassword}
             ></input>
             {passwordError && (
-              <span style={{ color: "red" }}>
+              <span className="text-sm" style={{ color: "red" }}>
                 비밀번호가 일치하지 않습니다.
               </span>
             )}
@@ -235,7 +334,7 @@ const SingUp: React.FC<SignUpType> = (props) => {
             <input
               type="text"
               className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-              placeholder="생년월일을 입력해주세요"
+              placeholder="생년월일을 입력해주세요  ex) 2023-01-01"
               onChange={(e) => {
                 changeInput(e);
               }}
@@ -243,6 +342,11 @@ const SingUp: React.FC<SignUpType> = (props) => {
               value={inputData.birthDay}
             ></input>
           </div>
+          {inputData.birthDay.length > 0 && !validBD && (
+            <p className="text-sm ml-2 mt-1" style={{ color: "red" }}>
+              생년월일 형식에 맞게 작성해주세요
+            </p>
+          )}
           <br />
           <div>
             <div className="flex justify-start">
@@ -272,6 +376,11 @@ const SingUp: React.FC<SignUpType> = (props) => {
               </button>
             </div>
           </div>
+          {inputData.email.length > 0 && !validEmail && (
+            <p className="text-sm ml-2 mt-1" style={{ color: "red" }}>
+              이메일 형식에 맞게 작성해주세요
+            </p>
+          )}
           <br />
           {checkCode && (
             <div className="flex justify-between">
@@ -342,7 +451,7 @@ const SingUp: React.FC<SignUpType> = (props) => {
             <input
               type="text"
               className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-              placeholder="전화번호를 입력해주세요"
+              placeholder="전화번호를 입력해주세요 ex) 010-0000-0000"
               name="tel"
               value={inputData.tel}
               onChange={(e) => {
@@ -350,6 +459,11 @@ const SingUp: React.FC<SignUpType> = (props) => {
               }}
             ></input>
           </div>
+          {inputData.tel.length > 0 && !validPN && (
+            <p className="text-sm ml-2 mt-1" style={{ color: "red" }}>
+              전화번호 형식에 맞게 작성해주세요
+            </p>
+          )}
           <br />
           <div className="my-3">
             <Button
@@ -380,4 +494,4 @@ const SingUp: React.FC<SignUpType> = (props) => {
   );
 };
 
-export default SingUp;
+export default MemberSignup;

@@ -6,6 +6,36 @@
   border-radius: 5px;
   background-color: #eeeeee;
 }
-.detail-reservation-box {
-  width: 358px;
+.reservation-time-select {
+  height: 40px;
+  background-color: #F2981F;
+}
+.reservation-detail-patient-text {
+  width: 90px;
+  font-weight: bold;
+}
+.reservation-detail-patient-title {
+  color: #2E5077;
+  font-weight: bold;
+}
+.reservation-caution-box {
+  background-color: #F2981F;
+}
+.mypage-reservation-box {
+  border: 2px solid black;
+  border-radius: 10px;
+}
+.res-small-btn-left {
+  border-radius: 5px;
+  background-color: red;
+}
+.res-small-btn-right {
+  border-radius: 5px;
+  background-color: #142CF9;
+}
+.reservation-detail-join-button {
+  background-color: #142CF9;
+  border-radius: 8px;
+  height: 40px;
+  width: 120px;
 }

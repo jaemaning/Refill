@@ -6,10 +6,12 @@ import com.refill.consulting.dto.response.ConnectionTokenResponse;
 import com.refill.consulting.dto.response.ConsultingDetailResponse;
 import com.refill.consulting.dto.response.ConsultingListResponse;
 import com.refill.consulting.service.ConsultingService;
+import com.refill.report.entity.Report;
 import com.refill.security.util.LoginInfo;
 import io.openvidu.java.client.OpenViduHttpException;
 import io.openvidu.java.client.OpenViduJavaClientException;
 import java.util.List;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
@@ -77,7 +79,7 @@ public class ConsultingController {
     }
 
     /* 상담 신고 하기 */
-    @PostMapping("report/{consultingId}")
+    @PostMapping("/report/{consultingId}")
     public ResponseEntity<String> reportConsulting(@AuthenticationPrincipal LoginInfo loginInfo, @PathVariable Long consultingId, @RequestBody
         ConsultingReportRequest consultingReportRequest) {
 
@@ -86,5 +88,15 @@ public class ConsultingController {
         consultingService.reportConsulting(consultingId, consultingReportRequest.content(),loginInfo);
 
         return ResponseEntity.ok().build();
+    }
+
+    /* 신고된 상담 조회 */
+    @GetMapping("/report")
+    public ResponseEntity<List<Report>>  consultingReportList (@AuthenticationPrincipal LoginInfo loginInfo) {
+
+        log.info("request cnosultingReportList");
+        List<Report> reportList = consultingService.getConsultingReportList(loginInfo);
+
+        return  ResponseEntity.ok().body(reportList);
     }
 }

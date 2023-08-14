@@ -135,8 +135,6 @@ public class DataInitializer implements CommandLineRunner {
                                         .hospitalProfileImg("https://picsum.photos/600/600/?random")
                                         .latitude(BigDecimal.valueOf(33.452613d + 0.0001d * (double)i))
                                         .longitude(BigDecimal.valueOf(126.570888d + 0.0001d * (double)i))
-                                        .postalCode(
-                                            String.valueOf(random.nextInt(90000)+10000))
                                         .registrationImg("https://picsum.photos/600/600/?random")
                                         .build();
             hospitalRepository.save(hospital);
