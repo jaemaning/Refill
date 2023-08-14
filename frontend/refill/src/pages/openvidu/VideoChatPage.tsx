@@ -232,6 +232,14 @@ const VideoChatPage: React.FC = () => {
     if (!mainStreamManager && publisher) {
       setMainStreamManager(publisher);
     }
+
+    // if (subscribers) {
+    //   subscribers
+    //   .filter((sub) => sub.stream.typeOfVideo !== "SCREEN")
+    //   .map((sub) => (
+    //     sub.stream.audioVolume
+    //   ))
+    // }
   }, [mainStreamManager, publisher, subscribers]);
 
   // 나갈때 동작
@@ -380,6 +388,8 @@ const VideoChatPage: React.FC = () => {
         setMainStreamManager(publisher);
         setPublisher(publisher);
       }
+
+      console.log("구독자들 다보여줘 :", subscribers);
     } catch (error) {
       console.log("There was an error connecting to the session:", error);
     }

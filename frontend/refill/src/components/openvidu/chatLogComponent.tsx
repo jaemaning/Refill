@@ -24,17 +24,39 @@ const ChatLog: React.FC<chatLogProps> = ({ chatData }) => {
   // console.log(textData.connectionId, textData.myStreamId)
   return (
     <>
-      {
-        chatData.mySessionId === chatData.connectionId 
-        ?
-        <div style={{textAlign: 'right', margin: '10px 0px'}}>
-          <span style={{ ...messageStyle, color: 'black', backgroundColor: '#AADAFF', borderTopLeftRadius: '5px', borderBottomLeftRadius: '5px', borderBottomRightRadius: '5px'}}> {chatData.message}</span>
+      {chatData.mySessionId === chatData.connectionId ? (
+        <div style={{ textAlign: "right", margin: "10px 0px" }}>
+          <span
+            style={{
+              ...messageStyle,
+              color: "black",
+              backgroundColor: "#AADAFF",
+              borderTopLeftRadius: "5px",
+              borderBottomLeftRadius: "5px",
+              borderBottomRightRadius: "5px",
+            }}
+          >
+            {" "}
+            {chatData.message}
+          </span>
         </div>
-        :
-        <div style={{marginBottom: '5px'}}>
-          <span style={{ ...messageStyle, color: 'white', backgroundColor: '#626264', borderTopRightRadius: '5px', borderBottomLeftRadius: '5px', borderBottomRightRadius: '5px'}}> {chatData.message}</span>
+      ) : (
+        <div style={{ marginBottom: "5px" }}>
+          <span
+            style={{
+              ...messageStyle,
+              color: "white",
+              backgroundColor: "#626264",
+              borderTopRightRadius: "5px",
+              borderBottomLeftRadius: "5px",
+              borderBottomRightRadius: "5px",
+            }}
+          >
+            {" "}
+            {chatData.message}
+          </span>
         </div>
-      }
+      )}
     </>
   );
 };
