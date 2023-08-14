@@ -4,7 +4,7 @@ import Button from "../elements/Button";
 import Social from "components/common/Social";
 import "../../styles/Loginsignup.css";
 import { useNavigate } from "react-router-dom";
-import { useKakaoMapScript } from 'hooks/UseKakaoMap'
+import { useKakaoMapScript } from "hooks/UseKakaoMap";
 
 declare global {
   interface Window {
@@ -46,22 +46,24 @@ const HospitalSignup: React.FC = () => {
   });
 
   // kakaomap 주소 -> 좌표 변환
-  const [hospitalAddr, setHospitalAddr] = useState("")
+  const [hospitalAddr, setHospitalAddr] = useState("");
   const scriptLoaded = useKakaoMapScript();
 
-  const [lonlat, setLonlat] = useState(["",""])
+  const [lonlat, setLonlat] = useState(["", ""]);
 
-  
-  const addrToGeocoder = async function(result: TypeChangeForGeocoder[], status: any) {
+  const addrToGeocoder = async function (
+    result: TypeChangeForGeocoder[],
+    status: any,
+  ) {
     if (status === window.kakao.maps.services.Status.OK && result.length > 0) {
       console.log(result[0].x, result[0].y);
-      await setLonlat([result[0].x, result[0].y])
+      await setLonlat([result[0].x, result[0].y]);
     } else {
-      alert('올바르지 않은 주소 접근입니다.')
-      console.log('err', result)
+      alert("올바르지 않은 주소 접근입니다.");
+      console.log("err", result);
     }
   };
-  
+
   useEffect(() => {
     if (scriptLoaded && window.kakao && window.kakao.maps) {
       const geocoder = new window.kakao.maps.services.Geocoder();
@@ -159,7 +161,7 @@ const HospitalSignup: React.FC = () => {
         (document.getElementById("addr") as HTMLInputElement).value =
           data.address;
         document.getElementById("addrDetail")?.focus();
-        setHospitalAddr(data.address)
+        setHospitalAddr(data.address);
       },
     }).open();
   };
