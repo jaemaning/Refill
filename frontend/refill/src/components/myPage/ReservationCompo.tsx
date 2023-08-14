@@ -9,13 +9,11 @@ type Res = {
 
 interface ReservationCompoProps {
   reservation: Res;
-  key: number;
   deleteReservation: (id: number) => void;
 }
 
 const ReservationCompo: React.FC<ReservationCompoProps> = ({
   reservation,
-  key,
   deleteReservation,
 }) => {
   const changeDate = (startDate: string) => {
@@ -44,11 +42,6 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
   };
 
   return (
-    <div
-      className="p-2"
-      key={key}
-      style={{ minWidth: "200px", padding: "5px" }}
-    >
       <div className="mypage-reservation-box p-4">
         <p className="text-xl font-black py-2">{reservation.hospitalName}</p>
         <p className="mb-1">{reservation.doctorName} 선생님</p>
@@ -68,7 +61,6 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
           </button>
         </div>
       </div>
-    </div>
   );
 };
 export default ReservationCompo;

@@ -14,6 +14,9 @@ import ModifyMember from "./user/ModifyMember";
 import { Container, Grid } from "@mui/material";
 // 하위 컴포넌트
 import MyReservationReport from "components/myPage/MyReservationReport";
+import AiDiagnosisList from "components/myPage/AiDiagnosisList";
+// CSS
+import "styles/MyPage.css"
 
 interface DivProps {
   selected?: boolean;
@@ -361,7 +364,9 @@ const Mypage: React.FC = () => {
             <Common
               style={{ width: "700px", height: "150px" }}
               className="mt-3 mb-6"
-            ></Common>
+            >
+              <AiDiagnosisList />
+            </Common>
           </Content2>
         </div>
       </Containerdiv>
