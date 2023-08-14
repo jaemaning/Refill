@@ -76,7 +76,7 @@ public class ConsultingService {
 
 
     /* 상담 세션 생성 */
-    @Scheduled(cron = "0 16 8-18 * * ?")
+    @Scheduled(cron = "0 30 8-18 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
 
         LocalDateTime now = LocalDateTime.now();
@@ -132,13 +132,16 @@ public class ConsultingService {
         Consulting consulting = consultingRepository.findConsultingByReservationId(reservationId);
 
         Long consultingId = 0L;
+        Long hospitalId = 0L;
+        Long doctorId = 0L;
+        Long memberId = 0L;
         String sessionId = "";
         String token = "";
         String screenShareToken = "";
         String hospitalName = "";
 
         if(consulting == null) {
-            return new ConnectionTokenResponse(consultingId, sessionId, token, screenShareToken,hospitalName);
+            return new ConnectionTokenResponse(consultingId, hospitalId, doctorId, memberId, sessionId, token, screenShareToken,hospitalName);
         }
         else {
             sessionId = consulting.getSessionId();
@@ -151,7 +154,10 @@ public class ConsultingService {
                 screenShareToken = consulting.getScreenShareToken();
             }
             hospitalName = consulting.getDoctor().getHospital().getName();
-            return new ConnectionTokenResponse(consultingId, sessionId, token, screenShareToken, hospitalName);
+            hospitalId = consulting.getDoctor().getHospital().getId();
+            doctorId = consulting.getDoctor().getId();
+            memberId = consulting.getMember().getId();
+            return new ConnectionTokenResponse(consultingId, hospitalId, doctorId, memberId, sessionId, token, screenShareToken,hospitalName);
         }
     }
 
