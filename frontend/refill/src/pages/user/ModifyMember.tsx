@@ -106,7 +106,6 @@ const ModifyMember: React.FC<ModifyModal> = ({
 
   useEffect(() => {
     defaultValueRef.current = userData;
-    console.log('전체 데이터좀 보자',userData)
   }, []); 
   
   const changeInput = (e : any) => {
@@ -117,7 +116,6 @@ const ModifyMember: React.FC<ModifyModal> = ({
   }
   
   const handleCancle = () => {
-    console.log('디폴트임',defaultValueRef.current)
     setuserData(defaultValueRef.current);
     handleMClose()
   }
@@ -139,14 +137,14 @@ const ModifyMember: React.FC<ModifyModal> = ({
   //   });
   // };
 
-  const [inputImage, setInputImage] = useState<InputImageState>({
-    profileImg: null,
-  });
+  // const [inputImage, setInputImage] = useState<InputImageState>({
+  //   profileImg: null,
+  // });
 
   const handleImgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null; // 선택한 파일을 가져옵니다. 없으면 null로 설정합니다.
 
-    setInputImage((prevInputImage) => ({
+    setuserData((prevInputImage : any) => ({
       ...prevInputImage,
       [e.target.name]: file,
     }));
