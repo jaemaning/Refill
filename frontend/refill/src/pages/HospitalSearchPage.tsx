@@ -127,11 +127,13 @@ export const HospitalSearch: React.FC = () => {
   const [selected, setSelected] = useState("option1"); // 상단 버튼 태그를 구분
   const [dropSelected, setDropSelected] = useState("서울"); // 드롭다운 버튼 구분
   const [searched, setSearched] = useState<string>(""); // 검색어 박스 구분
+  const [latLon, setLatLon] = useState<number[]>([0, 0]);
+  const [homeLatLon, setHomeLatLon] = useState([0, 0])
   const [homeLat, homeLon] = [33.452613, 126.570888]; // 집위치 테스트를 위해 가상의 값으로 테스트진행
   const [toggleSelected, setToggleSelected] = useState(true);
   const [rendered, setRendered] = useState(true);
   const [toggleData, setToggleData] = useState(true);
-  const nowCenter = useRef<number[]>([homeLat, homeLon]); // 현재 위치 시작 위치는 집위치
+  const nowCenter = useRef<number[]>(latLon); // 현재 위치 시작 위치는 집위치
   const [searchedData, setSearchedData] = useState<TypeSearchedData[]>([]);
   const [hospitals, setHospitals] = useState<TypeResponseMap[]>([]); // 병원 위치 테스트용
   const [starsHospitals, setStarsHospitals] = useState<TypeResponseMap[]>([]);
@@ -141,6 +143,8 @@ export const HospitalSearch: React.FC = () => {
 
   const token = useSelector((state: RootState) => state.login.token);
   const islogin = useSelector((state: RootState) => state.login.islogin);
+  const ismember = useSelector((state: RootState) => state.login.ismember);
+  const ishospital = useSelector((state: RootState) => state.login.ishospital);
 
   const kakaoMapBox = useRef<HTMLDivElement>(null); // 지도를 담을 div element를 위한 ref
   const map = useRef<any>(null); // map 객체를 관리할 ref
@@ -208,12 +212,57 @@ export const HospitalSearch: React.FC = () => {
   const scriptLoaded = useKakaoMapScript();
 
   useEffect(() => {
-    if (selected === "option1" && rendered === true && scriptLoaded) {
-      const loadMap = async () => {
+    const getLocation = async (): Promise<void> => {
+      if (selected === "option1" && rendered === true && scriptLoaded) {
+        if (ismember) {
+          // 내 위치 브라우저 검색으로 찾기
+          if ("geolocation" in navigator) {
+            await navigator.geolocation.getCurrentPosition(
+              (position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                setLatLon([latitude, longitude]);
+                setHomeLatLon([latitude, longitude]);
+              },
+              (error) => {
+                console.error(`Error getting location: ${error.message}`);
+              }
+            );
+            await console.log(latLon);
+          } else {
+            console.log("Geolocation is not supported by this browser.");
+          }
+          // geocoder 로 확인하기
+        } else if (ishospital) {
+          // 내 정보 가져오기
+        }
+  
+        const loadMap = async () => {
+          window.kakao.maps.load(() => {
+            const options = {
+              center: new window.kakao.maps.LatLng(latLon[0], latLon[1]),
+              level: 4,
+              wheel: false
+            };
+            map.current = new window.kakao.maps.Map(kakaoMapBox.current, options);
+            makeHomeMarker();
+          });
+        };
+        loadMap();
+      }
+    };
+  
+    getLocation();
+  }, [selected, scriptLoaded, rendered]); // 의존성 배열에 scriptLoaded 추가
+
+  useEffect(() => {
+    if (latLon[0] !== 0 && latLon[1] !== 0 && scriptLoaded) {
+      const loadMap = () => {
         window.kakao.maps.load(() => {
           const options = {
-            center: new window.kakao.maps.LatLng(homeLat, homeLon),
+            center: new window.kakao.maps.LatLng(latLon[0], latLon[1]),
             level: 4,
+            wheel: false
           };
           map.current = new window.kakao.maps.Map(kakaoMapBox.current, options);
           makeHomeMarker();
@@ -221,7 +270,7 @@ export const HospitalSearch: React.FC = () => {
       };
       loadMap();
     }
-  }, [selected, scriptLoaded]); // 의존성 배열에 scriptLoaded 추가
+  }, [latLon, scriptLoaded]); // latLon 변경 시 지도 다시 렌더링
 
   // 지도 홈마커 띄우기
   const makeHomeMarker = (): void => {
@@ -235,7 +284,7 @@ export const HospitalSearch: React.FC = () => {
         imageSize,
         imageOption,
       ),
-      markerPosition = new window.kakao.maps.LatLng(homeLat, homeLon); // 마커가 표시될 위치입니다
+      markerPosition = new window.kakao.maps.LatLng(homeLatLon[0], homeLatLon[1]); // 마커가 표시될 위치입니다
 
     // 마커를 생성합니다
     const marker = new window.kakao.maps.Marker({
@@ -258,6 +307,7 @@ export const HospitalSearch: React.FC = () => {
 
       // 지도의 현재 영역을 얻어옵니다
       const bounds = map.current.getBounds();
+      console.log("bb", bounds);
 
       // 영역의 남서쪽 좌표를 얻어옵니다
       const swLatLng = bounds.getSouthWest();
@@ -298,6 +348,7 @@ export const HospitalSearch: React.FC = () => {
       };
       map.current = new window.kakao.maps.Map(kakaoMapBox.current, options);
 
+      // 굳이 해야하나 ?
       makeHomeMarker();
 
       for (let i = 0; i < hospitals.length; i++) {
@@ -340,7 +391,7 @@ export const HospitalSearch: React.FC = () => {
   // 집위치로 이동 하는 코드
   const toHome = () => {
     // 집 위치 map 새로 생성
-    const moveHome = new window.kakao.maps.LatLng(homeLat, homeLon);
+    const moveHome = new window.kakao.maps.LatLng(latLon[0], latLon[1]);
 
     // 지도 중심을 이동 시킵니다
     map.current.panTo(moveHome);
