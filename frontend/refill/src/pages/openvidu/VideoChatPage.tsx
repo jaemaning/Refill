@@ -100,8 +100,7 @@ const VideoChatPage: React.FC = () => {
   } = location.state;
 
   const inputref = useRef<HTMLTextAreaElement>(null);
-  const chatLogRef = useRef<HTMLTextAreaElement>(null);
-  const chatLogref = useRef<HTMLInputElement>(null);
+  const chatLogRef = useRef<HTMLInputElement>(null);
   const [chat, setChat] = useState<Chat>({
     messageList: [],
     message: "",
@@ -138,6 +137,8 @@ const VideoChatPage: React.FC = () => {
   const [openReviewModal, setOpenReviewModal] = React.useState(false);
   const handleOpenRviewtModal = () => setOpenReviewModal(true);
   const handleCloseReviewModal = () => setOpenReviewModal(false);
+
+  
   //
 
   const loginToken = useSelector((state: RootState) => state.login.token);
@@ -177,7 +178,10 @@ const VideoChatPage: React.FC = () => {
   // 스크롤바 내리기
   useEffect(() => {
     if (chatLogRef.current) {
+      console.log('Scrolling to:', chatLogRef.current.scrollHeight);
       chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight;
+    } else {
+      console.log('chatLogRef.current is null or undefined');
     }
   }, [messageList]);
 
@@ -445,11 +449,8 @@ const VideoChatPage: React.FC = () => {
 
   const camOnOff = () => {
     if (session) {
-      console.log(publisher);
-      console.log(subscribers);
       publisher?.publishVideo(!publisher?.stream?.videoActive);
       setIsCamOn(!isCamOn);
-      // console.log(subscribers);
     }
   };
 
@@ -848,7 +849,7 @@ const VideoChatPage: React.FC = () => {
               }}
             >
               <div
-                ref={chatLogref}
+                ref={chatLogRef}
                 style={{
                   padding: "20px",
                   maxHeight: "400px",

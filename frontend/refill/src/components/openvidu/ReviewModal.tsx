@@ -94,8 +94,8 @@ const ReviewModal: React.FC<OutModalProps> = (props) => {
   );
   const [score, setScore] = React.useState<number | null>(0);
 
-  const reviewUrl = "api/v1/consulting/leave";
-  const doctorDatailUrl = "";
+  const reviewUrl = "/api/v1/review";
+  const doctorDatailUrl = "/api/v1/consulting/leave";
 
   const handleRating = (
     event: React.ChangeEvent<unknown>,
@@ -114,7 +114,7 @@ const ReviewModal: React.FC<OutModalProps> = (props) => {
     if (reviewText) {
       axios
         .post(
-          doctorDatailUrl,
+          reviewUrl,
           {
             hospitalId: props.hospitalId,
             doctorId: props.doctorId,
@@ -145,7 +145,7 @@ const ReviewModal: React.FC<OutModalProps> = (props) => {
     if (detailText) {
       axios
         .post(
-          reviewUrl,
+          doctorDatailUrl,
           {
             consultingId: props.consultingId,
             sessionId: props.sessionPk,

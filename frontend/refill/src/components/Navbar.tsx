@@ -53,8 +53,8 @@ const Navbar = React.forwardRef<HTMLDivElement>((props, ref) => {
   };
 
   return (
-    <div ref={ref} className="w-full border-b-[2px]">
-      <div className="w-full mx-auto lg:w-[1024px]">
+    <div ref={ref} className="w-full border-b-[2px] 2xl:px-[250px]">
+      <div className="w-full mx-auto lg:w-auto">
         <nav className="bg-white border-gray-200 w-full mx-auto">
           <div className="flex flex-wrap items-center dark:bg-gray-900 justify-between p-6 w-full mx-auto">
             <Link to="/" className="flex items-center">
