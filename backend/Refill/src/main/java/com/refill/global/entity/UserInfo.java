@@ -1,6 +1,5 @@
 package com.refill.global.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.refill.hospital.dto.request.HospitalInfoUpdateRequest;
 import com.refill.member.dto.request.MemberInfoUpdateRequest;
 import javax.persistence.Column;
@@ -41,7 +40,6 @@ public abstract class UserInfo extends BaseEntity implements UserDetails {
     @Column(unique = true)
     private String email;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
     @Enumerated(EnumType.STRING)
     private Role role;
 
