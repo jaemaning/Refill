@@ -27,9 +27,9 @@ import BEVideoChatPage from "pages/openvidu/VideoChatPage";
 const App: React.FC = () => {
   useKakaoMapScript();
 
-  window.addEventListener("beforeunload", () => {
-    localStorage.removeItem("persist:login"); // Local Storage 값 제거
-  });
+  // window.addEventListener("beforeunload", () => {
+  //   localStorage.removeItem("persist:login"); // Local Storage 값 제거
+  // });
 
   return (
     <div className="App">

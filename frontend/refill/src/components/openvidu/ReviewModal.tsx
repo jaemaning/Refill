@@ -9,6 +9,7 @@ import styled from "@emotion/styled";
 import CloseIcon from "@mui/icons-material/Close";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
 import axios from "axios";
+import Rating from "@mui/material/Rating";
 
 const StyleContainer = styled.div`
   display: grid;
@@ -16,6 +17,19 @@ const StyleContainer = styled.div`
   background-color: white;
   grid-template-columns: 50px auto 50px;
   grid-template-rows: 50px 1fr 50px;
+  align-items: center;
+  justify-items: center;
+  width: 700px;
+  background-color: #e8ffea;
+  border-radius: 5px;
+`;
+
+const StyleReviewContainer = styled.div`
+  display: grid;
+  padding: 30px;
+  background-color: white;
+  grid-template-columns: 50px auto 50px;
+  grid-template-rows: 50px 50px 1fr 50px;
   align-items: center;
   justify-items: center;
   width: 700px;
@@ -49,6 +63,12 @@ const Footer = styled.div`
   width: 100%;
 `;
 
+const StyleRating = styled(Rating)`
+  grid-column: 1 / 4;
+  /* width: 100%;
+  min-height: 100px; */
+`;
+
 type OutModalProps = {
   consultingId: number;
   consultingDetailInfo?: string;
@@ -68,12 +88,22 @@ const ReviewModal: React.FC<OutModalProps> = (props) => {
   const [reviewText, setReviewText] = React.useState(
     props.consultingReviewInfo || "",
   );
-  const [score, setScore] = React.useState(0);
+  const [score, setScore] = React.useState<number | null>(0);
 
   const reviewUrl = "api/v1/review";
   const doctorDatailUrl = "";
 
+  const handleRating = (event: React.ChangeEvent<unknown>, val : number | null) => {
+    if (val) {
+      console.log(score)
+      setScore(val);
+    }
+    console.log(val)
+  };
+
   const submitReview = () => {
+    console.log(score)
+    console.log('a??')
     // if (reviewText) {
     //   axios
     //   .post(
@@ -148,7 +178,7 @@ const ReviewModal: React.FC<OutModalProps> = (props) => {
     <>
       {ismember ? (
         <Box>
-          <StyleContainer>
+          <StyleReviewContainer>
             <Header>
               <CheckIcon fontSize="large" sx={{ color: "green" }} />
               <Typography
@@ -161,6 +191,13 @@ const ReviewModal: React.FC<OutModalProps> = (props) => {
               </Typography>
               <div></div>
             </Header>
+            <StyleRating
+              name="half-rating"
+              defaultValue={0}
+              precision={0.5}
+              sx={{ fontSize: "50px" }}
+              onChange={handleRating}
+            />
             <StyledTextarea
               value={reviewText}
               onChange={handleReviewChange}
@@ -176,7 +213,7 @@ const ReviewModal: React.FC<OutModalProps> = (props) => {
                 확인
               </Button>
             </Footer>
-          </StyleContainer>
+          </StyleReviewContainer>
         </Box>
       ) : (
         <Box>

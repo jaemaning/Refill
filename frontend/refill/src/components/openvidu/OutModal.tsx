@@ -62,11 +62,11 @@ const OutModal: React.FC<OutModalProps> = (props) => {
   const [text, setText] = React.useState("");
 
   const handleOut = async () => {
-    if (ishospital) {
+    if (ismember) {
       await props.onOpen();
       console.log("리뷰페이지로 이동");
       await props.onClose();
-    } else if (ismember) {
+    } else if (ishospital) {
       console.log("소견서 작성 페이지로 이동");
       await props.onClose();
     }
