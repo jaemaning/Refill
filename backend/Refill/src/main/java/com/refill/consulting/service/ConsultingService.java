@@ -80,7 +80,7 @@ public class ConsultingService {
         // 조건문 추가
 
         log.info("'{}' == time", now);
-        List<Reservation> reservationList = reservationRepository.findReservationReady(now.minusMinutes(45),now.plusMinutes(45));
+        List<Reservation> reservationList = reservationRepository.findReservationReady(now.minusMinutes(50),now.plusMinutes(50));
         log.info("{} makes consulting", reservationList);
         log.info("{} => reservationList" , reservationList);
         log.info("{} => reservationList.size()" , reservationList.size());
