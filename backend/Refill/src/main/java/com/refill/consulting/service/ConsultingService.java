@@ -104,7 +104,9 @@ public class ConsultingService {
 
             log.info("{} => customSessionId", customSessionId);
 
-            SessionProperties properties = SessionProperties.fromJson(params).build();
+//            SessionProperties properties = SessionProperties.fromJson(params).build();
+
+            SessionProperties properties = new SessionProperties.Builder().build();
 
             log.info("==============================");
             log.info("before CreateSession");
