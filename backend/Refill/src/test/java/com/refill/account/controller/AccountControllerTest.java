@@ -121,7 +121,7 @@ class AccountControllerTest extends ControllerTest {
     void joinHospitalTest() throws Exception {
 
         HospitalJoinRequest hospitalJoinRequest = new HospitalJoinRequest("hospital01", "pass01",
-            "한방병원", "광산구", "12345", BigDecimal.ONE, BigDecimal.TEN, "02-123-4567",
+            "한방병원", "광산구", BigDecimal.ONE, BigDecimal.TEN, "02-123-4567",
             "hospital@ssafy.com");
 
         MockMultipartFile hospitalJoinRequestPart = new MockMultipartFile("hospitalJoinRequest", "",

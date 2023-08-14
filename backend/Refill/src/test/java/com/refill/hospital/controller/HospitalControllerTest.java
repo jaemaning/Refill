@@ -69,7 +69,6 @@ class HospitalControllerTest extends ControllerTest {
                                     .name("호인병원")
                                     .address("경기도 수원시")
                                     .role(Role.ROLE_HOSPITAL)
-                                    .postalCode("12345")
                                     .tel("010-1234-1234")
                                     .registrationImg("reg_img")
                                     .id(1L)

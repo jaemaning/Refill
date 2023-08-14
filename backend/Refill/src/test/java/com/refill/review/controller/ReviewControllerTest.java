@@ -2,8 +2,20 @@ package com.refill.review.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.refill.global.entity.Role;
 import com.refill.review.dto.request.ReviewCreateRequest;
@@ -23,20 +35,6 @@ import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 public class ReviewControllerTest extends ControllerTest {
 
@@ -47,12 +45,12 @@ public class ReviewControllerTest extends ControllerTest {
         ReviewResponse mock1 = new ReviewResponse(1L, 3, "좋았습니다", 1L, "시그널만13", 1L,
             "김승현 의사", 1L, "성남탈모전문병원",
             LocalDate.now()
-                     .format(DateTimeFormatter.ofPattern("YYYY.MM.dd")), "모발이식");
+                     .format(DateTimeFormatter.ofPattern("YYYY.MM.dd")));
 
         ReviewResponse mock2 = new ReviewResponse(2L, 3, "좋았습니다", 1L, "시그널만13", 1L,
             "김승현 의사", 1L, "성남탈모전문병원",
             LocalDate.now()
-                     .format(DateTimeFormatter.ofPattern("YYYY.MM.dd")), "모발이식");
+                     .format(DateTimeFormatter.ofPattern("YYYY.MM.dd")));
 
         mockResponse1 = mock1;
         mockResponse2 = mock2;

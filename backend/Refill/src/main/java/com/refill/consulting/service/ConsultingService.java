@@ -17,6 +17,8 @@ import com.refill.global.entity.Role;
 import com.refill.global.exception.ErrorCode;
 import com.refill.hospital.repository.HospitalRepository;
 import com.refill.member.entity.Member;
+import com.refill.member.exception.MemberException;
+import com.refill.member.repository.MemberRepository;
 import com.refill.report.entity.Report;
 import com.refill.report.service.ReportService;
 import com.refill.reservation.entity.Reservation;
@@ -75,12 +77,13 @@ public class ConsultingService {
     private final ReservationRepository reservationRepository;
     private final ConsultingRepository consultingRepository;
     private final ReportService reportService;
+    private final MemberRepository memberRepository;
 
     private final int BEFORE_CONSULTING_TIME = 15;
 
 
     /* 상담 세션 생성 */
-    @Scheduled(cron = "0 00 8-23 * * ?")
+    @Scheduled(cron = "0 59 8-23 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
 
         LocalDateTime now = LocalDateTime.now();
@@ -182,7 +185,14 @@ public class ConsultingService {
 
     /* 상담 내역 반환 */
     @Transactional(readOnly = true)
-    public List<ConsultingListResponse> getConsultingList(long memberId) {
+    public List<ConsultingListResponse> getConsultingList(String loginId) {
+
+        Member member = memberRepository.findByLoginId(loginId)
+            .orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND));
+        Long memberId = member.getId();
+
+        log.info("###### {} ######" , memberId);
+
         List<Consulting> consultingList = consultingRepository.findConsultingsByMember(memberId);
 
         List<ConsultingListResponse> consultingListResponseList = new ArrayList<>();

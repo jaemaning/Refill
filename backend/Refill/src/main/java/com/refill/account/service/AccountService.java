@@ -127,7 +127,7 @@ public class AccountService {
             throw new MemberException(ErrorCode.INVALID_PASSWORD);
         }
 
-        String accessToken = jwtProvider.createToken(member.getLoginId(), member.getRole(), secretKey);
+        String accessToken = jwtProvider.createToken(member.getId(), member.getLoginId(), member.getRole(), secretKey);
         String refreshToken = jwtProvider.createRefreshToken(member.getLoginId(), member.getRole(), secretKey);
 
         return new TokenResponse(member.getId(), accessToken, refreshToken);
@@ -152,7 +152,7 @@ public class AccountService {
             throw new MemberException(ErrorCode.OUTSTANDING_AUTHORIZATION);
         }
 
-        String accessToken = jwtProvider.createToken(hospital.getLoginId(), hospital.getRole(), secretKey);
+        String accessToken = jwtProvider.createToken(hospital.getId(), hospital.getLoginId(), hospital.getRole(), secretKey);
         String refreshToken = jwtProvider.createRefreshToken(hospital.getLoginId(), hospital.getRole(), secretKey);
 
         return new TokenResponse(hospital.getId(), accessToken, refreshToken);
