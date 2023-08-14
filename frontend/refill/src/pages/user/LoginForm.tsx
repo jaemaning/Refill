@@ -6,7 +6,7 @@ import "../../styles/Loginsignup.css";
 import styled from "@emotion/styled";
 import LoginSelect from "components/loginsignup/LoginSelect";
 import HospitalLogin from "components/loginsignup/HospitalLogin";
-import SingUp from "components/loginsignup/MemberSignup";
+import MemberSignup from "components/loginsignup/MemberSignup";
 import HospitalSignup from "components/loginsignup/HospitalSignup";
 
 const LoginSingupForm = styled.div`
@@ -69,7 +69,7 @@ const LoginForm: React.FC = () => {
             ) : !ismember && loginpage ? (
               <HospitalLogin />
             ) : ismember && !loginpage ? (
-              <SingUp handleChecklogin={handleChecklogin} />
+              <MemberSignup handleChecklogin={handleChecklogin} />
             ) : (
               <HospitalSignup />
             )}
