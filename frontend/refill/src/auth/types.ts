@@ -17,6 +17,7 @@ export type HLoginResult = {
 export type Loginstate = {
   islogin: boolean;
   token: string;
+  loginId: string;
 };
 
 export type Hosstate = {

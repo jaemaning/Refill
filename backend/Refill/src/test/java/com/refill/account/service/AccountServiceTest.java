@@ -64,7 +64,7 @@ class AccountServiceTest extends ServiceTest {
     @DisplayName("병원_회원가입_성공한다")
     void t2() throws Exception {
 
-        HospitalJoinRequest hospitalJoinRequest = new HospitalJoinRequest("hospital01", "pass01", "상원병원", "광산구", "12345", new BigDecimal(
+        HospitalJoinRequest hospitalJoinRequest = new HospitalJoinRequest("hospital01", "pass01", "상원병원", "광산구", new BigDecimal(
             "12.12345"), new BigDecimal("14.12452"), "031-123-4253", "hospital@ssafy.com");
 
         MockMultipartFile profileImg1 = new MockMultipartFile("profileImg", "test.jpg", "image/jpeg", "test image".getBytes());
@@ -152,7 +152,7 @@ class AccountServiceTest extends ServiceTest {
     @DisplayName("승인_대기중인_병원이_로그인하면_OUTSTANDING_AUTHORIZATION_반환한다")
     void t6() throws Exception {
         //given
-        HospitalJoinRequest hospitalJoinRequest = new HospitalJoinRequest("hospital01", "pass01", "상원병원", "광산구", "12345", new BigDecimal(
+        HospitalJoinRequest hospitalJoinRequest = new HospitalJoinRequest("hospital01", "pass01", "상원병원", "광산구",  new BigDecimal(
             "12.12345"), new BigDecimal("14.12452"), "031-123-4253", "hospital@ssafy.com");
 
         MockMultipartFile profileImg1 = new MockMultipartFile("profileImg", "test.jpg", "image/jpeg", "test image".getBytes());

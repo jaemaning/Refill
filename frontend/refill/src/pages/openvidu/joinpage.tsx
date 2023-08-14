@@ -90,7 +90,7 @@ const JoinPage = () => {
         },
       );
       setTokenData((prevTokenData) => [...prevTokenData, response.data]);
-      // 
+      //
       console.log(response.data);
     } catch (err) {
       console.log("에러:", err);

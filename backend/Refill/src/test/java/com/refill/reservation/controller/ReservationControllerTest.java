@@ -206,7 +206,7 @@ class ReservationControllerTest extends ControllerTest {
     void get_reservation_info_list_by_doctor() throws Exception{
 
         List<ReservationInfoResponse> list = new ArrayList<>();
-        list.add(new ReservationInfoResponse(LocalDateTime.now(), "상원", LocalDate.now(), "010-1234-5678", "상담 요청합니다."));
+        list.add(new ReservationInfoResponse(1L, LocalDateTime.now(), "상원", LocalDate.now(), "010-1234-5678", "상담 요청합니다."));
 
         when(reservationService.findReservationByDoctor(any(), any())).thenReturn(list);
 

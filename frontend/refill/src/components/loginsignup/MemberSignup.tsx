@@ -3,6 +3,7 @@ import axios from "axios";
 import Social from "components/common/Social";
 import Button from "../elements/Button";
 import "../../styles/Loginsignup.css";
+import Swal from "sweetalert2";
 
 declare global {
   interface Window {
@@ -31,12 +32,8 @@ const MemberSignup: React.FC<SignUpType> = (props) => {
     email: "",
   });
 
-  const [checkPassword, setCheckPassword] = useState("");
-  const [code, setCode] = useState("");
-  const [checkCode, setCheckCode] = useState("");
-  const [check, setCheck] = useState(false);
-
   // 입력 패스워드와 확인 패스워드 일치하는지 검사
+  const [checkPassword, setCheckPassword] = useState("");
   const passwordError =
     checkPassword.length > 0 && inputData.loginPassword !== checkPassword;
 
@@ -138,6 +135,11 @@ const MemberSignup: React.FC<SignUpType> = (props) => {
     });
   };
 
+  // 이메일 인증 형식
+  const [code, setCode] = useState("");
+  const [checkCode, setCheckCode] = useState("");
+  const [check, setCheck] = useState(false);
+
   const handleCodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCode(event.target.value);
   };
@@ -151,6 +153,7 @@ const MemberSignup: React.FC<SignUpType> = (props) => {
     console.log(check);
   };
 
+  // 도로명 주소 추가
   const onClickAddr = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     new window.daum.Postcode({
@@ -183,43 +186,92 @@ const MemberSignup: React.FC<SignUpType> = (props) => {
       });
   };
 
+  // 에러 모달 처리
+  const Toast = Swal.mixin({
+    toast: true,
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
+
   // 회원가입 axios 요청
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const memberJoinRequest = {
-      loginId: inputData.loginId,
-      loginPassword: inputData.loginPassword,
-      nickname: inputData.nickname,
-      name: inputData.name,
-      address:
-        (document.getElementById("addr") as HTMLInputElement).value +
-        ", " +
-        inputData.address,
-      tel: inputData.tel,
-      birthDay: inputData.birthDay,
-      email: inputData.email,
-    };
-
-    const json = JSON.stringify(memberJoinRequest);
-    const jsonBlob = new Blob([json], { type: "application/json" });
-
-    const formData = new FormData();
-    formData.append("memberJoinRequest", jsonBlob);
-
-    axios
-      .post("api/v1/account/member/join", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((response) => {
-        console.log(response.data);
-        props.handleChecklogin();
-      })
-      .catch((err) => {
-        console.log(err.response.data);
+    if (!validId) {
+      Toast.fire({
+        icon: "error",
+        title: "ID 형식이 맞지않습니다.",
       });
+    } else if (!validPw) {
+      Toast.fire({
+        icon: "error",
+        title: "비밀번호 형식이 맞지않습니다.",
+      });
+    } else if (passwordError) {
+      Toast.fire({
+        icon: "error",
+        title: "비밀번호 확인이 맞지 않습니다.",
+      });
+    } else if (!validBD) {
+      Toast.fire({
+        icon: "error",
+        title: "생년월일 형식이 맞지않습니다.",
+      });
+    } else if (!validEmail) {
+      Toast.fire({
+        icon: "error",
+        title: "이메일 형식이 맞지않습니다.",
+      });
+    } else if (!check) {
+      Toast.fire({
+        icon: "error",
+        title: "이메일 인증을 하지 않으셨습니다.",
+      });
+    } else if (!validPN) {
+      Toast.fire({
+        icon: "error",
+        title: "전화번호 형식이 맞지않습니다.",
+      });
+    } else {
+      const memberJoinRequest = {
+        loginId: inputData.loginId,
+        loginPassword: inputData.loginPassword,
+        nickname: inputData.nickname,
+        name: inputData.name,
+        address:
+          (document.getElementById("addr") as HTMLInputElement).value +
+          ", " +
+          inputData.address,
+        tel: inputData.tel,
+        birthDay: inputData.birthDay,
+        email: inputData.email,
+      };
+
+      const json = JSON.stringify(memberJoinRequest);
+      const jsonBlob = new Blob([json], { type: "application/json" });
+
+      const formData = new FormData();
+      formData.append("memberJoinRequest", jsonBlob);
+
+      axios
+        .post("api/v1/account/member/join", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+          props.handleChecklogin();
+        })
+        .catch((err) => {
+          console.log(err.response.data);
+        });
+    }
   };
 
   const middle = "flex justify-center items-center";
@@ -227,7 +279,7 @@ const MemberSignup: React.FC<SignUpType> = (props) => {
   return (
     <div>
       <div className={`${middle} MSignup rounded-b-2xl mt-6 mb-3`}>
-        <form onSubmit={handleSubmit} className="" style={{ width: "100%" }}>
+        <form onSubmit={handleSubmit} className="" style={{ width: "400px" }}>
           <div>
             <div className="flex justify-start">
               <label className="block mb-2 text-sm font-medium text-gray-900 ">
@@ -473,7 +525,7 @@ const MemberSignup: React.FC<SignUpType> = (props) => {
               customStyles={{ width: "100%" }}
             />
           </div>
-          <div className="mt-4 text-lg font-bold flex-col text-center">
+          <div className="mt-4 pb-5 text-lg font-bold flex-col text-center">
             <span className="text-xl">병원을 등록하고 싶으신가요?</span>
             <br />
             <span className="mx-2">위에</span>
@@ -481,12 +533,6 @@ const MemberSignup: React.FC<SignUpType> = (props) => {
             <span className=""> 을 통해</span>
             <br />
             <span className="mx-2">병원 회원가입으로 가세요!</span>
-            <div className="mt-3">
-              <span className="">다른 계정으로 로그인하기</span>
-            </div>
-          </div>
-          <div className="flex justify-around mb-5">
-            <Social />
           </div>
         </form>
       </div>

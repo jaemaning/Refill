@@ -34,7 +34,7 @@ const SelectDate: React.FC<SelectDateProps> = ({
           disablePast={true}
           value={selectedDateValue}
           onChange={(date, selectionState) => {
-            setIsClicked(true)
+            setIsClicked(true);
             if (selectionState === "finish") {
               const formattedDate = dayjs(date).tz("Asia/Seoul").format();
               setSelectedDate(formattedDate);
@@ -43,7 +43,6 @@ const SelectDate: React.FC<SelectDateProps> = ({
               const weekday = dayjs(date).tz("Asia/Seoul").day();
               setNowWeekday(weekday);
               console.log(weekday);
-
             }
           }}
         />

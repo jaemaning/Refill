@@ -12,7 +12,7 @@ import { setCookie } from "auth/cookie";
 import { useNavigate } from "react-router-dom";
 
 interface User {
-  loginId?: string;
+  loginId: string;
   role?: string;
   iat?: number;
   exp?: number;
@@ -46,15 +46,16 @@ const UseLoginForm = (loginId: string, loginPassword: string, role: number) => {
   const checkstatus = (checked: any) => {
     if (checked.status === 200) {
       console.log("login Success");
+      setCookie("refresh-token", checked.data.refreshToken);
+      const decode_token: User = jwt_decode(checked.data.accessToken);
+      console.log(decode_token);
       dispatch(
         loginSuccess({
           islogin: true, // 로그인 성공 시 true로 설정
           token: checked.data.accessToken, // 액세스 토큰 값 설정
+          loginId: decode_token.loginId,
         }),
       );
-
-      setCookie("refresh-token", checked.data.refreshToken);
-      const decode_token: User = jwt_decode(checked.data.accessToken);
 
       if (decode_token.role === "ROLE_MEMBER") {
         dispatch(loginMember());

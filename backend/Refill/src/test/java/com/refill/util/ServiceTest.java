@@ -114,7 +114,6 @@ public class ServiceTest {
                                     .hospitalProfileImg("HOS_PROFILE_IMG_ADDRESS")
                                     .latitude(BigDecimal.valueOf(1.234))
                                     .longitude(BigDecimal.valueOf(2.456))
-                                    .postalCode("12345")
                                     .registrationImg("HOS_REG_IMG_ADDRESS")
                                     .doctors(new ArrayList<>())
                                     .build();

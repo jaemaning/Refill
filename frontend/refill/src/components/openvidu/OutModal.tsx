@@ -62,8 +62,8 @@ const OutModal: React.FC<OutModalProps> = (props) => {
   const [text, setText] = React.useState("");
 
   const handleOut = async () => {
-      await props.onOpen();
-      await props.onClose();
+    await props.onOpen();
+    await props.onClose();
   };
 
   const handleReturn = () => {
