@@ -76,7 +76,7 @@ public class ConsultingService {
 
 
     /* 상담 세션 생성 */
-    @Scheduled(cron = "0 48 8-23 * * ?")
+    @Scheduled(cron = "0 3 8-23 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
 
         LocalDateTime now = LocalDateTime.now();
@@ -183,9 +183,7 @@ public class ConsultingService {
 
         List<ConsultingListResponse> consultingListResponseList = new ArrayList<>();
 
-        log.info("========== {} consultingListSize =========", consultingListResponseList.size());
         for (Consulting consulting : consultingList) {
-            log.info("===== {} consulting ====", consulting.getId());
             consultingListResponseList.add(new ConsultingListResponse(consulting));
         }
 
