@@ -30,7 +30,6 @@ const StyledMainContainer = styled.div`
         &:nth-of-type(1) {
           &::after {
             content: ":";
-            font-size: 125px;
           }
         }
 
