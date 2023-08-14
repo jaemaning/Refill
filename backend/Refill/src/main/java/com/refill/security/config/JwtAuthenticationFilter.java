@@ -1,13 +1,9 @@
 package com.refill.security.config;
 
-import com.refill.security.service.UserDetailServiceImpl;
-import com.refill.security.util.LoginInfo;
 import com.refill.global.entity.UserInfo;
-import com.refill.global.exception.ErrorCode;
-import com.refill.hospital.repository.HospitalRepository;
-import com.refill.member.exception.MemberException;
-import com.refill.member.repository.MemberRepository;
+import com.refill.security.service.UserDetailServiceImpl;
 import com.refill.security.util.JwtProvider;
+import com.refill.security.util.LoginInfo;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -29,8 +25,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final MemberRepository memberRepository;
-    private final HospitalRepository hospitalRepository;
     private final JwtProvider jwtProvider;
     private final UserDetailServiceImpl userDetailService;
 
@@ -59,12 +53,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
             String loginId = JwtProvider.getLoginId(token, secretKey);
-            UserInfo userDetails = memberRepository.findByLoginId(loginId)
-                                                   .map(UserInfo.class::cast)
-                                                   .orElseGet(() ->
-                                                          hospitalRepository.findByLoginId(loginId)
-                                                                            .orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND))
-                                                      );
+//            UserInfo userDetails = memberRepository.findByLoginId(loginId)
+//                                                   .map(UserInfo.class::cast)
+//                                                   .orElseGet(() ->
+//                                                          hospitalRepository.findByLoginId(loginId)
+//                                                                            .orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND))
+//                                                      );
+
+            UserInfo userDetails = (UserInfo) userDetailService.loadUserByUsername(loginId);
+
             // 아이디, 권한만 넣어주기
             LoginInfo loginInfo = new LoginInfo(userDetails.getLoginId(), userDetails.getRole());
             // 권한 부여하기

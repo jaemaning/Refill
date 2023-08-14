@@ -1,6 +1,5 @@
 package com.refill.consulting.service;
 
-import static com.refill.global.entity.Role.ROLE_HOSPITAL;
 import static com.refill.global.entity.Role.ROLE_MEMBER;
 
 import com.refill.consulting.dto.request.ConsultingCloseRequest;
@@ -11,40 +10,31 @@ import com.refill.consulting.entity.Consulting;
 import com.refill.consulting.exception.ConsultingException;
 import com.refill.consulting.repository.ConsultingRepository;
 import com.refill.doctor.entity.Doctor;
-import com.refill.global.entity.Role;
 import com.refill.global.exception.ErrorCode;
 import com.refill.member.entity.Member;
 import com.refill.report.service.ReportService;
 import com.refill.reservation.entity.Reservation;
 import com.refill.reservation.repository.ReservationRepository;
-import com.refill.review.entity.Review;
-import com.refill.review.exception.ReviewException;
 import com.refill.security.util.LoginInfo;
+import io.openvidu.java.client.ConnectionProperties;
 import io.openvidu.java.client.ConnectionType;
+import io.openvidu.java.client.OpenVidu;
+import io.openvidu.java.client.OpenViduHttpException;
+import io.openvidu.java.client.OpenViduJavaClientException;
 import io.openvidu.java.client.OpenViduRole;
-import java.time.LocalDate;
+import io.openvidu.java.client.Session;
+import io.openvidu.java.client.SessionProperties;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
-import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
-import io.openvidu.java.client.Connection;
-import io.openvidu.java.client.ConnectionProperties;
-import io.openvidu.java.client.OpenVidu;
-import io.openvidu.java.client.OpenViduHttpException;
-import io.openvidu.java.client.OpenViduJavaClientException;
-import io.openvidu.java.client.Session;
-import io.openvidu.java.client.SessionProperties;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
@@ -75,7 +65,7 @@ public class ConsultingService {
     private final int BEFORE_CONSULTING_TIME = 15;
 
 
-    @Scheduled(cron = "0 */3 8-23 * * ?")
+    //@Scheduled(cron = "0 */3 8-23 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
 
         log.info("################## {} ########## {} ############", OPENVIDU_URL, OPENVIDU_SECRET);

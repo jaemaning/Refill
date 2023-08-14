@@ -98,6 +98,7 @@ public class Member extends UserInfo {
         this.nickname = memberInfoUpdateRequest.nickname();
     }
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
