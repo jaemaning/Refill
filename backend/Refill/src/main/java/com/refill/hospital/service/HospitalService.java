@@ -27,6 +27,8 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -58,6 +60,12 @@ public class HospitalService {
     public Long save(Hospital hospital) {
         return hospitalRepository.save(hospital)
                                  .getId();
+    }
+
+    @Cacheable(value = "HospitalCacheStore", key = "#loginId")
+    @Transactional(readOnly = true)
+    public Hospital findByLoginIdUsingCache(String loginId) {
+        return findByLoginId(loginId);
     }
 
     @Transactional(readOnly = true)
@@ -170,6 +178,7 @@ public class HospitalService {
         return hospital;
     }
 
+    @CacheEvict(value = "HospitalCacheStore", key = "#loginId")
     @Transactional
     public void modifyHospitalInfo(Long hospitalId, String loginId,
         HospitalInfoUpdateRequest hospitalInfoUpdateRequest, MultipartFile profileImg,
