@@ -99,37 +99,43 @@ public class Member extends UserInfo {
     }
 
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
         return Collections.singletonList(new SimpleGrantedAuthority(getRole().name()));
     }
-
+    @JsonIgnore
     @Override
     public String getPassword() {
         return getLoginPassword();
     }
 
+    @JsonIgnore
     @Override
     public String getUsername() {
         return getLoginId();
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return false;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return false;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return false;
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return false;
