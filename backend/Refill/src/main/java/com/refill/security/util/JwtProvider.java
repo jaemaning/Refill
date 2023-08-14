@@ -51,8 +51,9 @@ public class JwtProvider {
                    .before(new Date());
     }
 
-    public String createToken(String loginId, Role role, String secretKey) {
+    public String createToken(Long id, String loginId, Role role, String secretKey) {
         Claims claims = Jwts.claims();
+        claims.put("id", id);
         claims.put("loginId", loginId);
         claims.put("role", role.name());
 
