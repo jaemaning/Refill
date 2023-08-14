@@ -24,3 +24,6 @@ spring:
 flask:
   server:
     url: ${FLASK_URL}
+
+OPENVIDU_URL: ${OPENVIDU_URL}
+OPENVIDU_SECRET: ${OPENVIDU_SECRET}
