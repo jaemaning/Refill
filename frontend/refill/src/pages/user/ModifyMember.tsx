@@ -85,10 +85,9 @@ const ModifyMember: React.FC<ModifyModal> = ({
   email,
   onModify,
 }) => {
-
-  console.log(open)
-  console.log(name)
-  console.log(address)
+  console.log(open);
+  console.log(name);
+  console.log(address);
 
   const [inputData, setInputData] = useState({
     name: name,

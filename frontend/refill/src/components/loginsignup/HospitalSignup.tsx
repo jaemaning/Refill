@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState, useEffect } from "react";
 import axios from "axios";
 import Button from "../elements/Button";
 import Social from "components/common/Social";
@@ -34,6 +34,19 @@ const HospitalSignup: React.FC = () => {
     latitude: "",
     longitude: "",
   });
+  // const [latlon, setLatlon] = useState([0,0])
+
+  // const geocoder = new window.kakao.maps.services.Geocoder();
+
+  // const addrToGeocoder = function(result: [], status: any) {
+  //     if (status === window.kakao.maps.services.Status.OK) {
+  //         console.log(result);
+  //     }
+  // };
+  
+  // useEffect(() => {
+  //   geocoder.addressSearch('해남군 송지면', addrToGeocoder);
+  // }, [inputData.address]); // 의존성 배열에 scriptLoaded 추가
 
   // 이미지 올리기
   const [inputImage, setInputImage] = useState<InputImageState>({
@@ -114,8 +127,6 @@ const HospitalSignup: React.FC = () => {
       ...inputData,
       [e.target.name]: e.target.value,
     });
-    // console.log(e.target.name)
-    // console.log(e.target.value)
   };
 
   // 도로명 주소 API 로직
