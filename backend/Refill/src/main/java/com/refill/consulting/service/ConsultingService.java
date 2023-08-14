@@ -76,14 +76,14 @@ public class ConsultingService {
 
 
     /* 상담 세션 생성 */
-    @Scheduled(cron = "0 30 8-18 * * ?")
+    @Scheduled(cron = "0 40, 8-18 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
 
-        LocalDateTime now = LocalDateTime.now();
-//        LocalDateTime now = LocalDateTime.now().plusMinutes(BEFORE_CONSULTING_TIME);
+//        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now().plusMinutes(BEFORE_CONSULTING_TIME);
         // 조건문 추가
 
-        List<Reservation> reservationList = reservationRepository.findReservationReady(now.minusMinutes(2),now.plusMinutes(2));
+        List<Reservation> reservationList = reservationRepository.findReservationReady(now.minusMinutes(10),now.plusMinutes(10));
         log.info("'{}' == time", now);
         log.info("{} => reservationList.size()" , reservationList.size());
 
