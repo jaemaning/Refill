@@ -4,6 +4,7 @@ import Button from "../elements/Button";
 import Social from "components/common/Social";
 import "../../styles/Loginsignup.css";
 import { useNavigate } from "react-router-dom";
+import { useKakaoMapScript } from 'hooks/UseKakaoMap'
 
 declare global {
   interface Window {
@@ -20,6 +21,15 @@ interface InputImageState {
   regImg: File | null;
 }
 
+interface TypeChangeForGeocoder {
+  address_name: string;
+  address_type: string;
+  road_address: object;
+  address: object;
+  x: string;
+  y: string;
+}
+
 const HospitalSignup: React.FC = () => {
   const navigate = useNavigate();
   // 회원가입 할 때 필요한 데이터
@@ -34,19 +44,32 @@ const HospitalSignup: React.FC = () => {
     latitude: "",
     longitude: "",
   });
-  // const [latlon, setLatlon] = useState([0,0])
 
-  // const geocoder = new window.kakao.maps.services.Geocoder();
+  // kakaomap 주소 -> 좌표 변환
+  const [hospitalAddr, setHospitalAddr] = useState("")
+  const scriptLoaded = useKakaoMapScript();
 
-  // const addrToGeocoder = function(result: [], status: any) {
-  //     if (status === window.kakao.maps.services.Status.OK) {
-  //         console.log(result);
-  //     }
-  // };
+  const [lonlat, setLonlat] = useState(["",""])
+
   
-  // useEffect(() => {
-  //   geocoder.addressSearch('해남군 송지면', addrToGeocoder);
-  // }, [inputData.address]); // 의존성 배열에 scriptLoaded 추가
+  const addrToGeocoder = async function(result: TypeChangeForGeocoder[], status: any) {
+    if (status === window.kakao.maps.services.Status.OK && result.length > 0) {
+      console.log(result[0].x, result[0].y);
+      await setLonlat([result[0].x, result[0].y])
+    } else {
+      alert('올바르지 않은 주소 접근입니다.')
+      console.log('err', result)
+    }
+  };
+  
+  useEffect(() => {
+    if (scriptLoaded && window.kakao && window.kakao.maps) {
+      const geocoder = new window.kakao.maps.services.Geocoder();
+      geocoder.addressSearch(hospitalAddr, addrToGeocoder);
+    }
+  }, [hospitalAddr]); // 의존성 배열에 scriptLoaded 추가
+
+  //
 
   // 이미지 올리기
   const [inputImage, setInputImage] = useState<InputImageState>({
@@ -136,6 +159,7 @@ const HospitalSignup: React.FC = () => {
         (document.getElementById("addr") as HTMLInputElement).value =
           data.address;
         document.getElementById("addrDetail")?.focus();
+        setHospitalAddr(data.address)
       },
     }).open();
   };
@@ -156,8 +180,8 @@ const HospitalSignup: React.FC = () => {
         inputData.address,
       tel: inputData.tel,
       email: inputData.email,
-      latitude: "33.3",
-      longitude: "55.5",
+      latitude: lonlat[1],
+      longitude: lonlat[0],
     };
 
     const json = JSON.stringify(hospitalJoinRequest);
@@ -165,6 +189,7 @@ const HospitalSignup: React.FC = () => {
 
     const formData = new FormData();
     formData.append("hospitalJoinRequest", jsonBlob);
+    console.log(lonlat);
 
     if (inputImage.profileImg) {
       formData.append("profileImg", inputImage.profileImg);
