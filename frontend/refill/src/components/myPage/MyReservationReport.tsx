@@ -164,11 +164,13 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
             }}
           >
             {sortedList?.map((reservation, index) => (
-              <ReservationCompo
-                reservation={reservation}
-                key={index}
-                deleteReservation={deleteReservation}
-              />
+              <div
+              className="p-2"
+              key={index}
+              style={{ minWidth: "200px", padding: "5px" }}
+            >
+              <ReservationCompo reservation={reservation} deleteReservation={deleteReservation}/>
+            </div>
             ))}
           </div>
         </div>
