@@ -148,9 +148,16 @@ const Mypage: React.FC = () => {
   }, []);
 
   const buttonclick = () => {
-    setSelected(!selected);
-    console.log(selected);
+    console.log('계정 삭제 로직');
   };
+  
+  const handleToChangeMypage = () => {
+    setSelected(true);
+  }
+  
+  const handleToMyRecord = () => {
+    setSelected(false);
+  }
 
   // 비밀번호 변경 모달
   const [changeopen, setChangeOpen] = useState(false);
@@ -226,14 +233,14 @@ const Mypage: React.FC = () => {
                 content="계정관리"
                 variant={selected ? "menuSelected" : "menuUnselected"}
                 width="180px"
-                onClick={buttonclick}
+                onClick={handleToChangeMypage}
               />
               <br />
               <Button
                 content="나의기록"
                 variant={selected ? "menuUnselected" : "menuSelected"}
                 width="180px"
-                onClick={buttonclick}
+                onClick={handleToMyRecord}
               />
             </ButtonList>
           </Common>
@@ -249,7 +256,7 @@ const Mypage: React.FC = () => {
             >
               <Profileimg
                 src={checkimg ? `${userData.profileImg}` : `${default_profile}`}
-                className=""
+                className="mb-3"
               />
               <div
                 className="flex justify-between py-3"
@@ -298,6 +305,8 @@ const Mypage: React.FC = () => {
                         tel={userData.tel}
                         nickname={userData.nickname}
                         email={userData.email}
+                        userData={userData}
+                        setuserData={setuserData}
                         profile={
                           checkimg
                             ? `${userData.profileImg}`
