@@ -13,6 +13,7 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,6 +75,7 @@ public class MemberService {
 
         return new MemberInfoResponse(member);
     }
+    @CacheEvict(value = "UserCacheStore", key = "#loginId")
     @Transactional
     public void modifyMember(String loginId, MemberInfoUpdateRequest memberInfoUpdateRequest, MultipartFile profileImg) {
 
@@ -97,6 +99,7 @@ public class MemberService {
 
     }
 
+
     @Transactional
     public void modifyPassword(String loginId, MemberPasswordUpdateRequest memberPasswordUpdateRequest) {
 
@@ -113,5 +116,10 @@ public class MemberService {
     public Member findById(Long memberId) {
         return memberRepository.findById(memberId)
                                .orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND));
+    }
+
+    public void delete(Long id) {
+        Member member = findById(id);
+        memberRepository.delete(member);
     }
 }

@@ -278,7 +278,7 @@ const DetailHospital: React.FC = () => {
     // dreview 값에 따라 리뷰 정보를 필터링
     if (dreview !== 0) {
       filteredData = filteredData.filter(
-        (review) => review.doctorId === dreview,
+        (review) => review.doctorId === dreview
       );
     }
 
@@ -333,16 +333,20 @@ const DetailHospital: React.FC = () => {
   const ModifyDoc = async (
     hospitalid: number,
     doctorid: number,
-    formData: any,
+    formData: any
   ) => {
     console.log(formData);
     axios
-      .put(`api/v1/hospital/${hospitalid}/doctor/${doctorid}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
+      .put(
+        `http://localhost:3000/api/v1/hospital/${hospitalid}/doctor/${doctorid}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
         },
-      })
+      )
 
       .then((response) => {
         console.log(response);
@@ -465,7 +469,7 @@ const DetailHospital: React.FC = () => {
       </BannerContainer>
       <Containers>
         <Layout>
-          <Content style={{ width: "850px" }}>
+          <Content style={{ width: "1300px" }}>
             <span className="text-2xl font-bold">{hospitalData.name}</span>
             <Kakaomap></Kakaomap>
             <ButtonList>
@@ -556,7 +560,7 @@ const DetailHospital: React.FC = () => {
                                 ModifyDoc(
                                   hospitalData.hospitalId,
                                   doctor.doctorId,
-                                  formData,
+                                  formData
                                 )
                               }
                             ></ModifyDoctor>
@@ -586,7 +590,7 @@ const DetailHospital: React.FC = () => {
                               <li className="text-lg" key={index}>
                                 {background}
                               </li>
-                            ),
+                            )
                           )}
                         </ul>
                       </Doctor_common>
@@ -744,7 +748,7 @@ const DetailHospital: React.FC = () => {
                     <Stack spacing={2}>
                       <Pagination
                         count={Math.ceil(
-                          filteredReviewData.length / reviewPerPage,
+                          filteredReviewData.length / reviewPerPage
                         )}
                         page={page}
                         onChange={handleChange}
@@ -758,17 +762,20 @@ const DetailHospital: React.FC = () => {
           {/* 상담 예약 들어가는 곳 */}
           <Content style={{ width: "350px" }}></Content>
           <Content style={{ width: "350px" }}>
-            {/* merge 하거나 git pull 하기 전에 삭제 */}
-            <SelectDoctorAndTime
-              doctors={doctorData}
-              hospitalId={hospitalData.hospitalId}
-              hospitalName={hospitalName}
-            />
-            <DetailReservation
-              doctors={doctorData}
-              hospitalId={hospitalData.hospitalId}
-              hospitalName={hospitalName}
-            />
+            {/* 환자인지 의사인지 확인하는 로직이 필요함 */}
+            {ishospital ? (
+              <DetailReservation
+                doctors={doctorData}
+                hospitalId={hospitalData.hospitalId}
+                hospitalName={hospitalName}
+              />
+            ) : (
+              <SelectDoctorAndTime
+                doctors={doctorData}
+                hospitalId={hospitalData.hospitalId}
+                hospitalName={hospitalName}
+              />
+            )}
           </Content>
         </Layout>
       </Containers>

@@ -67,6 +67,7 @@ interface ModifyModal {
   nickname: string;
   email: string;
   onModify: (formData: any) => void;
+  profile: string;
 }
 
 interface InputImageState {
@@ -84,11 +85,8 @@ const ModifyMember: React.FC<ModifyModal> = ({
   nickname,
   email,
   onModify,
+  profile,
 }) => {
-  console.log(open);
-  console.log(name);
-  console.log(address);
-
   const [inputData, setInputData] = useState({
     name: name,
     address: address,
@@ -96,9 +94,8 @@ const ModifyMember: React.FC<ModifyModal> = ({
     tel: tel,
     nickname: nickname,
     email: email,
+    profile: profile,
   });
-
-  console.log(inputData.name);
 
   const changeInput = (e: ChangeEvent<HTMLInputElement>) => {
     setInputData({
@@ -126,21 +123,33 @@ const ModifyMember: React.FC<ModifyModal> = ({
     }
   };
 
+  function stringToFile(content: string, filename: string): File {
+    const blob = new Blob([content], { type: "image/png" });
+    return new File([blob], filename);
+  }
+
   const modifysubmit = () => {
     const temp = FinalModify();
     // onModifyDoctorSubmit 콜백 함수 호출 시 수정된 formData 전달
+    console.log(temp);
     onModify(temp);
   };
 
   const FinalModify = () => {
     const memberInfoUpdateRequest = {
-      name: inputData.name,
-      address: inputData.address,
-      birthday: inputData.birthday,
-      tel: inputData.tel,
-      nickname: inputData.nickname,
-      email: inputData.email,
+      name: inputData.name ? inputData.name : name,
+      address: inputData.address
+        ? (document.getElementById("addr") as HTMLInputElement).value +
+          ", " +
+          inputData.address
+        : address,
+      birthDay: inputData.birthday ? inputData.birthday : birthday,
+      tel: inputData.tel ? inputData.tel : tel,
+      nickname: inputData.nickname ? inputData.nickname : nickname,
+      email: inputData.email ? inputData.email : email,
     };
+
+    console.log(memberInfoUpdateRequest);
 
     const json = JSON.stringify(memberInfoUpdateRequest);
     const jsonBlob = new Blob([json], { type: "application/json" });
@@ -148,12 +157,14 @@ const ModifyMember: React.FC<ModifyModal> = ({
 
     formData.append("memberInfoUpdateRequest", jsonBlob);
     if (inputImage.profileImg) {
-      formData.append(
-        "profileImg",
-        `https://ssafyfinal.s3.ap-northeast-2.amazonaws.com/${inputImage.profileImg}`,
-      );
+      formData.append("profileImg", inputImage.profileImg);
+    } else {
+      const filename = `${profile}`;
+      console.log(filename);
+      const test = stringToFile(profile, filename);
+      console.log(test);
+      formData.append("profileImg", test);
     }
-    console.log(1);
 
     return formData;
   };
@@ -206,7 +217,7 @@ const ModifyMember: React.FC<ModifyModal> = ({
                     changeInput(e);
                   }}
                   name="name"
-                  value={inputData.name}
+                  defaultValue={name}
                 ></input>
               </Grid>
               <Grid item xs={4}>
@@ -220,7 +231,6 @@ const ModifyMember: React.FC<ModifyModal> = ({
                     changeInput(e);
                   }}
                   name="birthday"
-                  // value={inputData.birthday}
                   defaultValue={birthday}
                 ></input>
               </Grid>
@@ -235,7 +245,7 @@ const ModifyMember: React.FC<ModifyModal> = ({
                     changeInput(e);
                   }}
                   name="tel"
-                  value={inputData.tel}
+                  defaultValue={tel}
                 ></input>
               </Grid>
               <Grid item xs={4}>
@@ -249,7 +259,7 @@ const ModifyMember: React.FC<ModifyModal> = ({
                     changeInput(e);
                   }}
                   name="nickname"
-                  value={inputData.nickname}
+                  defaultValue={nickname}
                 ></input>
               </Grid>
               <Grid item xs={4}>
@@ -263,7 +273,7 @@ const ModifyMember: React.FC<ModifyModal> = ({
                     changeInput(e);
                   }}
                   name="email"
-                  value={inputData.email}
+                  defaultValue={email}
                 ></input>
               </Grid>
               <Grid item xs={4}>
@@ -275,6 +285,7 @@ const ModifyMember: React.FC<ModifyModal> = ({
                   readOnly
                   type="text"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                  defaultValue={profile}
                 ></input>
               </Grid>
               <Grid item xs={2}>
@@ -299,7 +310,7 @@ const ModifyMember: React.FC<ModifyModal> = ({
                   readOnly
                   type="text"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                  placeholder={inputData.address}
+                  value={address}
                 ></input>
               </Grid>
               <Grid item xs={2}>

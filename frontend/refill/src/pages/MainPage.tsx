@@ -64,7 +64,7 @@ const MainApp: React.FC = () => {
       <MainComponent handleClick={handleClickWord} />
       <GreyLine />
       <Container>
-        <Word>당신의 자심감을 다시</Word>
+        <Word>당신의 자신감을 다시</Word>
         <Word>채워 줄 단 하나의 플랫폼, RE:Fill</Word>
         <img
           src={app_logo}
