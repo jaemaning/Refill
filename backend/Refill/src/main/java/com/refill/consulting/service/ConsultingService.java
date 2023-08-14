@@ -1,6 +1,6 @@
 package com.refill.consulting.service;
 
-import static com.refill.global.entity.Role.ROLE_HOSPITAL;
+import static com.refill.global.entity.Role.ROLE_ADMIN;
 import static com.refill.global.entity.Role.ROLE_MEMBER;
 
 import com.refill.consulting.dto.request.ConsultingCloseRequest;
@@ -11,9 +11,13 @@ import com.refill.consulting.entity.Consulting;
 import com.refill.consulting.exception.ConsultingException;
 import com.refill.consulting.repository.ConsultingRepository;
 import com.refill.doctor.entity.Doctor;
+import com.refill.doctor.repository.DoctorRepository;
+import com.refill.doctor.service.DoctorService;
 import com.refill.global.entity.Role;
 import com.refill.global.exception.ErrorCode;
+import com.refill.hospital.repository.HospitalRepository;
 import com.refill.member.entity.Member;
+import com.refill.report.entity.Report;
 import com.refill.report.service.ReportService;
 import com.refill.reservation.entity.Reservation;
 import com.refill.reservation.repository.ReservationRepository;
@@ -29,9 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
-import javax.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -63,9 +65,7 @@ public class ConsultingService {
 
     @PostConstruct
     public void init() {
-        log.info("################## {} ########## {} ############", OPENVIDU_URL, OPENVIDU_SECRET);
         this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
-        log.info("##################### {} #################", openvidu);
     }
 
     private final ReservationRepository reservationRepository;
@@ -75,47 +75,30 @@ public class ConsultingService {
     private final int BEFORE_CONSULTING_TIME = 15;
 
 
-    @Scheduled(cron = "0 */3 8-23 * * ?")
+    /* 상담 세션 생성 */
+    @Scheduled(cron = "0 16 8-18 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
 
-        log.info("################## {} ########## {} ############", OPENVIDU_URL, OPENVIDU_SECRET);
         LocalDateTime now = LocalDateTime.now();
+//        LocalDateTime now = LocalDateTime.now().plusMinutes(BEFORE_CONSULTING_TIME);
         // 조건문 추가
 
+        List<Reservation> reservationList = reservationRepository.findReservationReady(now.minusMinutes(2),now.plusMinutes(2));
         log.info("'{}' == time", now);
-        List<Reservation> reservationList = reservationRepository.findReservationReady(now.minusMinutes(50),now.plusMinutes(50));
-        log.info("{} makes consulting", reservationList);
-        log.info("{} => reservationList" , reservationList);
         log.info("{} => reservationList.size()" , reservationList.size());
 
 
         // 돌아가면서 세션 생성 및 토큰 저장 .
         for (Reservation reservation : reservationList) {
-            log.info("iter come in");
             Member member = reservation.getMember();
             Doctor doctor = reservation.getDoctor();
 
-            log.info("'{}',  '{}' made", member, doctor);
-
             // 세션 생성
-            Map<String, Object> params = new HashMap<>();
-            String customSessionId = "session" + reservation.getId().toString();
-            params.put("customSessionId", customSessionId);
-
-            log.info("{} => customSessionId", customSessionId);
-
-//            SessionProperties properties = SessionProperties.fromJson(params).build();
-
             SessionProperties properties = new SessionProperties.Builder().build();
 
-            log.info("==============================");
-            log.info("before CreateSession");
             Session session = openvidu.createSession(properties);
-//            Session session = openvidu.createSession();
-            log.info("==============================");
-            log.info(" getSessionId");
             String sessionId = session.getSessionId();
-            log.info("after CreateSession");
+            log.info("Sessoin Created");
             log.info("==============================");
 
             // connection 생성
@@ -143,6 +126,7 @@ public class ConsultingService {
         }
     }
 
+    /* 상담 세션 정보 반환 */
     @Transactional(readOnly = true)
     public ConnectionTokenResponse getConnectionToken(Long reservationId, LoginInfo loginInfo){
         Consulting consulting = consultingRepository.findConsultingByReservationId(reservationId);
@@ -151,9 +135,10 @@ public class ConsultingService {
         String sessionId = "";
         String token = "";
         String screenShareToken = "";
+        String hospitalName = "";
 
         if(consulting == null) {
-            return new ConnectionTokenResponse(consultingId, sessionId, token, screenShareToken);
+            return new ConnectionTokenResponse(consultingId, sessionId, token, screenShareToken,hospitalName);
         }
         else {
             sessionId = consulting.getSessionId();
@@ -165,10 +150,12 @@ public class ConsultingService {
                 token = consulting.getDoctorToken();
                 screenShareToken = consulting.getScreenShareToken();
             }
-            return new ConnectionTokenResponse(consultingId, sessionId, token, screenShareToken);
+            hospitalName = consulting.getDoctor().getHospital().getName();
+            return new ConnectionTokenResponse(consultingId, sessionId, token, screenShareToken, hospitalName);
         }
     }
 
+    /* 상담 나가기 */
     @Transactional
     public void leaveSession(ConsultingCloseRequest consultingCloseRequest, LoginInfo loginInfo) {
 
@@ -187,6 +174,7 @@ public class ConsultingService {
         consulting.updateConsultingInfo(consultingCloseRequest.consultingDetailInfo());
     }
 
+    /* 상담 내역 반환 */
     @Transactional(readOnly = true)
     public List<ConsultingListResponse> getConsultingList(long memberId) {
         List<Consulting> consultingList = consultingRepository.findConsultingsByMember(memberId);
@@ -200,6 +188,7 @@ public class ConsultingService {
         return consultingListResponseList;
     }
 
+    /* 상담 상세 정보 반환 */
     @Transactional(readOnly = true)
     public ConsultingDetailResponse getConsultingDetailInfo(Long consultingId) {
 
@@ -208,15 +197,24 @@ public class ConsultingService {
         return new ConsultingDetailResponse(consulting);
     }
 
-    public Consulting findById(Long consultingId){
-        return consultingRepository.findById(consultingId)
-                                   .orElseThrow(() -> new ConsultingException(ErrorCode.SESSION_FAIL));
-    }
-
+    /* 상담 신고 하기 */
     @Transactional
     public void reportConsulting(Long consultingId, String content, LoginInfo loginInfo) {
         findById(consultingId);
         reportService.reportConsulting(consultingId, content, loginInfo);
     }
 
+    /* 상단 신고 반환 */
+    public List<Report> getConsultingReportList(LoginInfo loginInfo) {
+
+        if(loginInfo.role() != ROLE_ADMIN){
+            throw new ConsultingException(ErrorCode.UNAUTHORIZED_REQUEST);
+        }
+        return reportService.getReportConsultings();
+    }
+
+    public Consulting findById(Long consultingId){
+        return consultingRepository.findById(consultingId)
+                                   .orElseThrow(() -> new ConsultingException(ErrorCode.SESSION_FAIL));
+    }
 }
