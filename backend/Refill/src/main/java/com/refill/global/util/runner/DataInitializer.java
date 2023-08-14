@@ -37,7 +37,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Profile({"local"})
+@Profile({"prod", "local"})
 @Component
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
@@ -135,15 +135,13 @@ public class DataInitializer implements CommandLineRunner {
                                         .hospitalProfileImg("https://picsum.photos/600/600/?random")
                                         .latitude(BigDecimal.valueOf(33.452613d + 0.0001d * (double)i))
                                         .longitude(BigDecimal.valueOf(126.570888d + 0.0001d * (double)i))
-                                        .postalCode(
-                                            String.valueOf(random.nextInt(90000)+10000))
                                         .registrationImg("https://picsum.photos/600/600/?random")
                                         .build();
             hospitalRepository.save(hospital);
 
             // 운영시간 넣기
-            LocalTime startTime = LocalTime.of(9, 0);
-            LocalTime endTime = LocalTime.of(19, 0);
+            LocalTime startTime = LocalTime.of(5, 0);
+            LocalTime endTime = LocalTime.of(23, 0);
 
             DayOfWeek[] weeks = DayOfWeek.values();
 
@@ -204,6 +202,27 @@ public class DataInitializer implements CommandLineRunner {
                     reportRepository.save(report);
 
                 }
+                // 예약
+                for(int reserve = 0; reserve < 2; reserve++){
+                    LocalDateTime localDateTime = LocalDateTime.now()
+                                                               .plusMinutes(reserve * 4);
+                    LocalDate localDate = LocalDate.now();
+                    LocalDateTime startDateTime = LocalDateTime.of(localDate, LocalTime.from(localDateTime));
+                    LocalDateTime endDateTime = startDateTime.plusMinutes(30);
+
+                    String counselingDemands = "상담 요청합니다.";
+
+                    Reservation reservation = Reservation.builder()
+                                                         .member(member)
+                                                         .doctor(doctor)
+                                                         .startDateTime(startDateTime)
+                                                         .endDateTime(endDateTime)
+                                                         .counselingDemands(counselingDemands)
+                                                         .build();
+                    reservationRepository.save(reservation);
+                }
+
+
 
                 // 예약
 //                LocalDate localDate = LocalDate.now().plusDays(1L);
@@ -222,6 +241,21 @@ public class DataInitializer implements CommandLineRunner {
 //
 //                reservationRepository.save(reservation);
 
+//                LocalDate localDate = LocalDate.now();
+//                LocalTime localTime = LocalTime.of(5, 22);
+//                LocalDateTime startDateTime = LocalDateTime.of(localDate, localTime);
+//                LocalDateTime endDateTime = startDateTime.plusMinutes(30);
+//                String counselingDemands = "상담 요청합니다.";
+//
+//                Reservation reservation = Reservation.builder()
+//                                                     .member(member)
+//                                                     .doctor(doctor)
+//                                                     .startDateTime(startDateTime)
+//                                                     .endDateTime(endDateTime)
+//                                                     .counselingDemands(counselingDemands)
+//                                                     .build();
+//
+//                reservationRepository.save(reservation);
                 // LocalDate localDate = LocalDate.now();
                 // LocalTime localTime = LocalTime.of(17, 20);
                 // LocalDateTime startDateTime = LocalDateTime.of(localDate, localTime);
@@ -239,7 +273,7 @@ public class DataInitializer implements CommandLineRunner {
                 // reservationRepository.save(reservation);
 
 //                LocalDate localDate1 = LocalDate.now();
-//                LocalTime localTime1 = LocalTime.of(13, 30);
+//                LocalTime localTime1 = LocalTime.of(19, 40);
 //                LocalDateTime startDateTime1 = LocalDateTime.of(localDate1, localTime1);
 //                LocalDateTime endDateTime1 = startDateTime1.plusMinutes(30);
 //                String counselingDemands1 = "상담 요청합니다.";
@@ -255,7 +289,7 @@ public class DataInitializer implements CommandLineRunner {
 //                reservationRepository.save(reservation1);
 //
 //                LocalDate localDate2 = LocalDate.now();
-//                LocalTime localTime2 = LocalTime.of(14, 0);
+//                LocalTime localTime2 = LocalTime.of(19, 45);
 //                LocalDateTime startDateTime2 = LocalDateTime.of(localDate2, localTime2);
 //                LocalDateTime endDateTime2 = startDateTime2.plusMinutes(30);
 //                String counselingDemands2 = "상담 요청합니다.";
@@ -269,22 +303,22 @@ public class DataInitializer implements CommandLineRunner {
 //                                                     .build();
 //
 //                reservationRepository.save(reservation2);
+////
+//                    LocalDate localDate3 = LocalDate.now();
+//                    LocalTime localTime3 = LocalTime.of(19, 450);
+//                    LocalDateTime startDateTime3 = LocalDateTime.of(localDate3, localTime3);
+//                    LocalDateTime endDateTime3 = startDateTime3.plusMinutes(30);
+//                    String counselingDemands3 = "상담 요청합니다.";
 //
-//                LocalDate localDate3 = LocalDate.now();
-//                LocalTime localTime3 = LocalTime.of(14, 30);
-//                LocalDateTime startDateTime3 = LocalDateTime.of(localDate3, localTime3);
-//                LocalDateTime endDateTime3 = startDateTime3.plusMinutes(30);
-//                String counselingDemands3 = "상담 요청합니다.";
+//                    Reservation reservation3 = Reservation.builder()
+//                                                         .member(member)
+//                                                         .doctor(doctor)
+//                                                         .startDateTime(startDateTime3)
+//                                                         .endDateTime(endDateTime3)
+//                                                         .counselingDemands(counselingDemands3)
+//                                                         .build();
 //
-//                Reservation reservation3 = Reservation.builder()
-//                                                     .member(member)
-//                                                     .doctor(doctor)
-//                                                     .startDateTime(startDateTime3)
-//                                                     .endDateTime(endDateTime3)
-//                                                     .counselingDemands(counselingDemands3)
-//                                                     .build();
-//
-//                reservationRepository.save(reservation3);
+//                    reservationRepository.save(reservation3);
 //
 //                LocalDate localDate4 = LocalDate.now();
 //                LocalTime localTime4 = LocalTime.of(15, 0);

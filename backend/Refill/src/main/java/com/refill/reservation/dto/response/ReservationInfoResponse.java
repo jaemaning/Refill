@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record ReservationInfoResponse(
+    Long id,
     LocalDateTime startDate,
     String memberName,
     LocalDate birthDay,
@@ -15,6 +16,7 @@ public record ReservationInfoResponse(
 
     public ReservationInfoResponse(Reservation reservation) {
         this(
+            reservation.getId(),
             reservation.getStartDateTime(),
             reservation.getMember().getName(),
             reservation.getMember().getBirthDay(),

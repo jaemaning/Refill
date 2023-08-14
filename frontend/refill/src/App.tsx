@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 import MainApp from "./pages/MainPage";
 import { Routes, Route } from "react-router-dom";
@@ -26,6 +26,10 @@ import BEVideoChatPage from "pages/openvidu/VideoChatPage";
 
 const App: React.FC = () => {
   useKakaoMapScript();
+
+  // window.addEventListener("beforeunload", () => {
+  //   localStorage.removeItem("persist:login"); // Local Storage 값 제거
+  // });
 
   return (
     <div className="App">

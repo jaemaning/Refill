@@ -6,8 +6,13 @@ export const useKakaoMapScript = () => {
   useEffect(() => {
     if (!window.kakao) {
       const script = document.createElement("script");
-      script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_API_KEY}&autoload=false`;
-      script.onload = () => setScriptLoaded(true);
+      script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_API_KEY}&autoload=false&libraries=services`;
+      // script.onload = () => setScriptLoaded(true);
+      script.onload = () => {
+        window.kakao.maps.load(() => {
+          setScriptLoaded(true);
+        });
+      };
       script.async = true;
       document.head.appendChild(script);
     } else {

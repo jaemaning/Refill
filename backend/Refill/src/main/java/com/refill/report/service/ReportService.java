@@ -10,6 +10,7 @@ import com.refill.report.entity.TargetType;
 import com.refill.report.exception.ReportException;
 import com.refill.report.repository.ReportRepository;
 import com.refill.security.util.LoginInfo;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -83,5 +84,10 @@ public class ReportService {
                               .targetType(TargetType.CONSULTING).build();
 
         reportRepository.save(report);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Report> getReportConsultings() {
+        return reportRepository.getConsultingReportList(TargetType.CONSULTING);
     }
 }
