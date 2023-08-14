@@ -89,6 +89,8 @@ const DownContent = styled.div`
 `;
 
 const Mypage: React.FC = () => {
+
+  
   // 로그인이 안되있으면 메인페이지로 이동
 
   const [selected, setSelected] = useState(true);
@@ -102,7 +104,7 @@ const Mypage: React.FC = () => {
     profileImg: null,
     tel: "",
   });
-
+  
   // 예약 정보 받기
   const [reservationList, setReservationList] = useState<Reservation[] | null>(
     null
@@ -355,14 +357,14 @@ const Mypage: React.FC = () => {
             </Common>
             <span className="text-xl font-bold mt-10 mb-3">나의 상담 기록</span>
             <Common
-              style={{ width: "700px", height: "150px" }}
+              style={{ width: "700px", height: "200px" }}
               className="mt-3 mb-6"
             ></Common>
             <span className="text-xl font-bold mt-10 mb-3">
               나의 AI 자가진단 기록
             </span>
             <Common
-              style={{ width: "700px", height: "150px" }}
+              style={{ width: "700px", height: "200px" }}
               className="mt-3 mb-6"
             >
               <AiDiagnosisList />

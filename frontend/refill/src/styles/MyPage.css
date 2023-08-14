@@ -10,8 +10,12 @@
 }
 
 .ai-list-item {
-    height: 100px;
+    height: 120px;
     width: inherit;
+    border-radius: 16px;
+    border: 1px solid black;
+    padding: 10px;
+    margin-bottom: 5px;
 }
 /* 
 const scrollContainerStyle = {

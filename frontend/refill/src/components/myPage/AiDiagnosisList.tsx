@@ -15,12 +15,7 @@ type aiDiagnosisData = {
   diagnosisImage: string;
 };
 
-// axios 요청을 위한 memberId 받아오기
-interface AiDiagnosisListProps {
-  memberId?: number;
-}
-
-const AiDiagnosisList: React.FC<AiDiagnosisListProps> = ({ memberId }) => {
+const AiDiagnosisList: React.FC = () => {
   // 토큰
   const token = useSelector((state: RootState) => state.login.token);
   // AiDiagnosisList 받기
