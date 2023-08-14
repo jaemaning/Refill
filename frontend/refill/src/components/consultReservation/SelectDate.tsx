@@ -14,11 +14,13 @@ dayjs.tz.setDefault("Asia/Seoul");
 interface SelectDateProps {
   setSelectedDate: (date: string) => void;
   setNowWeekday: (weekday: number) => void;
+  setIsClicked: (click: boolean) => void;
 }
 
 const SelectDate: React.FC<SelectDateProps> = ({
   setSelectedDate,
   setNowWeekday,
+  setIsClicked,
 }) => {
   const [selectedDateValue, setSelectedDateValue] = useState<Date | null>(null);
 
@@ -32,6 +34,7 @@ const SelectDate: React.FC<SelectDateProps> = ({
           disablePast={true}
           value={selectedDateValue}
           onChange={(date, selectionState) => {
+            setIsClicked(true);
             if (selectionState === "finish") {
               const formattedDate = dayjs(date).tz("Asia/Seoul").format();
               setSelectedDate(formattedDate);

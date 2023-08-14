@@ -10,6 +10,10 @@ interface TypeToken {
   sessionId?: string | null;
   token?: string | null;
   shareToken?: string | null;
+  hospitalId?: number | null;
+  doctorId?: number | null;
+  memberId?: number | null;
+  hospitalName?: string | null;
 }
 
 const testReservationIds = [...Array(100)].map((_, i) => i);
@@ -52,6 +56,10 @@ const JoinPage = () => {
     sessionId,
     token,
     shareToken,
+    memberId,
+    doctorId,
+    hospitalId,
+    hospitalName,
   }: TypeToken) => {
     navigate("/video", {
       state: {
@@ -59,9 +67,15 @@ const JoinPage = () => {
         token: token,
         shareToken: shareToken,
         consultingId: consultingId,
+        memberId: memberId,
+        doctorId: doctorId,
+        hospitalId: hospitalId,
+        hospitalName: hospitalName,
       },
     });
   };
+  // 상담기록
+  // 진단내역
 
   // axios 를 5개를 동시에 보내서 받는 순서로 감. 비동기 처리 필요 => 일단 패스
   const getToken = async (testReservationId: number): Promise<void> => {
@@ -76,6 +90,7 @@ const JoinPage = () => {
         },
       );
       setTokenData((prevTokenData) => [...prevTokenData, response.data]);
+      //
       console.log(response.data);
     } catch (err) {
       console.log("에러:", err);
@@ -89,24 +104,46 @@ const JoinPage = () => {
       {isLoading ? (
         <div>Loading...</div>
       ) : (
-        tokenData.map(({ sessionId, token, shareToken, consultingId }, idx) =>
-          sessionId ? (
-            <div key={idx}>
-              {idx}, {sessionId} {consultingId}:
-              <Button
-                variant="normal"
-                content="입장 가능"
-                onClick={() => {
-                  joinSession({ token, shareToken, sessionId, consultingId });
-                }}
-              />
-            </div>
-          ) : (
-            <div key={idx}>
-              {idx},
-              <Button variant="disable" content="입장 불가" />
-            </div>
-          ),
+        tokenData.map(
+          (
+            {
+              memberId,
+              doctorId,
+              hospitalId,
+              sessionId,
+              token,
+              shareToken,
+              consultingId,
+              hospitalName,
+            },
+            idx,
+          ) =>
+            sessionId ? (
+              <div key={idx}>
+                {idx}, {sessionId} {consultingId}:
+                <Button
+                  variant="normal"
+                  content="입장 가능"
+                  onClick={() => {
+                    joinSession({
+                      memberId,
+                      doctorId,
+                      hospitalId,
+                      token,
+                      shareToken,
+                      sessionId,
+                      consultingId,
+                      hospitalName,
+                    });
+                  }}
+                />
+              </div>
+            ) : (
+              <div key={idx}>
+                {idx},
+                <Button variant="disable" content="입장 불가" />
+              </div>
+            ),
         )
       )}
     </div>

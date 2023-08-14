@@ -337,12 +337,16 @@ const DetailHospital: React.FC = () => {
   ) => {
     console.log(formData);
     axios
-      .put(`api/v1/hospital/${hospitalid}/doctor/${doctorid}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
+      .put(
+        `http://localhost:3000/api/v1/hospital/${hospitalid}/doctor/${doctorid}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
         },
-      })
+      )
 
       .then((response) => {
         console.log(response);
@@ -465,7 +469,7 @@ const DetailHospital: React.FC = () => {
       </BannerContainer>
       <Containers>
         <Layout>
-          <Content style={{ width: "850px" }}>
+          <Content style={{ width: "1300px" }}>
             <span className="text-2xl font-bold">{hospitalData.name}</span>
             <Kakaomap></Kakaomap>
             <ButtonList>
@@ -758,17 +762,20 @@ const DetailHospital: React.FC = () => {
           {/* 상담 예약 들어가는 곳 */}
           <Content style={{ width: "350px" }}></Content>
           <Content style={{ width: "350px" }}>
-            {/* merge 하거나 git pull 하기 전에 삭제 */}
-            <SelectDoctorAndTime
-              doctors={doctorData}
-              hospitalId={hospitalData.hospitalId}
-              hospitalName={hospitalName}
-            />
-            <DetailReservation
-              doctors={doctorData}
-              hospitalId={hospitalData.hospitalId}
-              hospitalName={hospitalName}
-            />
+            {/* 환자인지 의사인지 확인하는 로직이 필요함 */}
+            {ishospital ? (
+              <DetailReservation
+                doctors={doctorData}
+                hospitalId={hospitalData.hospitalId}
+                hospitalName={hospitalName}
+              />
+            ) : (
+              <SelectDoctorAndTime
+                doctors={doctorData}
+                hospitalId={hospitalData.hospitalId}
+                hospitalName={hospitalName}
+              />
+            )}
           </Content>
         </Layout>
       </Containers>

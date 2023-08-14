@@ -11,12 +11,20 @@ import com.refill.consulting.entity.Consulting;
 import com.refill.consulting.exception.ConsultingException;
 import com.refill.consulting.repository.ConsultingRepository;
 import com.refill.doctor.entity.Doctor;
+import com.refill.doctor.repository.DoctorRepository;
+import com.refill.doctor.service.DoctorService;
+import com.refill.global.entity.Role;
 import com.refill.global.exception.ErrorCode;
+import com.refill.hospital.repository.HospitalRepository;
 import com.refill.member.entity.Member;
+import com.refill.member.exception.MemberException;
+import com.refill.member.repository.MemberRepository;
 import com.refill.report.entity.Report;
 import com.refill.report.service.ReportService;
 import com.refill.reservation.entity.Reservation;
 import com.refill.reservation.repository.ReservationRepository;
+import com.refill.review.entity.Review;
+import com.refill.review.exception.ReviewException;
 import com.refill.security.util.LoginInfo;
 import io.openvidu.java.client.ConnectionProperties;
 import io.openvidu.java.client.ConnectionType;
@@ -24,11 +32,12 @@ import io.openvidu.java.client.OpenVidu;
 import io.openvidu.java.client.OpenViduHttpException;
 import io.openvidu.java.client.OpenViduJavaClientException;
 import io.openvidu.java.client.OpenViduRole;
-import io.openvidu.java.client.Session;
-import io.openvidu.java.client.SessionProperties;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +45,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
+import io.openvidu.java.client.Connection;
+import io.openvidu.java.client.ConnectionProperties;
+import io.openvidu.java.client.OpenVidu;
+import io.openvidu.java.client.OpenViduHttpException;
+import io.openvidu.java.client.OpenViduJavaClientException;
+import io.openvidu.java.client.Session;
+import io.openvidu.java.client.SessionProperties;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
@@ -60,16 +77,17 @@ public class ConsultingService {
     private final ReservationRepository reservationRepository;
     private final ConsultingRepository consultingRepository;
     private final ReportService reportService;
+    private final MemberRepository memberRepository;
 
     private final int BEFORE_CONSULTING_TIME = 15;
 
 
     /* 상담 세션 생성 */
-    @Scheduled(cron = "0 8,12 8-18 * * ?")
+    @Scheduled(cron = "0 59 8-23 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
 
         LocalDateTime now = LocalDateTime.now();
-        //LocalDateTime now = LocalDateTime.now().plusMinutes(BEFORE_CONSULTING_TIME);
+//        LocalDateTime now = LocalDateTime.now().plusMinutes(BEFORE_CONSULTING_TIME);
         // 조건문 추가
 
         List<Reservation> reservationList = reservationRepository.findReservationReady(now.minusMinutes(10),now.plusMinutes(10));
@@ -154,24 +172,27 @@ public class ConsultingService {
     @Transactional
     public void leaveSession(ConsultingCloseRequest consultingCloseRequest, LoginInfo loginInfo) {
 
-        if(loginInfo.role().equals(ROLE_MEMBER)) {
-            throw new ConsultingException(ErrorCode.UNAUTHORIZED_REQUEST);
-        }
-
         Consulting consulting = consultingRepository.findConsultingBySessionId(consultingCloseRequest.sessionId());
-
         if (consulting == null) {
             throw new ConsultingException(ErrorCode.SESSION_FAIL);
         }
 
+        /* 세션 아이디, 토큰 비우기 */
         consulting.closeSession();
-
+        /*  상담 소견 저장" */
         consulting.updateConsultingInfo(consultingCloseRequest.consultingDetailInfo());
     }
 
     /* 상담 내역 반환 */
     @Transactional(readOnly = true)
-    public List<ConsultingListResponse> getConsultingList(long memberId) {
+    public List<ConsultingListResponse> getConsultingList(String loginId) {
+
+        Member member = memberRepository.findByLoginId(loginId)
+            .orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND));
+        Long memberId = member.getId();
+
+        log.info("###### {} ######" , memberId);
+
         List<Consulting> consultingList = consultingRepository.findConsultingsByMember(memberId);
 
         List<ConsultingListResponse> consultingListResponseList = new ArrayList<>();

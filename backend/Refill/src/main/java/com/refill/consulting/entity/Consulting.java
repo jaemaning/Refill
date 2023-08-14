@@ -35,7 +35,7 @@ public class Consulting extends BaseEntity {
     @JoinColumn(name = "reservation_id")
     private Reservation reservation; // reservation에 추가 예정
 
-    @Column(nullable = false)
+    @Column
     private String sessionId;
 
     @Column

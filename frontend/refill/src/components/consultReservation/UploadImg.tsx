@@ -6,6 +6,7 @@ import "styles/Reservation.css";
 import axios from "axios";
 import { RootState } from "store/reducers";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 interface UploadImgProps {
   doctorName: string;
@@ -24,6 +25,11 @@ const UploadImg: React.FC<UploadImgProps> = ({
   hospitalName,
   doctorId,
 }) => {
+  // hospitalId undefined인 경우 axios로 호출
+  const { newHospitalId } = useParams();
+
+  // if (hospitalName === "")
+
   const [imgFile, setImgFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -42,6 +48,10 @@ const UploadImg: React.FC<UploadImgProps> = ({
     formData.append("reservationRequest", jsonBlob);
     if (imgFile) {
       formData.append("hairImg", imgFile);
+      console.log(imgFile);
+      // console.log(hospitalName)
+      // console.log(token)
+      // console.log(newHospitalId)
     }
 
     axios
@@ -54,7 +64,7 @@ const UploadImg: React.FC<UploadImgProps> = ({
         console.log(response.data);
       })
       .catch((error) => {
-        console.error(error);
+        console.error(error.response.data.message);
       });
 
     setModalOpen(true);

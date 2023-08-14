@@ -4,6 +4,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import MedicalInformationOutlinedIcon from "@mui/icons-material/MedicalInformationOutlined";
 
 type Doctor = {
   doctorId: number;
@@ -13,11 +14,13 @@ type Doctor = {
 interface ReservationDoctorProps {
   doctors: Doctor[];
   setDoctorId: (id: number) => void;
+  setIsSelectedDoctor: (select: boolean) => void;
 }
 
 const ReservationDoctor: React.FC<ReservationDoctorProps> = ({
   doctors,
   setDoctorId,
+  setIsSelectedDoctor,
 }) => {
   const [selectedDoctor, setSelectedDoctor] = useState("");
   const doctorsName = doctors.map((doctor) => doctor.name);
@@ -29,6 +32,7 @@ const ReservationDoctor: React.FC<ReservationDoctorProps> = ({
     if (doctor) {
       console.log(doctor.doctorId);
       setDoctorId(doctor.doctorId);
+      setIsSelectedDoctor(true);
     } else {
       console.log("해당 이름의 의사를 찾을 수 없습니다.");
     }
@@ -36,6 +40,9 @@ const ReservationDoctor: React.FC<ReservationDoctorProps> = ({
 
   return (
     <>
+      <div className="m-1 text-xl">
+        <MedicalInformationOutlinedIcon /> 나의 상담 일정
+      </div>
       <Box sx={{ minWidth: 120 }} className="m-2 mb-8">
         <FormControl fullWidth>
           <InputLabel id="demo-simple-select-label">Doctor</InputLabel>
