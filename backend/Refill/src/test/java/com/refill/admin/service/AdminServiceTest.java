@@ -24,8 +24,8 @@ class AdminServiceTest extends ServiceTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        HospitalJoinRequest joinRequest1 = new HospitalJoinRequest("test01", "test01", "한방병원", "광산구", "23023", new BigDecimal("452.456"), new BigDecimal("123.456"), "010-1234-5324", "ssafy1@ssafy.com");
-        HospitalJoinRequest joinRequest2 = new HospitalJoinRequest("test02", "test02", "두방병원", "광산구", "23023", new BigDecimal("452.456"), new BigDecimal("123.456"), "010-1234-5334", "ssafy2@ssafy.com");
+        HospitalJoinRequest joinRequest1 = new HospitalJoinRequest("test01", "test01", "한방병원", "광산구",  new BigDecimal("452.456"), new BigDecimal("123.456"), "010-1234-5324", "ssafy1@ssafy.com");
+        HospitalJoinRequest joinRequest2 = new HospitalJoinRequest("test02", "test02", "두방병원", "광산구",  new BigDecimal("452.456"), new BigDecimal("123.456"), "010-1234-5334", "ssafy2@ssafy.com");
 
         MockMultipartFile profileImg1 = new MockMultipartFile("profileImg", "test.jpg", "image/jpeg", "test image".getBytes());
         MockMultipartFile profileImg2 = new MockMultipartFile("profileImg", "test.jpg", "image/jpeg", "test image".getBytes());

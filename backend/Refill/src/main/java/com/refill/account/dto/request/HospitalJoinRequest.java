@@ -11,7 +11,6 @@ public record HospitalJoinRequest(
     @NotBlank(message = "비밀번호는 공백일 수 없습니다.") String loginPassword,
     @NotBlank(message = "병원 이름은 공백일 수 없습니다.") String name,
     @NotBlank(message = "병원 주소는 공백일 수 없습니다.") String address,
-    @NotBlank String postalCode,
     @NotNull BigDecimal latitude,
     @NotNull BigDecimal longitude,
     @NotBlank(message = "병원 번호는 공백일 수 없습니다.") String tel,
