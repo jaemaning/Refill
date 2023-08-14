@@ -301,12 +301,16 @@ const DetailHospital: React.FC = () => {
   const RegistDoc = async (hospitalid: number, formData: any) => {
     console.log(formData);
     axios
-      .post(`api/v1/hospital/${hospitalid}/doctor`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
+      .post(
+        `http://localhost:3000/api/v1/hospital/${hospitalid}/doctor`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
         },
-      })
+      )
 
       .then((response) => {
         console.log(response);
@@ -370,12 +374,15 @@ const DetailHospital: React.FC = () => {
 
   const DeleteDoc = async (doctorid: number) => {
     axios
-      .delete(`api/v1/hospital/${hospitalId}/doctor/${doctorid}`, {
-        headers: {
-          // "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
+      .delete(
+        `http://localhost:3000/api/v1/hospital/${hospitalId}/doctor/${doctorid}`,
+        {
+          headers: {
+            // "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
         },
-      })
+      )
 
       .then((response) => {
         console.log(response);
