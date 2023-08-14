@@ -69,7 +69,7 @@ const LoginForm: React.FC = () => {
             ) : !ismember && loginpage ? (
               <HospitalLogin />
             ) : ismember && !loginpage ? (
-              <SingUp />
+              <SingUp handleChecklogin={handleChecklogin} />
             ) : (
               <HospitalSignup />
             )}
