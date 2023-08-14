@@ -207,7 +207,7 @@ public class DataInitializer implements CommandLineRunner {
                 // 예약
                 for(int reserve = 0; reserve < 2; reserve++){
                     LocalDateTime localDateTime = LocalDateTime.now()
-                                                               .plusMinutes(reserve * 2);
+                                                               .plusMinutes(reserve * 3);
                     LocalDate localDate = LocalDate.now();
                     LocalDateTime startDateTime = LocalDateTime.of(localDate, LocalTime.from(localDateTime));
                     LocalDateTime endDateTime = startDateTime.plusMinutes(30);
