@@ -23,12 +23,12 @@ public record ConsultingDetailResponse(
 
     // 병원 이름, 주소, 전화번호
     String hospitalName,
-    String hospitalAddress
+    String hospitalAddress,
+    String tel
     // 전화번호
 ) {
     public ConsultingDetailResponse(Consulting consulting) {
         this (
-//            consulting.getDoctor().getMajorAreas().get(0),
             consulting.getDoctor().getName(),
             consulting.getReservation().getStartDateTime(),
             consulting.getMember().getAddress(),
@@ -36,7 +36,8 @@ public record ConsultingDetailResponse(
             consulting.getMember().getBirthDay(),
             consulting.getConsultingDetailInfo(),
             consulting.getDoctor().getHospital().getName(),
-            consulting.getDoctor().getHospital().getAddress()
+            consulting.getDoctor().getHospital().getAddress(),
+            consulting.getDoctor().getHospital().getTel()
         );
     }
 }

@@ -12,7 +12,7 @@ public interface ConsultingRepository extends JpaRepository<Consulting, Long> {
 
     Consulting findConsultingBySessionId(String sessionId);
 
-    @Query("SELECT c FROM Consulting c WHERE c.member.id = :memberId AND c.isExecuted = false")
+    @Query("SELECT c FROM Consulting c WHERE c.member.id = :memberId AND c.isExecuted = true")
     List<Consulting> findConsultingsByMember(@Param("memberId") Long memberId);
 
     Consulting findConsultingById(Long consultingId);
