@@ -15,6 +15,7 @@ import { Container, Grid } from "@mui/material";
 // 하위 컴포넌트
 import MyReservationReport from "components/myPage/MyReservationReport";
 import AiDiagnosisList from "components/myPage/AiDiagnosisList";
+import ConsultingList from "components/myPage/ConsultingList";
 // CSS
 import "styles/MyPage.css"
 
@@ -114,6 +115,7 @@ const Mypage: React.FC = () => {
   const islogin: boolean = useSelector(
     (state: RootState) => state.login.islogin,
   );
+  const loginId = useSelector((state: RootState) => state.login.loginId);
 
   const navigate = useNavigate();
 
@@ -359,7 +361,10 @@ const Mypage: React.FC = () => {
             <Common
               style={{ width: "700px", height: "200px" }}
               className="mt-3 mb-6"
-            ></Common>
+            >
+              <ConsultingList loginId={loginId}/>
+
+            </Common>
             <span className="text-xl font-bold mt-10 mb-3">
               나의 AI 자가진단 기록
             </span>

@@ -17,6 +17,14 @@
     padding: 10px;
     margin-bottom: 5px;
 }
+
+.cons-list-item {
+  height: 60px;
+  width: inherit;
+    border-bottom: 3px solid #2E5077;
+    padding: 10px;
+    margin-bottom: 5px;
+}
 /* 
 const scrollContainerStyle = {
   maxHeight: '400px',  // 원하는 높이로 조정하세요
