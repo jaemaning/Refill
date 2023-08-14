@@ -63,7 +63,9 @@ public class ConsultingService {
 
     @PostConstruct
     public void init() {
+        log.info("################## {} ########## {} ############", OPENVIDU_URL, OPENVIDU_SECRET);
         this.openvidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
+        log.info("##################### {} #################", openvidu);
     }
 
     private final ReservationRepository reservationRepository;
@@ -76,6 +78,7 @@ public class ConsultingService {
     @Scheduled(cron = "0 */3 8-23 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
 
+        log.info("################## {} ########## {} ############", OPENVIDU_URL, OPENVIDU_SECRET);
         LocalDateTime now = LocalDateTime.now();
         // 조건문 추가
 
@@ -97,7 +100,7 @@ public class ConsultingService {
             // 세션 생성
             Map<String, Object> params = new HashMap<>();
             String customSessionId = "session" + reservation.getId().toString();
-            params.put("customSessionId",customSessionId);
+            params.put("customSessionId", customSessionId);
 
             log.info("{} => customSessionId", customSessionId);
 
