@@ -14,7 +14,11 @@ interface Addr {
   address: string;
 }
 
-const SingUp: React.FC = () => {
+interface SignUpType {
+  handleChecklogin: () => void;
+}
+
+const SingUp: React.FC<SignUpType> = (props) => {
   // 회원가입 할 때 필요한 데이터
   const [inputData, setInputData] = useState({
     loginId: "",
@@ -123,6 +127,7 @@ const SingUp: React.FC = () => {
       })
       .then((response) => {
         console.log(response.data);
+        props.handleChecklogin();
       })
       .catch((err) => {
         console.log(err.response.data);

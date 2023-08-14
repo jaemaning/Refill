@@ -9,12 +9,15 @@ import default_profile from "../assets/default_profile.png";
 import { RootState } from "store/reducers";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import ChangePassword from "./user/ChangePassword";
+import ModifyMember from "./user/ModifyMember";
+import { Container, Grid } from "@mui/material";
 
 interface DivProps {
   selected?: boolean;
 }
 
-const Container = styled.div`
+const Containerdiv = styled.div`
   border 0;
   min-width: 100%;
   min-height: 50vh;
@@ -63,7 +66,6 @@ const Profileimg = styled.img`
 
 const Ptag = styled.p`
   font-size: 20px;
-  margin: 5px 0px;
   color: black;
 `;
 
@@ -128,10 +130,70 @@ const Mypage: React.FC = () => {
     console.log(selected);
   };
 
+  // 비밀번호 변경 모달
+  const [changeopen, setChangeOpen] = useState(false);
+  const handleCMOpen = () => {
+    setChangeOpen(true);
+  };
+  const handleCMClose = () => {
+    setChangeOpen(false);
+  };
+
+  const ChangePw = async (data: any) => {
+    axios
+      .put(`api/v1/member/mypage/password`, data, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      .then((response) => {
+        console.log(response);
+        handleCMClose();
+      })
+
+      .catch((error) => {
+        console.log(1);
+        console.log(error.response.data.message);
+        handleCMClose();
+      });
+  };
+
+  // 회원정보 변경 모달
+  const [modifyOpen, setModifyOpen] = useState(false);
+  const handleMMOpen = () => {
+    setModifyOpen(true);
+  };
+  const handleMMClose = () => {
+    setModifyOpen(false);
+  };
+
+  const ModifyDoc = async (formData: any) => {
+    console.log(formData);
+    axios
+      .put(`api/v1/member/mypage`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      .then((response) => {
+        console.log(response);
+        handleMMClose();
+      })
+
+      .catch((error) => {
+        console.log(error);
+        handleMMClose();
+      });
+  };
+
   return (
     <div>
       <Navbar />
-      <Container>
+      <Containerdiv>
         <div className="flex">
           <Common style={{ width: "200px", height: "220px" }}>
             <div className="ms-4 mb-4">
@@ -161,38 +223,64 @@ const Mypage: React.FC = () => {
             <span className="text-xl font-bold">기본 정보</span>
             <Common
               style={{ width: "700px", height: "480px" }}
-              className="mt-3 mb-6"
+              className="mt-3 mb-6 "
             >
               <Profileimg
                 src={checkimg ? `${userData.profileImg}` : `${default_profile}`}
+                className=""
               />
-              <br />
-              <div className="flex justify-between" style={{ width: "600px" }}>
-                <div
-                  className="flex flex-col text-center"
-                  style={{ width: "100px" }}
-                >
-                  <Ptag>이름</Ptag>
-                  <Ptag>주소</Ptag>
-                  <Ptag>생년월일</Ptag>
-                  <Ptag>전화번호</Ptag>
-                  <Ptag>닉네임</Ptag>
-                </div>
-                <div style={{ width: "450px" }}>
-                  <Ptag>{userData.name}</Ptag>
-                  <Ptag>{userData.address}</Ptag>
-                  <Ptag>{userData.birthDay}</Ptag>
-                  <Ptag>{userData.tel}</Ptag>
-                  <div className="flex justify-between">
-                    <Ptag>{userData.nickname}</Ptag>
-                    <Button
-                      content="정보수정"
-                      variant="menuSelected"
-                      width="80px"
-                      onClick={buttonclick}
-                    />
-                  </div>
-                </div>
+              <div
+                className="flex justify-between py-3"
+                style={{ width: "600px" }}
+              >
+                <Container>
+                  <Grid container spacing={2} className="my-10">
+                    <Grid item xs={4}>
+                      <Ptag>이름</Ptag>
+                    </Grid>
+                    <Grid item xs={8}>
+                      <Ptag>{userData.name}</Ptag>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <Ptag>주소</Ptag>
+                    </Grid>
+                    <Grid item xs={8}>
+                      <Ptag>{userData.address}</Ptag>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <Ptag>생년월일</Ptag>
+                    </Grid>
+                    <Grid item xs={8}>
+                      <Ptag>{userData.birthDay}</Ptag>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <Ptag>전화번호</Ptag>
+                    </Grid>
+                    <Grid item xs={8}>
+                      <Ptag>{userData.tel}</Ptag>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <Ptag>닉네임</Ptag>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Ptag>{userData.nickname}</Ptag>
+                    </Grid>
+                    <Grid item xs={2} style={{ paddingLeft: "40px" }}>
+                      <ModifyMember
+                        open={modifyOpen}
+                        handleMOpen={handleMMOpen}
+                        handleMClose={handleMMClose}
+                        name={userData.name}
+                        address={userData.address}
+                        birthday={userData.birthDay}
+                        tel={userData.tel}
+                        nickname={userData.nickname}
+                        email={userData.email}
+                        onModify={(formData) => ModifyDoc(formData)}
+                      ></ModifyMember>
+                    </Grid>
+                  </Grid>
+                </Container>
               </div>
             </Common>
             <span className="text-xl font-bold mt-10 mb-3">비밀번호</span>
@@ -204,12 +292,12 @@ const Mypage: React.FC = () => {
                 <h1 className="text-xl text-gray-400 font-bold">
                   비밀번호를 바꾸고 싶거나 잊어버리셨나요?
                 </h1>
-                <Button
-                  content="비밀번호 변경"
-                  variant="menuSelected"
-                  width="120px"
-                  onClick={buttonclick}
-                />
+                <ChangePassword
+                  open={changeopen}
+                  handleMOpen={handleCMOpen}
+                  handleMClose={handleCMClose}
+                  onChangemember={(data) => ChangePw(data)}
+                ></ChangePassword>
               </DownContent>
             </Common>
             <span className="text-xl font-bold mt-10 mb-3">계정 삭제</span>
@@ -254,7 +342,7 @@ const Mypage: React.FC = () => {
             ></Common>
           </Content2>
         </div>
-      </Container>
+      </Containerdiv>
       <Footer />
     </div>
   );
