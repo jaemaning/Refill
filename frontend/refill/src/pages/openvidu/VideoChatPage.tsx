@@ -138,7 +138,6 @@ const VideoChatPage: React.FC = () => {
   const handleOpenRviewtModal = () => setOpenReviewModal(true);
   const handleCloseReviewModal = () => setOpenReviewModal(false);
 
-  
   //
 
   const loginToken = useSelector((state: RootState) => state.login.token);
@@ -178,10 +177,10 @@ const VideoChatPage: React.FC = () => {
   // 스크롤바 내리기
   useEffect(() => {
     if (chatLogRef.current) {
-      console.log('Scrolling to:', chatLogRef.current.scrollHeight);
+      console.log("Scrolling to:", chatLogRef.current.scrollHeight);
       chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight;
     } else {
-      console.log('chatLogRef.current is null or undefined');
+      console.log("chatLogRef.current is null or undefined");
     }
   }, [messageList]);
 
