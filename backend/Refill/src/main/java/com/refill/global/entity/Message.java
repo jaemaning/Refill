@@ -12,7 +12,9 @@ public enum Message {
     ACCEPT_HOSPITAL("병원 승인 완료되었습니다."),
     REJECT_HOSPITAL("병원 승인 반려되었습니다."),
     ACCEPT_REPORT_REVIEW("신고된 리뷰가 승인되었습니다."),
-    REJECT_REPORT_REVIEW("신고된 리뷰가 반려되었습니다.");
+    REJECT_REPORT_REVIEW("신고된 리뷰가 반려되었습니다."),
+    ACCEPT_MEMBER_WITHDRAW("회원 탈퇴가 정상적으로 수행되었습니다."),
+    ACCEPT_HOSPITAL_WITHDRAW("병원 탈퇴가 정상적으로 수행되었습니다.");
 
     private final String message;
 }

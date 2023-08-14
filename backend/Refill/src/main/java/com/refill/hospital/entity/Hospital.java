@@ -51,11 +51,13 @@ public class Hospital extends UserInfo {
 
     @JsonIgnore
     @OneToMany(mappedBy = "hospital")
+    @OneToMany(mappedBy = "hospital", orphanRemoval = true)
     @Builder.Default
     List<Doctor> doctors = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "hospital")
+    @OneToMany(mappedBy = "hospital", orphanRemoval = true)
     @Builder.Default
     List<Review> reviews = new ArrayList<>();
 

@@ -117,4 +117,9 @@ public class MemberService {
         return memberRepository.findById(memberId)
                                .orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND));
     }
+
+    public void delete(Long id) {
+        Member member = findById(id);
+        memberRepository.delete(member);
+    }
 }

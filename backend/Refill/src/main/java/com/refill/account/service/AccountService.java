@@ -241,4 +241,20 @@ public class AccountService {
 
         return new EmailVerifyResponse(code);
     }
+
+    @Transactional
+    public String deleteAccount(Long id, LoginInfo loginInfo) {
+        Role role = loginInfo.role();
+        String message;
+        if (role.equals(Role.ROLE_HOSPITAL) || role.equals(Role.ROLE_GUEST)) {
+            hospitalService.delete(id);
+            message = Message.ACCEPT_HOSPITAL_WITHDRAW.getMessage();
+        } else if (role.equals(Role.ROLE_MEMBER)) {
+            memberService.delete(id);
+            message = Message.ACCEPT_MEMBER_WITHDRAW.getMessage();
+        } else {
+            throw new MemberException(ErrorCode.USERNAME_NOT_FOUND);
+        }
+        return message;
+    }
 }
