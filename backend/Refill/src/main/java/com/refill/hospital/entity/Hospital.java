@@ -49,14 +49,17 @@ public class Hospital extends UserInfo {
     @Column(nullable = false)
     String registrationImg;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "hospital")
     @Builder.Default
     List<Doctor> doctors = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "hospital")
     @Builder.Default
     List<Review> reviews = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<HospitalOperatingHour> operatingHours = new ArrayList<>();

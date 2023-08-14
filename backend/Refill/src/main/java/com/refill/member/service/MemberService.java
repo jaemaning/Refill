@@ -75,7 +75,7 @@ public class MemberService {
 
         return new MemberInfoResponse(member);
     }
-    @CacheEvict(value = "MemberCacheStore", key = "#loginId")
+    @CacheEvict(value = "UserCacheStore", key = "#loginId")
     @Transactional
     public void modifyMember(String loginId, MemberInfoUpdateRequest memberInfoUpdateRequest, MultipartFile profileImg) {
 

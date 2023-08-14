@@ -171,7 +171,7 @@ public class HospitalService {
         return hospital;
     }
 
-    @CacheEvict(value = "HospitalCacheStore", key = "#loginId")
+    @CacheEvict(value = "UserCacheStore", key = "#loginId")
     @Transactional
     public void modifyHospitalInfo(Long hospitalId, String loginId,
         HospitalInfoUpdateRequest hospitalInfoUpdateRequest, MultipartFile profileImg,
