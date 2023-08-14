@@ -13,6 +13,8 @@ import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,6 +50,12 @@ public class MemberService {
         return memberRepository.existsByEmail(email);
     }
 
+    @Cacheable(value = "MemberCacheStore", key = "#loginId")
+    @Transactional(readOnly = true)
+    public Member findByLoginIdUsingCache(String loginId) {
+        return findByLoginId(loginId);
+    }
+
     @Transactional(readOnly = true)
     public Member findByLoginId(String loginId) {
         return memberRepository.findByLoginId(loginId)
@@ -74,6 +82,7 @@ public class MemberService {
 
         return new MemberInfoResponse(member);
     }
+    @CacheEvict(value = "MemberCacheStore", key = "#loginId")
     @Transactional
     public void modifyMember(String loginId, MemberInfoUpdateRequest memberInfoUpdateRequest, MultipartFile profileImg) {
 
@@ -96,6 +105,7 @@ public class MemberService {
         }
 
     }
+
 
     @Transactional
     public void modifyPassword(String loginId, MemberPasswordUpdateRequest memberPasswordUpdateRequest) {

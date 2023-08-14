@@ -61,7 +61,8 @@ public class RedisConfig {
                                                                                  .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
 
         Map<String, RedisCacheConfiguration> redisCacheConfigurationMap = new HashMap<>();
-        redisCacheConfigurationMap.put("UserCacheStore", redisCacheConfiguration);
+        redisCacheConfigurationMap.put("MemberCacheStore", redisCacheConfiguration);
+        redisCacheConfigurationMap.put("HospitalCacheStore", redisCacheConfiguration);
 
         return RedisCacheManager.RedisCacheManagerBuilder
                                 .fromConnectionFactory(redisConnectionFactory)

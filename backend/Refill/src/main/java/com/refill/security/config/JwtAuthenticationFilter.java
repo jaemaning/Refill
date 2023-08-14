@@ -1,5 +1,6 @@
 package com.refill.security.config;
 
+import com.refill.security.service.UserDetailServiceImpl;
 import com.refill.security.util.LoginInfo;
 import com.refill.global.entity.UserInfo;
 import com.refill.global.exception.ErrorCode;
@@ -31,6 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final MemberRepository memberRepository;
     private final HospitalRepository hospitalRepository;
     private final JwtProvider jwtProvider;
+    private final UserDetailServiceImpl userDetailService;
 
     @Value("${jwt.token.secret}")
     private String secretKey;
