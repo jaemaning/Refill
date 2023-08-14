@@ -31,12 +31,12 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
     const dayName = days[dateObj.getDay()];
 
     const formattedDate = `${dateObj.getFullYear()}-${String(
-      dateObj.getMonth() + 1
+      dateObj.getMonth() + 1,
     ).padStart(2, "0")}-${String(dateObj.getDate()).padStart(
       2,
-      "0"
+      "0",
     )} (${dayName}) ${String(dateObj.getHours()).padStart(2, "0")}:${String(
-      dateObj.getMinutes()
+      dateObj.getMinutes(),
     ).padStart(2, "0")}`;
     return formattedDate;
   };
@@ -54,9 +54,7 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
           >
             상담취소
           </button>
-          <button
-            className="res-small-btn-right h-8 p-1 text-white"
-          >
+          <button className="res-small-btn-right h-8 p-1 text-white">
             상담입장
           </button>
         </div>
