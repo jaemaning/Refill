@@ -46,7 +46,10 @@ public enum ErrorCode {
     /* Consulting Exception */
     CONSULTING_NOT_YET("CON01",HttpStatus.BAD_REQUEST,"방이 아직 생성되지 않았습니다."),
     SESSION_FAIL("CON02",HttpStatus.BAD_REQUEST,"해당 세션이 존재하지 않습니다."),
-    CONSULTING_DETAIL_ERROR("CON03",HttpStatus.BAD_REQUEST,"해당 삼당 기록이 존재하지 않습니다.");
+    CONSULTING_DETAIL_ERROR("CON03",HttpStatus.BAD_REQUEST,"해당 삼당 기록이 존재하지 않습니다."),
+
+    /* IO EXCEPTION */
+    INPUT_DATA_NOT_VALID("IN01", HttpStatus.BAD_REQUEST, "입력이 유효하지 않습니다.");
 
 
     private final String code;

@@ -14,6 +14,8 @@ import SearchCard from "components/search/SearchCard";
 import { useKakaoMapScript } from "hooks/UseKakaoMap";
 import { useSelector } from "react-redux";
 import { RootState } from "store/reducers";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 
 const max_width = "1350";
 const max_height = "800";
@@ -69,6 +71,7 @@ const Container = styled.div`
   background-color: ${REFILL_COLORS["white"]};
   min-width: 100%;
   min-height: 120vh;
+  /* height: 1000px; */
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -80,6 +83,10 @@ const MapBox = styled.div`
   width: ${max_width + "px"};
   height: ${max_height + "px"};
   display: ${(props: DivProps) => (props.selected ? "block" : "none")};
+`;
+
+const MapBoxV2 = styled(MapBox)`
+  height: 1150px;
 `;
 
 const SearchTop = styled.div`
@@ -96,7 +103,8 @@ const SearchTop = styled.div`
 
 const SearchBot = styled.div`
   width: ${max_width + "px"};
-  height: ${parseInt(max_height) - 150 + "px"};
+  min-height: ${parseInt(max_height) + 150 + "px"};
+  /* height: auto; */
   background-color: white;
   overflow: "auto";
   max-height: ${parseInt(max_height) - 150 + "px"};
@@ -123,7 +131,7 @@ export const HospitalSearch: React.FC = () => {
   const [toggleSelected, setToggleSelected] = useState(true);
   const [rendered, setRendered] = useState(true);
   const [toggleData, setToggleData] = useState(true);
-  const nowCenter = useRef<number[]>([33.452613, 126.570888]);
+  const nowCenter = useRef<number[]>([homeLat, homeLon]); // 현재 위치 시작 위치는 집위치
   const [searchedData, setSearchedData] = useState<TypeSearchedData[]>([]);
   const [hospitals, setHospitals] = useState<TypeResponseMap[]>([]); // 병원 위치 테스트용
   const [starsHospitals, setStarsHospitals] = useState<TypeResponseMap[]>([]);
@@ -136,6 +144,14 @@ export const HospitalSearch: React.FC = () => {
 
   const kakaoMapBox = useRef<HTMLDivElement>(null); // 지도를 담을 div element를 위한 ref
   const map = useRef<any>(null); // map 객체를 관리할 ref
+
+  // 페이지네이션
+  const [page, setPage] = useState(1);
+  const resultPerPage = 4;
+
+  const handlePage = (event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+  };
 
   // 드롭다운 버튼 옵션 선택에 대한 함수임
   const handleSelect = (option: string) => {
@@ -530,7 +546,7 @@ export const HospitalSearch: React.FC = () => {
             </ToggleBox>
           </div>
         </MapBox>
-        <MapBox bgcolor="white" selected={selected === "option2"}>
+        <MapBoxV2 bgcolor="white" selected={selected === "option2"}>
           <SearchTop>
             <h1
               style={{
@@ -588,28 +604,39 @@ export const HospitalSearch: React.FC = () => {
               >
                 검색 결과가 없습니다.
               </h1>
-              {searchedData.map((data, i) => {
-                return (
-                  <div key={i} style={{ marginTop: "20px" }}>
-                    <div style={{ margin: "20px", paddingLeft: "100px" }}>
-                      <h1>{data.name}</h1>
-                      <p>{data.longitude}</p>
-                      <p>{data.latitude}</p>
-                      <p>{data.hospitalProfileImg}</p>
-                      <a>{data.address}</a>
-                      <p>{data.tel}</p>
-                      <p>{data.score}</p>
-                      <br />
-                      <hr />
+              {searchedData
+                .slice((page - 1) * resultPerPage, page * resultPerPage)
+                .map((data, i) => {
+                  return (
+                    <div key={i} style={{ marginTop: "20px" }}>
+                      <div style={{ margin: "20px", paddingLeft: "100px" }}>
+                        <h1>{data.name}</h1>
+                        <p>{data.longitude}</p>
+                        <p>{data.latitude}</p>
+                        <p>{data.hospitalProfileImg}</p>
+                        <a>{data.address}</a>
+                        <p>{data.tel}</p>
+                        <p>{data.score}</p>
+                        <br />
+                        <hr />
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </>
           </SearchBot>
-        </MapBox>
+          <div className="flex justify-center" style={{ marginBottom: "10px" }}>
+            <Stack spacing={2}>
+              <Pagination
+                count={Math.ceil(searchedData.length / resultPerPage)}
+                page={page}
+                onChange={handlePage}
+              />
+            </Stack>
+          </div>
+        </MapBoxV2>
+        <Footer />
       </Container>
-      <Footer />
     </div>
   );
 };

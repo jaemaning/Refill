@@ -8,8 +8,12 @@ import ReservationDate from "./ReservationDate";
 import ReservationTime from "./ReservationTime";
 import DetailPatient from "./DetailPatient";
 import ReservationDoctor from "./ReservationDoctor";
+import CautionDelete from "./CautionDelete";
 // css
 import "styles/Reservation.css";
+
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 type ComponentProps = {
   doctors: Doctor[];
@@ -23,6 +27,7 @@ type Doctor = {
 };
 
 type Reservation = {
+  reservationId: number;
   startDate: string;
   memberName: string;
   birthDay: string;
@@ -37,7 +42,6 @@ const DetailReservation: React.FC<ComponentProps> = ({
 }) => {
   const token = useSelector((state: RootState) => state.login.token);
   const [selectedDate, setSelectedDate] = useState("");
-  const [selectedTime, setSelectedTime] = useState("");
 
   const [doctorId, setDoctorId] = useState(0);
 
@@ -47,35 +51,13 @@ const DetailReservation: React.FC<ComponentProps> = ({
   >([]);
   // 환자 선택하기
   const [selectedMember, setSelectedMember] = useState<Reservation | null>(
-    null,
+    null
   );
-  /*
-  상담 내역 받아오기
-  @GetMapping("/{memberId}")
 
-  상담리스트 받아오기
-  @GetMapping("/")
-  */
+  const [isSelectedDoctor, setIsSelectedDoctor] = useState(false);
+  const [isSelectedDate, setIsSelectedDate] = useState(false);
+  const [isSelectedTime, setIsSelectedTime] = useState(false);
 
-  /* 
-  api/v1/reservation/list/{dictorid}
-  parameter : doctorId
-  Description : 의사 PK값
-
-  Content-Type : application/json
-
-  [
-    {
-      "startDate": "2023-08-11T14:58:17.6790553",
-      "memberName": "상원",
-      "birthDay": "2023-08-11",
-      "tel": "010-1234-5678",
-      "counselingDemands": "상담 요청합니다."
-    }
-  ]
-  
-  */
-  // 예약 정보 다 가져와 지면 자기 예약정보 가져오기
   useEffect(() => {
     if (doctorId > 0) {
       getReservation(doctorId);
@@ -91,7 +73,10 @@ const DetailReservation: React.FC<ComponentProps> = ({
       })
       .then((res) => {
         console.log(res);
-        setMyReservations(res.data);
+        if (res.data) {
+          setMyReservations(res.data);
+          console.log(res.data);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -105,40 +90,78 @@ const DetailReservation: React.FC<ComponentProps> = ({
         0,
         0,
         0,
-        0,
+        0
       );
       const targetDate = new Date(selectedDate).setHours(0, 0, 0, 0);
       return reservationDate === targetDate;
     });
 
     setSelectedDateReservations(filteredReservations);
+    console.log("마이레저베이션");
+    console.log(filteredReservations);
   }, [selectedDate]);
-
   return (
-    <div className="detail-reservation-box p-3">
+    <div className="m-2 py-2">
       <div>
         <div>
-          <p>나의 상담 일정</p>
-        </div>
-        <div>
-          <ReservationDoctor setDoctorId={setDoctorId} doctors={doctors} />
-        </div>
-        <div>
-          <ReservationDate setSelectedDate={setSelectedDate} />
-        </div>
-        <hr />
-        <div>
-          <ReservationTime
-            selectedDate={selectedDate}
-            setSelectedTime={setSelectedTime}
-            reservations={selectedDateReservations}
-            setSelectedMember={setSelectedMember}
+          <ReservationDoctor
+            setIsSelectedDoctor={setIsSelectedDoctor}
+            setDoctorId={setDoctorId}
+            doctors={doctors}
           />
         </div>
-        <hr />
-        <div>
-          <DetailPatient />
-        </div>
+
+        <hr className="border-2 border-black my-2" />
+        {isSelectedDoctor ? (
+          <div>
+            <ReservationDate
+              setIsSelectedDate={setIsSelectedDate}
+              setSelectedDate={setSelectedDate}
+              setIsSelectedTime={setIsSelectedTime}
+            />
+          </div>
+        ) : (
+          <>
+            <p className="text-xl">
+              <CalendarMonthOutlinedIcon /> 의사 선생님을 선택하세요.
+            </p>
+          </>
+        )}
+        <hr className="border-2 border-black my-2" />
+        {isSelectedDate ? (
+          <div>
+            <ReservationTime
+              reservations={selectedDateReservations}
+              setSelectedMember={setSelectedMember}
+              setIsSelectedTime={setIsSelectedTime}
+            />
+          </div>
+        ) : (
+          <>
+            <p className="text-xl">
+              <AccessTimeIcon /> 날짜를 선택하세요.
+            </p>
+          </>
+        )}
+        <hr className="border-2 border-black my-2" />
+        {isSelectedTime ? (
+          <div>
+            {selectedMember && (
+              <DetailPatient
+                selectedMember={selectedMember}
+                doctorId={doctorId}
+              />
+            )}
+          </div>
+        ) : (
+          <>
+            <div>
+              <p>선택된 예약 정보가 없습니다.</p>
+            </div>
+          </>
+        )}
+        <hr className="border-2 border-black my-2" />
+        <CautionDelete />
       </div>
     </div>
   );

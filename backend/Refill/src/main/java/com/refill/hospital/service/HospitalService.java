@@ -27,6 +27,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -170,6 +171,7 @@ public class HospitalService {
         return hospital;
     }
 
+    @CacheEvict(value = "UserCacheStore", key = "#loginId")
     @Transactional
     public void modifyHospitalInfo(Long hospitalId, String loginId,
         HospitalInfoUpdateRequest hospitalInfoUpdateRequest, MultipartFile profileImg,
