@@ -33,7 +33,6 @@ interface ChangepwyModal {
   handleMOpen: () => void;
   handleMClose: () => void;
   onChangemember: (data: any) => void;
-  children: never[];
 }
 
 const ChangePassword: React.FC<ChangepwyModal> = ({
