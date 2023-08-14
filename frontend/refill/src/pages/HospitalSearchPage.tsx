@@ -18,7 +18,7 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 
 const max_width = "1350";
-const max_height = "800";
+const max_height = "950";
 
 declare global {
   interface Window {
@@ -70,7 +70,7 @@ const Container = styled.div`
   margin-top: 50px;
   background-color: ${REFILL_COLORS["white"]};
   min-width: 100%;
-  min-height: 120vh;
+  min-height: 1200px;
   /* height: 1000px; */
   align-items: center;
   display: flex;
@@ -86,7 +86,7 @@ const MapBox = styled.div`
 `;
 
 const MapBoxV2 = styled(MapBox)`
-  height: 1150px;
+  height: 950px;
 `;
 
 const SearchTop = styled.div`
@@ -151,7 +151,7 @@ export const HospitalSearch: React.FC = () => {
 
   // 페이지네이션
   const [page, setPage] = useState(1);
-  const resultPerPage = 4;
+  const resultPerPage = 3;
 
   const handlePage = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
@@ -237,21 +237,21 @@ export const HospitalSearch: React.FC = () => {
           // 내 정보 가져오기
         }
   
-        const loadMap = async () => {
-          window.kakao.maps.load(() => {
+        const loadMap = () => {
+          window.kakao.maps.load( () => {
             const options = {
               center: new window.kakao.maps.LatLng(latLon[0], latLon[1]),
               level: 4,
               wheel: false
             };
             map.current = new window.kakao.maps.Map(kakaoMapBox.current, options);
+            map.current.setZoomable(false);
             makeHomeMarker();
           });
         };
         loadMap();
       }
     };
-  
     getLocation();
   }, [selected, scriptLoaded, rendered]); // 의존성 배열에 scriptLoaded 추가
 
@@ -265,6 +265,7 @@ export const HospitalSearch: React.FC = () => {
             wheel: false
           };
           map.current = new window.kakao.maps.Map(kakaoMapBox.current, options);
+          map.current.setZoomable(false);
           makeHomeMarker();
         });
       };
@@ -347,6 +348,7 @@ export const HospitalSearch: React.FC = () => {
         level: map.current.getLevel(),
       };
       map.current = new window.kakao.maps.Map(kakaoMapBox.current, options);
+      map.current.setZoomable(false);
 
       // 굳이 해야하나 ?
       makeHomeMarker();
@@ -445,7 +447,7 @@ export const HospitalSearch: React.FC = () => {
           maxWidth={max_width}
         ></RadioDiv>
         <MapBox selected={selected === "option1"}>
-          <div ref={kakaoMapBox} style={{ width: "100%", height: "100%" }}>
+          <div ref={kakaoMapBox} style={{ width: "100%", height: "80%" }}>
             <Button
               content="+"
               variant="normal"
@@ -676,6 +678,9 @@ export const HospitalSearch: React.FC = () => {
                 })}
             </>
           </SearchBot>
+        </MapBoxV2>
+        {
+          selected === "option2" ?
           <div className="flex justify-center" style={{ marginBottom: "10px" }}>
             <Stack spacing={2}>
               <Pagination
@@ -685,7 +690,9 @@ export const HospitalSearch: React.FC = () => {
               />
             </Stack>
           </div>
-        </MapBoxV2>
+          :
+          null
+        }
         <Footer />
       </Container>
     </div>
