@@ -76,11 +76,11 @@ public class ConsultingService {
 
 
     /* 상담 세션 생성 */
-    @Scheduled(cron = "0 0 8-18 * * ?")
+    @Scheduled(cron = "0 48 8-23 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
 
-//        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime now = LocalDateTime.now().plusMinutes(BEFORE_CONSULTING_TIME);
+        LocalDateTime now = LocalDateTime.now();
+//        LocalDateTime now = LocalDateTime.now().plusMinutes(BEFORE_CONSULTING_TIME);
         // 조건문 추가
 
         List<Reservation> reservationList = reservationRepository.findReservationReady(now.minusMinutes(10),now.plusMinutes(10));
@@ -165,18 +165,14 @@ public class ConsultingService {
     @Transactional
     public void leaveSession(ConsultingCloseRequest consultingCloseRequest, LoginInfo loginInfo) {
 
-        if(loginInfo.role().equals(ROLE_MEMBER)) {
-            throw new ConsultingException(ErrorCode.UNAUTHORIZED_REQUEST);
-        }
-
         Consulting consulting = consultingRepository.findConsultingBySessionId(consultingCloseRequest.sessionId());
-
         if (consulting == null) {
             throw new ConsultingException(ErrorCode.SESSION_FAIL);
         }
 
+        /* 세션 아이디, 토큰 비우기 */
         consulting.closeSession();
-
+        /*  상담 소견 저장" */
         consulting.updateConsultingInfo(consultingCloseRequest.consultingDetailInfo());
     }
 
@@ -187,7 +183,9 @@ public class ConsultingService {
 
         List<ConsultingListResponse> consultingListResponseList = new ArrayList<>();
 
+        log.info("========== {} consultingListSize =========", consultingListResponseList.size());
         for (Consulting consulting : consultingList) {
+            log.info("===== {} consulting ====", consulting.getId());
             consultingListResponseList.add(new ConsultingListResponse(consulting));
         }
 
