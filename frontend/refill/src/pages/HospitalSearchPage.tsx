@@ -41,7 +41,7 @@ interface ToggleBoxProps {
 }
 
 interface TypeSearchedData {
-  id?: number;
+  hospitalId?: number;
   name?: string;
   longitude?: number;
   latitude?: number;
@@ -141,6 +141,7 @@ export const HospitalSearch: React.FC = () => {
   const [distanceHospitals, setDistanceHospitalss] = useState<
     TypeResponseMap[]
   >([]);
+  const [btnCheck, setBtnCheck] = useState(true)
 
   const token = useSelector((state: RootState) => state.login.token);
   const islogin = useSelector((state: RootState) => state.login.islogin);
@@ -440,6 +441,11 @@ export const HospitalSearch: React.FC = () => {
       );
   };
 
+  useEffect(()=>{
+    console.log(hospitals)
+    console.log(distanceFirst)
+  },[distanceFirst, starsFirst])
+
   return (
     <div>
       <Navbar />
@@ -561,12 +567,18 @@ export const HospitalSearch: React.FC = () => {
                   variant="normal"
                   width="110px"
                   onClick={handleToggledist}
+                  customStyles={{
+                    color : toggleData ? 'yellow' : 'white'
+                  }}
                 />
                 <Button
                   content="평점순"
                   variant="normal"
                   width="110px"
                   onClick={handleTogglestars}
+                  customStyles={{
+                    color : toggleData ? 'white' : 'yellow'
+                  }}
                 />
               </div>
               <div
@@ -586,6 +598,7 @@ export const HospitalSearch: React.FC = () => {
                           addr={hospital.hospitalResponse?.address}
                           tel={hospital.hospitalResponse?.tel}
                           score={hospital.hospitalResponse?.score}
+                          hospitalId={hospital.hospitalResponse?.hospitalId}
                         ></SearchCard>
                       </div>
                     ))
@@ -603,6 +616,7 @@ export const HospitalSearch: React.FC = () => {
                           addr={hospital.hospitalResponse?.address}
                           tel={hospital.hospitalResponse?.tel}
                           score={hospital.hospitalResponse?.score}
+                          hospitalId={hospital.hospitalResponse?.hospitalId}
                         ></SearchCard>
                       </div>
                     ))

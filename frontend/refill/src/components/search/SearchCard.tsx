@@ -6,6 +6,7 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import SearchRating from "./SearchRating";
+import { useNavigate } from "react-router-dom";
 
 interface TypeSearchCardProps {
   name?: string;
@@ -13,6 +14,7 @@ interface TypeSearchCardProps {
   addr?: string;
   tel?: string;
   score?: number;
+  hospitalId?: number;
 }
 
 export default function SearchCard({
@@ -21,7 +23,16 @@ export default function SearchCard({
   addr,
   tel,
   score,
+  hospitalId
 }: TypeSearchCardProps) {
+
+  const navigate = useNavigate()
+
+  const handleToDetailHospital = () => {
+    const url = `/detailhospital/${hospitalId}`
+    navigate(url)
+  }
+
   return (
     <Card sx={{ minWidth: 275 }}>
       <CardContent sx={{ padding: "24px" }}>
@@ -49,7 +60,7 @@ export default function SearchCard({
           }}
         >
           {tel}
-          <Button size="small">병원 상세페이지</Button>
+          <Button size="small" onClick={handleToDetailHospital}>병원 상세페이지</Button>
         </div>
       </CardContent>
     </Card>
