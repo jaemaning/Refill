@@ -75,7 +75,7 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
             "Content-Type": "application/json",
             Authorization: `Bearer ${loginToken}`,
           },
-        }
+        },
       );
       setTokenData((prevTokenData) => [...prevTokenData, response.data]);
       //
@@ -108,7 +108,7 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
     .sort(
       (a, b) =>
         new Date(a.startDateTime).getTime() -
-        new Date(b.startDateTime).getTime()
+        new Date(b.startDateTime).getTime(),
     );
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -120,8 +120,8 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
       setCurrentIndex((prevIndex) =>
         Math.min(
           prevIndex + slidesToShow,
-          reservationList.length - slidesToShow
-        )
+          reservationList.length - slidesToShow,
+        ),
       );
     }
   };
@@ -164,7 +164,11 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
             }}
           >
             {sortedList?.map((reservation, index) => (
-              <ReservationCompo reservation={reservation} key={index} deleteReservation={deleteReservation}/>
+              <ReservationCompo
+                reservation={reservation}
+                key={index}
+                deleteReservation={deleteReservation}
+              />
             ))}
           </div>
         </div>

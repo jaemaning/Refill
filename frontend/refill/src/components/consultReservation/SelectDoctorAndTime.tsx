@@ -75,7 +75,7 @@ const SelectDoctorAndTime: React.FC<ComponentProps> = ({
     } else {
       console.log("해당 이름의 의사를 찾을 수 없습니다.");
     }
-    setIsSelectedDoctor(true)
+    setIsSelectedDoctor(true);
   };
 
   const disabledTime = (doctorId: number) => {

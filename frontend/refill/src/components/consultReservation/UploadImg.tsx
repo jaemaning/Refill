@@ -26,7 +26,7 @@ const UploadImg: React.FC<UploadImgProps> = ({
   doctorId,
 }) => {
   // hospitalId undefined인 경우 axios로 호출
-  const { newHospitalId } = useParams()
+  const { newHospitalId } = useParams();
 
   // if (hospitalName === "")
 
@@ -48,7 +48,7 @@ const UploadImg: React.FC<UploadImgProps> = ({
     formData.append("reservationRequest", jsonBlob);
     if (imgFile) {
       formData.append("hairImg", imgFile);
-      console.log(imgFile)
+      console.log(imgFile);
       // console.log(hospitalName)
       // console.log(token)
       // console.log(newHospitalId)

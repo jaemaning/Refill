@@ -23,13 +23,13 @@ const ReservationTime: React.FC<ReservationTimeProps> = ({
 }) => {
   const clickDate = (res: Reservation) => {
     setSelectedMember(res);
-    setIsSelectedTime(true)
-    console.log(res)
+    setIsSelectedTime(true);
+    console.log(res);
   };
   const sortedReservations = reservations.sort((a, b) => {
     const dateA = new Date(a.startDate);
     const dateB = new Date(b.startDate);
-  
+
     return dateA.getTime() - dateB.getTime(); // 오름차순 정렬
   });
   return (
@@ -37,16 +37,19 @@ const ReservationTime: React.FC<ReservationTimeProps> = ({
       <div className="text-xl mb-2">
         <AccessTimeIcon /> 예약된 상담 시간
       </div>
-      
+
       <div className="grid grid-cols-3 gap-2">
-      {sortedReservations.map((res) => (
-        <button className="reservation-time-select text-lg font-black rounded-md text-white" onClick={() => clickDate(res)} key={res.startDate}>
-          <p>{res.startDate.slice(11, 16)}</p>
-        </button>
-      ))}
+        {sortedReservations.map((res) => (
+          <button
+            className="reservation-time-select text-lg font-black rounded-md text-white"
+            onClick={() => clickDate(res)}
+            key={res.startDate}
+          >
+            <p>{res.startDate.slice(11, 16)}</p>
+          </button>
+        ))}
+      </div>
     </div>
-    </div>
-    
   );
 };
 export default ReservationTime;

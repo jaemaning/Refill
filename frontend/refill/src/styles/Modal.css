@@ -47,7 +47,12 @@
 .delete-modal-box {
   height: 200px;
   width: 400px;
-  background-color: rgba(242, 152, 31, 0.8); /* 0.7은 투명도를 나타내는 값입니다. */
+  background-color: rgba(
+    242,
+    152,
+    31,
+    0.8
+  ); /* 0.7은 투명도를 나타내는 값입니다. */
   color: white;
   border-radius: 5px;
   border: white 2px solid;
