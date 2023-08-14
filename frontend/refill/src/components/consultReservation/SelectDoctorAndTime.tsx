@@ -11,6 +11,8 @@ import MedicalInformationOutlinedIcon from "@mui/icons-material/MedicalInformati
 import UploadImg from "./UploadImg";
 import { RootState } from "store/reducers";
 import { useSelector } from "react-redux";
+import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 type Doctor = {
   doctorId: number;
@@ -44,6 +46,8 @@ const SelectDoctorAndTime: React.FC<ComponentProps> = ({
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [disabledTimes, setDisabledTimes] = useState<string[]>([]);
+  const [isClicked, setIsClicked] = useState(false);
+  const [isSelectedDoctor, setIsSelectedDoctor] = useState(false);
 
   const handleDateChange = (date: string) => {
     const extractedDate = date.split("T")[0];
@@ -71,6 +75,7 @@ const SelectDoctorAndTime: React.FC<ComponentProps> = ({
     } else {
       console.log("해당 이름의 의사를 찾을 수 없습니다.");
     }
+    setIsSelectedDoctor(true)
   };
 
   const disabledTime = (doctorId: number) => {
@@ -109,7 +114,7 @@ const SelectDoctorAndTime: React.FC<ComponentProps> = ({
     };
 
     fetchDetailsAndUpdateState();
-  }, [nowWeekday]);
+  }, [nowWeekday, isClicked]);
 
   useEffect(() => {
     handleDateChange(selectedDate);
@@ -186,17 +191,35 @@ const SelectDoctorAndTime: React.FC<ComponentProps> = ({
             </FormControl>
           </Box>
           <hr className="border-2 border-black my-2" />
-          <SelectDate
-            setSelectedDate={setSelectedDate}
-            setNowWeekday={setNowWeekday}
-          />
+          {isSelectedDoctor ? (
+            <SelectDate
+              setSelectedDate={setSelectedDate}
+              setNowWeekday={setNowWeekday}
+              setIsClicked={setIsClicked}
+            />
+          ) : (
+            <>
+              <p className="text-xl">
+                <CalendarMonthOutlinedIcon /> 의사 선생님을 선택하세요.
+              </p>
+            </>
+          )}
           <hr className="border-2 border-black my-2" />
-          <SelectTime
-            disabledTimes={disabledTimes}
-            setSelectedTime={setSelectedTime}
-            startTime={startTime}
-            endTime={endTime}
-          />
+          {isClicked ? (
+            <SelectTime
+              disabledTimes={disabledTimes}
+              setSelectedTime={setSelectedTime}
+              startTime={startTime}
+              endTime={endTime}
+            />
+          ) : (
+            <div>
+              <p className="text-xl">
+                <AccessTimeIcon /> 날짜를 선택하세요.
+              </p>
+              <hr className="border-2 border-black my-2" />
+            </div>
+          )}
           <div className="text-center">
             <h2 className="text-lg font-black mt-2">
               선택한 날짜 및 시간: {selectedDate} {selectedTime}

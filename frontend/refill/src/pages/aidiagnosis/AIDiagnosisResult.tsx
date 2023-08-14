@@ -30,9 +30,9 @@ const AIDiagnosisResult: React.FC = () => {
 
   const is_valid = (conf: number) => {
     if (conf < 80) {
-      return "부적합입니다. 올바른 사진에 가까운 사진을 업로드하여 다시 진단 받으시길 바랍니다."
+      return "신뢰도가 낮습니다. 올바른 사진에 가까운 사진을 업로드하여 다시 진단 받으시길 바랍니다."
     }
-    return "적합"
+    return "신뢰도가 높습니다. 올바른 사진을 업로드 하였으며 AI 정확도도 높을 경우 보다 정확한 데이터라고 할 수 있습니다."
   }
 
 
@@ -112,7 +112,7 @@ const AIDiagnosisResult: React.FC = () => {
               content2={
                 <ContentChild
                   service={false}
-                  content="AI 탈모 진행도"
+                  content="신뢰도"
                   subContent={is_valid(modelConfidence)}
                 />
               }

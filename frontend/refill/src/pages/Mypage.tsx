@@ -9,10 +9,20 @@ import default_profile from "../assets/default_profile.png";
 import { RootState } from "store/reducers";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+// 하위 컴포넌트
+import MyReservationReport from "components/myPage/MyReservationReport";
 
 interface DivProps {
   selected?: boolean;
 }
+
+// 예약 타입 설정
+type Reservation = {
+  doctorName: string;
+  hospitalName: string;
+  reservationId: number;
+  startDateTime: string;
+};
 
 const Container = styled.div`
   border 0;
@@ -88,9 +98,14 @@ const Mypage: React.FC = () => {
     tel: "",
   });
 
+  // 예약 정보 받기
+  const [reservationList, setReservationList] = useState<Reservation[] | null>(
+    null
+  );
+
   const token: string = useSelector((state: RootState) => state.login.token);
   const islogin: boolean = useSelector(
-    (state: RootState) => state.login.islogin,
+    (state: RootState) => state.login.islogin
   );
 
   const navigate = useNavigate();
@@ -108,7 +123,7 @@ const Mypage: React.FC = () => {
         .then((response) => {
           console.log(response.data);
           setuserData(response.data);
-
+          setReservationList(response.data.reservationList);
           if (userData.profileImg !== null) {
             setCheckimg(true);
           }
@@ -239,7 +254,9 @@ const Mypage: React.FC = () => {
             <Common
               style={{ width: "700px", height: "480px" }}
               className="mt-3 mb-6"
-            ></Common>
+            >
+              <MyReservationReport reservationList={reservationList}/>
+            </Common>
             <span className="text-xl font-bold mt-10 mb-3">나의 상담 기록</span>
             <Common
               style={{ width: "700px", height: "150px" }}

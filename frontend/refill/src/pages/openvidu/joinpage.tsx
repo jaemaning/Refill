@@ -59,9 +59,12 @@ const JoinPage = () => {
         token: token,
         shareToken: shareToken,
         consultingId: consultingId,
+
       },
     });
   };
+  // 상담기록
+  // 진단내역
 
   // axios 를 5개를 동시에 보내서 받는 순서로 감. 비동기 처리 필요 => 일단 패스
   const getToken = async (testReservationId: number): Promise<void> => {
@@ -76,6 +79,7 @@ const JoinPage = () => {
         },
       );
       setTokenData((prevTokenData) => [...prevTokenData, response.data]);
+      // 
       console.log(response.data);
     } catch (err) {
       console.log("에러:", err);
