@@ -65,11 +65,11 @@ public class ConsultingService {
 
 
     /* 상담 세션 생성 */
-    @Scheduled(cron = "0 0 8-18 * * ?")
+    @Scheduled(cron = "0 8,12 8-18 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
 
-//        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime now = LocalDateTime.now().plusMinutes(BEFORE_CONSULTING_TIME);
+        LocalDateTime now = LocalDateTime.now();
+        //LocalDateTime now = LocalDateTime.now().plusMinutes(BEFORE_CONSULTING_TIME);
         // 조건문 추가
 
         List<Reservation> reservationList = reservationRepository.findReservationReady(now.minusMinutes(10),now.plusMinutes(10));
