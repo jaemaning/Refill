@@ -43,7 +43,7 @@ public class MemberController {
         Member member = memberService.findByLoginId(loginInfo.loginId());
         List<AiDiagnosisListResponse> aiDiagnosisList = aiDiagnosisService.findAllByMember(loginInfo.loginId());
         List<ReservationListResponse> reservationList = reservationService.findAllByMember(loginInfo.loginId());
-        List<ConsultingListResponse> consultingList = consultingService.getConsultingList(member.getId());
+        List<ConsultingListResponse> consultingList = consultingService.getConsultingList(loginInfo.loginId());
 
         return ResponseEntity.ok().body(new MemberInfoResponse(member, aiDiagnosisList, reservationList, consultingList));
     }
