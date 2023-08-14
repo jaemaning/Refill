@@ -1,5 +1,6 @@
 package com.refill.hospital.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.refill.account.dto.request.HospitalJoinRequest;
 import com.refill.doctor.entity.Doctor;
 import com.refill.global.entity.Role;
@@ -48,14 +49,19 @@ public class Hospital extends UserInfo {
     @Column(nullable = false)
     String registrationImg;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "hospital")
     @OneToMany(mappedBy = "hospital", orphanRemoval = true)
     @Builder.Default
     List<Doctor> doctors = new ArrayList<>();
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "hospital")
     @OneToMany(mappedBy = "hospital", orphanRemoval = true)
     @Builder.Default
     List<Review> reviews = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "hospital", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<HospitalOperatingHour> operatingHours = new ArrayList<>();
@@ -74,6 +80,7 @@ public class Hospital extends UserInfo {
                        .build();
     }
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(new SimpleGrantedAuthority(getRole().name()));
@@ -93,31 +100,37 @@ public class Hospital extends UserInfo {
         this.registrationImg = address;
     }
 
+    @JsonIgnore
     @Override
     public String getPassword() {
         return getLoginPassword();
     }
 
+    @JsonIgnore
     @Override
     public String getUsername() {
         return getLoginId();
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return false;
     }
 
+    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return false;
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return false;
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return false;
