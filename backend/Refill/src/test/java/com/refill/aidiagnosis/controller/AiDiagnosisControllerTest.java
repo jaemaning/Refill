@@ -79,7 +79,7 @@ class AiDiagnosisControllerTest extends ControllerTest {
     @Test
     void ai_diagnosis_detail_checked_by_member() throws Exception {
 
-        AiDiagnosisResponse aiDiagnosisResponse = new AiDiagnosisResponse(100, "99.99","hairImageS3Address", LocalDate.now() );
+        AiDiagnosisResponse aiDiagnosisResponse = new AiDiagnosisResponse(100, "99.99", "23", "hairImageS3Address", LocalDate.now() );
 
         when(aiDiagnosisService.findById(any(), any())).thenReturn(aiDiagnosisResponse);
 
@@ -119,7 +119,7 @@ class AiDiagnosisControllerTest extends ControllerTest {
             new MockMultipartFile("hairImg", "reg.png", "image/png", "<<png data>>".getBytes(
                 StandardCharsets.UTF_8));
 
-        AiDiagnosisResponse aiDiagnosisResponse = new AiDiagnosisResponse(100, "99.99","hairImageS3Address", LocalDate.now());
+        AiDiagnosisResponse aiDiagnosisResponse = new AiDiagnosisResponse(100, "99.99","23", "hairImageS3Address", LocalDate.now());
 
         when(aiDiagnosisService.doAiDiagnosis(any(), any(), any())).thenReturn(aiDiagnosisResponse);
 

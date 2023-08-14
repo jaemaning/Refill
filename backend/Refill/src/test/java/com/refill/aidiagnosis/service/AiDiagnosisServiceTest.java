@@ -81,7 +81,7 @@ class AiDiagnosisServiceTest extends ServiceTest {
     void doAiDiagnosisByMember() throws Exception {
 
         Member member = memberService.findByLoginId("member01");
-        AiServerResponse aiServerResponse = new AiServerResponse("type_2", "99.99");
+        AiServerResponse aiServerResponse = new AiServerResponse("type_2", "99.99", "23");
 
         //TODO : how private method mocking???
     }
