@@ -16,6 +16,14 @@ import { useSelector } from "react-redux";
 import { RootState } from "store/reducers";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import Avatar from "@mui/material/Avatar";
+import Link from "@mui/material/Link";
+import AttachEmailIcon from '@mui/icons-material/AttachEmail';
+import HomeIcon from '@mui/icons-material/Home';
+import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+
 
 const max_width = "1350";
 const max_height = "950";
@@ -187,7 +195,7 @@ export const HospitalSearch: React.FC = () => {
       axios
         .get(url, { params: formData, headers: headers })
         .then((response) => {
-          console.log(response.data);
+          console.log(response);
           setSearchedData(response.data);
           console.log(searchedData);
         })
@@ -441,11 +449,6 @@ export const HospitalSearch: React.FC = () => {
       );
   };
 
-  useEffect(()=>{
-    console.log(hospitals)
-    console.log(distanceFirst)
-  },[distanceFirst, starsFirst])
-
   return (
     <div>
       <Navbar />
@@ -690,16 +693,21 @@ export const HospitalSearch: React.FC = () => {
                 .slice((page - 1) * resultPerPage, page * resultPerPage)
                 .map((data, i) => {
                   return (
-                    <div key={i} style={{ marginTop: "20px" }}>
-                      <div style={{ margin: "20px", paddingLeft: "100px" }}>
-                        <h1>{data.name}</h1>
-                        {/* <p>{data.longitude}</p>
-                        <p>{data.latitude}</p> */}
-                        <p>{data.email}</p>
-                        <p>{data.hospitalProfileImg}</p>
-                        <a>{data.address}</a>
-                        <p>{data.tel}</p>
-                        <p>{data.score}</p>
+                    <div key={i} style={{ margin: "20px 250px" }}>
+                      <div style={{display : 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                        <div style={{display : 'flex', alignItems: 'center'}}>
+                          <Avatar src={data.hospitalProfileImg} />
+                          <Typography variant="h4" sx={{margin: '15px'}}>{data.name}</Typography>
+                        </div>
+                        <Link href={`/detailhospital/${data.hospitalId}`} underline="hover">
+                          병원 상세페이지
+                        </Link>
+                      </div>
+                      <div style={{ margin: "20px", paddingLeft: "0px" }}>
+                        <p><AttachEmailIcon sx={{color : 'grey', marginRight:'20px'}} />  {data.email}</p>
+                        <p><HomeIcon sx={{color : 'grey', marginRight:'20px'}} /> {data.address}</p>
+                        <p><PhoneInTalkIcon sx={{color : 'grey', marginRight:'20px'}} /> {data.tel}</p>
+                        <p><StarBorderIcon sx={{color : 'grey', marginRight:'20px'}} /> {data.score}</p>
                         <br />
                         <hr />
                       </div>
