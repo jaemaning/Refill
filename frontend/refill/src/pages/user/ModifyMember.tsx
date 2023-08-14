@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState, useEffect } from "react";
+import React, { ChangeEvent, useState } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { Container, Grid } from "@mui/material";
@@ -67,7 +67,6 @@ interface ModifyModal {
   nickname: string;
   email: string;
   onModify: (formData: any) => void;
-  children: never[];
 }
 
 interface InputImageState {
@@ -86,6 +85,11 @@ const ModifyMember: React.FC<ModifyModal> = ({
   email,
   onModify,
 }) => {
+
+  console.log(open)
+  console.log(name)
+  console.log(address)
+
   const [inputData, setInputData] = useState({
     name: name,
     address: address,
@@ -217,7 +221,8 @@ const ModifyMember: React.FC<ModifyModal> = ({
                     changeInput(e);
                   }}
                   name="birthday"
-                  value={inputData.birthday}
+                  // value={inputData.birthday}
+                  defaultValue={birthday}
                 ></input>
               </Grid>
               <Grid item xs={4}>
