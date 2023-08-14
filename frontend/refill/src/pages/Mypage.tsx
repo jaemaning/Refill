@@ -291,6 +291,11 @@ const Mypage: React.FC = () => {
                         tel={userData.tel}
                         nickname={userData.nickname}
                         email={userData.email}
+                        profile={
+                          checkimg
+                            ? `${userData.profileImg}`
+                            : `${default_profile}`
+                        }
                         onModify={(formData) => ModifyDoc(formData)}
                       ></ModifyMember>
                     </Grid>

@@ -337,12 +337,16 @@ const DetailHospital: React.FC = () => {
   ) => {
     console.log(formData);
     axios
-      .put(`api/v1/hospital/${hospitalid}/doctor/${doctorid}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
+      .put(
+        `http://localhost:3000/api/v1/hospital/${hospitalid}/doctor/${doctorid}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
         },
-      })
+      )
 
       .then((response) => {
         console.log(response);
@@ -465,7 +469,7 @@ const DetailHospital: React.FC = () => {
       </BannerContainer>
       <Containers>
         <Layout>
-          <Content style={{ width: "850px" }}>
+          <Content style={{ width: "1300px" }}>
             <span className="text-2xl font-bold">{hospitalData.name}</span>
             <Kakaomap></Kakaomap>
             <ButtonList>
