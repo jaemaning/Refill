@@ -40,9 +40,6 @@ public class Hospital extends UserInfo {
     BigDecimal longitude;
 
     @Column(nullable = false)
-    String postalCode;
-
-    @Column(nullable = false)
     String hospitalProfileImg;
 
     @Column
@@ -69,7 +66,6 @@ public class Hospital extends UserInfo {
                        .loginPassword(hospitalJoinRequest.loginPassword())
                        .name(hospitalJoinRequest.name())
                        .address(hospitalJoinRequest.address())
-                       .postalCode(hospitalJoinRequest.postalCode())
                        .latitude(hospitalJoinRequest.latitude())
                        .longitude(hospitalJoinRequest.longitude())
                        .tel(hospitalJoinRequest.tel())
@@ -131,8 +127,6 @@ public class Hospital extends UserInfo {
         super.updateHospital(hospitalInfoUpdateRequest);
         this.latitude = hospitalInfoUpdateRequest.latitude();
         this.longitude = hospitalInfoUpdateRequest.longitude();
-        this.postalCode = hospitalInfoUpdateRequest.postalCode();
-
     }
 
     public void addReview(Review review){
