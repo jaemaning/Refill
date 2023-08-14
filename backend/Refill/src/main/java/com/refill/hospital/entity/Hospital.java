@@ -51,11 +51,11 @@ public class Hospital extends UserInfo {
     @Column(nullable = false)
     String registrationImg;
 
-    @OneToMany(mappedBy = "hospital")
+    @OneToMany(mappedBy = "hospital", orphanRemoval = true)
     @Builder.Default
     List<Doctor> doctors = new ArrayList<>();
 
-    @OneToMany(mappedBy = "hospital")
+    @OneToMany(mappedBy = "hospital", orphanRemoval = true)
     @Builder.Default
     List<Review> reviews = new ArrayList<>();
 
