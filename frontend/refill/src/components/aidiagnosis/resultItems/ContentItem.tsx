@@ -18,9 +18,9 @@ const ContentItem: React.FC<ContentItemProps> = ({
   return (
     <div className={`${colStart} ${colEnd} font-black text-white`}>
       <div className="mb-2">
-        <p className="p-2 text-3xl">{title}</p>
+        <p className="p-2 text-xl pb-0">{title}</p>
       </div>
-      <div className="w-full md:h-96 lg:xl sm:h-80 p-5 bg-black rounded-lg grid grid-rows-2 gap-5 pt-10">
+      <div className="w-full h-72 p-5 bg-black rounded-lg grid grid-rows-2 gap-5">
         {content1}
         {content2}
       </div>
