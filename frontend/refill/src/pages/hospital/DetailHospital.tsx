@@ -553,8 +553,7 @@ const DetailHospital: React.FC = () => {
                       >
                         <div className="flex justify-between">
                           <Bigspan>약력</Bigspan>
-                          {
-                            ishospital ?
+                          {ishospital ? (
                             <div className="flex">
                               <ModifyDoctor
                                 open={modifyOpen}
@@ -579,12 +578,14 @@ const DetailHospital: React.FC = () => {
                                 handleMClose={handleDMClose}
                                 hospitalname={hospitalData.name}
                                 doctorname={doctor.name}
-                                onDeleteDoctor={() => DeleteDoc(doctor.doctorId)}
+                                onDeleteDoctor={() =>
+                                  DeleteDoc(doctor.doctorId)
+                                }
                               ></DeleteDoctor>
                             </div>
-                            :
+                          ) : (
                             <div></div>
-                          }
+                          )}
                         </div>
                         <p className="text-lg">{doctor.description}</p>
                         <Bigspan>주요 분야</Bigspan>
@@ -730,18 +731,15 @@ const DetailHospital: React.FC = () => {
                                   size={"medium"}
                                 />
                               </Grid>
-                              { ishospital 
-                                ? 
+                              {ishospital ? (
                                 <Grid item xs={2}>
                                   <NotificationImportantIcon
                                     sx={{ color: red[500] }}
                                   />
                                 </Grid>
-                                :
-                                <Grid item xs={2}>
-
-                                </Grid>
-                              }
+                              ) : (
+                                <Grid item xs={2}></Grid>
+                              )}
                               <Grid item xs={2}>
                                 <h1>{review.doctorName}</h1>
                               </Grid>

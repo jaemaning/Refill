@@ -23,9 +23,8 @@ import AttachEmailIcon from "@mui/icons-material/AttachEmail";
 import HomeIcon from "@mui/icons-material/Home";
 import PhoneInTalkIcon from "@mui/icons-material/PhoneInTalk";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
-import 'styles/HospitalSearchStyle.css'
-import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
-
+import "styles/HospitalSearchStyle.css";
+import LocalHospitalIcon from "@mui/icons-material/LocalHospital";
 
 const max_width = "1350";
 const max_height = "950";
@@ -401,30 +400,30 @@ export const HospitalSearch: React.FC = () => {
           map: map.current, // 마커를 표시할 지도
           position: latlon, // 마커를 표시할 위치
           title: hospitals[i].hospitalResponse?.name, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-          clickable: true
+          clickable: true,
         });
-        console.log("마커입니다.",marker)
+        console.log("마커입니다.", marker);
         marker.setMap(map.current);
 
         // 마커를 클릭했을 때 마커 위에 표시할 인포윈도우를 생성합니다
         const iwContent = `<div class="close-button flex text-center">
         ${hospitals[i].hospitalResponse?.name}
-        </div>` // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+        </div>`; // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
 
         // 인포윈도우를 생성합니다
         const infowindow = new window.kakao.maps.InfoWindow({
-          content : iwContent,
+          content: iwContent,
         });
 
-        window.kakao.maps.event.addListener(marker, 'mouseover', function() {
+        window.kakao.maps.event.addListener(marker, "mouseover", function () {
           // 마커 위에 인포윈도우를 표시합니다
-          infowindow.open(map.current, marker); 
+          infowindow.open(map.current, marker);
         });
 
-        window.kakao.maps.event.addListener(marker, 'mouseout', function() {
+        window.kakao.maps.event.addListener(marker, "mouseout", function () {
           // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거합니다
           infowindow.close();
-      });
+        });
 
         setStarsHospitals(starsFirst());
         setDistanceHospitalss(distanceFirst());
