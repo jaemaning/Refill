@@ -18,7 +18,6 @@ const AIDiagnosis: React.FC = () => {
     setResultArray((prev) => {
       const newArr = [...prev];
       newArr[index] = value === "option1" ? "1" : "0";
-      console.log(newArr);
       return newArr;
     });
   };

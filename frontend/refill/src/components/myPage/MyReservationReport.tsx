@@ -79,9 +79,9 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
       );
       setTokenData((prevTokenData) => [...prevTokenData, response.data]);
       //
-      console.log(response.data);
+      console.log("ok");
     } catch (err) {
-      console.log("에러:", err);
+      console.log(err);
     }
   };
 
@@ -94,7 +94,7 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
         },
       })
       .then((res) => {
-        console.log(res);
+        console.log("ok");
         // 요청이 성공적으로 완료된 경우, 필요한 추가 동작을 여기에 작성합니다.
       })
       .catch((err) => {
@@ -165,12 +165,15 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
           >
             {sortedList?.map((reservation, index) => (
               <div
-              className="p-2"
-              key={index}
-              style={{ minWidth: "200px", padding: "5px" }}
-            >
-              <ReservationCompo reservation={reservation} deleteReservation={deleteReservation}/>
-            </div>
+                className="p-2"
+                key={index}
+                style={{ minWidth: "200px", padding: "5px" }}
+              >
+                <ReservationCompo
+                  reservation={reservation}
+                  deleteReservation={deleteReservation}
+                />
+              </div>
             ))}
           </div>
         </div>

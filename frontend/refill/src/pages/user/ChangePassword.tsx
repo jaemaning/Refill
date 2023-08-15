@@ -119,7 +119,7 @@ const ChangePassword: React.FC<ChangepwyModal> = ({
                 ></input>
               </Grid>
             </Grid>
-            <div style={{display: 'flex', justifyContent: 'end'}}>
+            <div style={{ display: "flex", justifyContent: "end" }}>
               <Clickbutton
                 style={{ backgroundColor: "#F8A300" }}
                 onClick={changesubmit}

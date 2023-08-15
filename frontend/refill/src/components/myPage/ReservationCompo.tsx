@@ -42,23 +42,23 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
   };
 
   return (
-      <div className="mypage-reservation-box p-4">
-        <p className="text-xl font-black py-2">{reservation.hospitalName}</p>
-        <p className="mb-1">{reservation.doctorName} 선생님</p>
-        <p>{changeDate(reservation.startDateTime)}</p>
-        <hr />
-        <div className="grid grid-cols-2 gap-1 mt-2">
-          <button
-            onClick={() => deleteReservation(reservation.reservationId)}
-            className="res-small-btn-left h-8 p-1 text-white"
-          >
-            상담취소
-          </button>
-          <button className="res-small-btn-right h-8 p-1 text-white">
-            상담입장
-          </button>
-        </div>
+    <div className="mypage-reservation-box p-4">
+      <p className="text-xl font-black py-2">{reservation.hospitalName}</p>
+      <p className="mb-1">{reservation.doctorName} 선생님</p>
+      <p>{changeDate(reservation.startDateTime)}</p>
+      <hr />
+      <div className="grid grid-cols-2 gap-1 mt-2">
+        <button
+          onClick={() => deleteReservation(reservation.reservationId)}
+          className="res-small-btn-left h-8 p-1 text-white"
+        >
+          상담취소
+        </button>
+        <button className="res-small-btn-right h-8 p-1 text-white">
+          상담입장
+        </button>
       </div>
+    </div>
   );
 };
 export default ReservationCompo;

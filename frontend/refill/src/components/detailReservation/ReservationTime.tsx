@@ -24,7 +24,7 @@ const ReservationTime: React.FC<ReservationTimeProps> = ({
   const clickDate = (res: Reservation) => {
     setSelectedMember(res);
     setIsSelectedTime(true);
-    console.log(res);
+    console.log("ok");
   };
   const sortedReservations = reservations.sort((a, b) => {
     const dateA = new Date(a.startDate);

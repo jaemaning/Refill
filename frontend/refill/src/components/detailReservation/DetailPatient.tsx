@@ -28,7 +28,7 @@ const DetailPatient: React.FC<DetailPatientProps> = ({
   const reservationId = selectedMember.reservationId;
 
   const joinPage = (reservationId: number) => {
-    console.log(reservationId);
+    console.log("ok");
   };
 
   const days = [

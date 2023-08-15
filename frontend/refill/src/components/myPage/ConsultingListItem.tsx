@@ -67,46 +67,54 @@ const ConsultingListItem: React.FC<ConsultingProps> = ({ consListItem }) => {
   // 상세 상담 가져오는 axios
   const getDetailCons = () => {
     axios
-    .get(`/api/v1/consulting/consultingDetail/${consListItem.consultingId}`,
-    {headers: {
-      Authorization: `Bearer ${token}`,
-    }
-  })
-  .then((res) => {
-    console.log(res);
-    setConsDetail(res.data);
-    console.log("데이터가 하나도 없냐?");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-  }
+      .get(`/api/v1/consulting/consultingDetail/${consListItem.consultingId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log("ok");
+        setConsDetail(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-  useEffect(() => {
-    getDetailCons()
-  }, [])
+  const handleModal = () => {
+    // getDetailCons()
+    setConsDetail(DummyData2);
+    if (consDetail) {
+      setOpenDetail(true);
+    } else {
+      console.log("error");
+    }
+  };
 
   return (
     <>
-      {DummyData2 ? (
-        <>
-          <DetailConsultingModal consDetail={DummyData2} />
-        </>
-      ) : (
-        <></>
-      )}
       {/* {openDetail ? (
         <>
-          <DetailConsultingModal consDetail={consDetail} />
+          <DetailConsultingModal consDetail={DummyData2} setOpenDetail={setOpenDetail} />
         </>
       ) : (
         <></>
       )} */}
+      {openDetail ? (
+        <>
+          <DetailConsultingModal
+            consDetail={consDetail}
+            setOpenDetail={setOpenDetail}
+          />
+        </>
+      ) : (
+        <></>
+      )}
       <div className="cons-list-item flex justify-between items-center">
         <div className="text-xl">{formattedDate}</div>
         <div className="text-xl font-black">{consListItem.hospitalName}</div>
         <div className="text-xl font-black">{consListItem.doctorName}</div>
-        <button>{`상담 기록 보러가기 >`}</button>
+        <button onClick={handleModal}>{`상담 기록 보러가기 >`}</button>
       </div>
     </>
   );

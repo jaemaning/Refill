@@ -23,15 +23,14 @@ export default function SearchCard({
   addr,
   tel,
   score,
-  hospitalId
+  hospitalId,
 }: TypeSearchCardProps) {
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleToDetailHospital = () => {
-    const url = `/detailhospital/${hospitalId}`
-    navigate(url)
-  }
+    const url = `/detailhospital/${hospitalId}`;
+    navigate(url);
+  };
 
   return (
     <Card sx={{ minWidth: 275 }}>
@@ -60,7 +59,9 @@ export default function SearchCard({
           }}
         >
           {tel}
-          <Button size="small" onClick={handleToDetailHospital}>병원 상세페이지</Button>
+          <Button size="small" onClick={handleToDetailHospital}>
+            병원 상세페이지
+          </Button>
         </div>
       </CardContent>
     </Card>

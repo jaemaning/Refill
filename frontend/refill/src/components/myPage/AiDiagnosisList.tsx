@@ -30,7 +30,7 @@ const AiDiagnosisList: React.FC = () => {
         },
       })
       .then((res) => {
-        console.log(res);
+        console.log("ok");
         setAiList(res.data);
         // 요청이 성공적으로 완료된 경우, 필요한 추가 동작을 여기에 작성합니다.
       })
