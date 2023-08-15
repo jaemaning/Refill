@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { RootState } from "store/reducers";
 import { useSelector } from "react-redux";
 import LoaderModal from "components/LoaderModal";
+import NotCheckModal from "./children/NotCheckModal";
 
 interface LinkProps {
   nextLink: string;
@@ -19,10 +20,9 @@ const NextPrevButtons: React.FC<LinkProps> = ({
   imgFile,
   arrayString,
 }) => {
-  // 탈모진행도, 정확도 useState
-  // const [hairLossScore, setHairLossScore] = useState(0)
-  // const [certainty, setCertainty] = useState(0)
-  // const [diagnosisImage, setDiagnosisImage] = useState("")
+  const [openModal, setOpenModal] = useState(false);
+  const [notCheckedNumbers, setNotCheckedNumbers] = useState<number[]>(Array);
+  const [isValid, setIsValid] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -72,13 +72,43 @@ const NextPrevButtons: React.FC<LinkProps> = ({
     if (isResult) {
       handleSubmit();
     } else {
-      navigate(nextLink, { state: { arrayString } }); // 이동할 경로 전달
+      // 여기서 전부 선택했는지 확인해야됨
+      // arrayString에 N이 있으면 아직 고르지 않은 문항이 있습니다. 문항 번호 모달로 보여주기
+
+      const notCheckedIndices: number[] = [];
+
+      // arrayString이 실제로 존재할 때만 실행
+      if (arrayString) {
+        for (let i = 0; i < arrayString.length; i++) {
+          if (arrayString.charAt(i) === "N") {
+            // 인덱스 번호 + 1을 해서 notCheckedIndices에 추가
+            notCheckedIndices.push(i + 1);
+          }
+        }
+      }
+
+      if (notCheckedIndices.length > 0) {
+        setIsValid(false);
+        setNotCheckedNumbers(notCheckedIndices);
+        setOpenModal(true);
+      } else {
+        setIsValid(true);
+        navigate(nextLink, { state: { arrayString } }); // 이동할 경로 전달
+      }
     }
   };
 
   return (
     <div className="flex justify-center mt-2.5">
       {loading ? <LoaderModal /> : <></>}
+      {openModal ? (
+        <NotCheckModal
+          notCheckedNumbers={notCheckedNumbers}
+          setOpenModal={setOpenModal}
+        />
+      ) : (
+        <></>
+      )}
       <div className="next-prev-buttons-box flex justify-end sm:min-w-full md:w-11/12 lg:w-5/6">
         <div className="mr-2.5">
           <Button

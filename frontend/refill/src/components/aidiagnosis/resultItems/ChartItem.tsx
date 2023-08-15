@@ -22,7 +22,7 @@ const ChartItem: React.FC<ChartItemProps> = ({
     const options: ApexCharts.ApexOptions = {
       series: [result],
       chart: {
-        height: 350,
+        height: 240,
         type: "radialBar",
         toolbar: {
           show: true,
@@ -99,21 +99,23 @@ const ChartItem: React.FC<ChartItemProps> = ({
     };
 
     if (chartRef.current) {
-      // Add null check for TypeScript.
       const chart = new ApexCharts(chartRef.current, options);
       chart.render();
+
+      // Return a clean-up function
+      return () => chart.destroy();
     }
   }, [result]);
 
   return (
     <div className={`${colStart} ${colEnd} font-black `}>
       <div className="mb-2">
-        <p className="p-2 text-3xl text-white">{title}</p>
+        <p className="p-2 text-xl pb-0 text-white">{title}</p>
       </div>
       <div className="w-full aspect-square bg-black rounded-lg">
         <div ref={chartRef}></div>
       </div>
-      <p className="p-2 text-white">{content}</p>
+      <p className="p-2 text-sm text-white">{content}</p>
     </div>
   );
 };

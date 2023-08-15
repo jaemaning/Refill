@@ -5,11 +5,13 @@ interface AProps {
   content: string;
   buttonName: string;
   connectNextLink: string;
+  isValid?: boolean;
 }
 
 interface BProps {
   content: string;
   subContent: string;
+  isValid?: boolean;
 }
 
 const A: React.FC<AProps> = ({ content, buttonName, connectNextLink }) => {
@@ -25,7 +27,7 @@ const A: React.FC<AProps> = ({ content, buttonName, connectNextLink }) => {
         <div>
           <p className="lg:text-xl mb:text-lg">{content}</p>
         </div>
-        <div className="py-8">
+        <div className="py-4">
           <button
             onClick={onClickEvent}
             className="result-btn rounded-full w-52 h-10"
