@@ -1,0 +1,11 @@
+.close-button {
+  height: 40px;
+  width: 100%; /* 원하는 크기로 조절 */
+  padding: 5px;
+  color: #4b525f;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
