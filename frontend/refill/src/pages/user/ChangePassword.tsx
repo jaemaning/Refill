@@ -119,19 +119,21 @@ const ChangePassword: React.FC<ChangepwyModal> = ({
                 ></input>
               </Grid>
             </Grid>
-            <Clickbutton
-              style={{ backgroundColor: "#F8A300" }}
-              onClick={changesubmit}
-            >
-              변경하기
-            </Clickbutton>
-            <Clickbutton
-              className="ml-4"
-              style={{ backgroundColor: "#EA4643" }}
-              onClick={handleMClose}
-            >
-              취소하기
-            </Clickbutton>
+            <div style={{display: 'flex', justifyContent: 'end'}}>
+              <Clickbutton
+                style={{ backgroundColor: "#F8A300" }}
+                onClick={changesubmit}
+              >
+                변경하기
+              </Clickbutton>
+              <Clickbutton
+                className="ml-4"
+                style={{ backgroundColor: "#EA4643" }}
+                onClick={handleMClose}
+              >
+                취소하기
+              </Clickbutton>
+            </div>
           </Container>
         </Box>
       </Modal>

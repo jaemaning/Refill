@@ -308,8 +308,6 @@ const VideoChatPage: React.FC = () => {
 
   // 의사전용 joinsession
   const joinSession = async () => {
-    // const token_v2 = getToken();
-    // console.log("엥???????????????",token_v2)
     const OV = new OpenVidu();
     const mySession = OV.initSession();
     setSession(mySession);
@@ -425,23 +423,25 @@ const VideoChatPage: React.FC = () => {
   };
 
   const leaveSession = () => {
-    if (session) {
-      session.disconnect();
+    if (ishospital) {
+      if (session) {
+        session.disconnect();
+      }
+      if (screenSession) {
+        console.log(screenSession);
+        screenSession.disconnect();
+      }
+  
+      // Empty all properties...
+      setSession(undefined);
+      setScreenSession(undefined);
+      setSubscribers([]);
+      // setMySessionId("SessionA");
+      setMyUserName("Participant" + Math.floor(Math.random() * 100));
+      setMainStreamManager(undefined);
+      setPublisher(undefined);
+      setScreenPublisher(undefined);
     }
-    if (screenSession) {
-      console.log(screenSession);
-      screenSession.disconnect();
-    }
-
-    // Empty all properties...
-    setSession(undefined);
-    setScreenSession(undefined);
-    setSubscribers([]);
-    // setMySessionId("SessionA");
-    setMyUserName("Participant" + Math.floor(Math.random() * 100));
-    setMainStreamManager(undefined);
-    setPublisher(undefined);
-    setScreenPublisher(undefined);
 
     navigate("/");
   };
