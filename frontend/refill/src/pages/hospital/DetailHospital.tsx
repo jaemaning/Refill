@@ -97,7 +97,7 @@ const Profileimg = styled.img`
 const Content = styled.div`
   display: flex;
   flex-direction: column;
-  border: 1px black solid;
+  /* border: 1px black solid; */
 `;
 
 const Kakaomap = styled.div`
@@ -553,33 +553,38 @@ const DetailHospital: React.FC = () => {
                       >
                         <div className="flex justify-between">
                           <Bigspan>약력</Bigspan>
-                          <div className="flex">
-                            <ModifyDoctor
-                              open={modifyOpen}
-                              handleMOpen={handleMMOpen}
-                              handleMClose={handleMMClose}
-                              description={doctor.description}
-                              education={doctor.educationBackgrounds}
-                              major={doctor.majorAreas}
-                              profile={doctor.profileImg}
-                              hospitalname={hospitalData.name}
-                              onModify={(formData) =>
-                                ModifyDoc(
-                                  hospitalData.hospitalId,
-                                  doctor.doctorId,
-                                  formData,
-                                )
-                              }
-                            ></ModifyDoctor>
-                            <DeleteDoctor
-                              open={deleteOpen}
-                              handleMOpen={handleDMOpen}
-                              handleMClose={handleDMClose}
-                              hospitalname={hospitalData.name}
-                              doctorname={doctor.name}
-                              onDeleteDoctor={() => DeleteDoc(doctor.doctorId)}
-                            ></DeleteDoctor>
-                          </div>
+                          {
+                            ishospital ?
+                            <div className="flex">
+                              <ModifyDoctor
+                                open={modifyOpen}
+                                handleMOpen={handleMMOpen}
+                                handleMClose={handleMMClose}
+                                description={doctor.description}
+                                education={doctor.educationBackgrounds}
+                                major={doctor.majorAreas}
+                                profile={doctor.profileImg}
+                                hospitalname={hospitalData.name}
+                                onModify={(formData) =>
+                                  ModifyDoc(
+                                    hospitalData.hospitalId,
+                                    doctor.doctorId,
+                                    formData,
+                                  )
+                                }
+                              ></ModifyDoctor>
+                              <DeleteDoctor
+                                open={deleteOpen}
+                                handleMOpen={handleDMOpen}
+                                handleMClose={handleDMClose}
+                                hospitalname={hospitalData.name}
+                                doctorname={doctor.name}
+                                onDeleteDoctor={() => DeleteDoc(doctor.doctorId)}
+                              ></DeleteDoctor>
+                            </div>
+                            :
+                            <div></div>
+                          }
                         </div>
                         <p className="text-lg">{doctor.description}</p>
                         <Bigspan>주요 분야</Bigspan>
@@ -725,11 +730,18 @@ const DetailHospital: React.FC = () => {
                                   size={"medium"}
                                 />
                               </Grid>
-                              <Grid item xs={2}>
-                                <NotificationImportantIcon
-                                  sx={{ color: red[500] }}
-                                />
-                              </Grid>
+                              { ishospital 
+                                ? 
+                                <Grid item xs={2}>
+                                  <NotificationImportantIcon
+                                    sx={{ color: red[500] }}
+                                  />
+                                </Grid>
+                                :
+                                <Grid item xs={2}>
+
+                                </Grid>
+                              }
                               <Grid item xs={2}>
                                 <h1>{review.doctorName}</h1>
                               </Grid>
