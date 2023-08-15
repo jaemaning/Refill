@@ -27,7 +27,7 @@ const A: React.FC<AProps> = ({ content, buttonName, connectNextLink}) => {
         <div>
           <p className="lg:text-xl mb:text-lg">{content}</p>
         </div>
-        <div className="py-2">
+        <div className="py-4">
           <button
             onClick={onClickEvent}
             className="result-btn rounded-full w-52 h-10"

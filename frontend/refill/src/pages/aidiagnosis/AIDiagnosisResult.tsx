@@ -6,6 +6,7 @@ import ChartItem from "components/aidiagnosis/resultItems/ChartItem";
 import RightImg from "assets/aidiagnosis/right_img.png";
 import ContentChild from "components/aidiagnosis/children/ContentChild";
 import { useLocation } from "react-router-dom";
+import AlertModal from "components/aidiagnosis/children/AlertModal";
 
 const AIDiagnosisResult: React.FC = () => {
   const colOneStart = "col-start-1";
@@ -20,6 +21,8 @@ const AIDiagnosisResult: React.FC = () => {
 
   const location = useLocation();
 
+  const [openAlert, setOpenAlert] = useState(false)
+
   // 전달된 state에서 jsonDataString을 추출
   const jsonDataString = location.state.jsonDataString;
   const jsonData = JSON.parse(jsonDataString);
@@ -30,7 +33,6 @@ const AIDiagnosisResult: React.FC = () => {
   const modelConfidence = jsonData.modelConfidence;
   const diagnosisImage = jsonData.diagnosisImage;
   const [newPercent, setNewPercent] = useState(0);
-  const [isValid, setIsValid] = useState(false);
 
   useEffect(() => {
     if (modelConfidence < 80) {
@@ -49,13 +51,14 @@ const AIDiagnosisResult: React.FC = () => {
 
   useEffect(() => {
     window.scrollTo(0, 106);
-    if (modelConfidence > 80) {
-      setIsValid(true)
+    if (Number(modelConfidence) < 80) {
+      setOpenAlert(true)
     }
   }, []);
 
   return (
     <div>
+      {openAlert? <AlertModal setOpenAlert={setOpenAlert} resultValue={Number(modelConfidence)}/> : <></>}
       <Navbar />
       <div className="aid-result">
         <div className="px-32">
@@ -126,7 +129,6 @@ const AIDiagnosisResult: React.FC = () => {
                 }
                 content2={
                   <ContentChild
-                    isValid={isValid}
                     service={false}
                     content="신뢰도"
                     subContent={getValidityMessage(modelConfidence)}

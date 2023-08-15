@@ -99,9 +99,11 @@ const ChartItem: React.FC<ChartItemProps> = ({
     };
 
     if (chartRef.current) {
-      // Add null check for TypeScript.
       const chart = new ApexCharts(chartRef.current, options);
       chart.render();
+  
+      // Return a clean-up function
+      return () => chart.destroy();
     }
   }, [result]);
 

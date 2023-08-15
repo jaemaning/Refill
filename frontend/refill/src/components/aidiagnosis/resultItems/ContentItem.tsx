@@ -20,8 +20,9 @@ const ContentItem: React.FC<ContentItemProps> = ({
       <div className="mb-2">
         <p className="p-2 text-xl pb-0">{title}</p>
       </div>
-      <div className="w-full h-72 p-5 bg-black rounded-lg grid grid-rows-2 gap-5">
+      <div className="h-72 p-5 bg-black rounded-lg grid grid-rows-2 gap-5 place-items-center">
         {content1}
+
         {content2}
       </div>
     </div>
