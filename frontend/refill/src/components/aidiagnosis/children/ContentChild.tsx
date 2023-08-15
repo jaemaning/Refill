@@ -5,16 +5,16 @@ interface AProps {
   content: string;
   buttonName: string;
   connectNextLink: string;
-  isValid?: boolean
+  isValid?: boolean;
 }
 
 interface BProps {
   content: string;
   subContent: string;
-  isValid?: boolean
+  isValid?: boolean;
 }
 
-const A: React.FC<AProps> = ({ content, buttonName, connectNextLink}) => {
+const A: React.FC<AProps> = ({ content, buttonName, connectNextLink }) => {
   const navigate = useNavigate();
 
   const onClickEvent = () => {

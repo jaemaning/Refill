@@ -52,8 +52,22 @@ const AlertModal: React.FC<AlertModalProps> = ({
           {getResultContentTwo(resultValue)}
         </div>
         <div className="alert-modal-bottom-box p-5 grid grid-cols-2 gap-5">
-          <button onClick={() => {navigate("/diagnosis")}} className="text-lg alert-modal-btn-left">AI진단 다시하기</button>
-          <button onClick={() => {setOpenAlert(false)}} className="text-lg alert-modal-btn-right">돌아가기</button>
+          <button
+            onClick={() => {
+              navigate("/diagnosis");
+            }}
+            className="text-lg alert-modal-btn-left"
+          >
+            AI진단 다시하기
+          </button>
+          <button
+            onClick={() => {
+              setOpenAlert(false);
+            }}
+            className="text-lg alert-modal-btn-right"
+          >
+            돌아가기
+          </button>
         </div>
       </div>
     </div>

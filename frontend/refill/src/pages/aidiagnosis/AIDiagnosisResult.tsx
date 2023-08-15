@@ -21,7 +21,7 @@ const AIDiagnosisResult: React.FC = () => {
 
   const location = useLocation();
 
-  const [openAlert, setOpenAlert] = useState(false)
+  const [openAlert, setOpenAlert] = useState(false);
 
   // 전달된 state에서 jsonDataString을 추출
   const jsonDataString = location.state.jsonDataString;
@@ -52,13 +52,20 @@ const AIDiagnosisResult: React.FC = () => {
   useEffect(() => {
     window.scrollTo(0, 106);
     if (Number(modelConfidence) < 80) {
-      setOpenAlert(true)
+      setOpenAlert(true);
     }
   }, []);
 
   return (
     <div>
-      {openAlert? <AlertModal setOpenAlert={setOpenAlert} resultValue={Number(modelConfidence)}/> : <></>}
+      {openAlert ? (
+        <AlertModal
+          setOpenAlert={setOpenAlert}
+          resultValue={Number(modelConfidence)}
+        />
+      ) : (
+        <></>
+      )}
       <Navbar />
       <div className="aid-result">
         <div className="px-32">

@@ -101,7 +101,7 @@ const ChartItem: React.FC<ChartItemProps> = ({
     if (chartRef.current) {
       const chart = new ApexCharts(chartRef.current, options);
       chart.render();
-  
+
       // Return a clean-up function
       return () => chart.destroy();
     }
