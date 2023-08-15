@@ -19,11 +19,10 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import Link from "@mui/material/Link";
-import AttachEmailIcon from '@mui/icons-material/AttachEmail';
-import HomeIcon from '@mui/icons-material/Home';
-import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
-import StarBorderIcon from '@mui/icons-material/StarBorder';
-
+import AttachEmailIcon from "@mui/icons-material/AttachEmail";
+import HomeIcon from "@mui/icons-material/Home";
+import PhoneInTalkIcon from "@mui/icons-material/PhoneInTalk";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 
 const max_width = "1350";
 const max_height = "950";
@@ -57,7 +56,7 @@ interface TypeSearchedData {
   address?: string;
   tel?: string;
   score?: number;
-  email?:string;
+  email?: string;
 }
 
 interface TypeRequestMap {
@@ -137,7 +136,7 @@ export const HospitalSearch: React.FC = () => {
   const [dropSelected, setDropSelected] = useState("서울"); // 드롭다운 버튼 구분
   const [searched, setSearched] = useState<string>(""); // 검색어 박스 구분
   const [latLon, setLatLon] = useState<number[]>([0, 0]);
-  const [homeLatLon, setHomeLatLon] = useState([0, 0])
+  const [homeLatLon, setHomeLatLon] = useState([0, 0]);
   const [homeLat, homeLon] = [33.452613, 126.570888]; // 집위치 테스트를 위해 가상의 값으로 테스트진행
   const [toggleSelected, setToggleSelected] = useState(true);
   const [rendered, setRendered] = useState(true);
@@ -149,7 +148,7 @@ export const HospitalSearch: React.FC = () => {
   const [distanceHospitals, setDistanceHospitalss] = useState<
     TypeResponseMap[]
   >([]);
-  const [btnCheck, setBtnCheck] = useState(true)
+  const [btnCheck, setBtnCheck] = useState(true);
 
   const token = useSelector((state: RootState) => state.login.token);
   const islogin = useSelector((state: RootState) => state.login.islogin);
@@ -237,7 +236,7 @@ export const HospitalSearch: React.FC = () => {
               },
               (error) => {
                 console.error(`Error getting location: ${error.message}`);
-              }
+              },
             );
             await console.log(latLon);
           } else {
@@ -246,29 +245,37 @@ export const HospitalSearch: React.FC = () => {
           // geocoder 로 확인하기
         } else if (ishospital) {
           // 내 병원 lonlat정보 가져오기
-          const url = `/api/v1/hospital/${hosid}`
+          const url = `/api/v1/hospital/${hosid}`;
           axios
-            .get(url, {headers :{
-              Authorization: `Bearer ${token}`
-            }})
-            .then((res)=>{
+            .get(url, {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            })
+            .then((res) => {
               // console.log(res.data.hospitalResponse.latitude)
               // console.log(res.data.hospitalResponse.longitude)
-              setLatLon([res.data.hospitalResponse.latitude, res.data.hospitalResponse.longitude])
+              setLatLon([
+                res.data.hospitalResponse.latitude,
+                res.data.hospitalResponse.longitude,
+              ]);
             })
-            .catch((err)=>{
-              console.log(err)
-            })
+            .catch((err) => {
+              console.log(err);
+            });
         }
-  
+
         const loadMap = () => {
-          window.kakao.maps.load( () => {
+          window.kakao.maps.load(() => {
             const options = {
               center: new window.kakao.maps.LatLng(latLon[0], latLon[1]),
               level: 4,
-              wheel: false
+              wheel: false,
             };
-            map.current = new window.kakao.maps.Map(kakaoMapBox.current, options);
+            map.current = new window.kakao.maps.Map(
+              kakaoMapBox.current,
+              options,
+            );
             map.current.setZoomable(false);
             makeHomeMarker();
           });
@@ -286,7 +293,7 @@ export const HospitalSearch: React.FC = () => {
           const options = {
             center: new window.kakao.maps.LatLng(latLon[0], latLon[1]),
             level: 4,
-            wheel: false
+            wheel: false,
           };
           map.current = new window.kakao.maps.Map(kakaoMapBox.current, options);
           map.current.setZoomable(false);
@@ -309,7 +316,10 @@ export const HospitalSearch: React.FC = () => {
         imageSize,
         imageOption,
       ),
-      markerPosition = new window.kakao.maps.LatLng(homeLatLon[0], homeLatLon[1]); // 마커가 표시될 위치입니다
+      markerPosition = new window.kakao.maps.LatLng(
+        homeLatLon[0],
+        homeLatLon[1],
+      ); // 마커가 표시될 위치입니다
 
     // 마커를 생성합니다
     const marker = new window.kakao.maps.Marker({
@@ -571,7 +581,7 @@ export const HospitalSearch: React.FC = () => {
                   width="110px"
                   onClick={handleToggledist}
                   customStyles={{
-                    color : toggleData ? 'yellow' : 'white'
+                    color: toggleData ? "yellow" : "white",
                   }}
                 />
                 <Button
@@ -580,7 +590,7 @@ export const HospitalSearch: React.FC = () => {
                   width="110px"
                   onClick={handleTogglestars}
                   customStyles={{
-                    color : toggleData ? 'white' : 'yellow'
+                    color: toggleData ? "white" : "yellow",
                   }}
                 />
               </div>
@@ -694,20 +704,51 @@ export const HospitalSearch: React.FC = () => {
                 .map((data, i) => {
                   return (
                     <div key={i} style={{ margin: "20px 250px" }}>
-                      <div style={{display : 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                        <div style={{display : 'flex', alignItems: 'center'}}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <div style={{ display: "flex", alignItems: "center" }}>
                           <Avatar src={data.hospitalProfileImg} />
-                          <Typography variant="h4" sx={{margin: '15px'}}>{data.name}</Typography>
+                          <Typography variant="h4" sx={{ margin: "15px" }}>
+                            {data.name}
+                          </Typography>
                         </div>
-                        <Link href={`/detailhospital/${data.hospitalId}`} underline="hover">
+                        <Link
+                          href={`/detailhospital/${data.hospitalId}`}
+                          underline="hover"
+                        >
                           병원 상세페이지
                         </Link>
                       </div>
                       <div style={{ margin: "20px", paddingLeft: "0px" }}>
-                        <p><AttachEmailIcon sx={{color : 'grey', marginRight:'20px'}} />  {data.email}</p>
-                        <p><HomeIcon sx={{color : 'grey', marginRight:'20px'}} /> {data.address}</p>
-                        <p><PhoneInTalkIcon sx={{color : 'grey', marginRight:'20px'}} /> {data.tel}</p>
-                        <p><StarBorderIcon sx={{color : 'grey', marginRight:'20px'}} /> {data.score}</p>
+                        <p>
+                          <AttachEmailIcon
+                            sx={{ color: "grey", marginRight: "20px" }}
+                          />{" "}
+                          {data.email}
+                        </p>
+                        <p>
+                          <HomeIcon
+                            sx={{ color: "grey", marginRight: "20px" }}
+                          />{" "}
+                          {data.address}
+                        </p>
+                        <p>
+                          <PhoneInTalkIcon
+                            sx={{ color: "grey", marginRight: "20px" }}
+                          />{" "}
+                          {data.tel}
+                        </p>
+                        <p>
+                          <StarBorderIcon
+                            sx={{ color: "grey", marginRight: "20px" }}
+                          />{" "}
+                          {data.score}
+                        </p>
                         <br />
                         <hr />
                       </div>
@@ -717,8 +758,7 @@ export const HospitalSearch: React.FC = () => {
             </>
           </SearchBot>
         </MapBoxV2>
-        {
-          selected === "option2" ?
+        {selected === "option2" ? (
           <div className="flex justify-center" style={{ marginBottom: "10px" }}>
             <Stack spacing={2}>
               <Pagination
@@ -728,9 +768,7 @@ export const HospitalSearch: React.FC = () => {
               />
             </Stack>
           </div>
-          :
-          null
-        }
+        ) : null}
         <Footer />
       </Container>
     </div>

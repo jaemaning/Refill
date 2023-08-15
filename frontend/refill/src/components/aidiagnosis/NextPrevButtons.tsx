@@ -32,7 +32,6 @@ const NextPrevButtons: React.FC<LinkProps> = ({
   };
   const token = useSelector((state: RootState) => state.login.token);
   const handleSubmit = () => {
-    console.log(arrayString);
     const aiDiagnosisRequest = {
       surveyResult: arrayString,
     };
@@ -48,8 +47,6 @@ const NextPrevButtons: React.FC<LinkProps> = ({
     if (imgFile) {
       formData.append("hairImg", imgFile);
     }
-    console.log(formData);
-    console.log(imgFile);
     axios
       .post("api/v1/diagnosis/", formData, {
         headers: {
@@ -58,27 +55,21 @@ const NextPrevButtons: React.FC<LinkProps> = ({
       })
       .then((response) => {
         console.log("ok");
-        console.log(response.data);
-
         return response.data;
       })
       .then((response) => {
-        console.log(response);
+        console.log("ok");
         const jsonData = response;
         const newJsonDataString = JSON.stringify(jsonData);
         navigate(nextLink, { state: { jsonDataString: newJsonDataString } });
       })
       .catch((err) => {
-        console.log(aiDiagnosisRequest);
         console.log(err.response.data);
       });
   };
 
   const ConnectNextLink = () => {
     if (isResult) {
-      console.log(isResult);
-      console.log(imgFile);
-      console.log(arrayString);
       handleSubmit();
     } else {
       navigate(nextLink, { state: { arrayString } }); // 이동할 경로 전달

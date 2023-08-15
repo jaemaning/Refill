@@ -68,8 +68,8 @@ interface ModifyModal {
   email: string;
   onModify: (formData: any) => void;
   profile: string;
-  userData : any;
-  setuserData : any;
+  userData: any;
+  setuserData: any;
 }
 
 interface InputImageState {
@@ -89,7 +89,7 @@ const ModifyMember: React.FC<ModifyModal> = ({
   onModify,
   profile,
   userData,
-  setuserData
+  setuserData,
 }) => {
   const [inputData, setInputData] = useState({
     name: name,
@@ -106,27 +106,25 @@ const ModifyMember: React.FC<ModifyModal> = ({
 
   useEffect(() => {
     defaultValueRef.current = userData;
-  }, []); 
-  
-  const changeInput = (e : any) => {
+  }, []);
+
+  const changeInput = (e: any) => {
     setuserData({
       ...userData,
       [e.target.name]: e.target.value,
     });
-  }
-  
+  };
+
   const handleCancle = () => {
     setuserData(defaultValueRef.current);
-    handleMClose()
-  }
-  
-  const modifysubmit = () => {
-    defaultValueRef.current = userData
-    handleMClose()
-  }
-  //
+    handleMClose();
+  };
 
-  
+  const modifysubmit = () => {
+    defaultValueRef.current = userData;
+    handleMClose();
+  };
+  //
 
   // const changeInput = (e: ChangeEvent<HTMLInputElement>) => {
   //   console.log('이름',e.target.name)
@@ -144,7 +142,7 @@ const ModifyMember: React.FC<ModifyModal> = ({
   const handleImgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null; // 선택한 파일을 가져옵니다. 없으면 null로 설정합니다.
 
-    setuserData((prevInputImage : any) => ({
+    setuserData((prevInputImage: any) => ({
       ...prevInputImage,
       [e.target.name]: file,
     }));

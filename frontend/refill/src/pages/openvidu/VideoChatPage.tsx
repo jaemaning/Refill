@@ -431,7 +431,7 @@ const VideoChatPage: React.FC = () => {
         console.log(screenSession);
         screenSession.disconnect();
       }
-  
+
       // Empty all properties...
       setSession(undefined);
       setScreenSession(undefined);

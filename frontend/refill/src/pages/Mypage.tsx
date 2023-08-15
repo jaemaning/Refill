@@ -17,7 +17,7 @@ import MyReservationReport from "components/myPage/MyReservationReport";
 import AiDiagnosisList from "components/myPage/AiDiagnosisList";
 import ConsultingList from "components/myPage/ConsultingList";
 // CSS
-import "styles/MyPage.css"
+import "styles/MyPage.css";
 
 interface DivProps {
   selected?: boolean;
@@ -90,8 +90,6 @@ const DownContent = styled.div`
 `;
 
 const Mypage: React.FC = () => {
-
-  
   // 로그인이 안되있으면 메인페이지로 이동
 
   const [selected, setSelected] = useState(true);
@@ -105,7 +103,7 @@ const Mypage: React.FC = () => {
     profileImg: null,
     tel: "",
   });
-  
+
   // 예약 정보 받기
   const [reservationList, setReservationList] = useState<Reservation[] | null>(
     null,
@@ -130,16 +128,15 @@ const Mypage: React.FC = () => {
         })
 
         .then((response) => {
-          console.log(response.data);
+          console.log("ok");
           setuserData(response.data);
           setReservationList(response.data.reservationList);
           if (userData.profileImg !== null) {
             setCheckimg(true);
           }
-          console.log(checkimg);
         })
         .catch((error) => {
-          console.log("에러:", error);
+          console.log(error);
         });
     } else {
       navigate("/");
@@ -148,16 +145,16 @@ const Mypage: React.FC = () => {
   }, []);
 
   const buttonclick = () => {
-    console.log('계정 삭제 로직');
+    console.log("계정 삭제");
   };
-  
+
   const handleToChangeMypage = () => {
     setSelected(true);
-  }
-  
+  };
+
   const handleToMyRecord = () => {
     setSelected(false);
-  }
+  };
 
   // 비밀번호 변경 모달
   const [changeopen, setChangeOpen] = useState(false);
@@ -178,12 +175,10 @@ const Mypage: React.FC = () => {
       })
 
       .then((response) => {
-        console.log(response);
         handleCMClose();
       })
 
       .catch((error) => {
-        console.log(1);
         console.log(error.response.data.message);
         handleCMClose();
       });
@@ -199,7 +194,6 @@ const Mypage: React.FC = () => {
   };
 
   const ModifyDoc = async (formData: any) => {
-    console.log(formData);
     axios
       .put(`api/v1/member/mypage`, formData, {
         headers: {
@@ -209,7 +203,7 @@ const Mypage: React.FC = () => {
       })
 
       .then((response) => {
-        console.log(response);
+        console.log("ok");
         handleMMClose();
       })
 
@@ -371,8 +365,7 @@ const Mypage: React.FC = () => {
               style={{ width: "700px", height: "200px" }}
               className="mt-3 mb-6"
             >
-              <ConsultingList loginId={loginId}/>
-
+              <ConsultingList loginId={loginId} />
             </Common>
             <span className="text-xl font-bold mt-10 mb-3">
               나의 AI 자가진단 기록

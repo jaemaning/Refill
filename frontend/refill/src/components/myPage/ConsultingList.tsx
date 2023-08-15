@@ -83,7 +83,6 @@ const ConsultingList: React.FC<ConsultingListProps> = ({ loginId }) => {
 
   // axios 호출 함수
   const getConsultingList = () => {
-    console.log(loginId);
     axios
       .get(`/api/v1/consulting/${loginId}`, {
         headers: {
@@ -91,9 +90,8 @@ const ConsultingList: React.FC<ConsultingListProps> = ({ loginId }) => {
         },
       })
       .then((res) => {
-        console.log(res);
+        console.log("ok");
         setConsList(res.data);
-        console.log("데이터가 하나도 없냐?");
       })
       .catch((err) => {
         console.log(err);
@@ -106,16 +104,16 @@ const ConsultingList: React.FC<ConsultingListProps> = ({ loginId }) => {
 
   return (
     <div className="scroll-ai-box">
-      {DummyData.map((consListItem, index) => (
-        <div key={index}>
-          <ConsultingListItem consListItem={consListItem} />
-        </div>
-      ))}
-      {/* {consList?.map((consListItem, index) => (
+      {/* {DummyData.map((consListItem, index) => (
         <div key={index}>
           <ConsultingListItem consListItem={consListItem} />
         </div>
       ))} */}
+      {consList?.map((consListItem, index) => (
+        <div key={index}>
+          <ConsultingListItem consListItem={consListItem} />
+        </div>
+      ))}
     </div>
   );
 };
