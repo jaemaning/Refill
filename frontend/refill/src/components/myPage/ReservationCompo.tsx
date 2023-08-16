@@ -1,5 +1,5 @@
 import React from "react";
-
+import "styles/MyPage.css"
 type Res = {
   doctorName: string;
   hospitalName: string;
@@ -54,6 +54,7 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
         >
           상담취소
         </button>
+        {/* 현재 시간을 기준으로 예약시간이 15분 */}
         <button className="res-small-btn-right h-8 p-1 text-white">
           상담입장
         </button>

@@ -66,16 +66,16 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
     });
   };
   // 토큰을 받아오는 함수
-  const getToken = async (testReservationId: number): Promise<void> => {
+  const getToken = async (reservationId: number): Promise<void> => {
     try {
       const response = await axios.get(
-        `api/v1/consulting/connection/${testReservationId}`,
+        `api/v1/consulting/connection/${reservationId}`,
         {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${loginToken}`,
           },
-        },
+        }
       );
       setTokenData((prevTokenData) => [...prevTokenData, response.data]);
       //
@@ -103,12 +103,22 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
       });
   };
 
+  // 1. 현재 날짜와 시간을 가져옵니다.
+  const now = new Date();
+
+  // 2. 현재 날짜 및 시간에서 31분을 빼서 경계 시간을 계산합니다.
+  const thirtyOneMinutesAgo = new Date(now.getTime() - 31 * 60 * 1000);
+  console.log(thirtyOneMinutesAgo)
   const sortedList = reservationList
-    ?.slice()
+    ?.filter(
+      (reservation) =>
+        new Date(reservation.startDateTime) >= thirtyOneMinutesAgo
+    )
+    .slice()
     .sort(
       (a, b) =>
         new Date(a.startDateTime).getTime() -
-        new Date(b.startDateTime).getTime(),
+        new Date(b.startDateTime).getTime()
     );
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -120,8 +130,8 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
       setCurrentIndex((prevIndex) =>
         Math.min(
           prevIndex + slidesToShow,
-          reservationList.length - slidesToShow,
-        ),
+          reservationList.length - slidesToShow
+        )
       );
     }
   };
