@@ -18,9 +18,12 @@ interface TypeToken {
 }
 
 type Res = {
+  reservationId: number;
+  hospitalId: number;
+  doctorId: number;
+  memberId: number;
   doctorName: string;
   hospitalName: string;
-  reservationId: number;
   startDateTime: string;
 };
 
@@ -33,51 +36,56 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
   reservation,
   deleteReservation,
 }) => {
-// 상담 입장
-const loginToken = useSelector((state: RootState) => state.login.token);
-const islogin = useSelector((state: RootState) => state.login.islogin);
-const [tokenData, setTokenData] = useState<TypeToken[]>([]);
-const navigate = useNavigate();
+  // 상담 입장
+  const loginToken = useSelector((state: RootState) => state.login.token);
+  const islogin = useSelector((state: RootState) => state.login.islogin);
+  const navigate = useNavigate();
+  const [canJoin, setCanJoin] = useState(true);
 
-// 입장하는 함수
-const joinSession = ({
-  consultingId,
-  sessionId,
-  token,
-  shareToken,
-}: TypeToken) => {
-  navigate("/video", {
-    state: {
-      sessionPk: sessionId,
-      token: token,
-      shareToken: shareToken,
-      consultingId: consultingId,
-    },
-  });
-};
-// 토큰을 받아오는 함수
-const getToken = async (reservationId: number): Promise<void> => {
-  try {
-    const response = await axios.get(
-      `api/v1/consulting/connection/${reservationId}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${loginToken}`,
+  // 입장하는 함수
+  const joinSession = ({
+    consultingId,
+    sessionId,
+    token,
+    shareToken,
+    memberId,
+    doctorId,
+    hospitalId,
+    hospitalName,
+  }: TypeToken) => {
+    navigate("/video", {
+      state: {
+        sessionPk: sessionId,
+        token: token,
+        shareToken: shareToken,
+        consultingId: consultingId,
+        memberId: memberId,
+        doctorId: doctorId,
+        hospitalId: hospitalId,
+        hospitalName: hospitalName,
+      },
+    });
+  };
+
+  // 토큰을 받아오는 함수
+  const getToken = async (reservationId: number): Promise<TypeToken> => {
+    try {
+      const response = await axios.get(
+        `api/v1/consulting/connection/${reservationId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${loginToken}`,
+          },
         },
-      }
-    );
-    setTokenData((prevTokenData) => [...prevTokenData, response.data]);
-    //
-    console.log("ok");
-  } catch (err) {
-    console.log(err);
-  }
-};
+      );
+      return response.data;
+    } catch (err) {
+      console.log(err);
+      throw err; // 오류가 발생하면 이를 다시 throw 해서 joinConsult에서 catch 할 수 있게 합니다.
+    }
+  };
 
-
-
-  const [openJoin, setOpenJoin] = useState(true);
   const changeDate = (startDate: string) => {
     const days = [
       "일요일",
@@ -93,12 +101,12 @@ const getToken = async (reservationId: number): Promise<void> => {
     const dayName = days[dateObj.getDay()];
 
     const formattedDate = `${dateObj.getFullYear()}-${String(
-      dateObj.getMonth() + 1
+      dateObj.getMonth() + 1,
     ).padStart(2, "0")}-${String(dateObj.getDate()).padStart(
       2,
-      "0"
+      "0",
     )} (${dayName}) ${String(dateObj.getHours()).padStart(2, "0")}:${String(
-      dateObj.getMinutes()
+      dateObj.getMinutes(),
     ).padStart(2, "0")}`;
     return formattedDate;
   };
@@ -133,6 +141,16 @@ const getToken = async (reservationId: number): Promise<void> => {
     cursor: "not-allowed",
   };
 
+  const joinConsult = async () => {
+    setCanJoin(false);
+    try {
+      const tokenResponse = await getToken(reservation.reservationId);
+      joinSession(tokenResponse); // 직접 응답 데이터를 전달
+    } catch (error) {
+      console.log("Error joining the session:", error);
+    }
+  };
+
   return (
     <>
       <div className="mypage-reservation-box p-4">
@@ -148,14 +166,16 @@ const getToken = async (reservationId: number): Promise<void> => {
             상담취소
           </button>
           <button
-            // onClick={() => {setOpenJoin(true)}}
+            onClick={joinConsult}
             className="h-8 p-1 text-center rounded-md"
             disabled={!isWithinTimeRange()}
             style={
-              isWithinTimeRange() ? activeButtonStyle : disabledButtonStyle
+              isWithinTimeRange() && canJoin
+                ? activeButtonStyle
+                : disabledButtonStyle
             } // 인라인 스타일 적용
           >
-            {isWithinTimeRange() ? "상담입장" : "입장 불가"}
+            {isWithinTimeRange() && canJoin ? "상담입장" : "입장 불가"}
           </button>
         </div>
       </div>

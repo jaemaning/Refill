@@ -14,9 +14,12 @@ import DeleteModal from "./DeleteModal";
 import ReservationCompo from "./ReservationCompo";
 
 type Reservation = {
+  reservationId: number;
+  hospitalId: number;
+  doctorId: number;
+  memberId: number;
   doctorName: string;
   hospitalName: string;
-  reservationId: number;
   startDateTime: string;
 };
 
@@ -55,17 +58,17 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
 
   // 2. 현재 날짜 및 시간에서 31분을 빼서 경계 시간을 계산합니다.
   const thirtyOneMinutesAgo = new Date(now.getTime() - 31 * 60 * 1000);
-  console.log(thirtyOneMinutesAgo)
+  console.log(thirtyOneMinutesAgo);
   const sortedList = reservationList
     ?.filter(
       (reservation) =>
-        new Date(reservation.startDateTime) >= thirtyOneMinutesAgo
+        new Date(reservation.startDateTime) >= thirtyOneMinutesAgo,
     )
     .slice()
     .sort(
       (a, b) =>
         new Date(a.startDateTime).getTime() -
-        new Date(b.startDateTime).getTime()
+        new Date(b.startDateTime).getTime(),
     );
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -77,8 +80,8 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
       setCurrentIndex((prevIndex) =>
         Math.min(
           prevIndex + slidesToShow,
-          reservationList.length - slidesToShow
-        )
+          reservationList.length - slidesToShow,
+        ),
       );
     }
   };

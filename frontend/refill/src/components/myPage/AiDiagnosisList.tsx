@@ -16,10 +16,10 @@ type aiDiagnosisData = {
 };
 
 interface AiProps {
-  memberId: number
+  memberId: number;
 }
 
-const AiDiagnosisList: React.FC<AiProps> = ({memberId}) => {
+const AiDiagnosisList: React.FC<AiProps> = ({ memberId }) => {
   // 토큰
   const token = useSelector((state: RootState) => state.login.token);
   // AiDiagnosisList 받기

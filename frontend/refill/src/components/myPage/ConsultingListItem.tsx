@@ -82,7 +82,7 @@ const ConsultingListItem: React.FC<ConsultingProps> = ({ consListItem }) => {
   };
 
   const handleModal = () => {
-    getDetailCons()
+    getDetailCons();
     // setConsDetail(DummyData2);
     if (consDetail) {
       setOpenDetail(true);

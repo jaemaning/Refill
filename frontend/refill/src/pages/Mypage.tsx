@@ -25,9 +25,12 @@ interface DivProps {
 
 // 예약 타입 설정
 type Reservation = {
+  reservationId: number;
+  hospitalId: number;
+  doctorId: number;
+  memberId: number;
   doctorName: string;
   hospitalName: string;
-  reservationId: number;
   startDateTime: string;
 };
 
@@ -110,12 +113,12 @@ const Mypage: React.FC = () => {
   );
 
   const token: string = useSelector((state: RootState) => state.login.token);
-  const memberId: number = useSelector((state: RootState) => state.login.pk)
+  const memberId: number = useSelector((state: RootState) => state.login.pk);
   const islogin: boolean = useSelector(
     (state: RootState) => state.login.islogin,
   );
   const loginId = useSelector((state: RootState) => state.login.loginId);
-    // 토큰 분해하기 memberId가져오기
+  // 토큰 분해하기 memberId가져오기
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -375,7 +378,7 @@ const Mypage: React.FC = () => {
               style={{ width: "700px", height: "200px" }}
               className="mt-3 mb-6"
             >
-              <AiDiagnosisList memberId={memberId}/>
+              <AiDiagnosisList memberId={memberId} />
             </Common>
           </Content2>
         </div>
