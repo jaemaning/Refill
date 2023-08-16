@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "styles/MyPage.css";
 // 토큰가져오기
@@ -42,7 +42,8 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
   const loginToken = useSelector((state: RootState) => state.login.token);
   const islogin = useSelector((state: RootState) => state.login.islogin);
   const navigate = useNavigate();
-  const [canJoin, setCanJoin] = useState(true);
+  const [canJoin, setCanJoin] = useState(false);
+  const [myJoinToken, setMyJoinToken] = useState<TypeToken[]>([]);
 
   // 입장하는 함수
   const joinSession = ({
@@ -70,7 +71,7 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
   };
 
   // 토큰을 받아오는 함수
-  const getToken = async (reservationId: number): Promise<TypeToken> => {
+  const getToken = async (reservationId: number) => {
     try {
       const response = await axios.get(
         `api/v1/consulting/connection/${reservationId}`,
@@ -81,12 +82,21 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
           },
         },
       );
-      return response.data;
+      console.log(response.data)
+      setMyJoinToken((prev) => [...prev, response.data])
+      if (response.data.sessionId) {
+        setCanJoin(true)
+      }
+
     } catch (err) {
       console.log(err);
       throw err; // 오류가 발생하면 이를 다시 throw 해서 joinConsult에서 catch 할 수 있게 합니다.
     }
   };
+
+  useEffect(() => {
+    getToken(reservation.reservationId)
+  }, [])
 
   const changeDate = (startDate: string) => {
     const days = [
@@ -113,22 +123,6 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
     return formattedDate;
   };
 
-  const isWithinTimeRange = () => {
-    const now = new Date();
-    const reservationDate = new Date(reservation.startDateTime);
-
-    // 예약 시간 14분 전
-    const startTime = new Date(reservationDate);
-    startTime.setMinutes(reservationDate.getMinutes() - 14);
-
-    // 예약 시간 29분 후
-    const endTime = new Date(reservationDate);
-    endTime.setMinutes(reservationDate.getMinutes() + 29);
-
-    // 현재 시간이 시작 및 종료 시간 사이에 있는지 확인
-    return now >= startTime && now <= endTime;
-  };
-
   const activeButtonStyle = {
     background: "#3498db", // 예시 색상입니다. 원하는 색상으로 변경 가능합니다.
     color: "white",
@@ -141,16 +135,6 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
     color: "white",
     border: "none",
     cursor: "not-allowed",
-  };
-
-  const joinConsult = async () => {
-    setCanJoin(false);
-    try {
-      const tokenResponse = await getToken(reservation.reservationId);
-      joinSession(tokenResponse); // 직접 응답 데이터를 전달
-    } catch (error) {
-      console.log("Error joining the session:", error);
-    }
   };
 
   const handleDelete = () => {
@@ -173,16 +157,16 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
             상담취소
           </button>
           <button
-            onClick={joinConsult}
+            onClick={() => {joinSession(myJoinToken[myJoinToken.length - 1])}}
             className="h-8 p-1 text-center rounded-md"
-            disabled={!isWithinTimeRange()}
+            disabled={!canJoin}
             style={
-              isWithinTimeRange() && canJoin
+              canJoin
                 ? activeButtonStyle
                 : disabledButtonStyle
             } // 인라인 스타일 적용
           >
-            {isWithinTimeRange() && canJoin ? "상담입장" : "입장 불가"}
+            {canJoin ? "상담입장" : "입장 불가"}
           </button>
         </div>
       </div>
