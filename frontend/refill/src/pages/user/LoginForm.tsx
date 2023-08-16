@@ -41,12 +41,12 @@ const LoginForm: React.FC = () => {
           <div style={{ width: "180x" }}>
             <ToggleSwitch
               ismember={ismember}
-              onText="환자"
+              onText="일반"
               offText="병원"
               handleToggle={handleToggleMember}
             />
           </div>
-          <div style={{ width: "300px" }} className="pl-6">
+          <div style={{ width: "300px" }} className="pl-6 pt-1">
             <span className="text-2xl font-bold text-center text-white">
               {ismember && loginpage
                 ? "일반 로그인"

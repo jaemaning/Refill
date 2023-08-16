@@ -5,7 +5,6 @@ import FindPassword from "components/find/FindPassword";
 import FindSelect from "components/find/FindSelect";
 import styled from "@emotion/styled";
 import "../../styles/Loginsignup.css";
-import Social from "components/common/Social";
 import { Link } from "react-router-dom";
 import app_logo from "../../assets/app_logo.png";
 
@@ -31,7 +30,6 @@ const FindIdPassword: React.FC = () => {
     setisMeber(!ismember); // ismember 값을 변경하는 함수
   };
 
-  console.log(ismember);
   return (
     <div
       className={`${
@@ -42,11 +40,11 @@ const FindIdPassword: React.FC = () => {
         <div className="flex justify-around items-center">
           <ToggleSwitch
             ismember={ismember}
-            onText="환자"
+            onText="일반"
             offText="병원"
             handleToggle={handleToggleMember}
           />
-          <span className="text-2xl font-bold text-center">
+          <span className="text-2xl font-bold text-center text-white pb-3 pr-2">
             {ismember ? "일반회원" : "병원회원"}
           </span>
           <Link to="/" className="flex items-center">
@@ -71,9 +69,6 @@ const FindIdPassword: React.FC = () => {
             ) : (
               <FindPassword ismember={ismember} />
             )}
-            <div>
-              <Social />
-            </div>
           </FindForm>
         </div>
       </div>
