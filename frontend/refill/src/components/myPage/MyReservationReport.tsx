@@ -33,11 +33,12 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
   const token = useSelector((state: RootState) => state.login.token);
   // 상담 취소
   const [openModal, setOpenModal] = useState(false);
-  const [wantDelete, setWantDelete] = useState(false);
+
+  const [reservationId, setReservationId] = useState(0)
 
   const deleteReservation = (id: number) => {
-    setOpenModal(true);
-    axios
+  
+      axios
       .delete(`/api/v1/reservation/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -51,6 +52,7 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
         console.log(err);
         // 오류가 발생한 경우, 오류 처리 로직을 여기에 작성합니다.
       });
+
   };
 
   // 1. 현재 날짜와 시간을 가져옵니다.
@@ -94,8 +96,9 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
     <div className="grid grid-rows-4 gap-4 items-center">
       {openModal ? (
         <DeleteModal
+          resId={reservationId}
           setOpenModal={setOpenModal}
-          setWantDelete={setWantDelete}
+          deleteReservation={deleteReservation}
         />
       ) : (
         <></>
@@ -131,7 +134,8 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
               >
                 <ReservationCompo
                   reservation={reservation}
-                  deleteReservation={deleteReservation}
+                  setOpenModal={setOpenModal}
+                  setReservationId={setReservationId}
                 />
               </div>
             ))}
