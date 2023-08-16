@@ -51,19 +51,19 @@ const Footer = styled.div`
   width: 100%;
 `;
 
-type ReportModalProps = {
+type ReviewReportModalProps = {
   onClose: () => void;
-  consultingId: number;
+  reviewId: number;
 };
 
-const ReportModal: React.FC<ReportModalProps> = (props) => {
+const ReviewReportModal: React.FC<ReviewReportModalProps> = (props) => {
   const loginToken = useSelector((state: RootState) => state.login.token);
 
   const [openReporSuccesstModal, setOpenReportSuccessModal] =
     React.useState(false);
   const handleOpenReportSuccessModal = () => setOpenReportSuccessModal(true);
 
-  const url = `api/v1/consulting/report/${props.consultingId}`;
+  const url = `/api/v1/review/report/${props.reviewId}`;
 
   const openAlert = (timeToDelay: number) =>
     new Promise((handleCloseReportSuccessModal) =>
@@ -149,11 +149,13 @@ const ReportModal: React.FC<ReportModalProps> = (props) => {
             justifyContent: "center",
           }}
         >
-          <ReportSuccessModal></ReportSuccessModal>
+          <div>
+            <ReportSuccessModal></ReportSuccessModal>
+          </div>
         </Modal>
       </Box>
     </>
   );
 };
 
-export default ReportModal;
+export default ReviewReportModal;
