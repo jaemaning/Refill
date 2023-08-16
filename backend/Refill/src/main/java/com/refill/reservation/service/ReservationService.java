@@ -128,6 +128,7 @@ public class ReservationService {
 
     }
 
+    @Transactional(readOnly = true)
     public List<ReservationInfoResponse> findReservationByDoctor(LoginInfo loginInfo, Long doctorId) {
 
         Doctor doctor = doctorService.findById(doctorId);
