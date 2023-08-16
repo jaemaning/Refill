@@ -105,7 +105,7 @@ const DetailPatient: React.FC<DetailPatientProps> = ({
           },
         }
       );
-      console.log("API Response:", response.data);
+      console.log("API Response ok");
       setMyJoinToken({ ...response.data, hairImage: selectedMember.hairImage });
 
       if (response.data && response.data.sessionId) {
