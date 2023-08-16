@@ -25,6 +25,8 @@ import SelectDoctorAndTime from "components/consultReservation/SelectDoctorAndTi
 import DetailReservation from "components/detailReservation/DetailReservation";
 import { useParams } from "react-router-dom";
 import { useKakaoMapScript } from "hooks/UseKakaoMap";
+import ReviewReportModal from "components/myPage/ReviewReportModal";
+import Modal from "@mui/material/Modal";
 // import StarRatings from "react-star-ratings";
 
 interface DivProps {
@@ -211,19 +213,22 @@ const DetailHospital: React.FC = () => {
     setButtonData(2);
   };
 
+  // 리뷰 신고하기
+  const [openReportModal, setOpenReportModal] = useState<number|null>(null);
+  const handleOpenReportModal = (reviewId: number) => setOpenReportModal(reviewId);
+  const handleCloseReportModal = () => setOpenReportModal(null);
+
   // 지도 생성 메서드
   // 처음부터 훅 호출
   const scriptLoaded = useKakaoMapScript();
 
   useEffect(() => {
-    console.log("여기", scriptLoaded, hospitalData);
     const getLocation = async (): Promise<void> => {
       if (
         scriptLoaded &&
         hospitalData.longitude != 0 &&
         hospitalData.latitude != 0
       ) {
-        console.log("???");
         const loadMap = () => {
           window.kakao.maps.load(() => {
             const options = {
@@ -359,7 +364,6 @@ const DetailHospital: React.FC = () => {
   };
 
   const RegistDoc = async (hospitalid: number, formData: any) => {
-    console.log(formData);
     axios
       .post(
         `http://localhost:3000/api/v1/hospital/${hospitalid}/doctor`,
@@ -373,25 +377,24 @@ const DetailHospital: React.FC = () => {
       )
 
       .then((response) => {
-        console.log(response);
-        console.log(1);
+        console.log("ok");
         setRegisterOpen(false);
       })
 
       .catch((error) => {
-        console.log(1);
+        console.log(error);
         handleRMClose();
       });
   };
 
   // 의사 수정
 
-  const [modifyOpen, setModifyOpen] = useState(false);
-  const handleMMOpen = () => {
-    setModifyOpen(true);
+  const [modifyOpen, setModifyOpen] = useState<number|null>(null);
+  const handleMMOpen = (doctorId:number) => {
+    setModifyOpen(doctorId);
   };
   const handleMMClose = () => {
-    setModifyOpen(false);
+    setModifyOpen(null);
   };
 
   const ModifyDoc = async (
@@ -399,7 +402,7 @@ const DetailHospital: React.FC = () => {
     doctorid: number,
     formData: any,
   ) => {
-    console.log(formData);
+    console.log("ok");
     axios
       .put(
         `http://localhost:3000/api/v1/hospital/${hospitalid}/doctor/${doctorid}`,
@@ -414,22 +417,22 @@ const DetailHospital: React.FC = () => {
 
       .then((response) => {
         console.log(response);
-        setModifyOpen(false);
+        setModifyOpen(null);
       })
 
       .catch((error) => {
-        console.log(1);
+        console.log(error);
         handleMMClose();
       });
   };
 
   // 의사 삭제
-  const [deleteOpen, setDeleteOpen] = useState(false);
-  const handleDMOpen = () => {
-    setDeleteOpen(true);
+  const [deleteOpen, setDeleteOpen] = useState<number|null>(null);
+  const handleDMOpen = (doctorId: number) => {
+    setDeleteOpen(doctorId);
   };
   const handleDMClose = () => {
-    setDeleteOpen(false);
+    setDeleteOpen(null);
   };
 
   const DeleteDoc = async (doctorid: number) => {
@@ -446,11 +449,11 @@ const DetailHospital: React.FC = () => {
 
       .then((response) => {
         console.log(response);
-        setDeleteOpen(false);
+        setDeleteOpen(null);
       })
 
       .catch((error) => {
-        console.log(1);
+        console.log(error);
         handleDMClose();
       });
   };
@@ -474,7 +477,7 @@ const DetailHospital: React.FC = () => {
           operatingHourResponses,
         } = response.data;
 
-        console.log(response.data);
+        console.log("ok");
         setHospitalData(hospitalResponse);
         setDoctorData(doctorResponses);
         setReviewData(reviewResponses);
@@ -622,8 +625,8 @@ const DetailHospital: React.FC = () => {
                           {ishospital && mypage && (
                             <div className="flex">
                               <ModifyDoctor
-                                open={modifyOpen}
-                                handleMOpen={handleMMOpen}
+                                open={modifyOpen === doctor.doctorId}
+                                handleMOpen={()=>handleMMOpen(doctor.doctorId)}
                                 handleMClose={handleMMClose}
                                 description={doctor.description}
                                 education={doctor.educationBackgrounds}
@@ -639,8 +642,8 @@ const DetailHospital: React.FC = () => {
                                 }
                               />
                               <DeleteDoctor
-                                open={deleteOpen}
-                                handleMOpen={handleDMOpen}
+                                open={deleteOpen === doctor.doctorId}
+                                handleMOpen={()=>handleDMOpen(doctor.doctorId)}
                                 handleMClose={handleDMClose}
                                 hospitalname={hospitalData.name}
                                 doctorname={doctor.name}
@@ -672,12 +675,6 @@ const DetailHospital: React.FC = () => {
                         </ul>
                       </Doctor_common>
                     </Doctors>
-                    <Doctor_res_icon>
-                      <img src={Arrow} alt="" />
-                      <a href="" className="mt-4 text-xl">
-                        {mypage ? "내 상담 확인하기" : "상담 예약 하기"}
-                      </a>
-                    </Doctor_res_icon>
                   </div>
                 ))}
                 {mypage && doctorData.length < 3 && (
@@ -798,8 +795,26 @@ const DetailHospital: React.FC = () => {
                               {ishospital ? (
                                 <Grid item xs={2}>
                                   <NotificationImportantIcon
-                                    sx={{ color: red[500] }}
+                                    sx={{ color: red[500], cursor: 'pointer' }}
+                                    onClick={()=>handleOpenReportModal(review.reviewId)}
                                   />
+                                  <Modal
+                                    open={openReportModal === review.reviewId}
+                                    onClose={handleCloseReportModal}
+                                    aria-labelledby="modal-modal-title"
+                                    aria-describedby="modal-modal-description"
+                                    sx={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                    }}
+                                  >
+                                    <ReviewReportModal
+                                      onClose={handleCloseReportModal}
+                                      reviewId={review.reviewId}
+                                    ></ReviewReportModal>
+                                  </Modal>
                                 </Grid>
                               ) : (
                                 <Grid item xs={2}></Grid>

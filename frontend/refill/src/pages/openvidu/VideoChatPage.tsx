@@ -131,15 +131,15 @@ const VideoChatPage: React.FC = () => {
   //
 
   // modal
-  const [openOutModal, setOpenOutModal] = React.useState(false);
+  const [openOutModal, setOpenOutModal] = useState(false);
   const handleOpenOutModal = () => setOpenOutModal(true);
   const handleCloseOutModal = () => setOpenOutModal(false);
 
-  const [openReportModal, setOpenReportModal] = React.useState(false);
+  const [openReportModal, setOpenReportModal] = useState(false);
   const handleOpenReportModal = () => setOpenReportModal(true);
   const handleCloseReportModal = () => setOpenReportModal(false);
 
-  const [openReviewModal, setOpenReviewModal] = React.useState(false);
+  const [openReviewModal, setOpenReviewModal] = useState(false);
   const handleOpenRviewtModal = () => setOpenReviewModal(true);
   const handleCloseReviewModal = () => setOpenReviewModal(false);
 

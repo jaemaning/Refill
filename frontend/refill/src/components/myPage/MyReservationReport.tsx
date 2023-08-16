@@ -62,13 +62,13 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
   const sortedList = reservationList
     ?.filter(
       (reservation) =>
-        new Date(reservation.startDateTime) >= thirtyOneMinutesAgo,
+        new Date(reservation.startDateTime) >= thirtyOneMinutesAgo
     )
     .slice()
     .sort(
       (a, b) =>
         new Date(a.startDateTime).getTime() -
-        new Date(b.startDateTime).getTime(),
+        new Date(b.startDateTime).getTime()
     );
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -80,8 +80,8 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
       setCurrentIndex((prevIndex) =>
         Math.min(
           prevIndex + slidesToShow,
-          reservationList.length - slidesToShow,
-        ),
+          reservationList.length - slidesToShow
+        )
       );
     }
   };
@@ -91,7 +91,7 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
   };
 
   return (
-    <div className="grid grid-rows-4 gap-4 items-center">
+    <div className="grid grid-rows-4 gap-2 items-center">
       {openModal ? (
         <DeleteModal
           resId={reservationId}
@@ -103,14 +103,6 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
       )}
 
       <div className="row-start-1 row-end-4">
-        <div className="flex justify-between">
-          <button className="text-lg" onClick={prevSlide}>
-            Prev
-          </button>
-          <button className="text-lg" onClick={nextSlide}>
-            Next
-          </button>
-        </div>
         <div
           style={{
             overflow: "hidden",
@@ -139,6 +131,16 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
             ))}
           </div>
         </div>
+
+        <div className="flex justify-between mt-2">
+          <button className="text-lg" onClick={prevSlide}>
+            Prev
+          </button>
+          <button className="text-lg" onClick={nextSlide}>
+            Next
+          </button>
+        </div>
+
       </div>
       <div className="px-10">
         <CautionReservation />
