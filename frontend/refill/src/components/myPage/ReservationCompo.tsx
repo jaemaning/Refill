@@ -154,9 +154,9 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
   };
 
   const handleDelete = () => {
-    setOpenModal(true)
-    setReservationId(reservation.reservationId)
-  }
+    setOpenModal(true);
+    setReservationId(reservation.reservationId);
+  };
 
   return (
     <>
@@ -167,7 +167,9 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
         <hr />
         <div className="grid grid-cols-2 gap-1 mt-2">
           <button
-            onClick={() => {handleDelete}}
+            onClick={() => {
+              handleDelete;
+            }}
             className="res-small-btn-left h-8 p-1 text-white"
           >
             상담취소
