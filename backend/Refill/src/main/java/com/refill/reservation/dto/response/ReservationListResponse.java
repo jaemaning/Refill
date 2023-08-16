@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 
 public record ReservationListResponse(
     Long reservationId,
+    Long hospitalId,
+    Long doctorId,
+    Long memberId,
     String hospitalName,
     String doctorName,
     LocalDateTime startDateTime
@@ -13,6 +16,9 @@ public record ReservationListResponse(
     public ReservationListResponse(Reservation reservation) {
         this (
             reservation.getId(),
+            reservation.getDoctor().getHospital().getId(),
+            reservation.getDoctor().getId(),
+            reservation.getMember().getId(),
             reservation.getDoctor().getHospital().getName(),
             reservation.getDoctor().getName(),
             reservation.getStartDateTime()
