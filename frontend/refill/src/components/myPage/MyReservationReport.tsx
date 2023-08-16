@@ -14,18 +14,14 @@ import DeleteModal from "./DeleteModal";
 import ReservationCompo from "./ReservationCompo";
 
 type Reservation = {
+  reservationId: number;
+  hospitalId: number;
+  doctorId: number;
+  memberId: number;
   doctorName: string;
   hospitalName: string;
-  reservationId: number;
   startDateTime: string;
 };
-
-interface TypeToken {
-  consultingId?: number | null;
-  sessionId?: string | null;
-  token?: string | null;
-  shareToken?: string | null;
-}
 
 interface MyReservationReportProps {
   reservationList: Reservation[] | null;
@@ -38,52 +34,6 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
   // 상담 취소
   const [openModal, setOpenModal] = useState(false);
   const [wantDelete, setWantDelete] = useState(false);
-
-  // 상담 입장
-  const loginToken = useSelector((state: RootState) => state.login.token);
-  const islogin = useSelector((state: RootState) => state.login.islogin);
-  const [tokenData, setTokenData] = useState<TypeToken[]>([]);
-  const navigate = useNavigate();
-  const [joinModal, setJoinModal] = useState(false);
-
-  const [nowResId, setNowResId] = useState(0);
-  const [openJoin, setOpenJoin] = useState(false);
-
-  // 입장하는 함수
-  const joinSession = ({
-    consultingId,
-    sessionId,
-    token,
-    shareToken,
-  }: TypeToken) => {
-    navigate("/video", {
-      state: {
-        sessionPk: sessionId,
-        token: token,
-        shareToken: shareToken,
-        consultingId: consultingId,
-      },
-    });
-  };
-  // 토큰을 받아오는 함수
-  const getToken = async (testReservationId: number): Promise<void> => {
-    try {
-      const response = await axios.get(
-        `api/v1/consulting/connection/${testReservationId}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${loginToken}`,
-          },
-        },
-      );
-      setTokenData((prevTokenData) => [...prevTokenData, response.data]);
-      //
-      console.log("ok");
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const deleteReservation = (id: number) => {
     setOpenModal(true);
@@ -103,8 +53,18 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
       });
   };
 
+  // 1. 현재 날짜와 시간을 가져옵니다.
+  const now = new Date();
+
+  // 2. 현재 날짜 및 시간에서 31분을 빼서 경계 시간을 계산합니다.
+  const thirtyOneMinutesAgo = new Date(now.getTime() - 31 * 60 * 1000);
+  console.log(thirtyOneMinutesAgo);
   const sortedList = reservationList
-    ?.slice()
+    ?.filter(
+      (reservation) =>
+        new Date(reservation.startDateTime) >= thirtyOneMinutesAgo,
+    )
+    .slice()
     .sort(
       (a, b) =>
         new Date(a.startDateTime).getTime() -

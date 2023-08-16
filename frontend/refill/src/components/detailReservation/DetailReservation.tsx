@@ -28,11 +28,15 @@ type Doctor = {
 
 type Reservation = {
   reservationId: number;
+  hospitalId: number;
+  doctorId: number;
+  memberId: number;
   startDate: string;
   memberName: string;
   birthDay: string;
   tel: string;
   counselingDemands: string;
+  hairImage: string;
 };
 
 const DetailReservation: React.FC<ComponentProps> = ({
@@ -100,7 +104,7 @@ const DetailReservation: React.FC<ComponentProps> = ({
     console.log("ok");
   }, [selectedDate]);
   return (
-    <div className="m-2 py-2">
+    <div className="m-2 py-2" style={{ width: "300px" }}>
       <div>
         <div>
           <ReservationDoctor

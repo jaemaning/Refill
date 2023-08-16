@@ -5,7 +5,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record ReservationInfoResponse(
-    Long id,
+    Long reservationId,
+    Long hospitalId,
+    Long doctorId,
+    Long memberId,
     LocalDateTime startDate,
     String memberName,
     LocalDate birthDay,
@@ -18,6 +21,9 @@ public record ReservationInfoResponse(
     public ReservationInfoResponse(Reservation reservation) {
         this(
             reservation.getId(),
+            reservation.getDoctor().getHospital().getId(),
+            reservation.getDoctor().getId(),
+            reservation.getMember().getId(),
             reservation.getStartDateTime(),
             reservation.getMember().getName(),
             reservation.getMember().getBirthDay(),
