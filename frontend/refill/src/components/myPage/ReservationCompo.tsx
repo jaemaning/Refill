@@ -29,12 +29,14 @@ type Res = {
 
 interface ReservationCompoProps {
   reservation: Res;
-  deleteReservation: (id: number) => void;
+  setReservationId: (id: number) => void;
+  setOpenModal: (open: boolean) => void;
 }
 
 const ReservationCompo: React.FC<ReservationCompoProps> = ({
   reservation,
-  deleteReservation,
+  setReservationId,
+  setOpenModal,
 }) => {
   // 상담 입장
   const loginToken = useSelector((state: RootState) => state.login.token);
@@ -151,6 +153,11 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
     }
   };
 
+  const handleDelete = () => {
+    setOpenModal(true)
+    setReservationId(reservation.reservationId)
+  }
+
   return (
     <>
       <div className="mypage-reservation-box p-4">
@@ -160,7 +167,7 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
         <hr />
         <div className="grid grid-cols-2 gap-1 mt-2">
           <button
-            onClick={() => deleteReservation(reservation.reservationId)}
+            onClick={() => {handleDelete}}
             className="res-small-btn-left h-8 p-1 text-white"
           >
             상담취소
