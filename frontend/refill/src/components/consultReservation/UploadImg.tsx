@@ -48,10 +48,6 @@ const UploadImg: React.FC<UploadImgProps> = ({
     formData.append("reservationRequest", jsonBlob);
     if (imgFile) {
       formData.append("hairImg", imgFile);
-      console.log(imgFile);
-      // console.log(hospitalName)
-      // console.log(token)
-      // console.log(newHospitalId)
     }
 
     axios
@@ -61,7 +57,7 @@ const UploadImg: React.FC<UploadImgProps> = ({
         },
       })
       .then((response) => {
-        console.log(response.data);
+        console.log("ok");
       })
       .catch((error) => {
         console.error(error.response.data.message);
