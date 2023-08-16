@@ -27,12 +27,6 @@ const Navbar = React.forwardRef<HTMLDivElement>((props, ref) => {
           ["로그아웃", "/logout"],
           ["마이페이지", "/mypage"],
         ]);
-      } else if (isHospital === true) {
-        setMenuList([
-          ...menuList,
-          ["로그아웃", "/logout"],
-          ["마이페이지", `/DetailHospital/${hospitalId}`],
-        ]);
       } else if (isAdmin === true) {
         setMenuList([
           ["로그아웃", "/logout"],
@@ -43,10 +37,10 @@ const Navbar = React.forwardRef<HTMLDivElement>((props, ref) => {
       setMenuList([...menuList, ["로그인", "/loginsignup"]]);
     }
 
-    console.log(isAdmin);
-    console.log(menuList);
-    console.log(isLogin);
   }, []);
+
+
+  const hosMenu = [["병원관리|예약상담", `/DetailHospital/${hospitalId}`],["로그아웃", "/logout"]]
 
   const handleMenuToggle = () => {
     setMenuOpen((prevMenuState) => !prevMenuState);
@@ -92,7 +86,9 @@ const Navbar = React.forwardRef<HTMLDivElement>((props, ref) => {
               style={{ zIndex: 5 }}
             >
               <ul className="font-medium flex flex-col p-4 lg:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 lg:flex-row lg:mt-0 lg:border-0 lg:bg-white dark:bg-gray-800 lg:dark:bg-gray-900 dark:border-gray-700">
-                {menuList.map((menu, i) => {
+                {
+                !isHospital ?
+                menuList.map((menu, i) => {
                   return (
                     <li key={i} className="ml-0 lg:ml-20 text-center">
                       <Link
@@ -103,7 +99,19 @@ const Navbar = React.forwardRef<HTMLDivElement>((props, ref) => {
                       </Link>
                     </li>
                   );
-                })}
+                })
+              : hosMenu.map((menu, i) => {
+                return (
+                  <li key={i} className="ml-0 lg:ml-20 text-center">
+                    <Link
+                      to={menu[1]}
+                      className="text-m-600 font-bold block py-2 px-5 text-gray-900 rounded hover:bg-gray-100 lg:hover:bg-transparent lg:border-0 lg:hover:text-blue-700 lg:p-0 dark:text-white lg:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white lg:dark:hover:bg-transparent"
+                    >
+                      {menu[0]}
+                    </Link>
+                  </li>
+                )
+              })}
               </ul>
             </div>
           </div>
