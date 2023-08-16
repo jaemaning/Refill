@@ -83,6 +83,7 @@ const ConsultingList: React.FC<ConsultingListProps> = ({ loginId }) => {
 
   // axios 호출 함수
   const getConsultingList = () => {
+    console.log("도는건가");
     axios
       .get(`/api/v1/consulting/${loginId}`, {
         headers: {
@@ -90,7 +91,9 @@ const ConsultingList: React.FC<ConsultingListProps> = ({ loginId }) => {
         },
       })
       .then((res) => {
-        console.log("ok");
+        console.log("ok123");
+        console.log(loginId);
+        console.log(res.data);
         setConsList(res.data);
       })
       .catch((err) => {

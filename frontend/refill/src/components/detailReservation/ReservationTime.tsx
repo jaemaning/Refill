@@ -3,11 +3,15 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 type Reservation = {
   reservationId: number;
+  hospitalId: number;
+  doctorId: number;
+  memberId: number;
   startDate: string;
   memberName: string;
   birthDay: string;
   tel: string;
   counselingDemands: string;
+  hairImage: string;
 };
 
 interface ReservationTimeProps {
