@@ -10,7 +10,8 @@ public record ReservationInfoResponse(
     String memberName,
     LocalDate birthDay,
     String tel,
-    String counselingDemands
+    String counselingDemands,
+    String hairImage
 
 ) {
 
@@ -21,7 +22,8 @@ public record ReservationInfoResponse(
             reservation.getMember().getName(),
             reservation.getMember().getBirthDay(),
             reservation.getMember().getTel(),
-            reservation.getCounselingDemands()
+            reservation.getCounselingDemands(),
+            reservation.getHairImage()
         );
     }
 

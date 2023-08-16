@@ -69,7 +69,7 @@ public class ReservationController {
     @GetMapping("/list/{doctorId}")
     public ResponseEntity<List<ReservationInfoResponse>> getReservationListByDoctor(@AuthenticationPrincipal LoginInfo loginInfo, @PathVariable("doctorId") Long doctorId) {
 
-        log.debug("'{}' hospital request reservation info by doctor");
+        log.debug("'{}' hospital request reservation info by doctor", loginInfo.loginId());
         List<ReservationInfoResponse> reservationInfoResponseList = reservationService.findReservationByDoctor(loginInfo, doctorId);
 
         return ResponseEntity.ok().body(reservationInfoResponseList);
