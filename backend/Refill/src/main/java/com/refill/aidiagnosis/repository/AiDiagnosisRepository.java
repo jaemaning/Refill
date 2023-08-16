@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface AiDiagnosisRepository extends JpaRepository<AiDiagnosis, Long> {
 
     List<AiDiagnosis> findAllByMember(Member member);
+
 }

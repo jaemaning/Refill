@@ -159,7 +159,7 @@ const SelectDoctorAndTime: React.FC<ComponentProps> = ({
   // 병원 정보 가져오기
 
   return (
-    <div className="m-2 py-2">
+    <div className="m-2 py-2" style={{ width: "300px" }}>
       {isFirst ? (
         <>
           <div className="m-1 text-xl">

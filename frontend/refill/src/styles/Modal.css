@@ -143,3 +143,11 @@
   border: 2px solid #9d9d9d;
   border-radius: 10px;
 }
+
+/* 입장 모달 */
+.join-modal-large-box {
+  height: 400px;
+  width: 600px;
+  border-radius: 10px;
+  background-color: white;
+}

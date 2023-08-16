@@ -125,21 +125,21 @@ const HospitalInfo = styled.div`
   flex-direction: column;
   display: ${(props: DivProps) => (props.buttonData === 0 ? "block" : "none")};
   padding: 25px;
-  `;
+`;
 
 const DoctorInfo = styled.div`
   display: flex;
   flex-direction: column;
   display: ${(props: DivProps) => (props.buttonData === 1 ? "block" : "none")};
   padding: 25px;
-  `;
+`;
 
 const Review = styled.div`
   display: flex;
   flex-direction: column;
   display: ${(props: DivProps) => (props.buttonData === 2 ? "block" : "none")};
   padding: 25px;
-  `;
+`;
 
 const Doctors = styled.div`
   display: flex;
@@ -211,19 +211,26 @@ const DetailHospital: React.FC = () => {
     setButtonData(2);
   };
 
-    // 지도 생성 메서드
+  // 지도 생성 메서드
   // 처음부터 훅 호출
   const scriptLoaded = useKakaoMapScript();
 
   useEffect(() => {
-    console.log("여기",scriptLoaded, hospitalData)
+    console.log("여기", scriptLoaded, hospitalData);
     const getLocation = async (): Promise<void> => {
-      if (scriptLoaded && hospitalData.longitude != 0 && hospitalData.latitude != 0) {
-        console.log("???")
+      if (
+        scriptLoaded &&
+        hospitalData.longitude != 0 &&
+        hospitalData.latitude != 0
+      ) {
+        console.log("???");
         const loadMap = () => {
           window.kakao.maps.load(() => {
             const options = {
-              center: new window.kakao.maps.LatLng(hospitalData.latitude, hospitalData.longitude),
+              center: new window.kakao.maps.LatLng(
+                hospitalData.latitude,
+                hospitalData.longitude,
+              ),
               level: 4,
             };
             map.current = new window.kakao.maps.Map(
@@ -234,8 +241,9 @@ const DetailHospital: React.FC = () => {
           });
         };
         loadMap();
-        makeHomeMarker()
-      }}
+        makeHomeMarker();
+      }
+    };
     getLocation();
   }, [scriptLoaded, hospitalData]); // 의존성 배열에 scriptLoaded 추가
 
@@ -243,9 +251,9 @@ const DetailHospital: React.FC = () => {
   const makeHomeMarker = (): void => {
     // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
     const markerPosition = new window.kakao.maps.LatLng(
-        hospitalData.latitude,
-        hospitalData.longitude,
-      ); // 마커가 표시될 위치입니다
+      hospitalData.latitude,
+      hospitalData.longitude,
+    ); // 마커가 표시될 위치입니다
 
     // 마커를 생성합니다
     const marker = new window.kakao.maps.Marker({
@@ -529,9 +537,13 @@ const DetailHospital: React.FC = () => {
       <Containers>
         <Layout>
           <Content style={{ width: "1300px" }}>
-            <span className="font-bold" style={{fontSize: "40px", padding: "10px 0px"}}>{hospitalData.name}</span>
-            <Kakaomap ref={kakaoMapBox}>
-            </Kakaomap>
+            <span
+              className="font-bold"
+              style={{ fontSize: "40px", padding: "10px 0px" }}
+            >
+              {hospitalData.name}
+            </span>
+            <Kakaomap ref={kakaoMapBox}></Kakaomap>
             <ButtonList>
               <Button
                 content="병원 정보"

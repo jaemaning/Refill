@@ -15,7 +15,11 @@ type aiDiagnosisData = {
   diagnosisImage: string;
 };
 
-const AiDiagnosisList: React.FC = () => {
+interface AiProps {
+  memberId: number;
+}
+
+const AiDiagnosisList: React.FC<AiProps> = ({ memberId }) => {
   // 토큰
   const token = useSelector((state: RootState) => state.login.token);
   // AiDiagnosisList 받기
@@ -24,7 +28,7 @@ const AiDiagnosisList: React.FC = () => {
   // AiDiagnosisList axios 호출
   const getAiDiagnosisList = () => {
     axios
-      .get(`/api/v1/diagnosis/`, {
+      .get(`/api/v1/diagnosis/member/${memberId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

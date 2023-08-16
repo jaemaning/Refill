@@ -109,7 +109,8 @@ export default function Footer() {
                 Co. RE:Fill
               </h6>
               <p>
-                RE:Fill was made by SSAFY Team C201 in 2023. Thank you for visiting our site.
+                RE:Fill was made by SSAFY Team C201 in 2023. Thank you for
+                visiting our site.
               </p>
             </div>
 
