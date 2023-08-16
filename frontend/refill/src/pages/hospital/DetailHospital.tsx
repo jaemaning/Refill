@@ -455,11 +455,6 @@ const DetailHospital: React.FC = () => {
   const MyId: number = useSelector((state: RootState) => state.login.hosid);
 
   useEffect(() => {
-    if (ishospital === true) {
-      if (MyId === hospitalData.hospitalId) {
-        setMypage(true);
-      }
-    }
     axios
       .get(`/api/v1/hospital/${hospitalId}`, {
         headers: {
@@ -488,12 +483,15 @@ const DetailHospital: React.FC = () => {
       });
   }, []);
 
-  // useEffect(() => {
-  //   console.log(hospitalData);
-  //   console.log(doctorData);
-  //   console.log(reviewData);
-  //   console.log(timeData);
-  // }, [hospitalData, doctorData, reviewData, timeData]);
+  useEffect(() => {
+    if (ishospital === true) {
+      console.log(MyId);
+      console.log(hospitalData.hospitalId);
+      if (MyId === hospitalData.hospitalId) {
+        setMypage(true);
+      }
+    }
+  }, [hospitalData, doctorData, reviewData, timeData]);
 
   // image onclick 이벤트 => 배너이미지 변경
   const [inputImage, setInputImage] = useState<InputImageState>({
@@ -592,7 +590,10 @@ const DetailHospital: React.FC = () => {
               <h1 className="text-4xl font-bold">의사 정보</h1>
               <div>
                 {doctorData.map((doctor, index) => (
-                  <div key={index} className="flex justify-around items-center">
+                  <div
+                    key={doctor.doctorId}
+                    className="flex justify-around items-center"
+                  >
                     <Doctors>
                       <Doctor_common
                         className=" items-center"
@@ -614,7 +615,7 @@ const DetailHospital: React.FC = () => {
                       >
                         <div className="flex justify-between">
                           <Bigspan>약력</Bigspan>
-                          {ishospital ? (
+                          {ishospital && mypage && (
                             <div className="flex">
                               <ModifyDoctor
                                 open={modifyOpen}
@@ -632,7 +633,7 @@ const DetailHospital: React.FC = () => {
                                     formData,
                                   )
                                 }
-                              ></ModifyDoctor>
+                              />
                               <DeleteDoctor
                                 open={deleteOpen}
                                 handleMOpen={handleDMOpen}
@@ -642,10 +643,8 @@ const DetailHospital: React.FC = () => {
                                 onDeleteDoctor={() =>
                                   DeleteDoc(doctor.doctorId)
                                 }
-                              ></DeleteDoctor>
+                              />
                             </div>
-                          ) : (
-                            <div></div>
                           )}
                         </div>
                         <p className="text-lg">{doctor.description}</p>
@@ -841,19 +840,19 @@ const DetailHospital: React.FC = () => {
           <Content style={{ width: "350px" }}></Content>
           <Content style={{ width: "350px" }}>
             {/* 환자인지 의사인지 확인하는 로직이 필요함 */}
-            {ishospital ? (
+            {ishospital && mypage ? (
               <DetailReservation
                 doctors={doctorData}
                 hospitalId={hospitalData.hospitalId}
                 hospitalName={hospitalName}
               />
-            ) : (
+            ) : !ishospital ? (
               <SelectDoctorAndTime
                 doctors={doctorData}
                 hospitalId={hospitalData.hospitalId}
                 hospitalName={hospitalName}
               />
-            )}
+            ) : null}
           </Content>
         </Layout>
       </Containers>

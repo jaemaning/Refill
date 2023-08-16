@@ -4,7 +4,7 @@ import "styles/Modal.css";
 interface DeleteModalProps {
   setOpenModal: (open: boolean) => void;
   deleteReservation: (resId: number) => void;
-  resId: number
+  resId: number;
 }
 
 const DeleteModal: React.FC<DeleteModalProps> = ({
