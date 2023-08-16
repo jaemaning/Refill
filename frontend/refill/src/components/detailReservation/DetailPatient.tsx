@@ -85,7 +85,7 @@ const DetailPatient: React.FC<DetailPatientProps> = ({
     console.log(reservationId);
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/v1/consulting/connection/${reservationId}`,
+        `/api/v1/consulting/connection/${reservationId}`,
         {
           headers: {
             "Content-Type": "application/json",
