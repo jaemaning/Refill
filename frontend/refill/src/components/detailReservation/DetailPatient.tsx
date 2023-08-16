@@ -86,12 +86,12 @@ const DetailPatient: React.FC<DetailPatientProps> = ({
   const dayName = days[dateObj.getDay()];
 
   const formattedDate = `${dateObj.getFullYear()}-${String(
-    dateObj.getMonth() + 1
+    dateObj.getMonth() + 1,
   ).padStart(2, "0")}-${String(dateObj.getDate()).padStart(
     2,
-    "0"
+    "0",
   )} (${dayName}) ${String(dateObj.getHours()).padStart(2, "0")}:${String(
-    dateObj.getMinutes()
+    dateObj.getMinutes(),
   ).padStart(2, "0")}`;
 
   const getToken = async (reservationId: number) => {
@@ -103,7 +103,7 @@ const DetailPatient: React.FC<DetailPatientProps> = ({
             "Content-Type": "application/json",
             Authorization: `Bearer ${loginToken}`,
           },
-        }
+        },
       );
       console.log("API Response:", response.data);
       setMyJoinToken({ ...response.data, hairImage: selectedMember.hairImage });
@@ -125,7 +125,7 @@ const DetailPatient: React.FC<DetailPatientProps> = ({
   const joinSession = (tokenData: newTypeToken | null) => {
     if (!tokenData) return;
     navigate("/video", {
-      state: tokenData
+      state: tokenData,
     });
   };
   // const joinConsult = async () => {
@@ -186,7 +186,9 @@ const DetailPatient: React.FC<DetailPatientProps> = ({
         <div className="pt-5 flex justify-center">
           {/* 버튼 넣는 곳 */}
           <button
-            onClick={() => { joinSession(myJoinToken); }}
+            onClick={() => {
+              joinSession(myJoinToken);
+            }}
             className="p-2 reservation-detail-join-button"
             disabled={!canJoin}
             style={canJoin ? activeButtonStyle : disabledButtonStyle}

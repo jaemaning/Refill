@@ -625,15 +625,22 @@ const VideoChatPage: React.FC = () => {
                   {ishospital ? (
                     <div
                       style={{
-                        display: toggleScreenPublisher ? "none" : "block", color: 'black'
+                        display: toggleScreenPublisher ? "none" : "block",
+                        color: "black",
                       }}
                     >
-                      <div style={{border: "1px solid grey"}} className="scroll-ai-box">
-                        <h2 style={{fontWeight:'700' }}>이전 상담 내역</h2>
+                      <div
+                        style={{ border: "1px solid grey" }}
+                        className="scroll-ai-box"
+                      >
+                        <h2 style={{ fontWeight: "700" }}>이전 상담 내역</h2>
                         <ConsultingList loginId={loginId} />
                       </div>
-                      <div style={{border: "1px solid grey"}} className="scroll-ai-box">
-                        <h2 style={{fontWeight:'700' }}>AI 자가진단</h2>
+                      <div
+                        style={{ border: "1px solid grey" }}
+                        className="scroll-ai-box"
+                      >
+                        <h2 style={{ fontWeight: "700" }}>AI 자가진단</h2>
                         <AiDiagnosisList memberId={memberId} />
                       </div>
                     </div>
@@ -641,17 +648,27 @@ const VideoChatPage: React.FC = () => {
                   {ismember &&
                   subscribers.filter(
                     (sub) => sub.stream.typeOfVideo === "SCREEN",
-                    ).length === 0 ? (
-                      <div style={{color: 'black', width:'95%'}}>
-                        <h2 style={{fontWeight:'700' }}>이전 상담 내역</h2>
-                        <div style={{border: "1px solid grey", height:'200px', marginBottom: '10px'}} className="scroll-ai-box">
-                          <ConsultingList loginId={loginId} />
-                        </div>
-                        <h2 style={{fontWeight:'700' }}>AI 자가진단</h2>
-                        <div style={{border: "1px solid grey", height:'200px'}} className="scroll-ai-box">
-                          <AiDiagnosisList memberId={memberId} />
-                        </div>
+                  ).length === 0 ? (
+                    <div style={{ color: "black", width: "95%" }}>
+                      <h2 style={{ fontWeight: "700" }}>이전 상담 내역</h2>
+                      <div
+                        style={{
+                          border: "1px solid grey",
+                          height: "200px",
+                          marginBottom: "10px",
+                        }}
+                        className="scroll-ai-box"
+                      >
+                        <ConsultingList loginId={loginId} />
                       </div>
+                      <h2 style={{ fontWeight: "700" }}>AI 자가진단</h2>
+                      <div
+                        style={{ border: "1px solid grey", height: "200px" }}
+                        className="scroll-ai-box"
+                      >
+                        <AiDiagnosisList memberId={memberId} />
+                      </div>
+                    </div>
                   ) : null}
                 </PrevComponent>
                 {ishospital ? (
