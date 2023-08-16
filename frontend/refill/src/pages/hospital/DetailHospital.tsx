@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios, { AxiosHeaders } from "axios";
 import Navbar from "../../components/Navbar";
 import Footer from "components/Footer";
@@ -24,6 +24,7 @@ import DeleteDoctor from "./DeleteDoctor";
 import SelectDoctorAndTime from "components/consultReservation/SelectDoctorAndTime";
 import DetailReservation from "components/detailReservation/DetailReservation";
 import { useParams } from "react-router-dom";
+import { useKakaoMapScript } from "hooks/UseKakaoMap";
 // import StarRatings from "react-star-ratings";
 
 interface DivProps {
@@ -105,6 +106,7 @@ const Kakaomap = styled.div`
   justify-content: center;
   height: 500px;
   border: 1px black solid;
+  margin-bottom: 30px;
 `;
 const Layout = styled.div`
   display: flex;
@@ -122,19 +124,22 @@ const HospitalInfo = styled.div`
   display: flex;
   flex-direction: column;
   display: ${(props: DivProps) => (props.buttonData === 0 ? "block" : "none")};
-`;
+  padding: 25px;
+  `;
 
 const DoctorInfo = styled.div`
   display: flex;
   flex-direction: column;
   display: ${(props: DivProps) => (props.buttonData === 1 ? "block" : "none")};
-`;
+  padding: 25px;
+  `;
 
 const Review = styled.div`
   display: flex;
   flex-direction: column;
   display: ${(props: DivProps) => (props.buttonData === 2 ? "block" : "none")};
-`;
+  padding: 25px;
+  `;
 
 const Doctors = styled.div`
   display: flex;
@@ -169,6 +174,8 @@ const Doctor_res_icon = styled.span`
 
 const DetailHospital: React.FC = () => {
   const { hospitalId } = useParams();
+  const kakaoMapBox = useRef<HTMLDivElement>(null); // 지도를 담을 div element를 위한 ref
+  const map = useRef<any>(null); // map 객체를 관리할 ref
 
   // 배너이미지 갈아끼울때마다 적용
   const [hospitalName, setHospitalName] = useState("");
@@ -202,6 +209,51 @@ const DetailHospital: React.FC = () => {
 
   const handleReviewClick = () => {
     setButtonData(2);
+  };
+
+    // 지도 생성 메서드
+  // 처음부터 훅 호출
+  const scriptLoaded = useKakaoMapScript();
+
+  useEffect(() => {
+    console.log("여기",scriptLoaded, hospitalData)
+    const getLocation = async (): Promise<void> => {
+      if (scriptLoaded && hospitalData.longitude != 0 && hospitalData.latitude != 0) {
+        console.log("???")
+        const loadMap = () => {
+          window.kakao.maps.load(() => {
+            const options = {
+              center: new window.kakao.maps.LatLng(hospitalData.latitude, hospitalData.longitude),
+              level: 4,
+            };
+            map.current = new window.kakao.maps.Map(
+              kakaoMapBox.current,
+              options,
+            );
+            // map.current.setZoomable(false); // 줌 가능 불가능 여부
+          });
+        };
+        loadMap();
+        makeHomeMarker()
+      }}
+    getLocation();
+  }, [scriptLoaded, hospitalData]); // 의존성 배열에 scriptLoaded 추가
+
+  // 지도 홈마커 띄우기
+  const makeHomeMarker = (): void => {
+    // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+    const markerPosition = new window.kakao.maps.LatLng(
+        hospitalData.latitude,
+        hospitalData.longitude,
+      ); // 마커가 표시될 위치입니다
+
+    // 마커를 생성합니다
+    const marker = new window.kakao.maps.Marker({
+      position: markerPosition,
+    });
+
+    // 마커가 지도 위에 표시되도록 설정합니다
+    marker.setMap(map.current);
   };
 
   // 페이지네이션
@@ -477,8 +529,9 @@ const DetailHospital: React.FC = () => {
       <Containers>
         <Layout>
           <Content style={{ width: "1300px" }}>
-            <span className="text-2xl font-bold">{hospitalData.name}</span>
-            <Kakaomap></Kakaomap>
+            <span className="font-bold" style={{fontSize: "40px", padding: "10px 0px"}}>{hospitalData.name}</span>
+            <Kakaomap ref={kakaoMapBox}>
+            </Kakaomap>
             <ButtonList>
               <Button
                 content="병원 정보"
