@@ -114,7 +114,7 @@ const Mypage: React.FC = () => {
     (state: RootState) => state.login.islogin,
   );
   const loginId = useSelector((state: RootState) => state.login.loginId);
-
+    // 토큰 분해하기 memberId가져오기
   const navigate = useNavigate();
 
   useEffect(() => {
