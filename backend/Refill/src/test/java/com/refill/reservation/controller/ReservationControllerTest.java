@@ -51,7 +51,7 @@ class ReservationControllerTest extends ControllerTest {
     void reservation_list_checked_by_member() throws Exception {
 
         List<ReservationListResponse> list = new ArrayList<>();
-        ReservationListResponse mockResponse = new ReservationListResponse(1L, "hospital", "doctor",
+        ReservationListResponse mockResponse = new ReservationListResponse(1L, 1L, 1L, 1L, "hospital", "doctor",
             LocalDateTime.now());
 
         list.add(mockResponse);
@@ -206,7 +206,7 @@ class ReservationControllerTest extends ControllerTest {
     void get_reservation_info_list_by_doctor() throws Exception{
 
         List<ReservationInfoResponse> list = new ArrayList<>();
-        list.add(new ReservationInfoResponse(1L, LocalDateTime.now(), "상원", LocalDate.now(), "010-1234-5678", "상담 요청합니다."));
+        list.add(new ReservationInfoResponse(1L, 1L, 1L, 1L, LocalDateTime.now(),  "상원", LocalDate.now(), "010-1234-5678", "상담 요청합니다.", "image"));
 
         when(reservationService.findReservationByDoctor(any(), any())).thenReturn(list);
 
