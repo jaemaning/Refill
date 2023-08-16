@@ -36,7 +36,7 @@ import OutModal from "components/openvidu/OutModal";
 import ReportModal from "components/openvidu/ReportModal";
 import Modal from "@mui/material/Modal";
 import ReviewModal from "components/openvidu/ReviewModal";
-import CameraswitchIcon from '@mui/icons-material/Cameraswitch';
+import CameraswitchIcon from "@mui/icons-material/Cameraswitch";
 import AiDiagnosisList from "components/myPage/AiDiagnosisList";
 import ConsultingList from "components/myPage/ConsultingList";
 
@@ -281,12 +281,11 @@ const VideoChatPage: React.FC = () => {
 
   useEffect(() => {
     if (!showChat) {
-      setChangeChatIcon(true)
-      console.log('활성화')
+      setChangeChatIcon(true);
+      console.log("활성화");
     }
-    console.log('??????????모지')
+    console.log("??????????모지");
   }, [chat.messageList, chat]);
-
 
   // 나갈때 동작
   const onbeforeunload = () => {
@@ -521,7 +520,7 @@ const VideoChatPage: React.FC = () => {
 
   const handleShowBox = () => {
     setShowChat(!showChat);
-    setChangeChatIcon(false)
+    setChangeChatIcon(false);
   };
 
   function preventHorizontalKeyboardNavigation(event: React.KeyboardEvent) {
@@ -690,17 +689,24 @@ const VideoChatPage: React.FC = () => {
                   {sessionPk}
                 </h1>
                 <div style={{ display: "flex", alignItems: "flex-end" }}>
-                  <CameraswitchIcon 
+                  <CameraswitchIcon
                     onClick={() => {
-                      if (publisher && subscribers && mainStreamManager === publisher) {
+                      if (
+                        publisher &&
+                        subscribers &&
+                        mainStreamManager === publisher
+                      ) {
                         // 필터링된 서브 스트림 중에서 적절한 대상을 선택
-                        const targetSubscriber = subscribers.find((sub) => sub.stream.typeOfVideo !== "SCREEN");
+                        const targetSubscriber = subscribers.find(
+                          (sub) => sub.stream.typeOfVideo !== "SCREEN",
+                        );
 
                         // 적절한 대상이 있으면 해당 스트림을 메인 스트림으로 설정
                         if (targetSubscriber) {
                           toggleMainAndSubStream(targetSubscriber);
                         }
-                      } else if (publisher) { // publisher가 undefined가 아닌 경우만 전달
+                      } else if (publisher) {
+                        // publisher가 undefined가 아닌 경우만 전달
                         toggleMainAndSubStream(publisher);
                       }
                     }}
@@ -855,20 +861,19 @@ const VideoChatPage: React.FC = () => {
                   </Modal>
                 </div>
                 <div style={{ display: "flex", alignItems: "flex-end" }}>
-                  {
-                    changeChatIcon ?
+                  {changeChatIcon ? (
                     <MarkUnreadChatAltIcon
                       fontSize="large"
                       onClick={handleShowBox}
                       sx={{ cursor: "pointer", transform: "scaleX(-1)" }}
                     />
-                    :
+                  ) : (
                     <ChatIcon
                       fontSize="large"
                       onClick={handleShowBox}
                       sx={{ cursor: "pointer", transform: "scaleX(-1)" }}
                     ></ChatIcon>
-                  }
+                  )}
                 </div>
               </div>
             </div>
