@@ -44,6 +44,7 @@ public class AiDiagnosisService {
     @Value("${flask.server.url}")
     private String url;
 
+    @Transactional(readOnly = true)
     public List<AiDiagnosisListResponse> findAllByMember(String loginId) {
 
         Member member = memberService.findByLoginId(loginId);
@@ -54,6 +55,18 @@ public class AiDiagnosisService {
                                     .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<AiDiagnosisListResponse> findAllByMemberId(Long memberId) {
+
+        Member member = memberService.findById(memberId);
+
+        return aiDiagnosisRepository.findAllByMember(member)
+                                    .stream()
+                                    .map(AiDiagnosisListResponse::from)
+                                    .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
     public AiDiagnosisResponse findById(Long id, String loginId) {
 
         AiDiagnosis aiDiagnosis = aiDiagnosisRepository.findById(id)
@@ -75,7 +88,8 @@ public class AiDiagnosisService {
         AiServerResponse aiServerResponse = imageSendToAiServer(hairImg);
 
         HairLossType hairLossType = HairLossType.getType(aiServerResponse.result());
-        Integer hairLossScore = HairLossType.scoreGenerator(hairLossType, aiDiagnosisRequest.surveyResult());
+        Integer hairLossScore = HairLossType.scoreGenerator(hairLossType,
+            aiDiagnosisRequest.surveyResult());
 
         AiDiagnosis aiDiagnosis = AiDiagnosis.builder()
                                              .member(member)
@@ -91,7 +105,6 @@ public class AiDiagnosisService {
 
         member.addAiDiagnosis(aiDiagnosis);
         aiDiagnosisRepository.save(aiDiagnosis);
-
 
         return new AiDiagnosisResponse(aiDiagnosis);
 
