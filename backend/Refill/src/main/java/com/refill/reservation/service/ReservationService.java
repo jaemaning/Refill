@@ -118,8 +118,7 @@ public class ReservationService {
 
         Member member = memberService.findByLoginId(loginId);
         Reservation reservation = reservationRepository.findById(reservationId)
-                                                       .orElseThrow(
-                                                           () -> new EntityNotFoundException());
+                                                       .orElseThrow(EntityNotFoundException::new);
 
         if (!Objects.equals(member, reservation.getMember())) {
             throw new MemberException(ErrorCode.UNAUTHORIZED_REQUEST);
@@ -141,8 +140,7 @@ public class ReservationService {
         }
 
         return reservationRepository.findByDoctorAndStartDateTimeAfter(
-                                        doctor, LocalDateTime.now()
-                                                             .minusDays(1L))
+                                        doctor, LocalDateTime.now().minusDays(1L))
                                     .stream()
                                     .map(ReservationInfoResponse::new)
                                     .collect(Collectors.toList());

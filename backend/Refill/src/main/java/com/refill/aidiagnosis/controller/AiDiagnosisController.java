@@ -42,7 +42,17 @@ public class AiDiagnosisController {
         log.debug("'{}' member request AiDiagnosisHistory", loginInfo.loginId());
         AiDiagnosisResponse aiDiagnosisResponse = aiDiagnosisService.findById(id, loginInfo.loginId());
 
+
         return ResponseEntity.ok().body(aiDiagnosisResponse);
+    }
+
+    @GetMapping("/member/{memberId}")
+    public ResponseEntity<List<AiDiagnosisListResponse>> getAiDiagnosisListByMember(@AuthenticationPrincipal LoginInfo loginInfo, @PathVariable("memberId") Long memberId) {
+
+        log.debug("'{}' request AiDiagnosisListByMember", loginInfo.loginId());
+        List<AiDiagnosisListResponse> aiDiagnosisListResponseList = aiDiagnosisService.findAllByMemberId(memberId);
+
+        return ResponseEntity.ok().body(aiDiagnosisListResponseList);
     }
 
     /*
