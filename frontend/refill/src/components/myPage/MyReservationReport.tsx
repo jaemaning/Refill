@@ -20,13 +20,6 @@ type Reservation = {
   startDateTime: string;
 };
 
-interface TypeToken {
-  consultingId?: number | null;
-  sessionId?: string | null;
-  token?: string | null;
-  shareToken?: string | null;
-}
-
 interface MyReservationReportProps {
   reservationList: Reservation[] | null;
 }
@@ -38,52 +31,6 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
   // 상담 취소
   const [openModal, setOpenModal] = useState(false);
   const [wantDelete, setWantDelete] = useState(false);
-
-  // 상담 입장
-  const loginToken = useSelector((state: RootState) => state.login.token);
-  const islogin = useSelector((state: RootState) => state.login.islogin);
-  const [tokenData, setTokenData] = useState<TypeToken[]>([]);
-  const navigate = useNavigate();
-  const [joinModal, setJoinModal] = useState(false);
-
-  const [nowResId, setNowResId] = useState(0);
-  const [openJoin, setOpenJoin] = useState(false);
-
-  // 입장하는 함수
-  const joinSession = ({
-    consultingId,
-    sessionId,
-    token,
-    shareToken,
-  }: TypeToken) => {
-    navigate("/video", {
-      state: {
-        sessionPk: sessionId,
-        token: token,
-        shareToken: shareToken,
-        consultingId: consultingId,
-      },
-    });
-  };
-  // 토큰을 받아오는 함수
-  const getToken = async (reservationId: number): Promise<void> => {
-    try {
-      const response = await axios.get(
-        `api/v1/consulting/connection/${reservationId}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${loginToken}`,
-          },
-        }
-      );
-      setTokenData((prevTokenData) => [...prevTokenData, response.data]);
-      //
-      console.log("ok");
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const deleteReservation = (id: number) => {
     setOpenModal(true);

@@ -100,7 +100,7 @@ const DetailReservation: React.FC<ComponentProps> = ({
     console.log("ok");
   }, [selectedDate]);
   return (
-    <div className="m-2 py-2">
+    <div className="m-2 py-2" style={{ width: '300px' }}>
       <div>
         <div>
           <ReservationDoctor
