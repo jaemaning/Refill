@@ -110,6 +110,7 @@ const Mypage: React.FC = () => {
   );
 
   const token: string = useSelector((state: RootState) => state.login.token);
+  const memberId: number = useSelector((state: RootState) => state.login.pk)
   const islogin: boolean = useSelector(
     (state: RootState) => state.login.islogin,
   );
@@ -374,7 +375,7 @@ const Mypage: React.FC = () => {
               style={{ width: "700px", height: "200px" }}
               className="mt-3 mb-6"
             >
-              <AiDiagnosisList />
+              <AiDiagnosisList memberId={memberId}/>
             </Common>
           </Content2>
         </div>

@@ -1,8 +1,21 @@
 import React, { useState } from "react";
+import axios from "axios";
 import "styles/MyPage.css";
+// 토큰가져오기
+import { RootState } from "store/reducers";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-// 하위 컴포넌트
-import JoinModal from "./JoinModal";
+interface TypeToken {
+  consultingId?: number | null;
+  sessionId?: string | null;
+  token?: string | null;
+  shareToken?: string | null;
+  hospitalId?: number | null;
+  doctorId?: number | null;
+  memberId?: number | null;
+  hospitalName?: string | null;
+}
 
 type Res = {
   doctorName: string;
@@ -20,6 +33,50 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
   reservation,
   deleteReservation,
 }) => {
+// 상담 입장
+const loginToken = useSelector((state: RootState) => state.login.token);
+const islogin = useSelector((state: RootState) => state.login.islogin);
+const [tokenData, setTokenData] = useState<TypeToken[]>([]);
+const navigate = useNavigate();
+
+// 입장하는 함수
+const joinSession = ({
+  consultingId,
+  sessionId,
+  token,
+  shareToken,
+}: TypeToken) => {
+  navigate("/video", {
+    state: {
+      sessionPk: sessionId,
+      token: token,
+      shareToken: shareToken,
+      consultingId: consultingId,
+    },
+  });
+};
+// 토큰을 받아오는 함수
+const getToken = async (reservationId: number): Promise<void> => {
+  try {
+    const response = await axios.get(
+      `api/v1/consulting/connection/${reservationId}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${loginToken}`,
+        },
+      }
+    );
+    setTokenData((prevTokenData) => [...prevTokenData, response.data]);
+    //
+    console.log("ok");
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+
+
   const [openJoin, setOpenJoin] = useState(true);
   const changeDate = (startDate: string) => {
     const days = [
@@ -78,7 +135,6 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
 
   return (
     <>
-    {/* {openJoin ? <JoinModal setOpenJoin={setOpenJoin} /> : <></>} */}
       <div className="mypage-reservation-box p-4">
         <p className="text-xl font-black py-2">{reservation.hospitalName}</p>
         <p className="mb-1">{reservation.doctorName} 선생님</p>
@@ -92,7 +148,7 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
             상담취소
           </button>
           <button
-            onClick={() => {setOpenJoin(true)}}
+            // onClick={() => {setOpenJoin(true)}}
             className="h-8 p-1 text-center rounded-md"
             disabled={!isWithinTimeRange()}
             style={
