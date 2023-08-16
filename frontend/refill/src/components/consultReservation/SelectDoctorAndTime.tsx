@@ -202,6 +202,7 @@ const SelectDoctorAndTime: React.FC<ComponentProps> = ({
           <hr className="border-2 border-black my-2" />
           {isClicked ? (
             <SelectTime
+              selectedDate={selectedDate}
               disabledTimes={disabledTimes}
               setSelectedTime={setSelectedTime}
               startTime={startTime}

@@ -223,14 +223,12 @@ const DetailHospital: React.FC = () => {
   const scriptLoaded = useKakaoMapScript();
 
   useEffect(() => {
-    console.log("여기", scriptLoaded, hospitalData);
     const getLocation = async (): Promise<void> => {
       if (
         scriptLoaded &&
         hospitalData.longitude != 0 &&
         hospitalData.latitude != 0
       ) {
-        console.log("???");
         const loadMap = () => {
           window.kakao.maps.load(() => {
             const options = {
@@ -366,7 +364,6 @@ const DetailHospital: React.FC = () => {
   };
 
   const RegistDoc = async (hospitalid: number, formData: any) => {
-    console.log(formData);
     axios
       .post(
         `http://localhost:3000/api/v1/hospital/${hospitalid}/doctor`,
@@ -380,13 +377,12 @@ const DetailHospital: React.FC = () => {
       )
 
       .then((response) => {
-        console.log(response);
-        console.log(1);
+        console.log("ok");
         setRegisterOpen(false);
       })
 
       .catch((error) => {
-        console.log(1);
+        console.log(error);
         handleRMClose();
       });
   };
@@ -406,7 +402,7 @@ const DetailHospital: React.FC = () => {
     doctorid: number,
     formData: any,
   ) => {
-    console.log(formData);
+    console.log("ok");
     axios
       .put(
         `http://localhost:3000/api/v1/hospital/${hospitalid}/doctor/${doctorid}`,
@@ -425,7 +421,7 @@ const DetailHospital: React.FC = () => {
       })
 
       .catch((error) => {
-        console.log(1);
+        console.log(error);
         handleMMClose();
       });
   };
@@ -457,7 +453,7 @@ const DetailHospital: React.FC = () => {
       })
 
       .catch((error) => {
-        console.log(1);
+        console.log(error);
         handleDMClose();
       });
   };
@@ -481,7 +477,7 @@ const DetailHospital: React.FC = () => {
           operatingHourResponses,
         } = response.data;
 
-        console.log(response.data);
+        console.log("ok");
         setHospitalData(hospitalResponse);
         setDoctorData(doctorResponses);
         setReviewData(reviewResponses);

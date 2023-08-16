@@ -26,10 +26,11 @@ const NextPrevButtons: React.FC<LinkProps> = ({
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
   const ConnectPrevLink = () => {
     navigate(-1);
   };
+
+  
   const token = useSelector((state: RootState) => state.login.token);
   const handleSubmit = () => {
     const aiDiagnosisRequest = {
@@ -45,7 +46,21 @@ const NextPrevButtons: React.FC<LinkProps> = ({
     setLoading(true);
 
     if (imgFile) {
-      formData.append("hairImg", imgFile);
+      const convertToEnglishName = (filename: string) => {
+        const extension = filename.split('.').pop();
+        const nameWithoutExtension = filename.replace(`.${extension}`, '');
+        
+        const englishName = Array.from(nameWithoutExtension).map((char) => {
+            return String.fromCharCode(97 + (char.charCodeAt(0) % 26));
+        }).join('');
+    
+        return `${englishName}.${extension}`;
+      };
+    
+      const newFileName = convertToEnglishName(imgFile.name);
+      const newFile = new File([imgFile], newFileName, { type: imgFile.type });
+      console.log(newFile)
+      formData.append("hairImg", newFile);
     }
     axios
       .post("api/v1/diagnosis/", formData, {
