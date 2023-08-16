@@ -9,6 +9,7 @@ interface LoginState {
   isadmin: boolean;
   hosid: number;
   loginId: string;
+  pk: number;
 }
 
 const initialState: LoginState = {
@@ -19,6 +20,7 @@ const initialState: LoginState = {
   isadmin: false,
   hosid: 0,
   loginId: "",
+  pk: 0,
 };
 
 const loginSlice = createSlice({
@@ -26,10 +28,11 @@ const loginSlice = createSlice({
   initialState,
   reducers: {
     loginSuccess: (state, action: PayloadAction<Loginstate>) => {
-      const { islogin, token, loginId } = action.payload;
+      const { islogin, token, loginId, pk } = action.payload;
       state.islogin = islogin;
       state.token = token;
       state.loginId = loginId;
+      state.pk = pk;
       console.log(state.islogin);
       console.log(state.token);
     },
