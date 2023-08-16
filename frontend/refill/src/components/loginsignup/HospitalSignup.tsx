@@ -367,7 +367,7 @@ const HospitalSignup: React.FC<SignUpType> = (props) => {
         </div>
         {inputData.loginId.length > 0 && !validId && (
           <p className="text-sm ml-2 mt-1" style={{ color: "red" }}>
-            영소문자와 숫자 조합으로 6글자 이상 20글자 이하로 입력해주세요.
+            영소문자와 숫자 조합으로 4글자 이상 16글자 이하로 입력해주세요.
           </p>
         )}
         <br />

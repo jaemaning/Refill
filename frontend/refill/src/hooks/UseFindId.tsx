@@ -4,7 +4,8 @@ import AuthService from "auth/auth-service";
 const authService = new AuthService();
 const UseFindIdForm = (email: string, role: boolean) => {
   const [check, setCheck] = useState({ status: 0, data: { message: "" } });
-
+  const [message, setMessage] = useState("");
+  const [istrue, setisTrue] = useState(2);
   const FindId = async () => {
     const data = {
       email: email,
@@ -18,20 +19,20 @@ const UseFindIdForm = (email: string, role: boolean) => {
       }
 
       if (check.status === 200) {
-        console.log(check.status);
-        console.log(check.data);
+        setisTrue(0);
+        setMessage("가입하신 이메일로 로그인 아이디를 전송했습니다");
       }
     } catch (error: any) {
-      console.log(error.response.data.message);
+      setMessage(error.response.data.message);
+      setisTrue(1);
     }
   };
 
-  const handleSubmitFindIdForm = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    FindId();
+  const handleSubmitFindIdForm = async () => {
+    await FindId();
   };
 
-  return [handleSubmitFindIdForm];
+  return { handleSubmitFindIdForm, message, istrue, setisTrue };
 };
 
 export default UseFindIdForm;
