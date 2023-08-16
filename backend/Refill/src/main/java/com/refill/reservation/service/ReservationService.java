@@ -135,7 +135,7 @@ public class ReservationService {
         Hospital loginHospital = hospitalService.findByLoginId(loginInfo.loginId());
         Hospital doctorHospital = doctor.getHospital();
 
-        if (!Objects.equals(loginHospital, doctorHospital)) {
+        if (!Objects.equals(loginHospital.getId(), doctorHospital.getId())) {
             throw new MemberException(ErrorCode.UNAUTHORIZED_REQUEST);
         }
 
