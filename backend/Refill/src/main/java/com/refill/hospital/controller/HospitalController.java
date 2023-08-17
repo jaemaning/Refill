@@ -89,13 +89,13 @@ public class HospitalController {
         Hospital hospital = hospitalService.findByIdUsingCache(hospitalId); // 캐시 적용
         List<DoctorResponse> doctorResponseList = hospitalService.getDoctorByHospital(hospital); // 캐시 적용
         List<ReviewResponse> reviewResponseList = reviewService.findAllByHospital(hospital); // 캐시 미적용
-        HospitalResponse hospitalResponse = new HospitalResponse(hospital);
+
+        HospitalResponse hospitalResponse = new HospitalResponse(hospital, reviewService.generateAverageScore(hospital));
 
         HospitalOperatingHoursCache operatingHoursCache = hospitalOperatingHourService.getOperatingHoursUsingCache(hospitalId); // 캐시 적용
 
         HospitalDetailResponse hospitalDetailResponse = new HospitalDetailResponse(hospitalResponse, doctorResponseList, reviewResponseList, operatingHoursCache);
 
-        log.info("######################{}#######################", hospitalDetailResponse.operatingHoursCache().toString());
         return ResponseEntity.ok()
                              .body(hospitalDetailResponse);
     }

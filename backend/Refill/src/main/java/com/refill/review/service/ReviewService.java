@@ -119,4 +119,19 @@ public class ReviewService {
                                .map(ReviewResponse::new)
                                .collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public Double generateAverageScore(Hospital cachedHospital) {
+
+            Hospital hospital = hospitalService.findByLoginId(cachedHospital.getLoginId());
+
+
+            double score = hospital.getReviews()
+                                   .stream()
+                                   .mapToInt(Review::getScore)
+                                   .average()
+                                   .orElse(0.0);
+            return Math.round(score * 10.00) / 10.00;
+
+    }
 }
