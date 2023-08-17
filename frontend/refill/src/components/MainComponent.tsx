@@ -56,8 +56,9 @@ const MainComponent = () => {
         <h2 onClick={toHome}>
           <span>RE</span>
           <span>Fill</span>
+          <span> To Home</span>
         </h2>
-        <h2 style={{cursor:'default'}}>
+        <h2 style={{cursor:'default', color: '#829ebc'}}>
           <p>404 NotFound</p>
         </h2>
       </div>
