@@ -151,3 +151,43 @@
   border-radius: 10px;
   background-color: white;
 }
+
+/* 에러 모달 */
+.error-modal {
+  height: 360px;
+  width: 600px;
+  background-color: #aadaff;
+  border-radius: 10px;
+  border: 5px solid white;
+}
+
+.error-modal-top-box {
+  background-color: #2E5077;
+  height: 80px;
+  border-bottom: 5px solid white;
+}
+
+.error-modal-bottom-box {
+  height: 100px;
+}
+
+.error-modal-middle-box {
+  height: 180px;
+}
+
+.error-modal-left-box {
+  width: 140px;
+  height: 100px;
+}
+.error-modal-right-box {
+  width: 370px;
+  height: 100px;
+}
+.error-btn {
+  height: 60px;
+  width: 180px;
+  background-color: #2E5077;
+  border-radius: 10px;
+  color: white;
+  border: 5px solid white
+}
