@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import styled from "@emotion/styled";
 import app_logo from "../assets/app_logo.png";
 // import MainComponent from "components/MainComponent";
+import "styles/Wave.css"
 
 const Container = styled.div`
   display: flex;
@@ -63,15 +64,60 @@ const MainApp: React.FC = () => {
       <Navbar ref={navbarRef} />
       {/* <MainComponent handleClick={handleClickWord} /> */}
       {/* <GreyLine /> */}
-      <Container>
-        <Word>당신의 자신감을 다시</Word>
-        <Word>채워 줄 단 하나의 플랫폼, RE:Fill</Word>
-        <img
-          src={app_logo}
-          alt=""
-          style={{ width: "100px", height: "100px" }}
-        />
-      </Container>
+      <div className="wave-container">
+        <p className="main-font text-4xl font-black">당신의 자신감을 다시</p>
+        <p className="main-font text-4xl font-black">채워 줄 단 하나의 플랫폼, RE:Fill</p>
+        <div className="flex justify-center items-center">
+          <img
+            src={app_logo}
+            alt=""
+            className="main-image"
+          />
+        </div>
+        <div>
+          <svg
+            className="waves"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlnsXlink="http://www.w3.org/1999/xlink"
+            viewBox="0 24 100 28"
+            preserveAspectRatio="none"
+            shapeRendering="auto"
+          >
+            <defs>
+              <path
+                id="gentle-wave"
+                d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"
+              />
+            </defs>
+            <g className="parallax">
+              <use
+                xlinkHref="#gentle-wave"
+                x="48"
+                y="0"
+                fill="rgba(255,255,255,0.25)"
+              />
+              <use
+                xlinkHref="#gentle-wave"
+                x="48"
+                y="3"
+                fill="rgba(255,255,255,0.2)"
+              />
+              <use
+                xlinkHref="#gentle-wave"
+                x="48"
+                y="5"
+                fill="rgba(255,255,255,0.15)"
+              />
+              <use
+                xlinkHref="#gentle-wave"
+                x="48"
+                y="7"
+                fill="rgba(255,255,255,0.1)"
+              />
+            </g>
+          </svg>
+        </div>
+      </div>
       <GreyLine />
       <Footer />
     </div>
