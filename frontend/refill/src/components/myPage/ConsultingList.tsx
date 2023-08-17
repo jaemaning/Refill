@@ -15,7 +15,7 @@ type consultData = {
 
 // axios 요청을 위한 memberId 받아오기
 interface ConsultingListProps {
-  loginId: string;
+  userPk: number;
 }
 
 const DummyData = [
@@ -75,7 +75,7 @@ const DummyData = [
   },
 ];
 
-const ConsultingList: React.FC<ConsultingListProps> = ({ loginId }) => {
+const ConsultingList: React.FC<ConsultingListProps> = ({ userPk }) => {
   // 토큰
   const token = useSelector((state: RootState) => state.login.token);
   // ConsultingList 받기
@@ -83,7 +83,7 @@ const ConsultingList: React.FC<ConsultingListProps> = ({ loginId }) => {
   // axios 호출 함수
   const getConsultingList = () => {
     axios
-      .get(`/api/v1/consulting/${loginId}`, {
+      .get(`/api/v1/consulting/${userPk}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

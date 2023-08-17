@@ -118,6 +118,7 @@ const Mypage: React.FC = () => {
     (state: RootState) => state.login.islogin,
   );
   const loginId = useSelector((state: RootState) => state.login.loginId);
+  const userPk = useSelector((state: RootState) => state.login.pk);
   // 토큰 분해하기 memberId가져오기
   const navigate = useNavigate();
 
@@ -387,7 +388,7 @@ const Mypage: React.FC = () => {
               style={{ width: "700px", height: "290px" }}
               className="mt-3 mb-6"
             >
-              <ConsultingList loginId={loginId} />
+              <ConsultingList userPk={userPk} />
             </Common>
             <span className="text-xl font-bold mt-10 mb-3">
               나의 AI 자가진단 기록
