@@ -10,6 +10,7 @@ interface LoginState {
   hosid: number;
   loginId: string;
   pk: number;
+  exp: number;
 }
 
 const initialState: LoginState = {
@@ -21,6 +22,7 @@ const initialState: LoginState = {
   hosid: 0,
   loginId: "",
   pk: 0,
+  exp: 0,
 };
 
 const loginSlice = createSlice({
@@ -28,11 +30,12 @@ const loginSlice = createSlice({
   initialState,
   reducers: {
     loginSuccess: (state, action: PayloadAction<Loginstate>) => {
-      const { islogin, token, loginId, pk } = action.payload;
+      const { islogin, token, loginId, pk, exp } = action.payload;
       state.islogin = islogin;
       state.token = token;
       state.loginId = loginId;
       state.pk = pk;
+      state.exp = exp;
       console.log(state.islogin);
       console.log(state.token);
     },
