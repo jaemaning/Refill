@@ -80,12 +80,12 @@ const Containers = styled.div`
 
 const BannerContainer = styled.div`
   position: relative;
-  height: 280px;
+  height: 250px;
 `;
 
 const Bannerimg = styled.img`
   width: 100%;
-  height: 150px;
+  height: 200px;
 `;
 
 const Profileimg = styled.img`
@@ -526,15 +526,15 @@ const DetailHospital: React.FC = () => {
       <Navbar />
       {/* 배너이미지 변경해주는거 적용해야함 */}
       <BannerContainer>
-        <Bannerimg
-          src={
-            hospitalData.bannerProfileImg
-              ? hospitalData.bannerProfileImg
-              : Cloud2
-          }
+        <div className="image-container">
+          <Bannerimg
+            className="fit-image"
+            src={`https://ssafyfinal.s3.ap-northeast-2.amazonaws.com/${hospitalData.hospitalProfileImg}`}
+          />
+        </div>
+        <Profileimg
+          src={`https://ssafyfinal.s3.ap-northeast-2.amazonaws.com/${hospitalData.hospitalProfileImg}`}
         />
-
-        <Profileimg src={hospitalData.hospitalProfileImg} />
       </BannerContainer>
       <Containers>
         <Layout>
@@ -608,7 +608,7 @@ const DetailHospital: React.FC = () => {
                         style={{ width: "150px" }}
                       >
                         <img
-                          src={doctor.profileImg}
+                          src={`https://ssafyfinal.s3.ap-northeast-2.amazonaws.com/${doctor.profileImg}`}
                           alt={doctor.name}
                           className="w-28 h-28 rounded-full mt-10"
                         />
