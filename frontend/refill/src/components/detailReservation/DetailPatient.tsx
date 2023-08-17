@@ -236,7 +236,12 @@ const DetailPatient: React.FC<DetailPatientProps> = ({
             <p className="reservation-detail-patient-text">사진</p>{" "}
             patient.jpg
           </div>
-        ) : null}
+        : 
+          <div className="flex">
+            <p className="reservation-detail-patient-text">사진</p>{" "}
+            사진 없음
+          </div>
+        }
         <div className="pt-5 flex justify-center">
           {/* 버튼 넣는 곳 */}
           <button
