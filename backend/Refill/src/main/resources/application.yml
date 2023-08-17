@@ -14,6 +14,7 @@ cloud:
       secret-key: ${AWS_S3_PRIVATE_KEY}
     region:
       static: ${AWS_S3_REGION}
+      email: ${AWS_SES_REGION}
     s3:
       bucket: ${AWS_S3_BUCKET_NAME}
     stack:
