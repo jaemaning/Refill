@@ -380,6 +380,7 @@ const DetailHospital: React.FC = () => {
       .then((response) => {
         console.log("ok");
         setRegisterOpen(false);
+        window.location.reload();
       })
 
       .catch((error) => {
@@ -419,6 +420,7 @@ const DetailHospital: React.FC = () => {
       .then((response) => {
         console.log("ok");
         setModifyOpen(null);
+        window.location.reload();
       })
 
       .catch((error) => {
@@ -451,6 +453,7 @@ const DetailHospital: React.FC = () => {
       .then((response) => {
         console.log("ok");
         setDeleteOpen(null);
+        window.location.reload();
       })
 
       .catch((error) => {
@@ -796,7 +799,7 @@ const DetailHospital: React.FC = () => {
                                   size={"medium"}
                                 />
                               </Grid>
-                              {ishospital ? (
+                              {ishospital && mypage ? (
                                 <Grid item xs={2}>
                                   <NotificationImportantIcon
                                     sx={{ color: red[500], cursor: "pointer" }}
