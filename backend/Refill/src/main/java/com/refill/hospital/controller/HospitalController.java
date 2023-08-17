@@ -18,9 +18,12 @@ import com.refill.review.dto.response.ReviewResponse;
 import com.refill.review.service.ReviewService;
 import com.refill.security.util.LoginInfo;
 import java.util.List;
+import javax.persistence.EntityManagerFactory;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.SessionFactory;
+import org.hibernate.stat.Statistics;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,6 +48,15 @@ public class HospitalController {
     private final HospitalService hospitalService;
     private final HospitalOperatingHourService hospitalOperatingHourService;
     private final ReviewService reviewService;
+    private final EntityManagerFactory entityManagerFactory;
+
+    public void showStatistics() {
+        SessionFactory sessionFactory = entityManagerFactory.unwrap(SessionFactory.class);
+        Statistics statistics = sessionFactory.getStatistics();
+
+        long queryCount = statistics.getQueryExecutionCount();
+        log.info("Number of executed queries: " + queryCount);
+    }
     @GetMapping("/")
     public ResponseEntity<List<HospitalResponse>> getAllHospitals(){
         List<HospitalResponse> hospitalResponses = hospitalService.findAllHospitals();
