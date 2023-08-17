@@ -58,9 +58,9 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-        String[] si = {"서울특별시", "수원시", "광주광역시", "대전광역시", "부산광역시", "구미시"};
+        String[] si = {"광주광역시", "서울특별시"};
         String[] gu = {"광산구", "종로구", "용산구", "동구", "남구", "수정구", "유성구", "덕진구", "분당구"};
-        String[] building = {"타워펠리스 3차", "파키원 타워", "롯데타워", "운체강 타워", "외피드 타워"};
+        String[] building = {"타워펠리스 3차", "파키원 타워", "롯데 타워", "운체강 타워", "외피드 타워"};
 
         /* 관리자 생성 */
         Member admin = Member.builder()
@@ -68,7 +68,6 @@ public class DataInitializer implements CommandLineRunner {
                              .loginId("admin")
                              .nickname("관리자")
                              .birthDay(LocalDate.of(1983, 1, 1))
-                             .profileImg("https://picsum.photos/600/600/?random")
                              .address("광주광역시 광산구 윗마을")
                              .email("hoin123@naver.com")
                              .loginPassword(bCryptPasswordEncoder.encode("1234"))
@@ -80,50 +79,63 @@ public class DataInitializer implements CommandLineRunner {
         memberRepository.save(admin);
 
 
-
-        for(int i=1; i<=20; i++){
+        for(int i=1; i<=9; i++){
 
             Random random = new Random();
             double randomDouble = random.nextDouble();
 
             /* 일반 회원 생성 */
-            String address = si[i % si.length] + gu[i % gu.length] + building[i % building.length];
+
+            String address = "";
+
+            if(i <= 5){
+                address = si[0] + " " + gu[i % gu.length] + " " + building[i % building.length];
+            }
+            else{
+                address = si[1] + " " + gu[i % gu.length] + " " + building[i % building.length];
+            }
+
             Member member = Member.builder()
                                   .name("member" + i)
                                   .loginId("member" + i)
                                   .nickname("일반유저" + i)
                                   .birthDay(LocalDate.of(2000, 1, 1))
-                                  .profileImg("https://picsum.photos/600/600/?random")
                                   .address(address)
                                   .email("member" + i + "@google.com")
                                   .loginPassword(bCryptPasswordEncoder.encode("1234"))
                                   .role(Role.ROLE_MEMBER)
-                                  .tel("010-5678-5678")
+                                  .tel("010-1234-1234")
                                   .createdAt(LocalDateTime.now())
                                   .updatedAt(LocalDateTime.now()).build();
             memberRepository.save(member);
 
-            AiDiagnosis aiDiagnosis = AiDiagnosis.builder()
-                                                 .member(member)
-                                                 .hairLossScore(40)
-                                                 .hairLossType(HairLossType.TYPE3)
-                                                 .certainty("60")
-                                                 .surveyResult("1010100000")
-                                                 .build();
+            String[] fileAddr = new String[]{"assets/diagnosis1.jpg", "assets/diagnosis2.jpg", "assets/diagnosis3.jpg"};
+            for(int j=0; j<3; j++){
+                AiDiagnosis aiDiagnosis = AiDiagnosis.builder()
+                                                     .member(member)
+                                                     .hairLossScore(j*20)
+                                                     .hairLossType(HairLossType.TYPE3)
+                                                     .certainty(String.valueOf(j*20))
+                                                     .surveyResult("1010100000")
+                                                     .build();
 
-            aiDiagnosis.updateFileAddress("https://picsum.photos/600/600/?random");
-            aiDiagnosisRepository.save(aiDiagnosis);
+                aiDiagnosis.updateFileAddress(fileAddr[j]);
+                aiDiagnosisRepository.save(aiDiagnosis);
+            }
+
 
 
             /* 병원 생성 */
             String[] hospitalName = {
-                "드림헤어라인의원", "오라클피부과", "맥스웰피부과",
-                "헬스켈병원", "광주더모의원", "젬마모발이식센터",
-                "참닥터의원", "더블랙의원 강남", "모텐셜의원",
-                "모앤블레스의원"};
+                "드림헤어라인 의원", "오라클 피부과", "맥스웰피부과",
+                "헬스켈병원", "더모의원", "젬마 모발이식 센터",
+                "참닥터 의원", "더블랙 의원", "모텐셜 의원",
+                "모앤블레스 의원"};
 
             double[] latitude = new double[]{35.1826339, 35.1774572, 35.1904336, 35.1828579, 35.1523404, 37.5576728, 37.5424231, 37.5751167, 37.5512287};
             double[] longitude = new double[]{126.8004544, 126.8296325, 126.8145234, 126.8504896, 126.853923, 126.956993, 126.9403019, 126.9574713, 127.0081282};
+            String[] hospitalProfileImg = new String[]{"assets/profile1.jpg", "assets/profile2.jpg", "assets/profile3.jpg"};
+            String registrationImg = "assets/reg1.jpg";
 
             Hospital hospital = Hospital.builder()
                                         .name(hospitalName[i % 10])
@@ -134,11 +146,10 @@ public class DataInitializer implements CommandLineRunner {
                                             bCryptPasswordEncoder.encode("1234")) //1234
                                         .role(i % 4 == 0 ? Role.ROLE_GUEST : Role.ROLE_HOSPITAL)
                                         .tel("02-2345-3465")
-                                        .hospitalBannerImg("https://www.snuh.org/asset/img/about/img_overview01.jpg")
-                                        .hospitalProfileImg("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQM2z6uxHzxBg5LPVNFeK5CYLY78m_EdUT0hw&usqp=CAU")
+                                        .hospitalProfileImg(hospitalProfileImg[i%3])
                                         .latitude(BigDecimal.valueOf(latitude[i%latitude.length] + 0.01d * (double)i))
                                         .longitude(BigDecimal.valueOf(longitude[i%longitude.length] + 0.01d * (double)i))
-                                        .registrationImg("https://jajaegroup.cafe24.com/data/cheditor4/1308/9054de68fb88ea39814e53ec28cd0971_mMnyxTgHWe6.jpg")
+                                        .registrationImg(registrationImg)
                                         .build();
             hospitalRepository.save(hospital);
 
@@ -155,14 +166,16 @@ public class DataInitializer implements CommandLineRunner {
             }
 
 
-            String[] firstName = {"김", "이", "박", "신", "유", "최"};
+            String[] firstName = {"신호인", "김재만", "신상원", "김승현", "이태성"};
+            String[] doctorProfileImg = new String[]{"assets/doctorp1.jpg", "assets/doctorp2.jpeg"};
+            String doctorResgstrationImg = "assets/docreg1.jpeg";
 
             /* 의사 생성 */
-            for(int j=0; j<4; j++){
+            for(int j=0; j<2; j++){
                 Doctor doctor = Doctor.builder()
-                                      .name(firstName[(i + j) % firstName.length] + "의사")
-                                      .profileImg("https://picsum.photos/600/600/?random")
-                                      .licenseImg("https://picsum.photos/600/600/?random")
+                                      .name(firstName[(i + j) % firstName.length])
+                                      .profileImg(doctorProfileImg[j%doctorProfileImg.length])
+                                      .licenseImg(doctorResgstrationImg)
                                       .licenseNumber("DOC-LN-2123-" + i)
                                       .description("한국 미용 성형학회 자문의원\nIBCS\n모발이식의 대가")
                                       .hospital(hospital)
