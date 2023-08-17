@@ -122,6 +122,9 @@ public class DataInitializer implements CommandLineRunner {
                 "참닥터의원", "더블랙의원 강남", "모텐셜의원",
                 "모앤블레스의원"};
 
+            double[] latitude = new double[]{35.1826339, 35.1774572, 35.1904336, 35.1828579, 35.1523404, 37.5576728, 37.5424231, 37.5751167, 37.5512287};
+            double[] longitude = new double[]{126.8004544, 126.8296325, 126.8145234, 126.8504896, 126.853923, 126.956993, 126.9403019, 126.9574713, 127.0081282};
+
             Hospital hospital = Hospital.builder()
                                         .name(hospitalName[i % 10])
                                         .address(address)
@@ -131,11 +134,11 @@ public class DataInitializer implements CommandLineRunner {
                                             bCryptPasswordEncoder.encode("1234")) //1234
                                         .role(i % 4 == 0 ? Role.ROLE_GUEST : Role.ROLE_HOSPITAL)
                                         .tel("02-2345-3465")
-                                        .hospitalBannerImg("https://picsum.photos/600/600/?random")
-                                        .hospitalProfileImg("https://picsum.photos/600/600/?random")
-                                        .latitude(BigDecimal.valueOf(33.452613d + 0.0001d * (double)i))
-                                        .longitude(BigDecimal.valueOf(126.570888d + 0.0001d * (double)i))
-                                        .registrationImg("https://picsum.photos/600/600/?random")
+                                        .hospitalBannerImg("https://www.snuh.org/asset/img/about/img_overview01.jpg")
+                                        .hospitalProfileImg("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQM2z6uxHzxBg5LPVNFeK5CYLY78m_EdUT0hw&usqp=CAU")
+                                        .latitude(BigDecimal.valueOf(latitude[i%latitude.length] + 0.01d * (double)i))
+                                        .longitude(BigDecimal.valueOf(longitude[i%longitude.length] + 0.01d * (double)i))
+                                        .registrationImg("https://jajaegroup.cafe24.com/data/cheditor4/1308/9054de68fb88ea39814e53ec28cd0971_mMnyxTgHWe6.jpg")
                                         .build();
             hospitalRepository.save(hospital);
 
