@@ -9,7 +9,6 @@ const LoginSelect: React.FC<loginSelect> = ({
   loginpage,
   handleChecklogin,
 }) => {
-
   return (
     <div className="flex">
       <Button

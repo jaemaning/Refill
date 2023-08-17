@@ -478,15 +478,14 @@ const DetailHospital: React.FC = () => {
           hospitalResponse,
           doctorResponses,
           reviewResponses,
-          operatingHourResponses,
+          operatingHoursCache,
         } = response.data;
 
-        console.log("ok");
         setHospitalData(hospitalResponse);
         setDoctorData(doctorResponses);
         setReviewData(reviewResponses);
         setHospitalName(hospitalResponse.name);
-        setTimeData(operatingHourResponses);
+        setTimeData(operatingHoursCache[1].operatingHourList);
       })
 
       .catch((error) => {

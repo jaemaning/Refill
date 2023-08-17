@@ -11,7 +11,7 @@ public record HospitalDetailResponse(
     @NotNull HospitalResponse hospitalResponse,
     @NotNull List<DoctorResponse> doctorResponses,
     @NotNull List<ReviewResponse> reviewResponses,
-    @NotNull List<HospitalOperatingHourResponse> operatingHourResponses
+    HospitalOperatingHoursCache operatingHoursCache
 ) {
 
     public HospitalDetailResponse(Hospital hospital) {
@@ -38,7 +38,7 @@ public record HospitalDetailResponse(
             hospital.getReviews()
                     .stream()
                     .map(ReviewResponse::new).collect(Collectors.toList()),
-            hourResponseList
+            null
         );
     }
 
