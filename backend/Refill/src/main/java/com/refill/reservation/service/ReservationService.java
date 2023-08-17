@@ -1,5 +1,6 @@
 package com.refill.reservation.service;
 
+import com.refill.consulting.service.ConsultingService;
 import com.refill.doctor.entity.Doctor;
 import com.refill.doctor.service.DoctorService;
 import com.refill.global.exception.ErrorCode;
@@ -18,6 +19,8 @@ import com.refill.reservation.entity.Reservation;
 import com.refill.reservation.exception.ReservationException;
 import com.refill.reservation.repository.ReservationRepository;
 import com.refill.security.util.LoginInfo;
+import io.openvidu.java.client.OpenViduHttpException;
+import io.openvidu.java.client.OpenViduJavaClientException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -37,6 +40,7 @@ public class ReservationService {
     private final MemberService memberService;
     private final AmazonS3Service amazonS3Service;
     private final HospitalService hospitalService;
+    private final ConsultingService consultingService;
     private final int CONSULTING_TIME = 30;
 
     @Transactional(readOnly = true)
@@ -85,7 +89,10 @@ public class ReservationService {
         }
 
         member.addReservation(reservation);
-        reservationRepository.save(reservation);
+        Long reservationId = reservationRepository.save(reservation).getId();
+        Reservation reservation1 = reservationRepository.findById(reservationId).orElseThrow(() -> new ReservationException(ErrorCode.ALREADY_RESERVED));
+
+        consultingService.createSessionNow(loginId, reservation1);
 
         return new ReservationResultResponse(reservation);
 
@@ -118,7 +125,8 @@ public class ReservationService {
 
         Member member = memberService.findByLoginId(loginId);
         Reservation reservation = reservationRepository.findById(reservationId)
-                                                       .orElseThrow(EntityNotFoundException::new);
+                                                       .orElseThrow(
+                                                           () -> new EntityNotFoundException());
 
         if (!Objects.equals(member, reservation.getMember())) {
             throw new MemberException(ErrorCode.UNAUTHORIZED_REQUEST);
@@ -128,7 +136,6 @@ public class ReservationService {
 
     }
 
-    @Transactional(readOnly = true)
     public List<ReservationInfoResponse> findReservationByDoctor(LoginInfo loginInfo, Long doctorId) {
 
         Doctor doctor = doctorService.findById(doctorId);
@@ -136,12 +143,13 @@ public class ReservationService {
         Hospital loginHospital = hospitalService.findByLoginId(loginInfo.loginId());
         Hospital doctorHospital = doctor.getHospital();
 
-        if (!Objects.equals(loginHospital.getId(), doctorHospital.getId())) {
+        if (!Objects.equals(loginHospital, doctorHospital)) {
             throw new MemberException(ErrorCode.UNAUTHORIZED_REQUEST);
         }
 
         return reservationRepository.findByDoctorAndStartDateTimeAfter(
-                                        doctor, LocalDateTime.now().minusDays(1L))
+                                        doctor, LocalDateTime.now()
+                                                             .minusDays(1L))
                                     .stream()
                                     .map(ReservationInfoResponse::new)
                                     .collect(Collectors.toList());
