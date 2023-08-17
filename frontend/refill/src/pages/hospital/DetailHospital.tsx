@@ -481,6 +481,7 @@ const DetailHospital: React.FC = () => {
           operatingHoursCache,
         } = response.data;
 
+        console.log(response.data);
         setHospitalData(hospitalResponse);
         setDoctorData(doctorResponses);
         setReviewData(reviewResponses);

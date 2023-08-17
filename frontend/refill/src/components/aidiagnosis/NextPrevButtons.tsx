@@ -24,8 +24,8 @@ const NextPrevButtons: React.FC<LinkProps> = ({
   const [openModal, setOpenModal] = useState(false);
   const [notCheckedNumbers, setNotCheckedNumbers] = useState<number[]>(Array);
   const [isValid, setIsValid] = useState(false);
-  
-  const [isError, setIsError] = useState(false)
+
+  const [isError, setIsError] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -70,7 +70,6 @@ const NextPrevButtons: React.FC<LinkProps> = ({
         },
       })
       .then((response) => {
-        
         console.log("ok");
         return response.data;
       })
@@ -81,8 +80,8 @@ const NextPrevButtons: React.FC<LinkProps> = ({
         navigate(nextLink, { state: { jsonDataString: newJsonDataString } });
       })
       .catch((err) => {
-        setLoading(false)
-        setIsError(true)
+        setLoading(false);
+        setIsError(true);
         console.log(err.response.data);
       });
   };
@@ -120,7 +119,7 @@ const NextPrevButtons: React.FC<LinkProps> = ({
   return (
     <div className="flex justify-center mt-2.5">
       {loading ? <LoaderModal /> : <></>}
-      {isError ? <AiServerError setIsError={setIsError}/> : <></>}
+      {isError ? <AiServerError setIsError={setIsError} /> : <></>}
       {openModal ? (
         <NotCheckModal
           notCheckedNumbers={notCheckedNumbers}
