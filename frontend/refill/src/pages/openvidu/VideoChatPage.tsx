@@ -652,10 +652,7 @@ const VideoChatPage: React.FC = () => {
                       style={{
                         display: toggleScreenPublisher ? "none" : "block",
                         color: "black",
-<<<<<<< HEAD
-=======
                         width: "95%",
->>>>>>> 8dd2b3f0bbf5d037125fbf78d32f575fd973493e
                       }}
                     >
                       <div
@@ -683,11 +680,7 @@ const VideoChatPage: React.FC = () => {
                       <div
                         style={{
                           border: "1px solid grey",
-<<<<<<< HEAD
-                          height: "200px",
-=======
                           height: "100px",
->>>>>>> 8dd2b3f0bbf5d037125fbf78d32f575fd973493e
                           marginBottom: "10px",
                         }}
                         className="scroll-ai-box"
@@ -696,11 +689,7 @@ const VideoChatPage: React.FC = () => {
                       </div>
                       <h2 style={{ fontWeight: "700" }}>AI 자가진단</h2>
                       <div
-<<<<<<< HEAD
-                        style={{ border: "1px solid grey", height: "200px" }}
-=======
                         style={{ border: "1px solid grey", height: "150px" }}
->>>>>>> 8dd2b3f0bbf5d037125fbf78d32f575fd973493e
                         className="scroll-ai-box"
                       >
                         <AiDiagnosisList memberId={memberId} />
