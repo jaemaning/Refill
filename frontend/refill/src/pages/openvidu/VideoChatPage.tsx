@@ -39,6 +39,7 @@ import ReviewModal from "components/openvidu/ReviewModal";
 import CameraswitchIcon from "@mui/icons-material/Cameraswitch";
 import AiDiagnosisList from "components/myPage/AiDiagnosisList";
 import ConsultingList from "components/myPage/ConsultingList";
+import DownloadIcon from "@mui/icons-material/Download";
 import "styles/MyPage.css";
 
 interface MessageList {
@@ -102,6 +103,7 @@ const VideoChatPage: React.FC = () => {
     hospitalId,
     doctorId,
     hospitalName,
+    hairImage,
   } = location.state;
 
   const inputref = useRef<HTMLTextAreaElement>(null);
@@ -153,6 +155,22 @@ const VideoChatPage: React.FC = () => {
 
   // 유저 정보 가져오기
   const navigate = useNavigate();
+
+  
+  function handleDownload() {
+    if ( !hairImage && ishospital ) {
+      const imageUrl = `https://ssafyfinal.s3.ap-northeast-2.amazonaws.com/${hairImage}`;
+      // 이미지 URL을 새로운 태그에 연결
+      const link = document.createElement('a');
+      link.href = imageUrl;
+      link.download = 'hairImage.png'; // 다운로드될 파일의 이름 지정
+    
+      // 다운로드 진행
+      link.click();
+    } else {
+      alert('등록된 사진이 없습니다.')
+    }
+  }
 
   useEffect(() => {
     console.log("요기", consultingId, sessionPk, token, shareToken);
@@ -484,6 +502,13 @@ const VideoChatPage: React.FC = () => {
     }
   };
 
+  // const handleDownload = () => {
+  //   if (hairImage) {
+
+  //   }
+  //   console.log('확인')
+  // }
+
   const accessToken = token;
   const headers = {
     Authorization: `Bearer ${accessToken}`,
@@ -627,6 +652,10 @@ const VideoChatPage: React.FC = () => {
                       style={{
                         display: toggleScreenPublisher ? "none" : "block",
                         color: "black",
+<<<<<<< HEAD
+=======
+                        width: "95%",
+>>>>>>> 8dd2b3f0bbf5d037125fbf78d32f575fd973493e
                       }}
                     >
                       <div
@@ -654,7 +683,11 @@ const VideoChatPage: React.FC = () => {
                       <div
                         style={{
                           border: "1px solid grey",
+<<<<<<< HEAD
                           height: "200px",
+=======
+                          height: "100px",
+>>>>>>> 8dd2b3f0bbf5d037125fbf78d32f575fd973493e
                           marginBottom: "10px",
                         }}
                         className="scroll-ai-box"
@@ -663,7 +696,11 @@ const VideoChatPage: React.FC = () => {
                       </div>
                       <h2 style={{ fontWeight: "700" }}>AI 자가진단</h2>
                       <div
+<<<<<<< HEAD
                         style={{ border: "1px solid grey", height: "200px" }}
+=======
+                        style={{ border: "1px solid grey", height: "150px" }}
+>>>>>>> 8dd2b3f0bbf5d037125fbf78d32f575fd973493e
                         className="scroll-ai-box"
                       >
                         <AiDiagnosisList memberId={memberId} />
@@ -820,6 +857,17 @@ const VideoChatPage: React.FC = () => {
                       ></StopScreenShareIcon>
                     )
                   ) : null}
+                  {
+                    ishospital ?
+                    <DownloadIcon
+                      fontSize="large"
+                      sx={{ margin: "0px 13px", color: "red", cursor: "pointer" }}
+                      onClick={()=> handleDownload()}
+                    >
+                    </DownloadIcon> 
+                    :
+                    null
+                  }
                   <NotificationImportantIcon
                     onClick={handleOpenReportModal}
                     fontSize="large"
