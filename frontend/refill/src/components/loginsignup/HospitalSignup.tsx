@@ -171,7 +171,7 @@ const HospitalSignup: React.FC<SignUpType> = (props) => {
   // 아이디 형식에 맞는지 판단
   const [validId, setValidId] = useState(false);
   const validateId = (id: string) => {
-    const alphanumericRegex = /^(?=.*[a-z])(?=.*\d)[a-z\d]{6,14}$/;
+    const alphanumericRegex = /^(?=.*[a-z])(?=.*\d)[a-z\d]{4,16}$/;
     const isValidId = alphanumericRegex.test(id);
     setValidId(isValidId);
   };

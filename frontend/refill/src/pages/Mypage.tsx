@@ -158,11 +158,13 @@ const Mypage: React.FC = () => {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then((res)=>{
-        console.log(res.data)
-        navigate('/logout')
+      .then((res) => {
+        console.log(res.data);
+        navigate("/logout");
       })
-      .catch((err)=>{console.log(err)})
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleToChangeMypage = () => {

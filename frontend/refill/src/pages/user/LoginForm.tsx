@@ -35,7 +35,7 @@ const LoginForm: React.FC = () => {
         <LoginLeftForm />
       </div>
       <div className="flex-col justify-center items-center Common_Right py-14">
-        <div className="flex justify-between mb-2" style={{width: '500px'}}>
+        <div className="flex justify-between mb-2" style={{ width: "500px" }}>
           {" "}
           {/* 수정 */}
           <div style={{ width: "180x" }}>
@@ -46,7 +46,9 @@ const LoginForm: React.FC = () => {
               handleToggle={handleToggleMember}
             />
           </div>
-          <div style={{ width: "300px", textAlign: 'right', lineHeight: "74px" }}>
+          <div
+            style={{ width: "300px", textAlign: "right", lineHeight: "74px" }}
+          >
             <span className="text-2xl font-bold text-center text-white">
               {ismember && loginpage
                 ? "일반 로그인"
