@@ -6,14 +6,12 @@ import com.refill.consulting.dto.response.ConnectionTokenResponse;
 import com.refill.consulting.dto.response.ConsultingDetailResponse;
 import com.refill.consulting.dto.response.ConsultingListResponse;
 import com.refill.consulting.service.ConsultingService;
+import com.refill.global.service.AmazonS3Service;
 import com.refill.report.entity.Report;
 import com.refill.security.util.LoginInfo;
-import io.openvidu.java.client.OpenViduHttpException;
-import io.openvidu.java.client.OpenViduJavaClientException;
+import java.io.IOException;
 import java.util.List;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ConsultingController {
 
     private final ConsultingService consultingService;
+    private final AmazonS3Service amazonS3Service;
 
     /* 입장 토큰 받아오기 */
     @GetMapping("/connection/{reservationId}")
@@ -95,5 +94,11 @@ public class ConsultingController {
         List<Report> reportList = consultingService.getConsultingReportList(loginInfo);
 
         return  ResponseEntity.ok().body(reportList);
+    }
+    /* 상담 전 파일 다운로드 */
+    @GetMapping("/file/{fileName}")
+    public ResponseEntity<byte[]> download(@PathVariable String fileName) throws IOException {
+        log.info("hello world" + "{}", fileName);
+        return amazonS3Service.getObject(fileName);
     }
 }
