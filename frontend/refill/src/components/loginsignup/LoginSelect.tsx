@@ -9,20 +9,14 @@ const LoginSelect: React.FC<loginSelect> = ({
   loginpage,
   handleChecklogin,
 }) => {
-  const [isloginpage, setIsLoginpage] = useState(loginpage);
-
-  const handleLoginPage = () => {
-    setIsLoginpage(!isloginpage);
-    handleChecklogin();
-  };
 
   return (
     <div className="flex">
       <Button
         content="로그인"
-        variant={isloginpage ? "selectSelected" : "selectUnselected"}
+        variant={loginpage ? "selectSelected" : "selectUnselected"}
         width="250px"
-        onClick={handleLoginPage}
+        onClick={handleChecklogin}
         customStyles={{
           borderTopLeftRadius: "7px",
           borderTopRightRadius: "7px",
@@ -33,9 +27,9 @@ const LoginSelect: React.FC<loginSelect> = ({
       />
       <Button
         content="회원가입"
-        variant={isloginpage ? "selectUnselected" : "selectSelected"}
+        variant={loginpage ? "selectUnselected" : "selectSelected"}
         width="250px"
-        onClick={handleLoginPage}
+        onClick={handleChecklogin}
         customStyles={{
           borderTopLeftRadius: "7px",
           borderTopRightRadius: "7px",

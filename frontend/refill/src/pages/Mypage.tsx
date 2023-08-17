@@ -151,6 +151,18 @@ const Mypage: React.FC = () => {
 
   const buttonclick = () => {
     console.log("계정 삭제");
+    axios
+      .delete(`/api/v1/account/member/${memberId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res)=>{
+        console.log(res.data)
+        navigate('/logout')
+      })
+      .catch((err)=>{console.log(err)})
   };
 
   const handleToChangeMypage = () => {
