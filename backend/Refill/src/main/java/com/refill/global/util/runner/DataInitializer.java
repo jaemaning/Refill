@@ -123,8 +123,6 @@ public class DataInitializer implements CommandLineRunner {
                 aiDiagnosisRepository.save(aiDiagnosis);
             }
 
-
-
             /* 병원 생성 */
             String[] hospitalName = {
                 "드림헤어라인 의원", "오라클 피부과", "맥스웰피부과",
