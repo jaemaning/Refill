@@ -8,7 +8,7 @@
     flex-direction: column;
 }
 
-.flex {
+.main-page-flex {
     /*Flexbox for containers*/
     display: flex;
     justify-content: center;
@@ -22,13 +22,6 @@
     height: 45vh;
     margin-bottom: -7px;
     /*Fix for safari gap*/
-}
-
-.content {
-    position: relative;
-    height: 20vh;
-    text-align: center;
-    background-color: white;
 }
 
 /* Animation */
@@ -95,10 +88,3 @@
     height: 100px;
     width: 100px;
 }
-/* .main-image가 호버 상태일 때 .wave-container와 그 하위 요소의 색상을 반전
-.main-image:hover ~ .wave-container, 
-.main-image:hover ~ .wave-container .flex,
-.main-image:hover ~ .wave-container .waves,
-.main-image:hover ~ .wave-container .content {
-    filter: invert(1);
-} */
