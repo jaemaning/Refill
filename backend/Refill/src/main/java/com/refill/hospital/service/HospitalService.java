@@ -4,6 +4,7 @@ import static com.refill.hospital.util.DistanceCalculator.calculateDistance;
 
 import com.refill.doctor.dto.request.DoctorJoinRequest;
 import com.refill.doctor.dto.request.DoctorUpdateRequest;
+import com.refill.doctor.dto.response.DoctorResponse;
 import com.refill.doctor.entity.Doctor;
 import com.refill.doctor.entity.EducationBackground;
 import com.refill.doctor.entity.MajorArea;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -131,7 +133,8 @@ public class HospitalService {
     public List<HospitalResponse> searchByKeyword(String hospitalName, String address) {
 
         if (StringUtils.hasText(hospitalName) && StringUtils.hasText(address)) {
-            return hospitalRepository.findByNameContainingAndAddressContaining(hospitalName, address)
+            return hospitalRepository.findByNameContainingAndAddressContaining(hospitalName,
+                                         address)
                                      .stream()
                                      .map(HospitalResponse::new)
                                      .collect(Collectors.toList());
@@ -150,6 +153,7 @@ public class HospitalService {
         }
     }
 
+    //@Cacheable(value = "hospitalInfo", key = "#id")
     @Transactional
     public HospitalDetailResponse getHospitalDetail(Long id) {
         return new HospitalDetailResponse(findById(id));
@@ -182,7 +186,8 @@ public class HospitalService {
 
         processImage(profileImg, hospital.getHospitalProfileImg(), hospital::updateProfileAddress);
         processImage(bannerImg, hospital.getHospitalBannerImg(), hospital::updateBannerAddress);
-        processImage(registrationImg, hospital.getRegistrationImg(), hospital::updateRegistrationImg);
+        processImage(registrationImg, hospital.getRegistrationImg(),
+            hospital::updateRegistrationImg);
     }
 
     private void processImage(MultipartFile newImage, String existingImageAddress, Consumer<String> addressUpdater) {
@@ -197,6 +202,7 @@ public class HospitalService {
             amazonS3Service.deleteFile(fileAddress);
         }
     }
+
     private void uploadFileAndUpdateAddress(MultipartFile file, Consumer<String> addressUpdater) {
         if (Objects.nonNull(file) && !file.isEmpty()) {
             String address = amazonS3Service.uploadFile(file);
@@ -219,6 +225,8 @@ public class HospitalService {
         processImage(profileImg, doctor.getProfileImg(), doctor::updateProfileAddress);
     }
 
+
+    @CacheEvict(value = "doctorInfo", key = "#hospitalId")
     @Transactional
     public void registHospitalDoctor(String loginId, Long hospitalId,
         DoctorJoinRequest doctorJoinRequest, MultipartFile profileImg, MultipartFile licenseImg) {
@@ -233,14 +241,17 @@ public class HospitalService {
         registMajor(doctorJoinRequest, doctor);
     }
 
-    private void registEducationBackground(DoctorJoinRequest doctorJoinRequest, Doctor doctor) {
+    @Transactional
+    @CacheEvict(value = "doctorInfo", key = "#doctor.getHospital().id")
+    public void registEducationBackground(DoctorJoinRequest doctorJoinRequest, Doctor doctor) {
         doctorJoinRequest.educationBackgrounds()
                          .stream()
                          .map(content -> new EducationBackground(doctor, content))
                          .forEach(educationBackgroundRepository::save);
     }
-
-    private void registMajor(DoctorJoinRequest doctorJoinRequest, Doctor doctor) {
+    @Transactional
+    @CacheEvict(value = "doctorInfo", key = "#doctor.getHospital().id")
+    public void registMajor(DoctorJoinRequest doctorJoinRequest, Doctor doctor) {
         doctorJoinRequest.majorAreas()
                          .stream()
                          .map(major -> new MajorArea(doctor, major))
@@ -248,7 +259,40 @@ public class HospitalService {
     }
 
 
+    @Transactional(readOnly = true)
     public List<HospitalResponse> findAllHospitals() {
-        return this.findAll().stream().map(hospital -> new HospitalResponse(hospital)).collect(Collectors.toList());
+        return this.findAll()
+                   .stream()
+                   .map(hospital -> new HospitalResponse(hospital))
+                   .collect(Collectors.toList());
+    }
+
+    @Cacheable(value = "hospitalInfo", key = "#hospitalId")
+    @Transactional(readOnly = true)
+    public Hospital findByIdUsingCache(Long hospitalId) {
+        return findById(hospitalId);
+    }
+
+   @Cacheable(value = "doctorInfo", key = "#hospital.id")
+    public List<DoctorResponse> getDoctorByHospital(Hospital hospital) {
+
+        return doctorService.findAllByHospital(hospital);
     }
 }
+
+//        return hospital.getDoctors()
+//                       .stream()
+//                       .map(DoctorResponse::new)
+//                       .collect(Collectors.toList());
+//    }
+
+//    public List<ReviewResponse> getReviewByHospital(Hospital hospital) {
+//
+//        return reviewService.findAllByHospital(hospital);
+
+//        return hospital.getReviews()
+//                       .stream()
+//                       .map(ReviewResponse::new)
+//                       .collect(Collectors.toList());
+//    }
+//}

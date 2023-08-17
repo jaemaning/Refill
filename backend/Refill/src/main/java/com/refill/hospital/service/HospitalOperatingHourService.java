@@ -5,6 +5,7 @@ import com.refill.global.exception.ErrorCode;
 import com.refill.hospital.dto.request.HospitalOperatingHoursRequest;
 import com.refill.hospital.dto.response.HospitalDetailResponse;
 import com.refill.hospital.dto.response.HospitalOperatingHourResponse;
+import com.refill.hospital.dto.response.HospitalOperatingHoursCache;
 import com.refill.hospital.entity.Hospital;
 import com.refill.hospital.entity.HospitalOperatingHour;
 import com.refill.hospital.repository.HospitalOperatingHourRepository;
@@ -15,6 +16,7 @@ import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,5 +79,19 @@ public class HospitalOperatingHourService {
             .map(y -> HospitalOperatingHour.from(y, hospital))
             .forEach(hospitalOperatingHourRepository::save);
 
+    }
+
+    @Cacheable(value = "hospitalHoursInfo", key = "#id")
+    @Transactional(readOnly = true)
+    public HospitalOperatingHoursCache getOperatingHoursUsingCache(Long id) {
+
+        Hospital hospital = hospitalService.findById(id);
+
+        List<HospitalOperatingHourResponse> operatingHourList = hospitalOperatingHourRepository.findAllByHospital(hospital)
+                                                                                               .stream()
+                                                                                               .map(HospitalOperatingHourResponse::new)
+                                                                                               .toList();
+
+        return new HospitalOperatingHoursCache(operatingHourList);
     }
 }

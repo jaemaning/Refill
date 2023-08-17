@@ -30,6 +30,19 @@ public record HospitalResponse(
             hospital.getEmail());
     }
 
+    public HospitalResponse(Hospital hospital, Double avg){
+        this(hospital.getId(),
+            hospital.getName(),
+            hospital.getLongitude(),
+            hospital.getLatitude(),
+            hospital.getHospitalProfileImg(),
+            hospital.getHospitalBannerImg(),
+            hospital.getAddress(),
+            hospital.getTel(),
+            avg,
+            hospital.getEmail());
+    }
+
     private static double getScore(Hospital hospital) {
         double score = hospital.getReviews()
                        .stream()
