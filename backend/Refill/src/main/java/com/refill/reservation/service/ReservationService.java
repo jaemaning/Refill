@@ -19,8 +19,6 @@ import com.refill.reservation.entity.Reservation;
 import com.refill.reservation.exception.ReservationException;
 import com.refill.reservation.repository.ReservationRepository;
 import com.refill.security.util.LoginInfo;
-import io.openvidu.java.client.OpenViduHttpException;
-import io.openvidu.java.client.OpenViduJavaClientException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -128,7 +126,7 @@ public class ReservationService {
                                                        .orElseThrow(
                                                            () -> new EntityNotFoundException());
 
-        if (!Objects.equals(member, reservation.getMember())) {
+        if (!Objects.equals(member.getId(), reservation.getMember().getId())) {
             throw new MemberException(ErrorCode.UNAUTHORIZED_REQUEST);
         }
 
@@ -136,6 +134,7 @@ public class ReservationService {
 
     }
 
+    @Transactional(readOnly = true)
     public List<ReservationInfoResponse> findReservationByDoctor(LoginInfo loginInfo, Long doctorId) {
 
         Doctor doctor = doctorService.findById(doctorId);
@@ -143,7 +142,7 @@ public class ReservationService {
         Hospital loginHospital = hospitalService.findByLoginId(loginInfo.loginId());
         Hospital doctorHospital = doctor.getHospital();
 
-        if (!Objects.equals(loginHospital, doctorHospital)) {
+        if (!Objects.equals(loginHospital.getId(), doctorHospital.getId())) {
             throw new MemberException(ErrorCode.UNAUTHORIZED_REQUEST);
         }
 
