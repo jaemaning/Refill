@@ -150,7 +150,7 @@ const VideoChatPage: React.FC = () => {
   const islogin = useSelector((state: RootState) => state.login.islogin);
   const ismember = useSelector((state: RootState) => state.login.ismember);
   const ishospital = useSelector((state: RootState) => state.login.ishospital);
-  const userPk = useSelector((state: RootState) => state.login.pk);
+  // const userPk = useSelector((state: RootState) => state.login.pk);
 
   // 유저 정보 가져오기
   const navigate = useNavigate();
@@ -610,7 +610,7 @@ const VideoChatPage: React.FC = () => {
                         }}
                         className="scroll-ai-box"
                       >
-                        <ConsultingList userPk={userPk} />
+                        <ConsultingList userPk={memberId} />
                       </div>
                       <h2 style={{ fontWeight: "700" }}>AI 자가진단</h2>
                       <div
@@ -635,7 +635,7 @@ const VideoChatPage: React.FC = () => {
                         }}
                         className="scroll-ai-box"
                       >
-                        <ConsultingList userPk={userPk} />
+                        <ConsultingList userPk={memberId} />
                       </div>
                       <h2 style={{ fontWeight: "700" }}>AI 자가진단</h2>
                       <div
