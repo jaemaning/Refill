@@ -23,7 +23,10 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({
 
   return (
     <div className="flex justify-center align-middle my-3">
-      <div className={`toggle-switch ${ismember ? "checked" : "unchecked"}`} style={{margin: "auto"}}>
+      <div
+        className={`toggle-switch ${ismember ? "checked" : "unchecked"}`}
+        style={{ margin: "auto" }}
+      >
         <div
           className={`switch ${ismember ? "checked" : "unchecked"}`}
           onClick={handleSwitchToggle}
