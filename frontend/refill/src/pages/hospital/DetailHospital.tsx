@@ -418,7 +418,7 @@ const DetailHospital: React.FC = () => {
       )
 
       .then((response) => {
-        console.log(response);
+        console.log("ok");
         setModifyOpen(null);
         window.location.reload();
       })
@@ -451,7 +451,7 @@ const DetailHospital: React.FC = () => {
       )
 
       .then((response) => {
-        console.log(response);
+        console.log("ok");
         setDeleteOpen(null);
         window.location.reload();
       })
@@ -496,8 +496,7 @@ const DetailHospital: React.FC = () => {
 
   useEffect(() => {
     if (ishospital === true) {
-      console.log(MyId);
-      console.log(hospitalData.hospitalId);
+      console.log("ok");
       if (MyId === hospitalData.hospitalId) {
         setMypage(true);
       }

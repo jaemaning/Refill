@@ -27,7 +27,7 @@ const DiagnosisItem: React.FC<DiagnosisItemProps> = ({
           </span>
         </div>
         <div className="grid grid-cols-2">
-          <div className="flex items-center justify-start">
+          <div className="flex items-center justify-center">
             <input
               type="radio"
               id={`option1-${title}`} // 유니크한 ID 생성
@@ -37,7 +37,7 @@ const DiagnosisItem: React.FC<DiagnosisItemProps> = ({
               onChange={handleOptionChange}
               className="form-radio h-5 w-5 text-blue-500"
             />
-            <label htmlFor={`option1-${title}`} className="ml-2">
+            <label htmlFor={`option1-${title}`} className="ml-2 text-lg">
               네 그렇습니다.
             </label>
           </div>
@@ -51,7 +51,7 @@ const DiagnosisItem: React.FC<DiagnosisItemProps> = ({
               onChange={handleOptionChange}
               className="form-radio h-5 w-5 text-blue-500"
             />
-            <label htmlFor={`option2-${title}`} className="ml-2">
+            <label htmlFor={`option2-${title}`} className="ml-2 text-lg">
               아니오 그렇지 않습니다.
             </label>
           </div>

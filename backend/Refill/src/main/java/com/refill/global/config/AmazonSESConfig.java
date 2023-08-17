@@ -15,7 +15,7 @@ public class AmazonSESConfig {
     private String accessKey;
     @Value("${cloud.aws.credentials.secret-key}")
     private String privateKey;
-    @Value("${cloud.aws.region.static}")
+    @Value("${cloud.aws.region.email}")
     private String region;
 
     @Bean

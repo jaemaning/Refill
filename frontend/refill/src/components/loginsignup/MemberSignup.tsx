@@ -81,7 +81,6 @@ const MemberSignup: React.FC<SignUpType> = (props) => {
       ) {
         setValidBD(false);
       } else {
-        console.log(1);
         setValidBD(true);
       }
     }
@@ -146,10 +145,6 @@ const MemberSignup: React.FC<SignUpType> = (props) => {
   const checkemail = () => {
     if (checkCode === code) setCheck(true);
     else setCheck(false);
-
-    console.log(code);
-    console.log(checkCode);
-    console.log(check);
   };
 
   // 도로명 주소 추가
@@ -168,8 +163,6 @@ const MemberSignup: React.FC<SignUpType> = (props) => {
   const emailCertify = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const data = { email: inputData.email };
-    console.log(data);
-
     axios
       .post("api/v1/account/verify/join", data, {
         headers: {
@@ -177,7 +170,7 @@ const MemberSignup: React.FC<SignUpType> = (props) => {
         },
       })
       .then((response) => {
-        console.log(response.data);
+        console.log("ok");
         setCheckCode(response.data.code);
       })
       .catch((err) => {
@@ -264,7 +257,7 @@ const MemberSignup: React.FC<SignUpType> = (props) => {
           },
         })
         .then((response) => {
-          console.log(response.data);
+          console.log("ok");
           props.handleChecklogin();
         })
         .catch((err) => {
