@@ -10,6 +10,9 @@ import com.refill.hospital.entity.HospitalOperatingHour;
 import com.refill.hospital.repository.HospitalOperatingHourRepository;
 import com.refill.member.exception.MemberException;
 import com.refill.security.util.LoginInfo;
+import java.time.DayOfWeek;
+import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -56,6 +59,23 @@ public class HospitalOperatingHourService {
         List<HospitalOperatingHourResponse> operatingHourResponses = getOperatingHours(id);
 
         return new HospitalDetailResponse(hospital, operatingHourResponses);
+
+    }
+
+    @Transactional
+    public void generateHours(Long id) {
+
+        Hospital hospital = hospitalService.findById(id);
+
+        LocalTime startTime = LocalTime.of(9, 0);
+        LocalTime endTime = LocalTime.of(19, 0);
+
+        DayOfWeek[] weeks = DayOfWeek.values();
+
+        Arrays.stream(weeks)
+            .map(x -> new HospitalOperatingHoursRequest(x, startTime, endTime))
+            .map(y -> HospitalOperatingHour.from(y, hospital))
+            .forEach(hospitalOperatingHourRepository::save);
 
     }
 }
