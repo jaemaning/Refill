@@ -225,6 +225,8 @@ public class HospitalService {
         processImage(profileImg, doctor.getProfileImg(), doctor::updateProfileAddress);
     }
 
+
+    @CacheEvict(value = "doctorInfo", key = "#hospitalId")
     @Transactional
     public void registHospitalDoctor(String loginId, Long hospitalId,
         DoctorJoinRequest doctorJoinRequest, MultipartFile profileImg, MultipartFile licenseImg) {
@@ -239,14 +241,17 @@ public class HospitalService {
         registMajor(doctorJoinRequest, doctor);
     }
 
-    private void registEducationBackground(DoctorJoinRequest doctorJoinRequest, Doctor doctor) {
+    @Transactional
+    @CacheEvict(value = "doctorInfo", key = "#doctor.getHospital().id")
+    public void registEducationBackground(DoctorJoinRequest doctorJoinRequest, Doctor doctor) {
         doctorJoinRequest.educationBackgrounds()
                          .stream()
                          .map(content -> new EducationBackground(doctor, content))
                          .forEach(educationBackgroundRepository::save);
     }
-
-    private void registMajor(DoctorJoinRequest doctorJoinRequest, Doctor doctor) {
+    @Transactional
+    @CacheEvict(value = "doctorInfo", key = "#doctor.getHospital().id")
+    public void registMajor(DoctorJoinRequest doctorJoinRequest, Doctor doctor) {
         doctorJoinRequest.majorAreas()
                          .stream()
                          .map(major -> new MajorArea(doctor, major))
@@ -268,7 +273,7 @@ public class HospitalService {
         return findById(hospitalId);
     }
 
-//    @Cacheable(value = "doctorInfo", key = "#hospital.id")
+   @Cacheable(value = "doctorInfo", key = "#hospital.id")
     public List<DoctorResponse> getDoctorByHospital(Hospital hospital) {
 
         return doctorService.findAllByHospital(hospital);

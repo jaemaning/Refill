@@ -75,7 +75,7 @@ public class RedisConfig {
 
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
                                                                                  .disableCachingNullValues()
-                                                                                 .entryTtl(Duration.ofDays(1L))
+                                                                                 .entryTtl(Duration.ofHours(1L))
                                                                                  .computePrefixWith(CacheKeyPrefix.simple())
                                                                                  .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
                                                                                  .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(genericJackson2JsonRedisSerializer));
@@ -84,6 +84,7 @@ public class RedisConfig {
         redisCacheConfigurationMap.put("UserCacheStore", redisCacheConfiguration);
         redisCacheConfigurationMap.put("hospitalInfo", redisCacheConfiguration);
         redisCacheConfigurationMap.put("hospitalHoursInfo", redisCacheConfiguration);
+        redisCacheConfigurationMap.put("doctorInfo", redisCacheConfiguration);
 
         return RedisCacheManager.RedisCacheManagerBuilder
                                 .fromConnectionFactory(redisConnectionFactory)
