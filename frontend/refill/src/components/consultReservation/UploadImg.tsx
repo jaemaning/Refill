@@ -7,7 +7,7 @@ import axios from "axios";
 import { RootState } from "store/reducers";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import NotSuccess from "./NotSuccess"
+import NotSuccess from "./NotSuccess";
 
 interface UploadImgProps {
   doctorName: string;
@@ -26,7 +26,7 @@ const UploadImg: React.FC<UploadImgProps> = ({
   hospitalName,
   doctorId,
 }) => {
-  const [isError, setIsError] = useState(false)
+  const [isError, setIsError] = useState(false);
   const [imgFile, setImgFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
@@ -58,7 +58,7 @@ const UploadImg: React.FC<UploadImgProps> = ({
         setModalOpen(true);
       })
       .catch((error) => {
-        setIsError(true)
+        setIsError(true);
         console.error(error.response.data.message);
       });
     return;
@@ -93,7 +93,7 @@ const UploadImg: React.FC<UploadImgProps> = ({
 
   return (
     <div>
-      {isError ? <NotSuccess setIsError={setIsError}/> : <></>}
+      {isError ? <NotSuccess setIsError={setIsError} /> : <></>}
       <CompleteCompo
         hospitalName={hospitalName}
         ModalOpen={modalOpen}

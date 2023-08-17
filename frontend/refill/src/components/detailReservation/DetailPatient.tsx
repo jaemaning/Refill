@@ -122,7 +122,7 @@ const DetailPatient: React.FC<DetailPatientProps> = ({
 
   const [canJoin, setCanJoin] = useState(false);
 
-  const imgUrl = `https://ssafyfinal.s3.ap-northeast-2.amazonaws.com/${selectedMember.hairImage}`
+  const imgUrl = `https://ssafyfinal.s3.ap-northeast-2.amazonaws.com/${selectedMember.hairImage}`;
   // 입장하는 함수
   // 입장하는 함수
   const joinSession = ({
@@ -203,15 +203,20 @@ const DetailPatient: React.FC<DetailPatientProps> = ({
           <p className="reservation-detail-patient-text">상담요청사항</p>{" "}
           {selectedMember.counselingDemands}
         </div>
-        {
-          selectedMember.hairImage ?
+        {selectedMember.hairImage ? (
           <div className="flex">
-            <a href={imgUrl} download className="reservation-detail-patient-text">사진</a>{" "}
-            <a href={imgUrl} download>{selectedMember.hairImage}</a>
+            <a
+              href={imgUrl}
+              download
+              className="reservation-detail-patient-text"
+            >
+              사진
+            </a>{" "}
+            <a href={imgUrl} download>
+              {selectedMember.hairImage}
+            </a>
           </div>
-          :
-          null
-        }
+        ) : null}
         <div className="pt-5 flex justify-center">
           {/* 버튼 넣는 곳 */}
           <button

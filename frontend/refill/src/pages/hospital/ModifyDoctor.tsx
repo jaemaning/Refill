@@ -123,19 +123,19 @@ const ModifyDoctor: React.FC<ModifyModal> = ({
   const FinalModify = () => {
     const tempEdu: string[] = eString.split(",");
     const tempMaj: string[] = mString.split(",");
-  
+
     const doctorUpdateRequest = {
       description: inputData.description,
       educationBackgrounds: tempEdu,
       majorAreas: tempMaj,
     };
-  
+
     const json = JSON.stringify(doctorUpdateRequest);
     const jsonBlob = new Blob([json], { type: "application/json" });
     const formData = new FormData();
-  
+
     formData.append("doctorUpdateRequest", jsonBlob);
-  
+
     if (isImageChanged && inputImage.profileImg) {
       // 사용자가 새로운 이미지를 업로드한 경우
       formData.append("profileImg", inputImage.profileImg);
