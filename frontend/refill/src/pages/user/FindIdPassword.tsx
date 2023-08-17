@@ -37,22 +37,23 @@ const FindIdPassword: React.FC = () => {
       } flex justify-center items-center`}
     >
       <div className="flex-col justify-center items-center">
-        <div className="flex justify-around items-center">
+        <div className="flex justify-between items-center">
           <ToggleSwitch
             ismember={ismember}
             onText="일반"
             offText="병원"
             handleToggle={handleToggleMember}
           />
-          <span className="text-2xl font-bold text-center text-white pb-3 pr-2">
+          <span className="text-2xl font-bold text-center text-white">
             {ismember ? "일반회원" : "병원회원"}
           </span>
           <Link to="/" className="flex items-center">
-            <img
+            {/* <img
               src={app_logo}
               alt="nav_log"
               style={{ width: "100px", height: "100px" }}
-            />
+            /> */}
+            <p style={{color:'white'}}>홈으로 돌아가기</p>
           </Link>
         </div>
         <div className="flex-col justify-center items-center">
@@ -60,14 +61,37 @@ const FindIdPassword: React.FC = () => {
             isfindid={isfindid}
             handdleSelect={handleFindCheck}
           ></FindSelect>
-          <FindForm className="rounded-b-2xl">
+          
+          <FindForm className="rounded-b-2xl flex justify-between">
             {isfindid ? (
-              <FindId
-                ismember={ismember}
-                toggleMembership={handleToggleMember}
-              />
+              <>
+                <div style={{textAlign: 'center', marginBottom: '50px'}}>
+                  <h1 style={{fontWeight: '700', fontSize:'20px', marginBottom:'5px'}}>아이디 찾기</h1>
+                  <p>
+                    아이디를 받고 싶은 이메일을 입력해 주세요.
+                  </p>
+                  <p>
+                    입력된 메일로 자세한 안내를 보내드립니다.
+                  </p>
+                </div>
+                <FindId
+                  ismember={ismember}
+                  toggleMembership={handleToggleMember}
+                />
+              </>
             ) : (
-              <FindPassword ismember={ismember} />
+              <>
+                <div style={{textAlign: 'center', marginBottom: '20px'}}>
+                  <h1 style={{fontWeight: '700', fontSize:'20px', marginBottom:'5px'}}>비밀번호 재설정</h1>
+                  <p>
+                    비밀번호를 재설정 할 이메일을 입력해 주세요.
+                  </p>
+                  <p>
+                    입력된 메일로 자세한 안내를 보내드립니다.
+                  </p>
+                </div>
+                <FindPassword ismember={ismember} />
+              </>
             )}
           </FindForm>
         </div>
