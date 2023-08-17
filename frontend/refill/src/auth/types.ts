@@ -19,6 +19,7 @@ export type Loginstate = {
   token: string;
   loginId: string;
   pk: number;
+  exp: number;
 };
 
 export type Hosstate = {
