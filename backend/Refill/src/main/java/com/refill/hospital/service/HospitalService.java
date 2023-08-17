@@ -23,6 +23,7 @@ import com.refill.hospital.exception.HospitalException;
 import com.refill.hospital.repository.HospitalRepository;
 import com.refill.member.exception.MemberException;
 import com.refill.review.dto.response.ReviewResponse;
+import com.refill.review.service.ReviewService;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -46,6 +47,7 @@ public class HospitalService {
     private final DoctorService doctorService;
     private final EducationBackgroundRepository educationBackgroundRepository;
     private final MajorAreaRepository majorAreaRepository;
+    private final ReviewService reviewService;
 
 
     @Transactional(readOnly = true)

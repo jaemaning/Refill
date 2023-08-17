@@ -4,10 +4,11 @@ import com.refill.doctor.dto.request.DoctorJoinRequest;
 import com.refill.doctor.dto.request.DoctorUpdateRequest;
 import com.refill.doctor.dto.response.DoctorResponse;
 import com.refill.hospital.dto.request.HospitalInfoUpdateRequest;
-import com.refill.hospital.dto.request.HospitalOperatingHoursRequest;
 import com.refill.hospital.dto.request.HospitalLocationRequest;
+import com.refill.hospital.dto.request.HospitalOperatingHoursRequest;
 import com.refill.hospital.dto.response.HospitalDetailResponse;
 import com.refill.hospital.dto.response.HospitalOperatingHourResponse;
+import com.refill.hospital.dto.response.HospitalOperatingHoursCache;
 import com.refill.hospital.dto.response.HospitalResponse;
 import com.refill.hospital.dto.response.HospitalSearchByLocationResponse;
 import com.refill.hospital.entity.Hospital;
@@ -84,14 +85,16 @@ public class HospitalController {
         log.debug("hospitalId: {}", hospitalId);
         //HospitalDetailResponse hospitalDetailResponse = hospitalOperatingHourService.getDetailHospitalInfo(hospitalId);
 
-        Hospital hospital = hospitalService.findByIdUsingCache(hospitalId);
-        List<HospitalOperatingHourResponse> operatingHourList = hospitalOperatingHourService.getOperatingHours(hospitalId);
-        List<DoctorResponse> doctorResponseList = hospitalService.getDoctorByHospital(hospital);
-        List<ReviewResponse> reviewResponseList = hospitalService.getReviewByHospital(hospital);
+        Hospital hospital = hospitalService.findByIdUsingCache(hospitalId); // 캐시 적용
+        List<DoctorResponse> doctorResponseList = hospitalService.getDoctorByHospital(hospital); // 캐시 미적용
+        List<ReviewResponse> reviewResponseList = hospitalService.getReviewByHospital(hospital); // 캐시 미적용
         HospitalResponse hospitalResponse = new HospitalResponse(hospital);
 
-        HospitalDetailResponse hospitalDetailResponse = new HospitalDetailResponse(hospitalResponse, doctorResponseList, reviewResponseList, operatingHourList);
+        HospitalOperatingHoursCache operatingHoursCache = hospitalOperatingHourService.getOperatingHoursUsingCache(hospitalId); // 캐시 적용
 
+        HospitalDetailResponse hospitalDetailResponse = new HospitalDetailResponse(hospitalResponse, doctorResponseList, reviewResponseList, operatingHoursCache);
+
+        log.info("######################{}#######################", hospitalDetailResponse.operatingHoursCache().toString());
         return ResponseEntity.ok()
                              .body(hospitalDetailResponse);
     }

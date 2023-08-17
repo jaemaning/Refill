@@ -5,6 +5,7 @@ import com.refill.global.exception.ErrorCode;
 import com.refill.hospital.dto.request.HospitalOperatingHoursRequest;
 import com.refill.hospital.dto.response.HospitalDetailResponse;
 import com.refill.hospital.dto.response.HospitalOperatingHourResponse;
+import com.refill.hospital.dto.response.HospitalOperatingHoursCache;
 import com.refill.hospital.entity.Hospital;
 import com.refill.hospital.entity.HospitalOperatingHour;
 import com.refill.hospital.repository.HospitalOperatingHourRepository;
@@ -42,7 +43,6 @@ public class HospitalOperatingHourService {
 
     }
 
-    @Cacheable(value = "hospitalHoursInfo", key = "#id")
     @Transactional(readOnly = true)
     public List<HospitalOperatingHourResponse> getOperatingHours(Long id) {
 
@@ -79,5 +79,19 @@ public class HospitalOperatingHourService {
             .map(y -> HospitalOperatingHour.from(y, hospital))
             .forEach(hospitalOperatingHourRepository::save);
 
+    }
+
+    @Cacheable(value = "hospitalHoursInfo", key = "#id")
+    @Transactional(readOnly = true)
+    public HospitalOperatingHoursCache getOperatingHoursUsingCache(Long id) {
+
+        Hospital hospital = hospitalService.findById(id);
+
+        List<HospitalOperatingHourResponse> operatingHourList = hospitalOperatingHourRepository.findAllByHospital(hospital)
+                                                                                               .stream()
+                                                                                               .map(HospitalOperatingHourResponse::new)
+                                                                                               .toList();
+
+        return new HospitalOperatingHoursCache(operatingHourList);
     }
 }
