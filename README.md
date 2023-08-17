@@ -141,7 +141,6 @@
 - 회원 상담
 
 ![회원 상담1](./exec/function/member-consulting1.gif)
-![회원 상담2](./exec/function/member-consulting2.gif)
 
 ---
 
