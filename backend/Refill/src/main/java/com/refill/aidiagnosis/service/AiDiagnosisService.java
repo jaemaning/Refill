@@ -147,6 +147,11 @@ public class AiDiagnosisService {
             throw new AiDiagnosisException(ErrorCode.AI_SERVER_ERROR);
         }
 
+        double modelConf = Double.parseDouble(aiServerResponse.modelConfidence());
+        if(modelConf < 50.0) {
+            throw new AiDiagnosisException(ErrorCode.AI_SERVER_WRONG_PICTURE);
+        }
+
         log.info("##### {} #####", aiServerResponse.toString());
         return aiServerResponse;
     }
