@@ -15,6 +15,7 @@ import com.refill.hospital.entity.Hospital;
 import com.refill.hospital.service.HospitalOperatingHourService;
 import com.refill.hospital.service.HospitalService;
 import com.refill.review.dto.response.ReviewResponse;
+import com.refill.review.service.ReviewService;
 import com.refill.security.util.LoginInfo;
 import java.util.List;
 import javax.validation.Valid;
@@ -43,7 +44,7 @@ public class HospitalController {
 
     private final HospitalService hospitalService;
     private final HospitalOperatingHourService hospitalOperatingHourService;
-
+    private final ReviewService reviewService;
     @GetMapping("/")
     public ResponseEntity<List<HospitalResponse>> getAllHospitals(){
         List<HospitalResponse> hospitalResponses = hospitalService.findAllHospitals();
@@ -86,8 +87,8 @@ public class HospitalController {
         //HospitalDetailResponse hospitalDetailResponse = hospitalOperatingHourService.getDetailHospitalInfo(hospitalId);
 
         Hospital hospital = hospitalService.findByIdUsingCache(hospitalId); // 캐시 적용
-        List<DoctorResponse> doctorResponseList = hospitalService.getDoctorByHospital(hospital); // 캐시 미적용
-        List<ReviewResponse> reviewResponseList = hospitalService.getReviewByHospital(hospital); // 캐시 미적용
+        List<DoctorResponse> doctorResponseList = hospitalService.getDoctorByHospital(hospital); // 캐시 적용
+        List<ReviewResponse> reviewResponseList = reviewService.findAllByHospital(hospital); // 캐시 미적용
         HospitalResponse hospitalResponse = new HospitalResponse(hospital);
 
         HospitalOperatingHoursCache operatingHoursCache = hospitalOperatingHourService.getOperatingHoursUsingCache(hospitalId); // 캐시 적용

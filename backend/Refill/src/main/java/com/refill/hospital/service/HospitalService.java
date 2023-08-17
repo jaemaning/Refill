@@ -22,8 +22,6 @@ import com.refill.hospital.entity.Hospital;
 import com.refill.hospital.exception.HospitalException;
 import com.refill.hospital.repository.HospitalRepository;
 import com.refill.member.exception.MemberException;
-import com.refill.review.dto.response.ReviewResponse;
-import com.refill.review.service.ReviewService;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -47,7 +45,6 @@ public class HospitalService {
     private final DoctorService doctorService;
     private final EducationBackgroundRepository educationBackgroundRepository;
     private final MajorAreaRepository majorAreaRepository;
-    private final ReviewService reviewService;
 
 
     @Transactional(readOnly = true)
@@ -271,19 +268,26 @@ public class HospitalService {
         return findById(hospitalId);
     }
 
+//    @Cacheable(value = "doctorInfo", key = "#hospital.id")
     public List<DoctorResponse> getDoctorByHospital(Hospital hospital) {
 
-        return hospital.getDoctors()
-                       .stream()
-                       .map(DoctorResponse::new)
-                       .collect(Collectors.toList());
-    }
-
-    public List<ReviewResponse> getReviewByHospital(Hospital hospital) {
-
-        return hospital.getReviews()
-                       .stream()
-                       .map(ReviewResponse::new)
-                       .collect(Collectors.toList());
+        return doctorService.findAllByHospital(hospital);
     }
 }
+
+//        return hospital.getDoctors()
+//                       .stream()
+//                       .map(DoctorResponse::new)
+//                       .collect(Collectors.toList());
+//    }
+
+//    public List<ReviewResponse> getReviewByHospital(Hospital hospital) {
+//
+//        return reviewService.findAllByHospital(hospital);
+
+//        return hospital.getReviews()
+//                       .stream()
+//                       .map(ReviewResponse::new)
+//                       .collect(Collectors.toList());
+//    }
+//}

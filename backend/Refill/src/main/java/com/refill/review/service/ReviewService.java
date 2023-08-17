@@ -36,9 +36,9 @@ public class ReviewService {
     private final ReportService reportService;
 
     @Transactional(readOnly = true)
-    public Review findById(Long id){
+    public Review findById(Long id) {
         return reviewRepository.findById(id)
-                        .orElseThrow(()-> new ReviewException(ErrorCode.REVIEW_NOT_FOUND));
+                               .orElseThrow(() -> new ReviewException(ErrorCode.REVIEW_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
@@ -52,7 +52,9 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public ReviewResponse getReviewById(Long reviewId) {
-        Review review = reviewRepository.findById(reviewId).orElseThrow(()->new ReviewException(ErrorCode.ACCESS_DENIED));
+        Review review = reviewRepository.findById(reviewId)
+                                        .orElseThrow(
+                                            () -> new ReviewException(ErrorCode.ACCESS_DENIED));
         ReviewResponse reviewResponse = new ReviewResponse(review);
         return reviewResponse;
     }
@@ -74,6 +76,7 @@ public class ReviewService {
         Review review = verifyMemberAccess(loginId, reviewId);
         review.update(reviewModifyRequest);
     }
+
     @Transactional
     public void deleteReviewById(Long reviewId, LoginInfo loginInfo) {
         Review review = verifyAdminOrMemberAccess(reviewId, loginInfo);
@@ -88,14 +91,16 @@ public class ReviewService {
 
     private Review verifyAdminOrMemberAccess(Long reviewId, LoginInfo loginInfo) {
         Review review = findById(reviewId);
-        if (!loginInfo.role().equals(Role.ROLE_ADMIN)) {
+        if (!loginInfo.role()
+                      .equals(Role.ROLE_ADMIN)) {
             validateAccess(loginInfo.loginId(), review);
         }
         return review;
     }
 
     private void validateAccess(String loginId, Review review) {
-        if (!loginId.equals(review.getMember().getLoginId())) {
+        if (!loginId.equals(review.getMember()
+                                  .getLoginId())) {
             throw new MemberException(ErrorCode.ACCESS_DENIED);
         }
     }
@@ -104,5 +109,14 @@ public class ReviewService {
     public void reportReview(Long reviewId, String content, LoginInfo loginInfo) {
         findById(reviewId);
         reportService.reportReview(reviewId, content, loginInfo);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ReviewResponse> findAllByHospital(Hospital hospital) {
+
+        return reviewRepository.findAllByHospital(hospital)
+                               .stream()
+                               .map(ReviewResponse::new)
+                               .collect(Collectors.toList());
     }
 }
