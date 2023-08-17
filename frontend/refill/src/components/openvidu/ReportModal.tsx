@@ -63,7 +63,7 @@ const ReportModal: React.FC<ReportModalProps> = (props) => {
     React.useState(false);
   const handleOpenReportSuccessModal = () => setOpenReportSuccessModal(true);
 
-  const url = `api/v1/consulting/report/${props.consultingId}`;
+  const url = `/api/v1/consulting/report/${props.consultingId}`;
 
   const openAlert = (timeToDelay: number) =>
     new Promise((handleCloseReportSuccessModal) =>
