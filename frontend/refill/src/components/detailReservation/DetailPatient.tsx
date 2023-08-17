@@ -157,6 +157,9 @@ const DetailPatient: React.FC<DetailPatientProps> = ({
   if (!selectedMember) return null;
   return (
     <>
+      <a href="http://localhost/16b6e337-10da-489b-a151-07bcd491de00.png" download="http://localhost/16b6e337-10da-489b-a151-07bcd491de00.png">다운로드</a>
+      <br/>
+      {selectedMember.hairImage}
       <div className="rounded-md border-2 border-black p-4">
         <div>
           <p className="reservation-detail-patient-title font-black text-xl mb-2">
