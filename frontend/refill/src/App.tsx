@@ -21,7 +21,8 @@ import RegisterDoctor from "pages/hospital/RegisterDoctor";
 import Admin from "pages/admin";
 import VideoChatPage from "pages/openvidu/VideoChatPage";
 import JoinPage from "pages/openvidu/joinpage";
-import BEVideoChatPage from "pages/openvidu/VideoChatPage";
+// import BEVideoChatPage from "pages/openvidu/VideoChatPage";
+import NotFoundPage from 'pages/NotFoundPage'
 // import { OpenVidu } from "openvidu-browser";
 
 const App: React.FC = () => {
@@ -57,13 +58,7 @@ const App: React.FC = () => {
 
         <Route
           path="*"
-          element={
-            <div>
-              404
-              <br />
-              NOT FOUND
-            </div>
-          }
+          element={<NotFoundPage />}
         />
       </Routes>
     </div>

@@ -4,6 +4,10 @@ html body .MainApp {
   margin: 0;
 }
 
+body *:not(input):not(textarea) {
+  user-select: none;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

@@ -1,4 +1,5 @@
-import * as React from "react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
 
 const StyledMainContainer = styled.div`
@@ -9,6 +10,7 @@ const StyledMainContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  user-select: none;
 
   h2 {
     font-size: 6em;
@@ -41,17 +43,24 @@ const StyledMainContainer = styled.div`
   }
 `;
 
-interface MainProps {
-  handleClick: () => void;
-}
+const MainComponent = () => {
+  const navigate = useNavigate();
 
-const MainComponent = ({ handleClick }: MainProps) => {
+  const toHome = () => {
+    navigate('/')
+  }
+
   return (
-    <StyledMainContainer onClick={handleClick}>
-      <h2>
-        <span>RE</span>
-        <span>Fill</span>
-      </h2>
+    <StyledMainContainer>
+      <div style={{textAlign: 'center'}}>
+        <h2 onClick={toHome}>
+          <span>RE</span>
+          <span>Fill</span>
+        </h2>
+        <h2 style={{cursor:'default'}}>
+          <p>404 NotFound</p>
+        </h2>
+      </div>
     </StyledMainContainer>
   );
 };
