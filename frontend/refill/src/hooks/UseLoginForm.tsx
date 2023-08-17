@@ -49,7 +49,6 @@ const UseLoginForm = (loginId: string, loginPassword: string, role: number) => {
       console.log("login Success");
       setCookie("refresh-token", checked.data.refreshToken);
       const decode_token: User = jwt_decode(checked.data.accessToken);
-      console.log(decode_token);
       dispatch(
         loginSuccess({
           islogin: true, // 로그인 성공 시 true로 설정

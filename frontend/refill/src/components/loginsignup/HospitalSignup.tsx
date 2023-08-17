@@ -58,7 +58,6 @@ const HospitalSignup: React.FC<SignUpType> = (props) => {
     status: any,
   ) {
     if (status === window.kakao.maps.services.Status.OK && result.length > 0) {
-      console.log(result[0].x, result[0].y);
       await setLonlat([result[0].x, result[0].y]);
     } else {
       alert("올바르지 않은 주소 접근입니다.");
@@ -111,10 +110,6 @@ const HospitalSignup: React.FC<SignUpType> = (props) => {
   const checkemail = () => {
     if (checkCode === code) setCheck(true);
     else setCheck(false);
-
-    console.log(code);
-    console.log(checkCode);
-    console.log(check);
   };
 
   // 이메일 인증 요청
@@ -130,7 +125,7 @@ const HospitalSignup: React.FC<SignUpType> = (props) => {
         },
       })
       .then((response) => {
-        console.log(response.data);
+        console.log("ok");
         setCheckCode(response.data.code);
       })
       .catch((err) => {
@@ -171,7 +166,7 @@ const HospitalSignup: React.FC<SignUpType> = (props) => {
   // 아이디 형식에 맞는지 판단
   const [validId, setValidId] = useState(false);
   const validateId = (id: string) => {
-    const alphanumericRegex = /^(?=.*[a-z])(?=.*\d)[a-z\d]{6,14}$/;
+    const alphanumericRegex = /^(?=.*[a-z])(?=.*\d)[a-z\d]{4,16}$/;
     const isValidId = alphanumericRegex.test(id);
     setValidId(isValidId);
   };
@@ -299,7 +294,6 @@ const HospitalSignup: React.FC<SignUpType> = (props) => {
 
       const formData = new FormData();
       formData.append("hospitalJoinRequest", jsonBlob);
-      console.log(hospitalJoinRequest);
 
       if (inputImage.profileImg) {
         formData.append("profileImg", inputImage.profileImg);
@@ -308,7 +302,6 @@ const HospitalSignup: React.FC<SignUpType> = (props) => {
       if (inputImage.regImg) {
         formData.append("regImg", inputImage.regImg);
       }
-      console.log(inputImage.profileImg);
       axios
         .post("api/v1/account/hospital/join", formData, {
           headers: {
@@ -316,7 +309,7 @@ const HospitalSignup: React.FC<SignUpType> = (props) => {
           },
         })
         .then((response) => {
-          console.log(response.data);
+          console.log("ok");
           props.handleChecklogin();
         })
         .catch((err) => {

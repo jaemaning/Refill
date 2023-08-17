@@ -22,7 +22,6 @@ interface Error {
 }
 
 const LoginSignupModal: React.FC<Error> = ({ message, open, onClose }) => {
-  console.log(open);
   console.log("success");
   return (
     <div>
