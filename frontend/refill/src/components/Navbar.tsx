@@ -39,7 +39,7 @@ const Navbar = React.forwardRef<HTMLDivElement>((props, ref) => {
         ]);
       }
     } else {
-      setMenuList([["로그인|회원가입", "/loginsignup"]]);
+      setMenuList([["로그인 | 회원가입", "/loginsignup"]]);
     }
   }, []);
 
