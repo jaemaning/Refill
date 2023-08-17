@@ -491,7 +491,6 @@ const VideoChatPage: React.FC = () => {
     "Content-Type": "application/json",
   };
 
-
   const handleShowBox = () => {
     setShowChat(!showChat);
     setChangeChatIcon(false);

@@ -89,7 +89,7 @@ const ConsultingList: React.FC<ConsultingListProps> = ({ loginId }) => {
         },
       })
       .then((res) => {
-        console.log("ok")
+        console.log("ok");
         setConsList(res.data);
       })
       .catch((err) => {

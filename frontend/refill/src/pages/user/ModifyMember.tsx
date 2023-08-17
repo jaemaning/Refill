@@ -128,7 +128,6 @@ const ModifyMember: React.FC<ModifyModal> = ({
       email: userData.email,
     };
 
-
     const json = JSON.stringify(memberInfoUpdateRequest);
     const jsonBlob = new Blob([json], { type: "application/json" });
     const formData = new FormData();
