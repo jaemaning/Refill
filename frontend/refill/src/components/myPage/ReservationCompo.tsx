@@ -82,12 +82,11 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
           },
         },
       );
-      console.log(response.data)
-      setMyJoinToken((prev) => [...prev, response.data])
+      console.log(response.data);
+      setMyJoinToken((prev) => [...prev, response.data]);
       if (response.data.sessionId) {
-        setCanJoin(true)
+        setCanJoin(true);
       }
-
     } catch (err) {
       console.log(err);
       throw err; // 오류가 발생하면 이를 다시 throw 해서 joinConsult에서 catch 할 수 있게 합니다.
@@ -95,8 +94,8 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
   };
 
   useEffect(() => {
-    getToken(reservation.reservationId)
-  }, [])
+    getToken(reservation.reservationId);
+  }, []);
 
   const changeDate = (startDate: string) => {
     const days = [
@@ -159,14 +158,12 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
             상담취소
           </button>
           <button
-            onClick={() => {joinSession(myJoinToken[myJoinToken.length - 1])}}
+            onClick={() => {
+              joinSession(myJoinToken[myJoinToken.length - 1]);
+            }}
             className="h-8 p-1 text-center rounded-md"
             disabled={!canJoin}
-            style={
-              canJoin
-                ? activeButtonStyle
-                : disabledButtonStyle
-            } // 인라인 스타일 적용
+            style={canJoin ? activeButtonStyle : disabledButtonStyle} // 인라인 스타일 적용
           >
             {canJoin ? "상담입장" : "입장 불가"}
           </button>
