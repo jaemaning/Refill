@@ -81,7 +81,7 @@ const JoinPage = () => {
   const getToken = async (testReservationId: number): Promise<void> => {
     try {
       const response = await axios.get(
-        `api/v1/consulting/connection/${testReservationId}`,
+        `http://localhost:3000/api/v1/consulting/connection/${testReservationId}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -120,7 +120,8 @@ const JoinPage = () => {
           ) =>
             sessionId ? (
               <div key={idx}>
-                {idx}, {sessionId} {consultingId} 멤버-{memberId} 병원-{hospitalId} 의사-{doctorId}:
+                {idx}, {sessionId} {consultingId} 멤버-{memberId} 병원-
+                {hospitalId} 의사-{doctorId}:
                 <Button
                   variant="normal"
                   content="입장 가능"

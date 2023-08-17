@@ -135,6 +135,7 @@ const Mypage: React.FC = () => {
           console.log("ok");
           setuserData(response.data);
           setReservationList(response.data.reservationList);
+          console.log(response);
           if (userData.profileImg !== null) {
             setCheckimg(true);
           }
@@ -198,6 +199,8 @@ const Mypage: React.FC = () => {
   };
 
   const ModifyDoc = async (formData: any) => {
+    console.log(formData);
+    console.log(1);
     axios
       .put(`api/v1/member/mypage`, formData, {
         headers: {
@@ -208,10 +211,12 @@ const Mypage: React.FC = () => {
 
       .then((response) => {
         console.log("ok");
+        console.log(response);
         handleMMClose();
       })
 
       .catch((error) => {
+        console.log(1);
         console.log(error);
         handleMMClose();
       });
@@ -253,7 +258,11 @@ const Mypage: React.FC = () => {
               className="mt-3 mb-6 "
             >
               <Profileimg
-                src={checkimg ? `${userData.profileImg}` : `${default_profile}`}
+                src={
+                  userData.profileImg
+                    ? `https://ssafyfinal.s3.ap-northeast-2.amazonaws.com/${userData.profileImg}`
+                    : `${default_profile}`
+                }
                 className="mb-3"
               />
               <div
@@ -307,7 +316,7 @@ const Mypage: React.FC = () => {
                         setuserData={setuserData}
                         profile={
                           checkimg
-                            ? `${userData.profileImg}`
+                            ? `https://ssafyfinal.s3.ap-northeast-2.amazonaws.com/${userData.profileImg}`
                             : `${default_profile}`
                         }
                         onModify={(formData) => ModifyDoc(formData)}
@@ -359,7 +368,7 @@ const Mypage: React.FC = () => {
             <br />
             <span className="text-xl font-bold mb-3">나의 예약 현황</span>
             <Common
-              style={{ width: "700px", height: "320px" }}
+              style={{ width: "700px", height: "350px" }}
               className="mt-3 mb-6"
             >
               <MyReservationReport reservationList={reservationList} />

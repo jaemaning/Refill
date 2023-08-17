@@ -30,6 +30,7 @@ const WaitingHospitalList: React.FC = () => {
             },
           },
         );
+        console.log(response.data);
         setHospitals(response.data);
       } else {
         navigate("/");
@@ -119,7 +120,7 @@ const WaitingHospitalList: React.FC = () => {
           className="flex items-center justify-between mb-4 p-4 border-t border-b min-w-[400px]"
         >
           <img
-            src={hospital.hospitalProfileImg}
+            src={`https://ssafyfinal.s3.ap-northeast-2.amazonaws.com/${hospital.hospitalProfileImg}`}
             alt="Profile"
             width="50"
             onClick={() => handleOpenModal(hospital)}

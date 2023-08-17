@@ -18,6 +18,7 @@ import com.refill.global.exception.ErrorCode;
 import com.refill.global.service.AmazonS3Service;
 import com.refill.global.service.AmazonSESService;
 import com.refill.hospital.entity.Hospital;
+import com.refill.hospital.service.HospitalOperatingHourService;
 import com.refill.hospital.service.HospitalService;
 import com.refill.member.entity.Member;
 import com.refill.member.exception.MemberException;
@@ -43,6 +44,7 @@ public class AccountService {
     private final HospitalService hospitalService;
     private final AmazonS3Service amazonS3Service;
     private final AmazonSESService amazonSESService;
+    private final HospitalOperatingHourService hospitalOperatingHourService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
     private final RedisTemplate<String, String> redisTemplate;
@@ -109,7 +111,8 @@ public class AccountService {
         hospital.updateProfileAddress(profileAddress);
         hospital.updateRegAddress(regAddress);
 
-        hospitalService.save(hospital);
+        Long id = hospitalService.save(hospital);
+        hospitalOperatingHourService.generateHours(id);
     }
 
 

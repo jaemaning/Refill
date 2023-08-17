@@ -57,13 +57,14 @@ const SelectTime: React.FC<SelectTimeProps> = ({
 
   const getCurrentDate = () => {
     const date = new Date();
-    return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+    return `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
   };
-  
+
   const isToday = (selectedDate: string) => {
     return selectedDate === getCurrentDate();
   };
-  
 
   const currentRealTime = getCurrentTime();
 
@@ -74,23 +75,25 @@ const SelectTime: React.FC<SelectTimeProps> = ({
   const [nowTime, setNowTime] = useState<string | null>(null); // 추가된 상태
   const isDisabled = (time: string) => {
     const timeInMinutes = convertToMinutes(time);
-    
+
     // 현재 실제 시간보다 이전인지 확인 (오늘이 선택된 날짜라면)
-    const isBeforeCurrentTime = isToday(selectedDate) && timeInMinutes < convertToMinutes(getCurrentTime());
-  
+    const isBeforeCurrentTime =
+      isToday(selectedDate) &&
+      timeInMinutes < convertToMinutes(getCurrentTime());
+
     // startTime과 endTime을 기준으로 비활성화 판단
-    const outOfBounds = 
+    const outOfBounds =
       timeInMinutes < convertToMinutes(startTime) ||
       timeInMinutes >= convertToMinutes(endTime);
-  
+
     // disabledTimes에서 시간만 추출하고 해당 시간이 포함되어 있는지 확인
     const isTimeDisabled = disabledTimes
       .map((t) => t.slice(0, 5))
       .includes(time);
-  
+
     return outOfBounds || isTimeDisabled || isBeforeCurrentTime;
   };
-  
+
   const handleTimeClick = (time: string) => {
     setSelectedTime(time);
     setNowSelected(time);
