@@ -156,6 +156,22 @@ const VideoChatPage: React.FC = () => {
   // 유저 정보 가져오기
   const navigate = useNavigate();
 
+  
+  function handleDownload() {
+    if ( !hairImage && ishospital ) {
+      const imageUrl = `https://ssafyfinal.s3.ap-northeast-2.amazonaws.com/${hairImage}`;
+      // 이미지 URL을 새로운 태그에 연결
+      const link = document.createElement('a');
+      link.href = imageUrl;
+      link.download = 'hairImage.png'; // 다운로드될 파일의 이름 지정
+    
+      // 다운로드 진행
+      link.click();
+    } else {
+      alert('등록된 사진이 없습니다.')
+    }
+  }
+
   useEffect(() => {
     console.log("요기", consultingId, sessionPk, token, shareToken);
     if (islogin && ismember) {
@@ -830,18 +846,17 @@ const VideoChatPage: React.FC = () => {
                       ></StopScreenShareIcon>
                     )
                   ) : null}
-                  <p>{hairImage}123</p>
-                  <DownloadIcon
-                    fontSize="large"
-                    sx={{ margin: "0px 13px", color: "red", cursor: "pointer" }}
-                  >
-                    {hairImage ? (
-                      <a
-                        href={`https://ssafyfinal.s3.ap-northeast-2.amazonaws.com/${hairImage}`}
-                        download="hairImage.png"
-                      ></a>
-                    ) : null}
-                  </DownloadIcon>
+                  {
+                    ishospital ?
+                    <DownloadIcon
+                      fontSize="large"
+                      sx={{ margin: "0px 13px", color: "red", cursor: "pointer" }}
+                      onClick={()=> handleDownload()}
+                    >
+                    </DownloadIcon> 
+                    :
+                    null
+                  }
                   <NotificationImportantIcon
                     onClick={handleOpenReportModal}
                     fontSize="large"
