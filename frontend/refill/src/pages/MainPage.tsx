@@ -67,7 +67,7 @@ const MainApp: React.FC = () => {
       <div className="wave-container">
         <p className="main-font text-4xl font-black">당신의 자신감을 다시</p>
         <p className="main-font text-4xl font-black">채워 줄 단 하나의 플랫폼, RE:Fill</p>
-        <div className="flex justify-center items-center">
+        <div className="main-page-flex">
           <img
             src={app_logo}
             alt=""
