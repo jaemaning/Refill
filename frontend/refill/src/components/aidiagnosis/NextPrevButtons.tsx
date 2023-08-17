@@ -6,6 +6,7 @@ import { RootState } from "store/reducers";
 import { useSelector } from "react-redux";
 import LoaderModal from "components/LoaderModal";
 import NotCheckModal from "./children/NotCheckModal";
+import AiServerError from "./children/AiServerError";
 
 interface LinkProps {
   nextLink: string;
@@ -23,6 +24,8 @@ const NextPrevButtons: React.FC<LinkProps> = ({
   const [openModal, setOpenModal] = useState(false);
   const [notCheckedNumbers, setNotCheckedNumbers] = useState<number[]>(Array);
   const [isValid, setIsValid] = useState(false);
+  
+  const [isError, setIsError] = useState(false)
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -32,6 +35,7 @@ const NextPrevButtons: React.FC<LinkProps> = ({
 
   const token = useSelector((state: RootState) => state.login.token);
   const handleSubmit = () => {
+    setLoading(true);
     const aiDiagnosisRequest = {
       surveyResult: arrayString,
     };
@@ -41,8 +45,6 @@ const NextPrevButtons: React.FC<LinkProps> = ({
 
     const formData = new FormData();
     formData.append("aiDiagnosisRequest", jsonBlob);
-
-    setLoading(true);
 
     if (imgFile) {
       const convertToEnglishName = (filename: string) => {
@@ -57,10 +59,8 @@ const NextPrevButtons: React.FC<LinkProps> = ({
 
         return `${englishName}.${extension}`;
       };
-
       const newFileName = convertToEnglishName(imgFile.name);
       const newFile = new File([imgFile], newFileName, { type: imgFile.type });
-      console.log(newFile);
       formData.append("hairImg", newFile);
     }
     axios
@@ -70,6 +70,7 @@ const NextPrevButtons: React.FC<LinkProps> = ({
         },
       })
       .then((response) => {
+        
         console.log("ok");
         return response.data;
       })
@@ -80,6 +81,8 @@ const NextPrevButtons: React.FC<LinkProps> = ({
         navigate(nextLink, { state: { jsonDataString: newJsonDataString } });
       })
       .catch((err) => {
+        setLoading(false)
+        setIsError(true)
         console.log(err.response.data);
       });
   };
@@ -117,6 +120,7 @@ const NextPrevButtons: React.FC<LinkProps> = ({
   return (
     <div className="flex justify-center mt-2.5">
       {loading ? <LoaderModal /> : <></>}
+      {isError ? <AiServerError setIsError={setIsError}/> : <></>}
       {openModal ? (
         <NotCheckModal
           notCheckedNumbers={notCheckedNumbers}

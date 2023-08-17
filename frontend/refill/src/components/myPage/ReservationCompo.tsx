@@ -82,7 +82,7 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
           },
         },
       );
-      console.log(response.data);
+      console.log("ok");
       setMyJoinToken((prev) => [...prev, response.data]);
       if (response.data.sessionId) {
         setCanJoin(true);
@@ -136,9 +136,9 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
     cursor: "not-allowed",
   };
 
-  const handleDelete = () => {
-    setOpenModal(true);
-    setReservationId(reservation.reservationId);
+  const handleDelete = async () => {
+    await setOpenModal(true);
+    await setReservationId(reservation.reservationId);
   };
 
   return (
@@ -151,7 +151,7 @@ const ReservationCompo: React.FC<ReservationCompoProps> = ({
         <div className="grid grid-cols-2 gap-1 mt-2">
           <button
             onClick={() => {
-              handleDelete;
+              handleDelete();
             }}
             className="res-small-btn-left h-8 p-1 text-white"
           >
