@@ -162,7 +162,7 @@
 }
 
 .error-modal-top-box {
-  background-color: #2E5077;
+  background-color: #2e5077;
   height: 80px;
   border-bottom: 5px solid white;
 }
@@ -186,8 +186,8 @@
 .error-btn {
   height: 60px;
   width: 180px;
-  background-color: #2E5077;
+  background-color: #2e5077;
   border-radius: 10px;
   color: white;
-  border: 5px solid white
+  border: 5px solid white;
 }

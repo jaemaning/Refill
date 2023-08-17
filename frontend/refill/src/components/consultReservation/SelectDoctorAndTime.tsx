@@ -99,21 +99,28 @@ const SelectDoctorAndTime: React.FC<ComponentProps> = ({
   const token = useSelector((state: RootState) => state.login.token);
 
   useEffect(() => {
-    const fetchDetailsAndUpdateState = async () => {
-      const times = await hospitalDetail();
-      if (times && times[nowWeekday]) {
-        setStartTime(times[nowWeekday].startTime);
-        setEndTime(times[nowWeekday].endTime);
-      }
-      // 이제 disabled 시간을 골라줘야함
-    };
-
-    fetchDetailsAndUpdateState();
-  }, [nowWeekday, isClicked]);
+    if (hospitalId) {
+      const fetchDetailsAndUpdateState = async () => {
+        const times = await hospitalDetail();
+        if (times && times[nowWeekday]) {
+          setStartTime(times[nowWeekday].startTime);
+          setEndTime(times[nowWeekday].endTime);
+        }
+        // 이제 disabled 시간을 골라줘야함
+      };
+      fetchDetailsAndUpdateState();
+    }
+  }, [nowWeekday, isClicked, hospitalId]);
 
   useEffect(() => {
     handleDateChange(selectedDate);
   }, [selectedDate]);
+
+  // useEffect(()=>{
+  //   if (hospitalId !== 0) {
+  //     hospitalDetail()
+  //   }
+  // },[])
 
   const hospitalDetail = async () => {
     try {
@@ -123,6 +130,7 @@ const SelectDoctorAndTime: React.FC<ComponentProps> = ({
         },
       });
       console.log("ok");
+      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error("Error fetching hospital details:", error);
