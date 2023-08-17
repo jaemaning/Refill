@@ -15,7 +15,7 @@ interface User {
   loginId: string;
   role?: string;
   iat?: number;
-  exp?: number;
+  exp: number;
   id: number;
 }
 
@@ -56,6 +56,7 @@ const UseLoginForm = (loginId: string, loginPassword: string, role: number) => {
           token: checked.data.accessToken, // 액세스 토큰 값 설정
           loginId: decode_token.loginId,
           pk: decode_token.id,
+          exp: decode_token.exp,
         }),
       );
 

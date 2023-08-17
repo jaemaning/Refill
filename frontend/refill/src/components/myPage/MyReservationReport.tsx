@@ -62,13 +62,13 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
   const sortedList = reservationList
     ?.filter(
       (reservation) =>
-        new Date(reservation.startDateTime) >= thirtyOneMinutesAgo
+        new Date(reservation.startDateTime) >= thirtyOneMinutesAgo,
     )
     .slice()
     .sort(
       (a, b) =>
         new Date(a.startDateTime).getTime() -
-        new Date(b.startDateTime).getTime()
+        new Date(b.startDateTime).getTime(),
     );
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -80,8 +80,8 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
       setCurrentIndex((prevIndex) =>
         Math.min(
           prevIndex + slidesToShow,
-          reservationList.length - slidesToShow
-        )
+          reservationList.length - slidesToShow,
+        ),
       );
     }
   };
@@ -140,7 +140,6 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
             Next
           </button>
         </div>
-
       </div>
       <div className="px-10">
         <CautionReservation />

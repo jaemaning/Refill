@@ -30,7 +30,6 @@ const NextPrevButtons: React.FC<LinkProps> = ({
     navigate(-1);
   };
 
-  
   const token = useSelector((state: RootState) => state.login.token);
   const handleSubmit = () => {
     const aiDiagnosisRequest = {
@@ -47,19 +46,21 @@ const NextPrevButtons: React.FC<LinkProps> = ({
 
     if (imgFile) {
       const convertToEnglishName = (filename: string) => {
-        const extension = filename.split('.').pop();
-        const nameWithoutExtension = filename.replace(`.${extension}`, '');
-        
-        const englishName = Array.from(nameWithoutExtension).map((char) => {
+        const extension = filename.split(".").pop();
+        const nameWithoutExtension = filename.replace(`.${extension}`, "");
+
+        const englishName = Array.from(nameWithoutExtension)
+          .map((char) => {
             return String.fromCharCode(97 + (char.charCodeAt(0) % 26));
-        }).join('');
-    
+          })
+          .join("");
+
         return `${englishName}.${extension}`;
       };
-    
+
       const newFileName = convertToEnglishName(imgFile.name);
       const newFile = new File([imgFile], newFileName, { type: imgFile.type });
-      console.log(newFile)
+      console.log(newFile);
       formData.append("hairImg", newFile);
     }
     axios
