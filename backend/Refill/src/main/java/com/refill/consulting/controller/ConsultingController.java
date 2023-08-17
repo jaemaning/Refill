@@ -55,11 +55,11 @@ public class ConsultingController {
     }
 
     /* 상담 내역 받아오기 */
-    @GetMapping("/{loginId}")
-    public ResponseEntity<List<ConsultingListResponse>> getConsultingList(@AuthenticationPrincipal LoginInfo loginInfo, @PathVariable String loginId) {
+    @GetMapping("/{memberId}")
+    public ResponseEntity<List<ConsultingListResponse>> getConsultingList(@AuthenticationPrincipal LoginInfo loginInfo, @PathVariable Long memberId) {
         log.info("'{}' member request consultingList", loginInfo.loginId());
 
-        List<ConsultingListResponse> consultingList = consultingService.getConsultingList(loginId);
+        List<ConsultingListResponse> consultingList = consultingService.getConsultingList(memberId);
 
         return ResponseEntity.ok().body(consultingList);
     }

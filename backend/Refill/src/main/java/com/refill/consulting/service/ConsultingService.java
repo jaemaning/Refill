@@ -187,11 +187,7 @@ public class ConsultingService {
 
     /* 상담 내역 반환 */
     @Transactional(readOnly = true)
-    public List<ConsultingListResponse> getConsultingList(String loginId) {
-
-        Member member = memberRepository.findByLoginId(loginId)
-                                        .orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND));
-        Long memberId = member.getId();
+    public List<ConsultingListResponse> getConsultingList(Long memberId) {
 
         log.info("###### {} ######" , memberId);
 
