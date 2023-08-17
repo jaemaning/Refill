@@ -368,7 +368,7 @@ const Mypage: React.FC = () => {
             <br />
             <span className="text-xl font-bold mb-3">나의 예약 현황</span>
             <Common
-              style={{ width: "700px", height: "320px" }}
+              style={{ width: "700px", height: "350px" }}
               className="mt-3 mb-6"
             >
               <MyReservationReport reservationList={reservationList} />

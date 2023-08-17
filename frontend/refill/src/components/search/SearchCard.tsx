@@ -33,7 +33,7 @@ export default function SearchCard({
   };
 
   return (
-    <Card sx={{ minWidth: 275 }}>
+    <Card sx={{ minWidth: 275, boxShadow: '2px 2px' }}>
       <CardContent sx={{ padding: "24px" }}>
         <Typography
           sx={{ fontSize: "18px", fontWeight: "bold" }}

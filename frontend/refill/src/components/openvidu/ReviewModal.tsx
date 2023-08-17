@@ -170,14 +170,6 @@ const ReviewModal: React.FC<OutModalProps> = (props) => {
     }
   };
 
-  const handleOut = () => {
-    console.log("나가기");
-  };
-
-  const handleReturn = () => {
-    console.log("상담 돌아가기");
-  };
-
   const handleReviewChange = (event: any) => {
     setReviewText(event.target.value);
   };
