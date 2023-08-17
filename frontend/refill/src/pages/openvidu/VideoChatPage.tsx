@@ -36,6 +36,11 @@ import OutModal from "components/openvidu/OutModal";
 import ReportModal from "components/openvidu/ReportModal";
 import Modal from "@mui/material/Modal";
 import ReviewModal from "components/openvidu/ReviewModal";
+import CameraswitchIcon from "@mui/icons-material/Cameraswitch";
+import AiDiagnosisList from "components/myPage/AiDiagnosisList";
+import ConsultingList from "components/myPage/ConsultingList";
+import DownloadIcon from "@mui/icons-material/Download";
+import "styles/MyPage.css";
 
 interface MessageList {
   connectionId: string;
@@ -85,6 +90,7 @@ const VideoChatPage: React.FC = () => {
     Device | undefined
   >(undefined);
   const [showChat, setShowChat] = useState(false);
+  const [changeChatIcon, setChangeChatIcon] = useState(false);
   const location = useLocation();
   const [vol, setVol] = useState(30);
   //받는애
@@ -126,25 +132,25 @@ const VideoChatPage: React.FC = () => {
   //
 
   // modal
-  const [openOutModal, setOpenOutModal] = React.useState(false);
+  const [openOutModal, setOpenOutModal] = useState(false);
   const handleOpenOutModal = () => setOpenOutModal(true);
   const handleCloseOutModal = () => setOpenOutModal(false);
 
-  const [openReportModal, setOpenReportModal] = React.useState(false);
+  const [openReportModal, setOpenReportModal] = useState(false);
   const handleOpenReportModal = () => setOpenReportModal(true);
   const handleCloseReportModal = () => setOpenReportModal(false);
 
-  const [openReviewModal, setOpenReviewModal] = React.useState(false);
+  const [openReviewModal, setOpenReviewModal] = useState(false);
   const handleOpenRviewtModal = () => setOpenReviewModal(true);
   const handleCloseReviewModal = () => setOpenReviewModal(false);
 
-  
   //
 
   const loginToken = useSelector((state: RootState) => state.login.token);
   const islogin = useSelector((state: RootState) => state.login.islogin);
   const ismember = useSelector((state: RootState) => state.login.ismember);
   const ishospital = useSelector((state: RootState) => state.login.ishospital);
+  const loginId = useSelector((state: RootState) => state.login.loginId);
 
   // 유저 정보 가져오기
   const navigate = useNavigate();
@@ -178,10 +184,10 @@ const VideoChatPage: React.FC = () => {
   // 스크롤바 내리기
   useEffect(() => {
     if (chatLogRef.current) {
-      console.log('Scrolling to:', chatLogRef.current.scrollHeight);
+      console.log("Scrolling to:", chatLogRef.current.scrollHeight);
       chatLogRef.current.scrollTop = chatLogRef.current.scrollHeight;
     } else {
-      console.log('chatLogRef.current is null or undefined');
+      console.log("chatLogRef.current is null or undefined");
     }
   }, [messageList]);
 
@@ -276,6 +282,14 @@ const VideoChatPage: React.FC = () => {
     // }
   }, [mainStreamManager, publisher, subscribers]);
 
+  useEffect(() => {
+    if (!showChat) {
+      setChangeChatIcon(true);
+      console.log("활성화");
+    }
+    console.log("??????????모지");
+  }, [chat.messageList, chat]);
+
   // 나갈때 동작
   const onbeforeunload = () => {
     // session 떠나기
@@ -309,8 +323,6 @@ const VideoChatPage: React.FC = () => {
 
   // 의사전용 joinsession
   const joinSession = async () => {
-    // const token_v2 = getToken();
-    // console.log("엥???????????????",token_v2)
     const OV = new OpenVidu();
     const mySession = OV.initSession();
     setSession(mySession);
@@ -426,23 +438,25 @@ const VideoChatPage: React.FC = () => {
   };
 
   const leaveSession = () => {
-    if (session) {
-      session.disconnect();
-    }
-    if (screenSession) {
-      console.log(screenSession);
-      screenSession.disconnect();
-    }
+    if (ishospital) {
+      if (session) {
+        session.disconnect();
+      }
+      if (screenSession) {
+        console.log(screenSession);
+        screenSession.disconnect();
+      }
 
-    // Empty all properties...
-    setSession(undefined);
-    setScreenSession(undefined);
-    setSubscribers([]);
-    // setMySessionId("SessionA");
-    setMyUserName("Participant" + Math.floor(Math.random() * 100));
-    setMainStreamManager(undefined);
-    setPublisher(undefined);
-    setScreenPublisher(undefined);
+      // Empty all properties...
+      setSession(undefined);
+      setScreenSession(undefined);
+      setSubscribers([]);
+      // setMySessionId("SessionA");
+      setMyUserName("Participant" + Math.floor(Math.random() * 100));
+      setMainStreamManager(undefined);
+      setPublisher(undefined);
+      setScreenPublisher(undefined);
+    }
 
     navigate("/");
   };
@@ -477,38 +491,10 @@ const VideoChatPage: React.FC = () => {
     "Content-Type": "application/json",
   };
 
-  // const getToken = async () => {
-  //   const sessionId = await createSession(mySessionId);
-  //   return await createToken(sessionId);
-  // };
-
-  // const createSession = async (sessionId: string) => {
-  //   const response = await axios.post(
-  //     APPLICATION_SERVER_URL + "api/sessions",
-  //     { customSessionId: sessionId },
-  //     {
-  //       headers: headers,
-  //     },
-  //   );
-
-  //   console.log(response.data);
-
-  //   return response.data; // The sessionId
-  // };
-
-  // const createToken = async (sessionId: string) => {
-  //   const response = await axios.post(
-  //     APPLICATION_SERVER_URL + "api/sessions/" + sessionId + "/connections",
-  //     {},
-  //     {
-  //       headers: headers,
-  //     },
-  //   );
-  //   return response.data; // The token
-  // };
 
   const handleShowBox = () => {
     setShowChat(!showChat);
+    setChangeChatIcon(false);
   };
 
   function preventHorizontalKeyboardNavigation(event: React.KeyboardEvent) {
@@ -612,16 +598,54 @@ const VideoChatPage: React.FC = () => {
                     <div
                       style={{
                         display: toggleScreenPublisher ? "none" : "block",
+                        color: "black",
+                        width: "95%",
                       }}
                     >
-                      여기에 이제 진짜 이전 자료들이 들어옵니다.
+                      <h2 style={{ fontWeight: "700" }}>이전 상담 내역</h2>
+                      <div
+                        style={{
+                          border: "1px solid grey",
+                          height: "100px",
+                          marginBottom: "10px",
+                        }}
+                        className="scroll-ai-box"
+                      >
+                        <ConsultingList loginId={loginId} />
+                      </div>
+                      <h2 style={{ fontWeight: "700" }}>AI 자가진단</h2>
+                      <div
+                        style={{ border: "1px solid grey", height: "150px" }}
+                        className="scroll-ai-box"
+                      >
+                        <AiDiagnosisList memberId={memberId} />
+                      </div>
                     </div>
                   ) : null}
                   {ismember &&
                   subscribers.filter(
                     (sub) => sub.stream.typeOfVideo === "SCREEN",
                   ).length === 0 ? (
-                    <div>여기에 이제 진짜 이전 자료들이 들어옵니다.</div>
+                    <div style={{ color: "black", width: "95%" }}>
+                      <h2 style={{ fontWeight: "700" }}>이전 상담 내역</h2>
+                      <div
+                        style={{
+                          border: "1px solid grey",
+                          height: "100px",
+                          marginBottom: "10px",
+                        }}
+                        className="scroll-ai-box"
+                      >
+                        <ConsultingList loginId={loginId} />
+                      </div>
+                      <h2 style={{ fontWeight: "700" }}>AI 자가진단</h2>
+                      <div
+                        style={{ border: "1px solid grey", height: "150px" }}
+                        className="scroll-ai-box"
+                      >
+                        <AiDiagnosisList memberId={memberId} />
+                      </div>
+                    </div>
                   ) : null}
                 </PrevComponent>
                 {ishospital ? (
@@ -677,6 +701,30 @@ const VideoChatPage: React.FC = () => {
                   {sessionPk}
                 </h1>
                 <div style={{ display: "flex", alignItems: "flex-end" }}>
+                  <CameraswitchIcon
+                    onClick={() => {
+                      if (
+                        publisher &&
+                        subscribers &&
+                        mainStreamManager === publisher
+                      ) {
+                        // 필터링된 서브 스트림 중에서 적절한 대상을 선택
+                        const targetSubscriber = subscribers.find(
+                          (sub) => sub.stream.typeOfVideo !== "SCREEN",
+                        );
+
+                        // 적절한 대상이 있으면 해당 스트림을 메인 스트림으로 설정
+                        if (targetSubscriber) {
+                          toggleMainAndSubStream(targetSubscriber);
+                        }
+                      } else if (publisher) {
+                        // publisher가 undefined가 아닌 경우만 전달
+                        toggleMainAndSubStream(publisher);
+                      }
+                    }}
+                    fontSize="large"
+                    sx={{ margin: "0px 13px", cursor: "pointer" }}
+                  />
                   {isCamOn ? (
                     <VideocamIcon
                       onClick={camOnOff}
@@ -825,11 +873,19 @@ const VideoChatPage: React.FC = () => {
                   </Modal>
                 </div>
                 <div style={{ display: "flex", alignItems: "flex-end" }}>
-                  <ChatIcon
-                    fontSize="large"
-                    onClick={handleShowBox}
-                    sx={{ cursor: "pointer", transform: "scaleX(-1)" }}
-                  ></ChatIcon>
+                  {changeChatIcon ? (
+                    <MarkUnreadChatAltIcon
+                      fontSize="large"
+                      onClick={handleShowBox}
+                      sx={{ cursor: "pointer", transform: "scaleX(-1)" }}
+                    />
+                  ) : (
+                    <ChatIcon
+                      fontSize="large"
+                      onClick={handleShowBox}
+                      sx={{ cursor: "pointer", transform: "scaleX(-1)" }}
+                    ></ChatIcon>
+                  )}
                 </div>
               </div>
             </div>

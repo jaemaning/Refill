@@ -22,12 +22,12 @@ const DiagnosisItem: React.FC<DiagnosisItemProps> = ({
     <div className="flex justify-center">
       <div className="diagnosis-item sm:min-w-full sm:h-16 md:w-11/12 md:h-20 lg:w-5/6 lg:h-20 px-10 grid grid-cols-2 gap-4">
         <div className="flex items-center">
-          <span className="font-black sm:text-lg md:text-xl lg:text-2xl">
+          <span className="ml-10 font-black sm:text-lg md:text-xl lg:text-2xl">
             {title}
           </span>
         </div>
         <div className="grid grid-cols-2">
-          <div className="flex items-center justify-end">
+          <div className="flex items-center justify-start">
             <input
               type="radio"
               id={`option1-${title}`} // 유니크한 ID 생성
@@ -41,7 +41,7 @@ const DiagnosisItem: React.FC<DiagnosisItemProps> = ({
               네 그렇습니다.
             </label>
           </div>
-          <div className="flex items-center justify-end">
+          <div className="flex items-center justify-start">
             <input
               type="radio"
               id={`option2-${title}`} // 유니크한 ID 생성

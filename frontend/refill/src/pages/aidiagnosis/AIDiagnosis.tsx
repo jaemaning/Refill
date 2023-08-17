@@ -13,12 +13,11 @@ const AIDiagnosis: React.FC = () => {
   }, []);
 
   // 선택한 문항을 array값에서 변환해준다.
-  const [resultArray, setResultArray] = useState<string[]>(Array(10).fill("0"));
+  const [resultArray, setResultArray] = useState<string[]>(Array(10).fill("N"));
   const handleOptionChange = (value: string, index: number) => {
     setResultArray((prev) => {
       const newArr = [...prev];
       newArr[index] = value === "option1" ? "1" : "0";
-      console.log(newArr);
       return newArr;
     });
   };
@@ -27,7 +26,7 @@ const AIDiagnosis: React.FC = () => {
     <div>
       <Navbar />
       <HeadAID title="사전진단 (문항형)" />
-      <div className="content-large-box flex-col ">
+      <div className="content-large-box flex-col px-32">
         <DiagnosisItem
           index={0}
           title="1. 이마가 점점 넓어지는 느낌이 든다."

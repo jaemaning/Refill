@@ -30,7 +30,7 @@ const ReservationDoctor: React.FC<ReservationDoctorProps> = ({
     setSelectedDoctor(selectedName);
     const doctor = doctors.find((doc) => doc.name === selectedName);
     if (doctor) {
-      console.log(doctor.doctorId);
+      console.log("ok");
       setDoctorId(doctor.doctorId);
       setIsSelectedDoctor(true);
     } else {

@@ -3,11 +3,15 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 type Reservation = {
   reservationId: number;
+  hospitalId: number;
+  doctorId: number;
+  memberId: number;
   startDate: string;
   memberName: string;
   birthDay: string;
   tel: string;
   counselingDemands: string;
+  hairImage: string;
 };
 
 interface ReservationTimeProps {
@@ -24,7 +28,7 @@ const ReservationTime: React.FC<ReservationTimeProps> = ({
   const clickDate = (res: Reservation) => {
     setSelectedMember(res);
     setIsSelectedTime(true);
-    console.log(res);
+    console.log("ok");
   };
   const sortedReservations = reservations.sort((a, b) => {
     const dateA = new Date(a.startDate);

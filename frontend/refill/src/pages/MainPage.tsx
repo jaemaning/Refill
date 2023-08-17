@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import styled from "@emotion/styled";
 import app_logo from "../assets/app_logo.png";
-import MainComponent from "components/MainComponent";
+// import MainComponent from "components/MainComponent";
 
 const Container = styled.div`
   display: flex;
@@ -31,38 +31,38 @@ const GreyLine = styled.div`
 `;
 
 const MainApp: React.FC = () => {
-  const [windowHeight, setWindowHeight] = useState(window.innerHeight);
-  const [navbarHeight, setNavbarHeight] = useState(0);
+  // const [windowHeight, setWindowHeight] = useState(window.innerHeight);
+  // const [navbarHeight, setNavbarHeight] = useState(0);
   const navbarRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    const handleResize = () => setWindowHeight(window.innerHeight);
+  // useEffect(() => {
+  //   const handleResize = () => setWindowHeight(window.innerHeight);
 
-    window.addEventListener("resize", handleResize);
+  //   window.addEventListener("resize", handleResize);
 
-    if (navbarRef.current) {
-      const navH = navbarRef.current.getBoundingClientRect().height;
-      setNavbarHeight(navH);
-      console.log(navbarHeight, navH);
-      window.scrollTo(0, navH);
-    }
+  //   if (navbarRef.current) {
+  //     const navH = navbarRef.current.getBoundingClientRect().height;
+  //     setNavbarHeight(navH);
+  //     console.log(navbarHeight, navH);
+  //     window.scrollTo(0, navH);
+  //   }
 
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  //   return () => window.removeEventListener("resize", handleResize);
+  // }, []);
 
-  const handleClickWord = () => {
-    window.scroll({
-      top: windowHeight + 80 + navbarHeight,
-      left: 0,
-      behavior: "smooth",
-    });
-  };
+  // const handleClickWord = () => {
+  //   window.scroll({
+  //     top: windowHeight + 80 + navbarHeight,
+  //     left: 0,
+  //     behavior: "smooth",
+  //   });
+  // };
 
   return (
     <div className="MainApp">
       <Navbar ref={navbarRef} />
-      <MainComponent handleClick={handleClickWord} />
-      <GreyLine />
+      {/* <MainComponent handleClick={handleClickWord} /> */}
+      {/* <GreyLine /> */}
       <Container>
         <Word>당신의 자신감을 다시</Word>
         <Word>채워 줄 단 하나의 플랫폼, RE:Fill</Word>

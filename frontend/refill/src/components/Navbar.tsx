@@ -14,7 +14,6 @@ const Navbar = React.forwardRef<HTMLDivElement>((props, ref) => {
   const hospitalId = useSelector((state: RootState) => state.login.hosid);
 
   const [menuList, setMenuList] = useState([
-    ["예약", "#"],
     ["병원검색", "/search"],
     ["AI자가진단", "/diagnosis"],
   ]);
@@ -40,7 +39,7 @@ const Navbar = React.forwardRef<HTMLDivElement>((props, ref) => {
         ]);
       }
     } else {
-      setMenuList([...menuList, ["로그인", "/loginsignup"]]);
+      setMenuList([["로그인|회원가입", "/loginsignup"]]);
     }
 
     console.log(isAdmin);

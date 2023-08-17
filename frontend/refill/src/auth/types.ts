@@ -18,6 +18,8 @@ export type Loginstate = {
   islogin: boolean;
   token: string;
   loginId: string;
+  pk: number;
+  exp: number;
 };
 
 export type Hosstate = {

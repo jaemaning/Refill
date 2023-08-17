@@ -10,13 +10,13 @@ import {
 } from "store/reducers/loginReducer";
 import { setCookie } from "auth/cookie";
 import { useNavigate } from "react-router-dom";
-import { formControlClasses } from "@mui/material";
 
 interface User {
   loginId: string;
   role?: string;
   iat?: number;
-  exp?: number;
+  exp: number;
+  id: number;
 }
 
 const authService = new AuthService();
@@ -55,13 +55,14 @@ const UseLoginForm = (loginId: string, loginPassword: string, role: number) => {
           islogin: true, // 로그인 성공 시 true로 설정
           token: checked.data.accessToken, // 액세스 토큰 값 설정
           loginId: decode_token.loginId,
+          pk: decode_token.id,
+          exp: decode_token.exp,
         }),
       );
 
       if (decode_token.role === "ROLE_MEMBER") {
         dispatch(loginMember());
       } else if (decode_token.role === "ROLE_HOSPITAL") {
-        console.log(checked.data.id);
         dispatch(loginHospital({ hosid: checked.data.id }));
       } else if (decode_token.role === "ROLE_ADMIN") {
         dispatch(loginAdmin());

@@ -22,6 +22,7 @@ import com.refill.member.repository.MemberRepository;
 import com.refill.report.entity.Report;
 import com.refill.report.service.ReportService;
 import com.refill.reservation.entity.Reservation;
+import com.refill.reservation.exception.ReservationException;
 import com.refill.reservation.repository.ReservationRepository;
 import com.refill.review.entity.Review;
 import com.refill.review.exception.ReviewException;
@@ -83,7 +84,7 @@ public class ConsultingService {
 
 
     /* 상담 세션 생성 */
-    @Scheduled(cron = "0 59 8-23 * * ?")
+//    @Scheduled(cron = "0 59 8-23 * * ?")
     public void createSession() throws OpenViduJavaClientException, OpenViduHttpException {
 
         LocalDateTime now = LocalDateTime.now();
@@ -172,6 +173,7 @@ public class ConsultingService {
     @Transactional
     public void leaveSession(ConsultingCloseRequest consultingCloseRequest, LoginInfo loginInfo) {
 
+        log.info("{} = consultingCloseRequest.sessionId", consultingCloseRequest.sessionId());
         Consulting consulting = consultingRepository.findConsultingBySessionId(consultingCloseRequest.sessionId());
         if (consulting == null) {
             throw new ConsultingException(ErrorCode.SESSION_FAIL);
@@ -188,7 +190,7 @@ public class ConsultingService {
     public List<ConsultingListResponse> getConsultingList(String loginId) {
 
         Member member = memberRepository.findByLoginId(loginId)
-            .orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND));
+                                        .orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND));
         Long memberId = member.getId();
 
         log.info("###### {} ######" , memberId);
@@ -232,5 +234,45 @@ public class ConsultingService {
     public Consulting findById(Long consultingId){
         return consultingRepository.findById(consultingId)
                                    .orElseThrow(() -> new ConsultingException(ErrorCode.SESSION_FAIL));
+    }
+
+    /* 상담 세션 예약시 생성 */
+    public void createSessionNow(String memberLoginId, Reservation reservation) {
+        SessionProperties properties = new SessionProperties.Builder().build();
+
+        Session session = null;
+        try {
+            session = openvidu.createSession(properties);
+
+            String sessionId = session.getSessionId();
+
+            ConnectionProperties connectionProperties = new ConnectionProperties.Builder()
+                .type(ConnectionType.WEBRTC)
+                .role(OpenViduRole.PUBLISHER)
+                .data("user_data")
+                .build();
+
+            String doctorToken = session.createConnection(connectionProperties).getToken();
+            String screenShareToken = session.createConnection(connectionProperties).getToken();
+            String memberToken = session.createConnection(connectionProperties).getToken();
+
+            Member member = memberRepository.findByLoginId(memberLoginId).orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND));
+            Doctor doctor = reservation.getDoctor();
+
+            Consulting consulting = Consulting.builder()
+                                              .member(member)
+                                              .doctor(doctor)
+                                              .sessionId(sessionId)
+                                              .memberToken(memberToken)
+                                              .doctorToken(doctorToken)
+                                              .screenShareToken(screenShareToken)
+                                              .reservation(reservation)
+                                              .build();
+            consultingRepository.save(consulting);
+        } catch (OpenViduJavaClientException e) {
+            throw new RuntimeException(e);
+        } catch (OpenViduHttpException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

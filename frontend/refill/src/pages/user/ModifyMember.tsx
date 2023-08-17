@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState, useEffect, useRef } from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { Container, Grid } from "@mui/material";
@@ -68,6 +68,8 @@ interface ModifyModal {
   email: string;
   onModify: (formData: any) => void;
   profile: string;
+  userData: any;
+  setuserData: any;
 }
 
 interface InputImageState {
@@ -86,41 +88,25 @@ const ModifyMember: React.FC<ModifyModal> = ({
   email,
   onModify,
   profile,
+  userData,
+  setuserData,
 }) => {
   const [inputData, setInputData] = useState({
-    name: name,
-    address: address,
-    birthday: birthday,
-    tel: tel,
-    nickname: nickname,
-    email: email,
-    profile: profile,
+    address: "",
   });
 
-  const changeInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setInputData({
-      ...inputData,
+  const changeInput = (e: any) => {
+    setuserData({
+      ...userData,
       [e.target.name]: e.target.value,
     });
   };
 
-  const [inputImage, setInputImage] = useState<InputImageState>({
-    profileImg: null,
-  });
-
-  const handleImgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null; // 선택한 파일을 가져옵니다. 없으면 null로 설정합니다.
-
-    setInputImage((prevInputImage) => ({
-      ...prevInputImage,
-      [e.target.name]: file,
-    }));
-    if (file) {
-      if (e.target.name === "profileImg") {
-        (document.getElementById("profilename") as HTMLInputElement).value =
-          file.name;
-      }
-    }
+  const changeAddress = (e: ChangeEvent<HTMLInputElement>) => {
+    setInputData({
+      ...inputData,
+      [e.target.name]: e.target.value,
+    });
   };
 
   function stringToFile(content: string, filename: string): File {
@@ -129,24 +115,17 @@ const ModifyMember: React.FC<ModifyModal> = ({
   }
 
   const modifysubmit = () => {
-    const temp = FinalModify();
-    // onModifyDoctorSubmit 콜백 함수 호출 시 수정된 formData 전달
-    console.log(temp);
-    onModify(temp);
-  };
-
-  const FinalModify = () => {
     const memberInfoUpdateRequest = {
-      name: inputData.name ? inputData.name : name,
-      address: inputData.address
+      name: userData.name,
+      address: addcheck
         ? (document.getElementById("addr") as HTMLInputElement).value +
           ", " +
           inputData.address
-        : address,
-      birthDay: inputData.birthday ? inputData.birthday : birthday,
-      tel: inputData.tel ? inputData.tel : tel,
-      nickname: inputData.nickname ? inputData.nickname : nickname,
-      email: inputData.email ? inputData.email : email,
+        : userData.address,
+      birthDay: userData.birthDay,
+      tel: userData.tel,
+      nickname: userData.nickname,
+      email: userData.email,
     };
 
     console.log(memberInfoUpdateRequest);
@@ -157,16 +136,50 @@ const ModifyMember: React.FC<ModifyModal> = ({
 
     formData.append("memberInfoUpdateRequest", jsonBlob);
     if (inputImage.profileImg) {
+      console.log(inputImage.profileImg);
       formData.append("profileImg", inputImage.profileImg);
     } else {
-      const filename = `${profile}`;
-      console.log(filename);
-      const test = stringToFile(profile, filename);
-      console.log(test);
-      formData.append("profileImg", test);
+      formData.append(
+        "profileImg",
+        stringToFile("profileImg", userData.profile),
+      );
     }
 
-    return formData;
+    console.log(formData);
+    onModify(formData);
+    handleMClose();
+  };
+  //
+
+  const defaultValueRef = useRef();
+
+  useEffect(() => {
+    defaultValueRef.current = userData;
+    console.log(defaultValueRef.current);
+  }, []);
+
+  const closeModal = () => {
+    setuserData(defaultValueRef.current);
+    handleMClose();
+  };
+
+  const [inputImage, setInputImage] = useState<InputImageState>({
+    profileImg: null,
+  });
+
+  const handleImgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null; // 선택한 파일을 가져옵니다. 없으면 null로 설정합니다.
+
+    setInputImage((prevInputImage: any) => ({
+      ...prevInputImage,
+      [e.target.name]: file,
+    }));
+    if (file) {
+      if (e.target.name === "profileImg") {
+        (document.getElementById("profilename") as HTMLInputElement).value =
+          file.name;
+      }
+    }
   };
 
   const [addcheck, setAddcheck] = useState(false);
@@ -217,7 +230,7 @@ const ModifyMember: React.FC<ModifyModal> = ({
                     changeInput(e);
                   }}
                   name="name"
-                  defaultValue={name}
+                  value={userData.name}
                 ></input>
               </Grid>
               <Grid item xs={4}>
@@ -231,7 +244,7 @@ const ModifyMember: React.FC<ModifyModal> = ({
                     changeInput(e);
                   }}
                   name="birthday"
-                  defaultValue={birthday}
+                  value={userData.birthDay}
                 ></input>
               </Grid>
               <Grid item xs={4}>
@@ -245,7 +258,7 @@ const ModifyMember: React.FC<ModifyModal> = ({
                     changeInput(e);
                   }}
                   name="tel"
-                  defaultValue={tel}
+                  value={userData.tel}
                 ></input>
               </Grid>
               <Grid item xs={4}>
@@ -259,7 +272,7 @@ const ModifyMember: React.FC<ModifyModal> = ({
                     changeInput(e);
                   }}
                   name="nickname"
-                  defaultValue={nickname}
+                  value={userData.nickname}
                 ></input>
               </Grid>
               <Grid item xs={4}>
@@ -273,7 +286,7 @@ const ModifyMember: React.FC<ModifyModal> = ({
                     changeInput(e);
                   }}
                   name="email"
-                  defaultValue={email}
+                  value={userData.email}
                 ></input>
               </Grid>
               <Grid item xs={4}>
@@ -285,7 +298,7 @@ const ModifyMember: React.FC<ModifyModal> = ({
                   readOnly
                   type="text"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                  defaultValue={profile}
+                  value={userData.profile}
                 ></input>
               </Grid>
               <Grid item xs={2}>
@@ -310,7 +323,7 @@ const ModifyMember: React.FC<ModifyModal> = ({
                   readOnly
                   type="text"
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                  value={address}
+                  value={userData.address}
                 ></input>
               </Grid>
               <Grid item xs={2}>
@@ -336,7 +349,7 @@ const ModifyMember: React.FC<ModifyModal> = ({
                         type="text"
                         className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                         onChange={(e) => {
-                          changeInput(e);
+                          changeAddress(e);
                         }}
                         name="address"
                         style={{ marginLeft: "7px", width: "448px" }}
@@ -349,12 +362,6 @@ const ModifyMember: React.FC<ModifyModal> = ({
             </Grid>
 
             <div className="flex justify-end pt-2">
-              <Clickbutton
-                style={{ backgroundColor: "#20A4F3" }}
-                onClick={FinalModify}
-              >
-                수정적용
-              </Clickbutton>
               <Clickbutton
                 style={{ backgroundColor: "#2E5077" }}
                 onClick={modifysubmit}

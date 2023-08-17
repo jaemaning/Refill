@@ -3,17 +3,19 @@ import "styles/Modal.css";
 
 interface DeleteModalProps {
   setOpenModal: (open: boolean) => void;
-  setWantDelete: (want: boolean) => void;
+  deleteReservation: (resId: number) => void;
+  resId: number;
 }
 
 const DeleteModal: React.FC<DeleteModalProps> = ({
   setOpenModal,
-  setWantDelete,
+  deleteReservation,
+  resId,
 }) => {
   const clickWantDelete = () => {
     setOpenModal(false);
-    setWantDelete(true);
-    window.location.reload(); // 페이지 새로고침
+
+    // window.location.reload(); // 페이지 새로고침
   };
 
   const clickReturn = () => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios, { AxiosHeaders } from "axios";
 import Navbar from "../../components/Navbar";
 import Footer from "components/Footer";
@@ -24,6 +24,9 @@ import DeleteDoctor from "./DeleteDoctor";
 import SelectDoctorAndTime from "components/consultReservation/SelectDoctorAndTime";
 import DetailReservation from "components/detailReservation/DetailReservation";
 import { useParams } from "react-router-dom";
+import { useKakaoMapScript } from "hooks/UseKakaoMap";
+import ReviewReportModal from "components/myPage/ReviewReportModal";
+import Modal from "@mui/material/Modal";
 // import StarRatings from "react-star-ratings";
 
 interface DivProps {
@@ -77,12 +80,12 @@ const Containers = styled.div`
 
 const BannerContainer = styled.div`
   position: relative;
-  height: 280px;
+  height: 250px;
 `;
 
 const Bannerimg = styled.img`
   width: 100%;
-  height: 150px;
+  height: 200px;
 `;
 
 const Profileimg = styled.img`
@@ -97,7 +100,7 @@ const Profileimg = styled.img`
 const Content = styled.div`
   display: flex;
   flex-direction: column;
-  border: 1px black solid;
+  /* border: 1px black solid; */
 `;
 
 const Kakaomap = styled.div`
@@ -105,6 +108,7 @@ const Kakaomap = styled.div`
   justify-content: center;
   height: 500px;
   border: 1px black solid;
+  margin-bottom: 30px;
 `;
 const Layout = styled.div`
   display: flex;
@@ -122,18 +126,21 @@ const HospitalInfo = styled.div`
   display: flex;
   flex-direction: column;
   display: ${(props: DivProps) => (props.buttonData === 0 ? "block" : "none")};
+  padding: 25px;
 `;
 
 const DoctorInfo = styled.div`
   display: flex;
   flex-direction: column;
   display: ${(props: DivProps) => (props.buttonData === 1 ? "block" : "none")};
+  padding: 25px;
 `;
 
 const Review = styled.div`
   display: flex;
   flex-direction: column;
   display: ${(props: DivProps) => (props.buttonData === 2 ? "block" : "none")};
+  padding: 25px;
 `;
 
 const Doctors = styled.div`
@@ -169,6 +176,8 @@ const Doctor_res_icon = styled.span`
 
 const DetailHospital: React.FC = () => {
   const { hospitalId } = useParams();
+  const kakaoMapBox = useRef<HTMLDivElement>(null); // 지도를 담을 div element를 위한 ref
+  const map = useRef<any>(null); // map 객체를 관리할 ref
 
   // 배너이미지 갈아끼울때마다 적용
   const [hospitalName, setHospitalName] = useState("");
@@ -202,6 +211,63 @@ const DetailHospital: React.FC = () => {
 
   const handleReviewClick = () => {
     setButtonData(2);
+  };
+
+  // 리뷰 신고하기
+  const [openReportModal, setOpenReportModal] = useState<number | null>(null);
+  const handleOpenReportModal = (reviewId: number) =>
+    setOpenReportModal(reviewId);
+  const handleCloseReportModal = () => setOpenReportModal(null);
+
+  // 지도 생성 메서드
+  // 처음부터 훅 호출
+  const scriptLoaded = useKakaoMapScript();
+
+  useEffect(() => {
+    const getLocation = async (): Promise<void> => {
+      if (
+        scriptLoaded &&
+        hospitalData.longitude != 0 &&
+        hospitalData.latitude != 0
+      ) {
+        const loadMap = () => {
+          window.kakao.maps.load(() => {
+            const options = {
+              center: new window.kakao.maps.LatLng(
+                hospitalData.latitude,
+                hospitalData.longitude,
+              ),
+              level: 4,
+            };
+            map.current = new window.kakao.maps.Map(
+              kakaoMapBox.current,
+              options,
+            );
+            // map.current.setZoomable(false); // 줌 가능 불가능 여부
+          });
+        };
+        loadMap();
+        makeHomeMarker();
+      }
+    };
+    getLocation();
+  }, [scriptLoaded, hospitalData]); // 의존성 배열에 scriptLoaded 추가
+
+  // 지도 홈마커 띄우기
+  const makeHomeMarker = (): void => {
+    // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+    const markerPosition = new window.kakao.maps.LatLng(
+      hospitalData.latitude,
+      hospitalData.longitude,
+    ); // 마커가 표시될 위치입니다
+
+    // 마커를 생성합니다
+    const marker = new window.kakao.maps.Marker({
+      position: markerPosition,
+    });
+
+    // 마커가 지도 위에 표시되도록 설정합니다
+    marker.setMap(map.current);
   };
 
   // 페이지네이션
@@ -299,35 +365,37 @@ const DetailHospital: React.FC = () => {
   };
 
   const RegistDoc = async (hospitalid: number, formData: any) => {
-    console.log(formData);
     axios
-      .post(`api/v1/hospital/${hospitalid}/doctor`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
+      .post(
+        `http://localhost:3000/api/v1/hospital/${hospitalid}/doctor`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
         },
-      })
+      )
 
       .then((response) => {
-        console.log(response);
-        console.log(1);
+        console.log("ok");
         setRegisterOpen(false);
       })
 
       .catch((error) => {
-        console.log(1);
+        console.log(error);
         handleRMClose();
       });
   };
 
   // 의사 수정
 
-  const [modifyOpen, setModifyOpen] = useState(false);
-  const handleMMOpen = () => {
-    setModifyOpen(true);
+  const [modifyOpen, setModifyOpen] = useState<number | null>(null);
+  const handleMMOpen = (doctorId: number) => {
+    setModifyOpen(doctorId);
   };
   const handleMMClose = () => {
-    setModifyOpen(false);
+    setModifyOpen(null);
   };
 
   const ModifyDoc = async (
@@ -335,7 +403,7 @@ const DetailHospital: React.FC = () => {
     doctorid: number,
     formData: any,
   ) => {
-    console.log(formData);
+    console.log("ok");
     axios
       .put(
         `http://localhost:3000/api/v1/hospital/${hospitalid}/doctor/${doctorid}`,
@@ -350,40 +418,43 @@ const DetailHospital: React.FC = () => {
 
       .then((response) => {
         console.log(response);
-        setModifyOpen(false);
+        setModifyOpen(null);
       })
 
       .catch((error) => {
-        console.log(1);
+        console.log(error);
         handleMMClose();
       });
   };
 
   // 의사 삭제
-  const [deleteOpen, setDeleteOpen] = useState(false);
-  const handleDMOpen = () => {
-    setDeleteOpen(true);
+  const [deleteOpen, setDeleteOpen] = useState<number | null>(null);
+  const handleDMOpen = (doctorId: number) => {
+    setDeleteOpen(doctorId);
   };
   const handleDMClose = () => {
-    setDeleteOpen(false);
+    setDeleteOpen(null);
   };
 
   const DeleteDoc = async (doctorid: number) => {
     axios
-      .delete(`api/v1/hospital/${hospitalId}/doctor/${doctorid}`, {
-        headers: {
-          // "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
+      .delete(
+        `http://localhost:3000/api/v1/hospital/${hospitalId}/doctor/${doctorid}`,
+        {
+          headers: {
+            // "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
         },
-      })
+      )
 
       .then((response) => {
         console.log(response);
-        setDeleteOpen(false);
+        setDeleteOpen(null);
       })
 
       .catch((error) => {
-        console.log(1);
+        console.log(error);
         handleDMClose();
       });
   };
@@ -392,11 +463,6 @@ const DetailHospital: React.FC = () => {
   const MyId: number = useSelector((state: RootState) => state.login.hosid);
 
   useEffect(() => {
-    if (ishospital === true) {
-      if (MyId === hospitalData.hospitalId) {
-        setMypage(true);
-      }
-    }
     axios
       .get(`/api/v1/hospital/${hospitalId}`, {
         headers: {
@@ -412,7 +478,7 @@ const DetailHospital: React.FC = () => {
           operatingHourResponses,
         } = response.data;
 
-        console.log(response.data);
+        console.log("ok");
         setHospitalData(hospitalResponse);
         setDoctorData(doctorResponses);
         setReviewData(reviewResponses);
@@ -426,10 +492,13 @@ const DetailHospital: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log(hospitalData);
-    console.log(doctorData);
-    console.log(reviewData);
-    console.log(timeData);
+    if (ishospital === true) {
+      console.log(MyId);
+      console.log(hospitalData.hospitalId);
+      if (MyId === hospitalData.hospitalId) {
+        setMypage(true);
+      }
+    }
   }, [hospitalData, doctorData, reviewData, timeData]);
 
   // image onclick 이벤트 => 배너이미지 변경
@@ -457,21 +526,26 @@ const DetailHospital: React.FC = () => {
       <Navbar />
       {/* 배너이미지 변경해주는거 적용해야함 */}
       <BannerContainer>
-        <Bannerimg
-          src={
-            hospitalData.bannerProfileImg
-              ? hospitalData.bannerProfileImg
-              : Cloud2
-          }
+        <div className="image-container">
+          <Bannerimg
+            className="fit-image"
+            src={`https://ssafyfinal.s3.ap-northeast-2.amazonaws.com/${hospitalData.hospitalProfileImg}`}
+          />
+        </div>
+        <Profileimg
+          src={`https://ssafyfinal.s3.ap-northeast-2.amazonaws.com/${hospitalData.hospitalProfileImg}`}
         />
-
-        <Profileimg src={hospitalData.hospitalProfileImg} />
       </BannerContainer>
       <Containers>
         <Layout>
           <Content style={{ width: "1300px" }}>
-            <span className="text-2xl font-bold">{hospitalData.name}</span>
-            <Kakaomap></Kakaomap>
+            <span
+              className="font-bold"
+              style={{ fontSize: "40px", padding: "10px 0px" }}
+            >
+              {hospitalData.name}
+            </span>
+            <Kakaomap ref={kakaoMapBox}></Kakaomap>
             <ButtonList>
               <Button
                 content="병원 정보"
@@ -524,14 +598,17 @@ const DetailHospital: React.FC = () => {
               <h1 className="text-4xl font-bold">의사 정보</h1>
               <div>
                 {doctorData.map((doctor, index) => (
-                  <div key={index} className="flex justify-around items-center">
+                  <div
+                    key={doctor.doctorId}
+                    className="flex justify-around items-center"
+                  >
                     <Doctors>
                       <Doctor_common
                         className=" items-center"
                         style={{ width: "150px" }}
                       >
                         <img
-                          src={doctor.profileImg}
+                          src={`https://ssafyfinal.s3.ap-northeast-2.amazonaws.com/${doctor.profileImg}`}
                           alt={doctor.name}
                           className="w-28 h-28 rounded-full mt-10"
                         />
@@ -546,33 +623,41 @@ const DetailHospital: React.FC = () => {
                       >
                         <div className="flex justify-between">
                           <Bigspan>약력</Bigspan>
-                          <div className="flex">
-                            <ModifyDoctor
-                              open={modifyOpen}
-                              handleMOpen={handleMMOpen}
-                              handleMClose={handleMMClose}
-                              description={doctor.description}
-                              education={doctor.educationBackgrounds}
-                              major={doctor.majorAreas}
-                              profile={doctor.profileImg}
-                              hospitalname={hospitalData.name}
-                              onModify={(formData) =>
-                                ModifyDoc(
-                                  hospitalData.hospitalId,
-                                  doctor.doctorId,
-                                  formData,
-                                )
-                              }
-                            ></ModifyDoctor>
-                            <DeleteDoctor
-                              open={deleteOpen}
-                              handleMOpen={handleDMOpen}
-                              handleMClose={handleDMClose}
-                              hospitalname={hospitalData.name}
-                              doctorname={doctor.name}
-                              onDeleteDoctor={() => DeleteDoc(doctor.doctorId)}
-                            ></DeleteDoctor>
-                          </div>
+                          {ishospital && mypage && (
+                            <div className="flex">
+                              <ModifyDoctor
+                                open={modifyOpen === doctor.doctorId}
+                                handleMOpen={() =>
+                                  handleMMOpen(doctor.doctorId)
+                                }
+                                handleMClose={handleMMClose}
+                                description={doctor.description}
+                                education={doctor.educationBackgrounds}
+                                major={doctor.majorAreas}
+                                profile={doctor.profileImg}
+                                hospitalname={hospitalData.name}
+                                onModify={(formData) =>
+                                  ModifyDoc(
+                                    hospitalData.hospitalId,
+                                    doctor.doctorId,
+                                    formData,
+                                  )
+                                }
+                              />
+                              <DeleteDoctor
+                                open={deleteOpen === doctor.doctorId}
+                                handleMOpen={() =>
+                                  handleDMOpen(doctor.doctorId)
+                                }
+                                handleMClose={handleDMClose}
+                                hospitalname={hospitalData.name}
+                                doctorname={doctor.name}
+                                onDeleteDoctor={() =>
+                                  DeleteDoc(doctor.doctorId)
+                                }
+                              />
+                            </div>
+                          )}
                         </div>
                         <p className="text-lg">{doctor.description}</p>
                         <Bigspan>주요 분야</Bigspan>
@@ -595,12 +680,6 @@ const DetailHospital: React.FC = () => {
                         </ul>
                       </Doctor_common>
                     </Doctors>
-                    <Doctor_res_icon>
-                      <img src={Arrow} alt="" />
-                      <a href="" className="mt-4 text-xl">
-                        {mypage ? "내 상담 확인하기" : "상담 예약 하기"}
-                      </a>
-                    </Doctor_res_icon>
                   </div>
                 ))}
                 {mypage && doctorData.length < 3 && (
@@ -718,11 +797,35 @@ const DetailHospital: React.FC = () => {
                                   size={"medium"}
                                 />
                               </Grid>
-                              <Grid item xs={2}>
-                                <NotificationImportantIcon
-                                  sx={{ color: red[500] }}
-                                />
-                              </Grid>
+                              {ishospital ? (
+                                <Grid item xs={2}>
+                                  <NotificationImportantIcon
+                                    sx={{ color: red[500], cursor: "pointer" }}
+                                    onClick={() =>
+                                      handleOpenReportModal(review.reviewId)
+                                    }
+                                  />
+                                  <Modal
+                                    open={openReportModal === review.reviewId}
+                                    onClose={handleCloseReportModal}
+                                    aria-labelledby="modal-modal-title"
+                                    aria-describedby="modal-modal-description"
+                                    sx={{
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                    }}
+                                  >
+                                    <ReviewReportModal
+                                      onClose={handleCloseReportModal}
+                                      reviewId={review.reviewId}
+                                    ></ReviewReportModal>
+                                  </Modal>
+                                </Grid>
+                              ) : (
+                                <Grid item xs={2}></Grid>
+                              )}
                               <Grid item xs={2}>
                                 <h1>{review.doctorName}</h1>
                               </Grid>
@@ -763,19 +866,19 @@ const DetailHospital: React.FC = () => {
           <Content style={{ width: "350px" }}></Content>
           <Content style={{ width: "350px" }}>
             {/* 환자인지 의사인지 확인하는 로직이 필요함 */}
-            {ishospital ? (
+            {ishospital && mypage ? (
               <DetailReservation
                 doctors={doctorData}
                 hospitalId={hospitalData.hospitalId}
                 hospitalName={hospitalName}
               />
-            ) : (
+            ) : !ishospital ? (
               <SelectDoctorAndTime
                 doctors={doctorData}
                 hospitalId={hospitalData.hospitalId}
                 hospitalName={hospitalName}
               />
-            )}
+            ) : null}
           </Content>
         </Layout>
       </Containers>

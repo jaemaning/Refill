@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { RootState } from "store/reducers";
 import { useSelector } from "react-redux";
 import LoaderModal from "components/LoaderModal";
+import NotCheckModal from "./children/NotCheckModal";
 
 interface LinkProps {
   nextLink: string;
@@ -19,20 +20,18 @@ const NextPrevButtons: React.FC<LinkProps> = ({
   imgFile,
   arrayString,
 }) => {
-  // 탈모진행도, 정확도 useState
-  // const [hairLossScore, setHairLossScore] = useState(0)
-  // const [certainty, setCertainty] = useState(0)
-  // const [diagnosisImage, setDiagnosisImage] = useState("")
+  const [openModal, setOpenModal] = useState(false);
+  const [notCheckedNumbers, setNotCheckedNumbers] = useState<number[]>(Array);
+  const [isValid, setIsValid] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
   const ConnectPrevLink = () => {
     navigate(-1);
   };
+
   const token = useSelector((state: RootState) => state.login.token);
   const handleSubmit = () => {
-    console.log(arrayString);
     const aiDiagnosisRequest = {
       surveyResult: arrayString,
     };
@@ -46,10 +45,24 @@ const NextPrevButtons: React.FC<LinkProps> = ({
     setLoading(true);
 
     if (imgFile) {
-      formData.append("hairImg", imgFile);
+      const convertToEnglishName = (filename: string) => {
+        const extension = filename.split(".").pop();
+        const nameWithoutExtension = filename.replace(`.${extension}`, "");
+
+        const englishName = Array.from(nameWithoutExtension)
+          .map((char) => {
+            return String.fromCharCode(97 + (char.charCodeAt(0) % 26));
+          })
+          .join("");
+
+        return `${englishName}.${extension}`;
+      };
+
+      const newFileName = convertToEnglishName(imgFile.name);
+      const newFile = new File([imgFile], newFileName, { type: imgFile.type });
+      console.log(newFile);
+      formData.append("hairImg", newFile);
     }
-    console.log(formData);
-    console.log(imgFile);
     axios
       .post("api/v1/diagnosis/", formData, {
         headers: {
@@ -58,36 +71,60 @@ const NextPrevButtons: React.FC<LinkProps> = ({
       })
       .then((response) => {
         console.log("ok");
-        console.log(response.data);
-
         return response.data;
       })
       .then((response) => {
-        console.log(response);
+        console.log("ok");
         const jsonData = response;
         const newJsonDataString = JSON.stringify(jsonData);
         navigate(nextLink, { state: { jsonDataString: newJsonDataString } });
       })
       .catch((err) => {
-        console.log(aiDiagnosisRequest);
         console.log(err.response.data);
       });
   };
 
   const ConnectNextLink = () => {
     if (isResult) {
-      console.log(isResult);
-      console.log(imgFile);
-      console.log(arrayString);
       handleSubmit();
     } else {
-      navigate(nextLink, { state: { arrayString } }); // 이동할 경로 전달
+      // 여기서 전부 선택했는지 확인해야됨
+      // arrayString에 N이 있으면 아직 고르지 않은 문항이 있습니다. 문항 번호 모달로 보여주기
+
+      const notCheckedIndices: number[] = [];
+
+      // arrayString이 실제로 존재할 때만 실행
+      if (arrayString) {
+        for (let i = 0; i < arrayString.length; i++) {
+          if (arrayString.charAt(i) === "N") {
+            // 인덱스 번호 + 1을 해서 notCheckedIndices에 추가
+            notCheckedIndices.push(i + 1);
+          }
+        }
+      }
+
+      if (notCheckedIndices.length > 0) {
+        setIsValid(false);
+        setNotCheckedNumbers(notCheckedIndices);
+        setOpenModal(true);
+      } else {
+        setIsValid(true);
+        navigate(nextLink, { state: { arrayString } }); // 이동할 경로 전달
+      }
     }
   };
 
   return (
     <div className="flex justify-center mt-2.5">
       {loading ? <LoaderModal /> : <></>}
+      {openModal ? (
+        <NotCheckModal
+          notCheckedNumbers={notCheckedNumbers}
+          setOpenModal={setOpenModal}
+        />
+      ) : (
+        <></>
+      )}
       <div className="next-prev-buttons-box flex justify-end sm:min-w-full md:w-11/12 lg:w-5/6">
         <div className="mr-2.5">
           <Button

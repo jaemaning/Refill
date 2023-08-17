@@ -67,3 +67,87 @@
   border-radius: 5px;
   border: white 1px solid;
 }
+
+/* consulting detail modal */
+.detail-consulting-box {
+  height: 600px;
+  width: 752px;
+  background-color: white;
+  overflow-y: auto;
+}
+
+.detail-consulting-inner-large-box {
+  height: 860px;
+  width: 752px;
+  border-bottom: 2px solid black;
+  border-top: 2px solid black;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.detail-consulting-inner-small-box {
+  height: 80px;
+  width: 752px;
+}
+.detail-consulting-btn {
+  height: 40px;
+  width: 100px;
+  color: white;
+  background-color: #20a4f3;
+  border-radius: 5px;
+}
+.detail-content-box {
+  border-top: 2px solid black;
+}
+
+.detail-content-sm-box {
+  background-color: #d9d9d9;
+}
+
+/* Chrome & Safari */
+.detail-consulting-box::-webkit-scrollbar {
+  display: none;
+}
+
+/* alert-modal */
+.alert-modal {
+  height: 440px;
+  width: 600px;
+  border-radius: 5px;
+  padding: 20px;
+  background-color: white;
+}
+
+.alert-modal-top-box {
+  height: 200px;
+  border-bottom: 3px solid red;
+}
+
+.alert-modal-bottom-box {
+  height: 100px;
+}
+.alert-modal-middle-box {
+  height: 100px;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 20px;
+}
+.alert-modal-btn-left {
+  background-color: #20a4f3;
+  border-radius: 10px;
+  color: white;
+  border: 2px solid #9d9d9d;
+}
+.alert-modal-btn-right {
+  border: 2px solid #9d9d9d;
+  border-radius: 10px;
+}
+
+/* 입장 모달 */
+.join-modal-large-box {
+  height: 400px;
+  width: 600px;
+  border-radius: 10px;
+  background-color: white;
+}

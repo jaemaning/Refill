@@ -3,8 +3,8 @@ import axios from "axios";
 import Button from "../elements/Button";
 import Social from "components/common/Social";
 import "../../styles/Loginsignup.css";
-import { useNavigate } from "react-router-dom";
 import { useKakaoMapScript } from "hooks/UseKakaoMap";
+import Swal from "sweetalert2";
 
 declare global {
   interface Window {
@@ -30,15 +30,17 @@ interface TypeChangeForGeocoder {
   y: string;
 }
 
-const HospitalSignup: React.FC = () => {
-  const navigate = useNavigate();
+interface SignUpType {
+  handleChecklogin: () => void;
+}
+
+const HospitalSignup: React.FC<SignUpType> = (props) => {
   // 회원가입 할 때 필요한 데이터
   const [inputData, setInputData] = useState({
     loginId: "",
     loginPassword: "",
     name: "",
     address: "",
-    postalCode: "",
     tel: "",
     email: "",
     latitude: "",
@@ -166,61 +168,168 @@ const HospitalSignup: React.FC = () => {
     }).open();
   };
 
+  // 아이디 형식에 맞는지 판단
+  const [validId, setValidId] = useState(false);
+  const validateId = (id: string) => {
+    const alphanumericRegex = /^(?=.*[a-z])(?=.*\d)[a-z\d]{6,14}$/;
+    const isValidId = alphanumericRegex.test(id);
+    setValidId(isValidId);
+  };
+
+  // 비밀번호 형식에 맞는지 판단
+  const [validPw, setValidPw] = useState(false);
+  const validatePw = (pw: string) => {
+    const complexRegex =
+      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{6,14}$/;
+    const isValidPw = complexRegex.test(pw);
+    setValidPw(isValidPw);
+  };
+
+  // 이메일 형식에 맞는지 판단
+  const [validEmail, setValidEmail] = useState(false);
+  const validateEmail = (Email: string) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9]+\.(com|net)$/;
+    const isEmail = emailRegex.test(Email);
+    setValidEmail(isEmail);
+  };
+
+  // 폰넘버 형식에 맞는지 판단
+  const [validPN, setValidPN] = useState(false);
+  const validatePN = (PN: string) => {
+    const numberRegex = /^\d{3}-\d{4}-\d{4}$/;
+
+    if (!numberRegex.test(PN)) {
+      setValidPN(false);
+    } else {
+      const PhoneHead = PN.substring(0, 3);
+
+      if (PhoneHead === "010") {
+        setValidPN(true);
+      } else {
+        setValidPN(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    validateId(inputData.loginId);
+    validatePw(inputData.loginPassword);
+    validateEmail(inputData.email);
+    validatePN(inputData.tel);
+  }, [
+    inputData.loginId,
+    inputData.loginPassword,
+    inputData.email,
+    inputData.tel,
+  ]);
+
+  // 에러 모달 처리
+  const Toast = Swal.mixin({
+    toast: true,
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
+
   // 병원 회원가입 axios요청 부분
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const hospitalJoinRequest = {
-      loginId: inputData.loginId,
-      loginPassword: inputData.loginPassword,
-      name: inputData.name,
-      postalCode: "55055",
-      // address값은 바뀔 예정
-      address:
-        (document.getElementById("addr") as HTMLInputElement).value +
-        ", " +
-        inputData.address,
-      tel: inputData.tel,
-      email: inputData.email,
-      latitude: lonlat[1],
-      longitude: lonlat[0],
-    };
-
-    const json = JSON.stringify(hospitalJoinRequest);
-    const jsonBlob = new Blob([json], { type: "application/json" });
-
-    const formData = new FormData();
-    formData.append("hospitalJoinRequest", jsonBlob);
-    console.log(lonlat);
-
-    if (inputImage.profileImg) {
-      formData.append("profileImg", inputImage.profileImg);
-    }
-
-    if (inputImage.regImg) {
-      formData.append("regImg", inputImage.regImg);
-    }
-    console.log(inputImage.profileImg);
-    axios
-      .post("api/v1/account/hospital/join", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((response) => {
-        console.log(response.data);
-        navigate("/");
-      })
-      .catch((err) => {
-        console.log(err.response.data);
+    if (!validId) {
+      Toast.fire({
+        icon: "error",
+        title: "ID 형식이 맞지않습니다.",
       });
+    } else if (!validPw) {
+      Toast.fire({
+        icon: "error",
+        title: "비밀번호 형식이 맞지않습니다.",
+      });
+    } else if (passwordError) {
+      Toast.fire({
+        icon: "error",
+        title: "비밀번호 확인이 맞지 않습니다.",
+      });
+    } else if (!validEmail) {
+      Toast.fire({
+        icon: "error",
+        title: "이메일 형식이 맞지않습니다.",
+      });
+    } else if (!check) {
+      Toast.fire({
+        icon: "error",
+        title: "이메일 인증을 하지 않으셨습니다.",
+      });
+    } else if (!validPN) {
+      Toast.fire({
+        icon: "error",
+        title: "전화번호 형식이 맞지않습니다.",
+      });
+    } else if (!inputImage.regImg) {
+      Toast.fire({
+        icon: "error",
+        title: "병원 등록증이 없습니다.",
+      });
+    } else if (!inputImage.profileImg) {
+      Toast.fire({
+        icon: "error",
+        title: "병원 프로필이미지가 없습니다.",
+      });
+    } else {
+      const hospitalJoinRequest = {
+        loginId: inputData.loginId,
+        loginPassword: inputData.loginPassword,
+        name: inputData.name,
+        address:
+          (document.getElementById("addr") as HTMLInputElement).value +
+          ", " +
+          inputData.address,
+        tel: inputData.tel,
+        email: inputData.email,
+        latitude: lonlat[1],
+        longitude: lonlat[0],
+      };
+
+      const json = JSON.stringify(hospitalJoinRequest);
+      const jsonBlob = new Blob([json], { type: "application/json" });
+
+      const formData = new FormData();
+      formData.append("hospitalJoinRequest", jsonBlob);
+      console.log(hospitalJoinRequest);
+
+      if (inputImage.profileImg) {
+        formData.append("profileImg", inputImage.profileImg);
+      }
+
+      if (inputImage.regImg) {
+        formData.append("regImg", inputImage.regImg);
+      }
+      console.log(inputImage.profileImg);
+      axios
+        .post("api/v1/account/hospital/join", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+          props.handleChecklogin();
+        })
+        .catch((err) => {
+          console.log(err.response.data);
+        });
+    }
   };
 
   const middle = "flex justify-center items-center";
 
   return (
     <div className={`${middle} MSignup rounded-b-2xl mt-6 mb-3`}>
-      <form onSubmit={handleSubmit} className="" style={{ width: "100%" }}>
+      <form onSubmit={handleSubmit} className="" style={{ width: "400px" }}>
         <div>
           <div className="flex justify-start">
             <label className="block mb-2 text-sm font-medium text-gray-900 ">
@@ -256,6 +365,11 @@ const HospitalSignup: React.FC = () => {
             }}
           ></input>
         </div>
+        {inputData.loginId.length > 0 && !validId && (
+          <p className="text-sm ml-2 mt-1" style={{ color: "red" }}>
+            영소문자와 숫자 조합으로 4글자 이상 16글자 이하로 입력해주세요.
+          </p>
+        )}
         <br />
         <div>
           <div className="flex justify-start">
@@ -273,8 +387,13 @@ const HospitalSignup: React.FC = () => {
             name="loginPassword"
             value={inputData.loginPassword}
           ></input>
+          {inputData.loginPassword.length > 0 && !validPw && (
+            <p className="text-sm ml-2 mt-1" style={{ color: "red" }}>
+              영문자,숫자,특수문자 조합으로 6글자 이상 14글자 이하로
+              입력해주세요.
+            </p>
+          )}
           <br />
-          {/* 비밀번호 입력 확인 Logic구성해서 적용해야함 */}
           <input
             type="password"
             className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
@@ -290,7 +409,7 @@ const HospitalSignup: React.FC = () => {
         <div>
           <div className="flex justify-start">
             <label className="block mb-2 text-sm font-medium text-gray-900 ">
-              병원 프로필 사진 등록 (선택)
+              병원 프로필 사진 등록 (필수)
             </label>
           </div>
           <div className="flex justify-between">
@@ -381,6 +500,11 @@ const HospitalSignup: React.FC = () => {
             </button>
           </div>
         </div>
+        {inputData.email.length > 0 && !validEmail && (
+          <p className="text-sm ml-2 mt-1" style={{ color: "red" }}>
+            이메일 형식에 맞게 작성해주세요
+          </p>
+        )}
         <br />
         {checkCode && (
           <div className="flex justify-between">
@@ -459,6 +583,11 @@ const HospitalSignup: React.FC = () => {
             }}
           ></input>
         </div>
+        {inputData.tel.length > 0 && !validPN && (
+          <p className="text-sm ml-2 mt-1" style={{ color: "red" }}>
+            전화번호 형식에 맞게 작성해주세요
+          </p>
+        )}
         <br />
         <div className="my-3">
           <Button
@@ -468,7 +597,7 @@ const HospitalSignup: React.FC = () => {
             customStyles={{ width: "100%" }}
           />
         </div>
-        <div className="mt-4 text-lg font-bold flex-col text-center">
+        <div className="mt-4 pb-5 text-lg font-bold flex-col text-center">
           <span className="text-xl">회원을 등록하고 싶으신가요?</span>
           <br />
           <span className="mx-2">위에</span>
@@ -476,12 +605,6 @@ const HospitalSignup: React.FC = () => {
           <span className=""> 을 통해</span>
           <br />
           <span className="mx-2">일반 회원가입으로 가세요!</span>
-          <div className="mt-3">
-            <span className="">다른 계정으로 로그인하기</span>
-          </div>
-        </div>
-        <div className="flex justify-around mb-5">
-          <Social />
         </div>
       </form>
     </div>

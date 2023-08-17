@@ -14,18 +14,14 @@ import DeleteModal from "./DeleteModal";
 import ReservationCompo from "./ReservationCompo";
 
 type Reservation = {
+  reservationId: number;
+  hospitalId: number;
+  doctorId: number;
+  memberId: number;
   doctorName: string;
   hospitalName: string;
-  reservationId: number;
   startDateTime: string;
 };
-
-interface TypeToken {
-  consultingId?: number | null;
-  sessionId?: string | null;
-  token?: string | null;
-  shareToken?: string | null;
-}
 
 interface MyReservationReportProps {
   reservationList: Reservation[] | null;
@@ -37,56 +33,10 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
   const token = useSelector((state: RootState) => state.login.token);
   // 상담 취소
   const [openModal, setOpenModal] = useState(false);
-  const [wantDelete, setWantDelete] = useState(false);
 
-  // 상담 입장
-  const loginToken = useSelector((state: RootState) => state.login.token);
-  const islogin = useSelector((state: RootState) => state.login.islogin);
-  const [tokenData, setTokenData] = useState<TypeToken[]>([]);
-  const navigate = useNavigate();
-  const [joinModal, setJoinModal] = useState(false);
-
-  const [nowResId, setNowResId] = useState(0);
-  const [openJoin, setOpenJoin] = useState(false);
-
-  // 입장하는 함수
-  const joinSession = ({
-    consultingId,
-    sessionId,
-    token,
-    shareToken,
-  }: TypeToken) => {
-    navigate("/video", {
-      state: {
-        sessionPk: sessionId,
-        token: token,
-        shareToken: shareToken,
-        consultingId: consultingId,
-      },
-    });
-  };
-  // 토큰을 받아오는 함수
-  const getToken = async (testReservationId: number): Promise<void> => {
-    try {
-      const response = await axios.get(
-        `api/v1/consulting/connection/${testReservationId}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${loginToken}`,
-          },
-        },
-      );
-      setTokenData((prevTokenData) => [...prevTokenData, response.data]);
-      //
-      console.log(response.data);
-    } catch (err) {
-      console.log("에러:", err);
-    }
-  };
+  const [reservationId, setReservationId] = useState(0);
 
   const deleteReservation = (id: number) => {
-    setOpenModal(true);
     axios
       .delete(`/api/v1/reservation/${id}`, {
         headers: {
@@ -94,7 +44,7 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
         },
       })
       .then((res) => {
-        console.log(res);
+        console.log("ok");
         // 요청이 성공적으로 완료된 경우, 필요한 추가 동작을 여기에 작성합니다.
       })
       .catch((err) => {
@@ -103,8 +53,18 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
       });
   };
 
+  // 1. 현재 날짜와 시간을 가져옵니다.
+  const now = new Date();
+
+  // 2. 현재 날짜 및 시간에서 31분을 빼서 경계 시간을 계산합니다.
+  const thirtyOneMinutesAgo = new Date(now.getTime() - 31 * 60 * 1000);
+  console.log(thirtyOneMinutesAgo);
   const sortedList = reservationList
-    ?.slice()
+    ?.filter(
+      (reservation) =>
+        new Date(reservation.startDateTime) >= thirtyOneMinutesAgo,
+    )
+    .slice()
     .sort(
       (a, b) =>
         new Date(a.startDateTime).getTime() -
@@ -131,25 +91,18 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
   };
 
   return (
-    <div className="grid grid-rows-4 gap-4 items-center">
+    <div className="grid grid-rows-4 gap-2 items-center">
       {openModal ? (
         <DeleteModal
+          resId={reservationId}
           setOpenModal={setOpenModal}
-          setWantDelete={setWantDelete}
+          deleteReservation={deleteReservation}
         />
       ) : (
         <></>
       )}
 
       <div className="row-start-1 row-end-4">
-        <div className="flex justify-between">
-          <button className="text-lg" onClick={prevSlide}>
-            Prev
-          </button>
-          <button className="text-lg" onClick={nextSlide}>
-            Next
-          </button>
-        </div>
         <div
           style={{
             overflow: "hidden",
@@ -164,13 +117,28 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
             }}
           >
             {sortedList?.map((reservation, index) => (
-              <ReservationCompo
-                reservation={reservation}
+              <div
+                className="p-2"
                 key={index}
-                deleteReservation={deleteReservation}
-              />
+                style={{ minWidth: "200px", padding: "5px" }}
+              >
+                <ReservationCompo
+                  reservation={reservation}
+                  setOpenModal={setOpenModal}
+                  setReservationId={setReservationId}
+                />
+              </div>
             ))}
           </div>
+        </div>
+
+        <div className="flex justify-between mt-2">
+          <button className="text-lg" onClick={prevSlide}>
+            Prev
+          </button>
+          <button className="text-lg" onClick={nextSlide}>
+            Next
+          </button>
         </div>
       </div>
       <div className="px-10">

@@ -59,17 +59,14 @@ const SelectDoctorAndTime: React.FC<ComponentProps> = ({
     const disabledTimesForDate = doctorDisabledTime
       .filter((item) => item.startDateTime.includes(date))
       .map((item) => item.startDateTime.split("T")[1]);
-    console.log(disabledTimesForDate);
     setDisabledTimes(disabledTimesForDate);
   };
 
   const ishandleChange = (event: SelectChangeEvent) => {
     const selectedName = event.target.value as string;
     setSelectedDoctor(selectedName);
-    console.log(selectedName);
     const doctor = doctors.find((doc) => doc.name === selectedName);
     if (doctor) {
-      console.log(doctor.doctorId);
       setDoctorId(doctor.doctorId);
       disabledTime(doctor.doctorId);
     } else {
@@ -86,7 +83,7 @@ const SelectDoctorAndTime: React.FC<ComponentProps> = ({
         },
       })
       .then((response) => {
-        console.log(response.data);
+        console.log("ok");
         setDoctorDisabledTime(response.data);
         // 이제 오늘 날짜랑 비교해서 오늘 날짜인 date를 가져오고 시간을 추출한 다음에 list에 보관
       })
@@ -102,8 +99,6 @@ const SelectDoctorAndTime: React.FC<ComponentProps> = ({
   const token = useSelector((state: RootState) => state.login.token);
 
   useEffect(() => {
-    console.log("이번 주에 해당하는 번호는?", nowWeekday);
-
     const fetchDetailsAndUpdateState = async () => {
       const times = await hospitalDetail();
       if (times && times[nowWeekday]) {
@@ -127,7 +122,7 @@ const SelectDoctorAndTime: React.FC<ComponentProps> = ({
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data);
+      console.log("ok");
       return response.data;
     } catch (error) {
       console.error("Error fetching hospital details:", error);
@@ -164,7 +159,7 @@ const SelectDoctorAndTime: React.FC<ComponentProps> = ({
   // 병원 정보 가져오기
 
   return (
-    <div className="m-2 py-2">
+    <div className="m-2 py-2" style={{ width: "300px" }}>
       {isFirst ? (
         <>
           <div className="m-1 text-xl">
@@ -207,6 +202,7 @@ const SelectDoctorAndTime: React.FC<ComponentProps> = ({
           <hr className="border-2 border-black my-2" />
           {isClicked ? (
             <SelectTime
+              selectedDate={selectedDate}
               disabledTimes={disabledTimes}
               setSelectedTime={setSelectedTime}
               startTime={startTime}

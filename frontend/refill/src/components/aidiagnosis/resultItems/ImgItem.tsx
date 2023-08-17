@@ -18,12 +18,12 @@ const ImgItem: React.FC<ImgItemProps> = ({
   return (
     <div className={`${colStart} ${colEnd} font-black text-white`}>
       <div className="mb-2">
-        <p className="p-2 text-3xl">{title}</p>
+        <p className="p-2 text-xl pb-0">{title}</p>
       </div>
       <div className="w-full aspect-square">
         <img src={src} alt="noHave" className="rounded-xl w-full h-full" />
       </div>
-      <p className="p-2">{content}</p>
+      <p className="p-2 text-sm">{content}</p>
     </div>
   );
 };

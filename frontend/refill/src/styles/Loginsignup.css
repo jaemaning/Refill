@@ -25,7 +25,7 @@ body {
   width: 50%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
   font-weight: bold;
 }
@@ -51,7 +51,7 @@ body {
 
 .MLogin {
   background-color: white;
-  height: 550px;
+  height: 500px;
   width: 400px;
 }
 
@@ -101,5 +101,11 @@ body {
   background-color: #f2981f;
 }
 
-/* customStyles={{  }}
-                onClick={emailCertify} */
+.image-container {
+  overflow: hidden;
+}
+
+.fit-image {
+  object-fit: cover;
+  object-position: center center;
+}

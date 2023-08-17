@@ -28,11 +28,15 @@ type Doctor = {
 
 type Reservation = {
   reservationId: number;
+  hospitalId: number;
+  doctorId: number;
+  memberId: number;
   startDate: string;
   memberName: string;
   birthDay: string;
   tel: string;
   counselingDemands: string;
+  hairImage: string;
 };
 
 const DetailReservation: React.FC<ComponentProps> = ({
@@ -72,10 +76,10 @@ const DetailReservation: React.FC<ComponentProps> = ({
         },
       })
       .then((res) => {
-        console.log(res);
+        console.log("ok");
         if (res.data) {
           setMyReservations(res.data);
-          console.log(res.data);
+          console.log("ok");
         }
       })
       .catch((err) => {
@@ -97,11 +101,10 @@ const DetailReservation: React.FC<ComponentProps> = ({
     });
 
     setSelectedDateReservations(filteredReservations);
-    console.log("마이레저베이션");
-    console.log(filteredReservations);
+    console.log("ok");
   }, [selectedDate]);
   return (
-    <div className="m-2 py-2">
+    <div className="m-2 py-2" style={{ width: "300px" }}>
       <div>
         <div>
           <ReservationDoctor

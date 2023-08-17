@@ -39,7 +39,7 @@ const ReservationDate: React.FC<ReservationDateProps> = ({
               setSelectedDateValue(date);
               setIsSelectedDate(true);
               setIsSelectedTime(false);
-              console.log(formattedDate);
+              console.log("ok");
             }
           }}
         />

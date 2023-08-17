@@ -14,6 +14,10 @@ import ModifyMember from "./user/ModifyMember";
 import { Container, Grid } from "@mui/material";
 // 하위 컴포넌트
 import MyReservationReport from "components/myPage/MyReservationReport";
+import AiDiagnosisList from "components/myPage/AiDiagnosisList";
+import ConsultingList from "components/myPage/ConsultingList";
+// CSS
+import "styles/MyPage.css";
 
 interface DivProps {
   selected?: boolean;
@@ -21,9 +25,12 @@ interface DivProps {
 
 // 예약 타입 설정
 type Reservation = {
+  reservationId: number;
+  hospitalId: number;
+  doctorId: number;
+  memberId: number;
   doctorName: string;
   hospitalName: string;
-  reservationId: number;
   startDateTime: string;
 };
 
@@ -106,10 +113,12 @@ const Mypage: React.FC = () => {
   );
 
   const token: string = useSelector((state: RootState) => state.login.token);
+  const memberId: number = useSelector((state: RootState) => state.login.pk);
   const islogin: boolean = useSelector(
     (state: RootState) => state.login.islogin,
   );
-
+  const loginId = useSelector((state: RootState) => state.login.loginId);
+  // 토큰 분해하기 memberId가져오기
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -123,16 +132,16 @@ const Mypage: React.FC = () => {
         })
 
         .then((response) => {
-          console.log(response.data);
+          console.log("ok");
           setuserData(response.data);
           setReservationList(response.data.reservationList);
+          console.log(response);
           if (userData.profileImg !== null) {
             setCheckimg(true);
           }
-          console.log(checkimg);
         })
         .catch((error) => {
-          console.log("에러:", error);
+          console.log(error);
         });
     } else {
       navigate("/");
@@ -141,8 +150,27 @@ const Mypage: React.FC = () => {
   }, []);
 
   const buttonclick = () => {
-    setSelected(!selected);
-    console.log(selected);
+    console.log("계정 삭제");
+    axios
+      .delete(`/api/v1/account/member/${memberId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res)=>{
+        console.log(res.data)
+        navigate('/logout')
+      })
+      .catch((err)=>{console.log(err)})
+  };
+
+  const handleToChangeMypage = () => {
+    setSelected(true);
+  };
+
+  const handleToMyRecord = () => {
+    setSelected(false);
   };
 
   // 비밀번호 변경 모달
@@ -164,12 +192,10 @@ const Mypage: React.FC = () => {
       })
 
       .then((response) => {
-        console.log(response);
         handleCMClose();
       })
 
       .catch((error) => {
-        console.log(1);
         console.log(error.response.data.message);
         handleCMClose();
       });
@@ -186,6 +212,7 @@ const Mypage: React.FC = () => {
 
   const ModifyDoc = async (formData: any) => {
     console.log(formData);
+    console.log(1);
     axios
       .put(`api/v1/member/mypage`, formData, {
         headers: {
@@ -195,11 +222,13 @@ const Mypage: React.FC = () => {
       })
 
       .then((response) => {
+        console.log("ok");
         console.log(response);
         handleMMClose();
       })
 
       .catch((error) => {
+        console.log(1);
         console.log(error);
         handleMMClose();
       });
@@ -219,14 +248,14 @@ const Mypage: React.FC = () => {
                 content="계정관리"
                 variant={selected ? "menuSelected" : "menuUnselected"}
                 width="180px"
-                onClick={buttonclick}
+                onClick={handleToChangeMypage}
               />
               <br />
               <Button
                 content="나의기록"
                 variant={selected ? "menuUnselected" : "menuSelected"}
                 width="180px"
-                onClick={buttonclick}
+                onClick={handleToMyRecord}
               />
             </ButtonList>
           </Common>
@@ -241,8 +270,12 @@ const Mypage: React.FC = () => {
               className="mt-3 mb-6 "
             >
               <Profileimg
-                src={checkimg ? `${userData.profileImg}` : `${default_profile}`}
-                className=""
+                src={
+                  userData.profileImg
+                    ? `https://ssafyfinal.s3.ap-northeast-2.amazonaws.com/${userData.profileImg}`
+                    : `${default_profile}`
+                }
+                className="mb-3"
               />
               <div
                 className="flex justify-between py-3"
@@ -291,9 +324,11 @@ const Mypage: React.FC = () => {
                         tel={userData.tel}
                         nickname={userData.nickname}
                         email={userData.email}
+                        userData={userData}
+                        setuserData={setuserData}
                         profile={
                           checkimg
-                            ? `${userData.profileImg}`
+                            ? `https://ssafyfinal.s3.ap-northeast-2.amazonaws.com/${userData.profileImg}`
                             : `${default_profile}`
                         }
                         onModify={(formData) => ModifyDoc(formData)}
@@ -345,23 +380,27 @@ const Mypage: React.FC = () => {
             <br />
             <span className="text-xl font-bold mb-3">나의 예약 현황</span>
             <Common
-              style={{ width: "700px", height: "480px" }}
+              style={{ width: "700px", height: "350px" }}
               className="mt-3 mb-6"
             >
               <MyReservationReport reservationList={reservationList} />
             </Common>
             <span className="text-xl font-bold mt-10 mb-3">나의 상담 기록</span>
             <Common
-              style={{ width: "700px", height: "150px" }}
+              style={{ width: "700px", height: "240px" }}
               className="mt-3 mb-6"
-            ></Common>
+            >
+              <ConsultingList loginId={loginId} />
+            </Common>
             <span className="text-xl font-bold mt-10 mb-3">
               나의 AI 자가진단 기록
             </span>
             <Common
-              style={{ width: "700px", height: "150px" }}
+              style={{ width: "700px", height: "240px" }}
               className="mt-3 mb-6"
-            ></Common>
+            >
+              <AiDiagnosisList memberId={memberId} />
+            </Common>
           </Content2>
         </div>
       </Containerdiv>

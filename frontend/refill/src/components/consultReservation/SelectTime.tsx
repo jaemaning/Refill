@@ -4,6 +4,7 @@ import "styles/Reservation.css";
 
 interface SelectTimeProps {
   setSelectedTime: (time: string) => void;
+  selectedDate: string; // 'YYYY-MM-DD' 형식
   startTime: string;
   endTime: string;
   disabledTimes: string[];
@@ -14,6 +15,7 @@ const SelectTime: React.FC<SelectTimeProps> = ({
   startTime,
   endTime,
   disabledTimes,
+  selectedDate,
 }) => {
   const times = [
     "08:00",
@@ -41,6 +43,30 @@ const SelectTime: React.FC<SelectTimeProps> = ({
     "19:00",
     "19:30",
   ];
+  const [nowSelected, setNowSelected] = useState("00:00");
+
+  // 1. 현재 시간 가져오기
+  const getCurrentTime = () => {
+    const date = new Date();
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = (Math.floor(date.getMinutes() / 30) * 30)
+      .toString()
+      .padStart(2, "0");
+    return `${hours}:${minutes}`;
+  };
+
+  const getCurrentDate = () => {
+    const date = new Date();
+    return `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  };
+
+  const isToday = (selectedDate: string) => {
+    return selectedDate === getCurrentDate();
+  };
+
+  const currentRealTime = getCurrentTime();
 
   const convertToMinutes = (time: string) => {
     const [hours, minutes] = time.split(":");
@@ -49,6 +75,12 @@ const SelectTime: React.FC<SelectTimeProps> = ({
   const [nowTime, setNowTime] = useState<string | null>(null); // 추가된 상태
   const isDisabled = (time: string) => {
     const timeInMinutes = convertToMinutes(time);
+
+    // 현재 실제 시간보다 이전인지 확인 (오늘이 선택된 날짜라면)
+    const isBeforeCurrentTime =
+      isToday(selectedDate) &&
+      timeInMinutes < convertToMinutes(getCurrentTime());
+
     // startTime과 endTime을 기준으로 비활성화 판단
     const outOfBounds =
       timeInMinutes < convertToMinutes(startTime) ||
@@ -59,12 +91,13 @@ const SelectTime: React.FC<SelectTimeProps> = ({
       .map((t) => t.slice(0, 5))
       .includes(time);
 
-    return outOfBounds || isTimeDisabled;
+    return outOfBounds || isTimeDisabled || isBeforeCurrentTime;
   };
+
   const handleTimeClick = (time: string) => {
     setSelectedTime(time);
+    setNowSelected(time);
     setNowTime(time); // nowTime 상태 업데이트
-    console.log(time);
   };
   return (
     <div className="mb-12">
@@ -79,10 +112,13 @@ const SelectTime: React.FC<SelectTimeProps> = ({
             <button
               key={time}
               onClick={() => handleTimeClick(time)}
-              className={
-                `bg-${isDisabled(time) ? "red" : "black"} hover:bg-slate-400` +
-                ` rounded-md`
-              }
+              className={`rounded-md ${
+                nowSelected === time
+                  ? "bg-orange hover:bg-slate-400" // 선택된 경우 파란색
+                  : isDisabled(time)
+                  ? "bg-red"
+                  : "bg-black hover:bg-slate-400"
+              }`}
               disabled={isDisabled(time)}
             >
               <div
@@ -101,10 +137,13 @@ const SelectTime: React.FC<SelectTimeProps> = ({
             <button
               key={time}
               onClick={() => handleTimeClick(time)}
-              className={
-                `bg-${isDisabled(time) ? "red" : "black"} hover:bg-slate-400` +
-                ` rounded-md`
-              }
+              className={`rounded-md ${
+                nowSelected === time
+                  ? "bg-orange hover:bg-slate-400" // 선택된 경우 파란색
+                  : isDisabled(time)
+                  ? "bg-red"
+                  : "bg-black hover:bg-slate-400"
+              }`}
               disabled={isDisabled(time)}
             >
               <div

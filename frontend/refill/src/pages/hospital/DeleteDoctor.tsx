@@ -47,6 +47,8 @@ const DeleteDoctor: React.FC<DeleteModal> = ({
   doctorname,
   onDeleteDoctor,
 }) => {
+  console.log(doctorname);
+  console.log(hospitalname);
   return (
     <div>
       <div onClick={handleMOpen}>
