@@ -12,7 +12,7 @@ interface LinkProps {
   arrayString?: string;
   imgFile?: File | null;
   isResult?: boolean;
-  setOpenError?: boolean;
+  // open일 경우 에러 뜸
 }
 
 const NextPrevButtons: React.FC<LinkProps> = ({
@@ -24,6 +24,7 @@ const NextPrevButtons: React.FC<LinkProps> = ({
   const [openModal, setOpenModal] = useState(false);
   const [notCheckedNumbers, setNotCheckedNumbers] = useState<number[]>(Array);
   const [isValid, setIsValid] = useState(false);
+  const [isError, setIsError] = useState(false)
 
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -42,8 +43,6 @@ const NextPrevButtons: React.FC<LinkProps> = ({
 
     const formData = new FormData();
     formData.append("aiDiagnosisRequest", jsonBlob);
-
-    setLoading(true);
 
     if (imgFile) {
       const convertToEnglishName = (filename: string) => {
@@ -74,12 +73,14 @@ const NextPrevButtons: React.FC<LinkProps> = ({
         return response.data;
       })
       .then((response) => {
+        setLoading(true);
         console.log("ok");
         const jsonData = response;
         const newJsonDataString = JSON.stringify(jsonData);
         navigate(nextLink, { state: { jsonDataString: newJsonDataString } });
       })
       .catch((err) => {
+        setIsError(false)
         console.log(err.response.data);
       });
   };
