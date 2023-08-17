@@ -81,7 +81,7 @@ const DetailPatient: React.FC<DetailPatientProps> = ({
     "토요일",
   ];
 
-  const [myJoinToken, setMyJoinToken] = useState<newTypeToken | null>(null);
+  const [myJoinToken, setMyJoinToken] = useState<TypeToken[]>([]);
   const dateObj = new Date(selectedMember.startDate);
   const dayName = days[dateObj.getDay()];
 
@@ -97,7 +97,7 @@ const DetailPatient: React.FC<DetailPatientProps> = ({
   const getToken = async (reservationId: number) => {
     try {
       const response = await axios.get(
-        `https://i9c201.p.ssafy.io/api/v1/consulting/connection/${reservationId}`,
+        `http://localhost:3000/api/v1/consulting/connection/${reservationId}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -105,27 +105,44 @@ const DetailPatient: React.FC<DetailPatientProps> = ({
           },
         },
       );
-      console.log("API Response ok");
-      setMyJoinToken({ ...response.data, hairImage: selectedMember.hairImage });
-
-      if (response.data && response.data.sessionId) {
+      console.log(response.data);
+      setMyJoinToken((prev) => [...prev, response.data]);
+      if (response.data.sessionId) {
         setCanJoin(true);
       }
     } catch (err) {
-      console.log("Error during getToken:", err);
+      console.log(err);
+      throw err; // 오류가 발생하면 이를 다시 throw 해서 joinConsult에서 catch 할 수 있게 합니다.
     }
   };
-
   useEffect(() => {
     getToken(reservationId);
   }, [reservationId]);
 
   const [canJoin, setCanJoin] = useState(false);
   // 입장하는 함수
-  const joinSession = (tokenData: newTypeToken | null) => {
-    if (!tokenData) return;
+  // 입장하는 함수
+  const joinSession = ({
+    consultingId,
+    sessionId,
+    token,
+    shareToken,
+    memberId,
+    doctorId,
+    hospitalId,
+    hospitalName,
+  }: TypeToken) => {
     navigate("/video", {
-      state: tokenData,
+      state: {
+        sessionPk: sessionId,
+        token: token,
+        shareToken: shareToken,
+        consultingId: consultingId,
+        memberId: memberId,
+        doctorId: doctorId,
+        hospitalId: hospitalId,
+        hospitalName: hospitalName,
+      },
     });
   };
   // const joinConsult = async () => {
@@ -187,7 +204,7 @@ const DetailPatient: React.FC<DetailPatientProps> = ({
           {/* 버튼 넣는 곳 */}
           <button
             onClick={() => {
-              joinSession(myJoinToken);
+              joinSession(myJoinToken[myJoinToken.length - 1]);
             }}
             className="p-2 reservation-detail-join-button"
             disabled={!canJoin}
