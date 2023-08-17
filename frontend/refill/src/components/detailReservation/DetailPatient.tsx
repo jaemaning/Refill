@@ -135,6 +135,7 @@ const DetailPatient: React.FC<DetailPatientProps> = ({
     hospitalId,
     hospitalName,
   }: TypeToken) => {
+    downloadFile()
     navigate("/video", {
       state: {
         sessionPk: sessionId,
@@ -160,6 +161,32 @@ const DetailPatient: React.FC<DetailPatientProps> = ({
   // Add this inside the `DetailPatient` component, similar to the `ReservationCompo`
 
   // Define the active and disabled button styles as constants
+
+  const downloadFile = () => {
+    if (!checkImgDownload) {
+      axios
+          .get(`/api/v1/consulting/file/${selectedMember.hairImage}`, {
+              headers: {
+                  Authorization: `Bearer ${loginToken}`,
+              },
+              responseType: 'blob',
+          })
+          .then((res) => {
+              const url = window.URL.createObjectURL(new Blob([res.data]));
+              const link = document.createElement('a');
+              link.href = url;
+              link.setAttribute('download', 'patient.jpg'); // 원하는 파일 이름을 설정하세요.
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              setCheckImgDownload(true)
+          })
+          .catch((err) => console.log(err));
+    }
+  };
+
+  const [checkImgDownload, setCheckImgDownload] = useState(false)
+
   const activeButtonStyle = {
     background: "#3498db",
     color: "white",
@@ -203,18 +230,11 @@ const DetailPatient: React.FC<DetailPatientProps> = ({
           <p className="reservation-detail-patient-text">상담요청사항</p>{" "}
           {selectedMember.counselingDemands}
         </div>
-        {selectedMember.hairImage ? (
-          <div className="flex">
-            <a
-              href={imgUrl}
-              download
-              className="reservation-detail-patient-text"
-            >
-              사진
-            </a>{" "}
-            <a href={imgUrl} download>
-              {selectedMember.hairImage}
-            </a>
+        {
+          selectedMember.hairImage ?
+          <div className="flex" onClick={downloadFile} style={{cursor: 'pointer'}}>
+            <p className="reservation-detail-patient-text">사진</p>{" "}
+            patient.jpg
           </div>
         ) : null}
         <div className="pt-5 flex justify-center">
