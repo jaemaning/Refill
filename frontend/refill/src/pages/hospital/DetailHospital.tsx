@@ -367,7 +367,7 @@ const DetailHospital: React.FC = () => {
   const RegistDoc = async (hospitalid: number, formData: any) => {
     axios
       .post(
-        `http://localhost:3000/api/v1/hospital/${hospitalid}/doctor`,
+        `https://i9c201.p.ssafy.io/api/v1/hospital/${hospitalid}/doctor`,
         formData,
         {
           headers: {
@@ -407,7 +407,7 @@ const DetailHospital: React.FC = () => {
     console.log("ok");
     axios
       .put(
-        `http://localhost:3000/api/v1/hospital/${hospitalid}/doctor/${doctorid}`,
+        `https://i9c201.p.ssafy.io/api/v1/hospital/${hospitalid}/doctor/${doctorid}`,
         formData,
         {
           headers: {
@@ -441,7 +441,7 @@ const DetailHospital: React.FC = () => {
   const DeleteDoc = async (doctorid: number) => {
     axios
       .delete(
-        `http://localhost:3000/api/v1/hospital/${hospitalId}/doctor/${doctorid}`,
+        `https://i9c201.p.ssafy.io/api/v1/hospital/${hospitalId}/doctor/${doctorid}`,
         {
           headers: {
             // "Content-Type": "multipart/form-data",
