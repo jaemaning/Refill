@@ -120,7 +120,8 @@ const JoinPage = () => {
           ) =>
             sessionId ? (
               <div key={idx}>
-                {idx}, {sessionId} {consultingId} 멤버-{memberId} 병원-{hospitalId} 의사-{doctorId}:
+                {idx}, {sessionId} {consultingId} 멤버-{memberId} 병원-
+                {hospitalId} 의사-{doctorId}:
                 <Button
                   variant="normal"
                   content="입장 가능"

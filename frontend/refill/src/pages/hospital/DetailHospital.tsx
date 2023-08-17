@@ -214,8 +214,9 @@ const DetailHospital: React.FC = () => {
   };
 
   // 리뷰 신고하기
-  const [openReportModal, setOpenReportModal] = useState<number|null>(null);
-  const handleOpenReportModal = (reviewId: number) => setOpenReportModal(reviewId);
+  const [openReportModal, setOpenReportModal] = useState<number | null>(null);
+  const handleOpenReportModal = (reviewId: number) =>
+    setOpenReportModal(reviewId);
   const handleCloseReportModal = () => setOpenReportModal(null);
 
   // 지도 생성 메서드
@@ -389,8 +390,8 @@ const DetailHospital: React.FC = () => {
 
   // 의사 수정
 
-  const [modifyOpen, setModifyOpen] = useState<number|null>(null);
-  const handleMMOpen = (doctorId:number) => {
+  const [modifyOpen, setModifyOpen] = useState<number | null>(null);
+  const handleMMOpen = (doctorId: number) => {
     setModifyOpen(doctorId);
   };
   const handleMMClose = () => {
@@ -427,7 +428,7 @@ const DetailHospital: React.FC = () => {
   };
 
   // 의사 삭제
-  const [deleteOpen, setDeleteOpen] = useState<number|null>(null);
+  const [deleteOpen, setDeleteOpen] = useState<number | null>(null);
   const handleDMOpen = (doctorId: number) => {
     setDeleteOpen(doctorId);
   };
@@ -626,7 +627,9 @@ const DetailHospital: React.FC = () => {
                             <div className="flex">
                               <ModifyDoctor
                                 open={modifyOpen === doctor.doctorId}
-                                handleMOpen={()=>handleMMOpen(doctor.doctorId)}
+                                handleMOpen={() =>
+                                  handleMMOpen(doctor.doctorId)
+                                }
                                 handleMClose={handleMMClose}
                                 description={doctor.description}
                                 education={doctor.educationBackgrounds}
@@ -643,7 +646,9 @@ const DetailHospital: React.FC = () => {
                               />
                               <DeleteDoctor
                                 open={deleteOpen === doctor.doctorId}
-                                handleMOpen={()=>handleDMOpen(doctor.doctorId)}
+                                handleMOpen={() =>
+                                  handleDMOpen(doctor.doctorId)
+                                }
                                 handleMClose={handleDMClose}
                                 hospitalname={hospitalData.name}
                                 doctorname={doctor.name}
@@ -795,8 +800,10 @@ const DetailHospital: React.FC = () => {
                               {ishospital ? (
                                 <Grid item xs={2}>
                                   <NotificationImportantIcon
-                                    sx={{ color: red[500], cursor: 'pointer' }}
-                                    onClick={()=>handleOpenReportModal(review.reviewId)}
+                                    sx={{ color: red[500], cursor: "pointer" }}
+                                    onClick={() =>
+                                      handleOpenReportModal(review.reviewId)
+                                    }
                                   />
                                   <Modal
                                     open={openReportModal === review.reviewId}

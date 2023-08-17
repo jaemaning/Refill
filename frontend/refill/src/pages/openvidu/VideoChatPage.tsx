@@ -39,7 +39,7 @@ import ReviewModal from "components/openvidu/ReviewModal";
 import CameraswitchIcon from "@mui/icons-material/Cameraswitch";
 import AiDiagnosisList from "components/myPage/AiDiagnosisList";
 import ConsultingList from "components/myPage/ConsultingList";
-import DownloadIcon from '@mui/icons-material/Download';
+import DownloadIcon from "@mui/icons-material/Download";
 import "styles/MyPage.css";
 
 interface MessageList {
@@ -103,7 +103,7 @@ const VideoChatPage: React.FC = () => {
     hospitalId,
     doctorId,
     hospitalName,
-    hairImage
+    hairImage,
   } = location.state;
 
   const inputref = useRef<HTMLTextAreaElement>(null);
@@ -634,15 +634,23 @@ const VideoChatPage: React.FC = () => {
                   {ishospital ? (
                     <div
                       style={{
-                        display: toggleScreenPublisher ? "none" : "block", color: 'black', width: '95%'
+                        display: toggleScreenPublisher ? "none" : "block",
+                        color: "black",
+                        width: "95%",
                       }}
                     >
-                      <div style={{border: "1px solid grey"}} className="scroll-ai-box">
-                        <h2 style={{fontWeight:'700' }}>이전 상담 내역</h2>
+                      <div
+                        style={{ border: "1px solid grey" }}
+                        className="scroll-ai-box"
+                      >
+                        <h2 style={{ fontWeight: "700" }}>이전 상담 내역</h2>
                         <ConsultingList loginId={loginId} />
                       </div>
-                      <div style={{border: "1px solid grey"}} className="scroll-ai-box">
-                        <h2 style={{fontWeight:'700' }}>AI 자가진단</h2>
+                      <div
+                        style={{ border: "1px solid grey" }}
+                        className="scroll-ai-box"
+                      >
+                        <h2 style={{ fontWeight: "700" }}>AI 자가진단</h2>
                         <AiDiagnosisList memberId={memberId} />
                       </div>
                     </div>
@@ -650,17 +658,27 @@ const VideoChatPage: React.FC = () => {
                   {ismember &&
                   subscribers.filter(
                     (sub) => sub.stream.typeOfVideo === "SCREEN",
-                    ).length === 0 ? (
-                      <div style={{color: 'black', width:'95%'}}>
-                        <h2 style={{fontWeight:'700' }}>이전 상담 내역</h2>
-                        <div style={{border: "1px solid grey", height:'100px', marginBottom: '10px'}} className="scroll-ai-box">
-                          <ConsultingList loginId={loginId} />
-                        </div>
-                        <h2 style={{fontWeight:'700' }}>AI 자가진단</h2>
-                        <div style={{border: "1px solid grey", height:'150px',}} className="scroll-ai-box">
-                          <AiDiagnosisList memberId={memberId} />
-                        </div>
+                  ).length === 0 ? (
+                    <div style={{ color: "black", width: "95%" }}>
+                      <h2 style={{ fontWeight: "700" }}>이전 상담 내역</h2>
+                      <div
+                        style={{
+                          border: "1px solid grey",
+                          height: "100px",
+                          marginBottom: "10px",
+                        }}
+                        className="scroll-ai-box"
+                      >
+                        <ConsultingList loginId={loginId} />
                       </div>
+                      <h2 style={{ fontWeight: "700" }}>AI 자가진단</h2>
+                      <div
+                        style={{ border: "1px solid grey", height: "150px" }}
+                        className="scroll-ai-box"
+                      >
+                        <AiDiagnosisList memberId={memberId} />
+                      </div>
+                    </div>
                   ) : null}
                 </PrevComponent>
                 {ishospital ? (
@@ -817,12 +835,12 @@ const VideoChatPage: React.FC = () => {
                     fontSize="large"
                     sx={{ margin: "0px 13px", color: "red", cursor: "pointer" }}
                   >
-                    {hairImage
-                    ?
-                    <a href={`https://ssafyfinal.s3.ap-northeast-2.amazonaws.com/${hairImage}`} download="hairImage.png"></a>
-                    :
-                    null
-                    }
+                    {hairImage ? (
+                      <a
+                        href={`https://ssafyfinal.s3.ap-northeast-2.amazonaws.com/${hairImage}`}
+                        download="hairImage.png"
+                      ></a>
+                    ) : null}
                   </DownloadIcon>
                   <NotificationImportantIcon
                     onClick={handleOpenReportModal}
