@@ -20,10 +20,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -48,8 +46,7 @@ public class ConsultingController {
 
     /* 세션 종료 및 상담 소견 내용 저장 */
     @PostMapping("/leave")
-    public ResponseEntity<String> leaveConsult(@AuthenticationPrincipal LoginInfo loginInfo,@RequestBody final ConsultingCloseRequest consultingCloseRequest)
-        throws OpenViduJavaClientException, OpenViduHttpException {
+    public ResponseEntity<String> leaveConsult(@AuthenticationPrincipal LoginInfo loginInfo,@RequestBody final ConsultingCloseRequest consultingCloseRequest) {
 
         log.info("Close Session");
         // 세션 닫기 & 상담 실행 여부 변경
@@ -81,7 +78,7 @@ public class ConsultingController {
     /* 상담 신고 하기 */
     @PostMapping("/report/{consultingId}")
     public ResponseEntity<String> reportConsulting(@AuthenticationPrincipal LoginInfo loginInfo, @PathVariable Long consultingId, @RequestBody
-        ConsultingReportRequest consultingReportRequest) {
+    ConsultingReportRequest consultingReportRequest) {
 
         log.info("consultingId: {}, loginInfo: {}, content: {}", consultingId, loginInfo, consultingReportRequest.content());
 
