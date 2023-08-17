@@ -60,6 +60,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 //                                                                            .orElseThrow(() -> new MemberException(ErrorCode.USERNAME_NOT_FOUND))
 //                                                      );
 
+
             UserInfo userDetails = (UserInfo) userDetailService.loadUserByUsername(loginId);
 
             // 아이디, 권한만 넣어주기

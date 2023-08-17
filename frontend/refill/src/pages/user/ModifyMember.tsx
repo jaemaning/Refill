@@ -128,15 +128,12 @@ const ModifyMember: React.FC<ModifyModal> = ({
       email: userData.email,
     };
 
-    console.log(memberInfoUpdateRequest);
-
     const json = JSON.stringify(memberInfoUpdateRequest);
     const jsonBlob = new Blob([json], { type: "application/json" });
     const formData = new FormData();
 
     formData.append("memberInfoUpdateRequest", jsonBlob);
     if (inputImage.profileImg) {
-      console.log(inputImage.profileImg);
       formData.append("profileImg", inputImage.profileImg);
     } else {
       formData.append(
@@ -145,7 +142,6 @@ const ModifyMember: React.FC<ModifyModal> = ({
       );
     }
 
-    console.log(formData);
     onModify(formData);
     handleMClose();
   };
@@ -155,7 +151,6 @@ const ModifyMember: React.FC<ModifyModal> = ({
 
   useEffect(() => {
     defaultValueRef.current = userData;
-    console.log(defaultValueRef.current);
   }, []);
 
   const closeModal = () => {

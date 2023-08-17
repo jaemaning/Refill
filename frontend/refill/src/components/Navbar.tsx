@@ -28,7 +28,7 @@ const Navbar = React.forwardRef<HTMLDivElement>((props, ref) => {
         ]);
       } else if (isHospital === true) {
         setMenuList([
-          ...menuList,
+          ["병원검색", "/search"],
           ["로그아웃", "/logout"],
           ["마이페이지", `/DetailHospital/${hospitalId}`],
         ]);
@@ -41,10 +41,6 @@ const Navbar = React.forwardRef<HTMLDivElement>((props, ref) => {
     } else {
       setMenuList([["로그인|회원가입", "/loginsignup"]]);
     }
-
-    console.log(isAdmin);
-    console.log(menuList);
-    console.log(isLogin);
   }, []);
 
   const handleMenuToggle = () => {

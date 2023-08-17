@@ -30,7 +30,7 @@ const WaitingHospitalList: React.FC = () => {
             },
           },
         );
-        console.log(response.data);
+        console.log("ok");
         setHospitals(response.data);
       } else {
         navigate("/");

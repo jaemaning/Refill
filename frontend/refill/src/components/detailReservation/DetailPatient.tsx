@@ -98,6 +98,7 @@ const DetailPatient: React.FC<DetailPatientProps> = ({
     try {
       const response = await axios.get(
         `https://i9c201.p.ssafy.io/api/v1/consulting/connection/${reservationId}`,
+        // `http://localhost:3000/api/v1/consulting/connection/${reservationId}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -105,7 +106,7 @@ const DetailPatient: React.FC<DetailPatientProps> = ({
           },
         },
       );
-      console.log(response.data);
+      console.log("ok");
       setMyJoinToken((prev) => [...prev, response.data]);
       if (response.data.sessionId) {
         setCanJoin(true);
@@ -120,6 +121,8 @@ const DetailPatient: React.FC<DetailPatientProps> = ({
   }, [reservationId]);
 
   const [canJoin, setCanJoin] = useState(false);
+
+  const imgUrl = `https://ssafyfinal.s3.ap-northeast-2.amazonaws.com/${selectedMember.hairImage}`
   // 입장하는 함수
   // 입장하는 함수
   const joinSession = ({
@@ -200,6 +203,15 @@ const DetailPatient: React.FC<DetailPatientProps> = ({
           <p className="reservation-detail-patient-text">상담요청사항</p>{" "}
           {selectedMember.counselingDemands}
         </div>
+        {
+          selectedMember.hairImage ?
+          <div className="flex">
+            <a href={imgUrl} download className="reservation-detail-patient-text">사진</a>{" "}
+            <a href={imgUrl} download>{selectedMember.hairImage}</a>
+          </div>
+          :
+          null
+        }
         <div className="pt-5 flex justify-center">
           {/* 버튼 넣는 곳 */}
           <button

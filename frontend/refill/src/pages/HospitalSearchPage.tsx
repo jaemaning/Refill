@@ -182,8 +182,6 @@ export const HospitalSearch: React.FC = () => {
   // 검색시 검색 버튼 누르면 이벤트
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(dropSelected + searched);
-
     if (islogin === true) {
       const url = "api/v1/hospital/search/keyword";
       const formData: TypeFormData = {
@@ -196,9 +194,7 @@ export const HospitalSearch: React.FC = () => {
       axios
         .get(url, { params: formData, headers: headers })
         .then((response) => {
-          console.log(response);
           setSearchedData(response.data);
-          console.log(searchedData);
         })
         .catch((err) => {
           console.log(err.response.data);
@@ -255,8 +251,6 @@ export const HospitalSearch: React.FC = () => {
               },
             })
             .then((res) => {
-              // console.log(res.data.hospitalResponse.latitude)
-              // console.log(res.data.hospitalResponse.longitude)
               setLatLon([
                 res.data.hospitalResponse.latitude,
                 res.data.hospitalResponse.longitude,
@@ -340,19 +334,15 @@ export const HospitalSearch: React.FC = () => {
       // 정보를 가져오고 이 정보를 통해 추후 병원 데이터를 아래에 입력 진행 비동기로
       const center = map.current.getCenter();
       nowCenter.current = [center.Ma, center.La];
-      console.log("now", nowCenter.current);
 
       // 지도의 현재 영역을 얻어옵니다
       const bounds = map.current.getBounds();
-      console.log("bb", bounds);
 
       // 영역의 남서쪽 좌표를 얻어옵니다
       const swLatLng = bounds.getSouthWest();
-      console.log("sw", swLatLng);
 
       // 영역의 북동쪽 좌표를 얻어옵니다
       const neLatLng = bounds.getNorthEast();
-      console.log("ne", neLatLng);
 
       const url = "api/v1/hospital/search/location";
       const formData: TypeRequestMap = {
@@ -369,7 +359,7 @@ export const HospitalSearch: React.FC = () => {
       axios
         .get(url, { params: formData, headers: headers })
         .then((response) => {
-          console.log(response.data);
+          console.log("ok");
           setHospitals(response.data);
         });
     }
@@ -402,7 +392,6 @@ export const HospitalSearch: React.FC = () => {
           title: hospitals[i].hospitalResponse?.name, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
           clickable: true,
         });
-        console.log("마커입니다.", marker);
         marker.setMap(map.current);
 
         // 마커를 클릭했을 때 마커 위에 표시할 인포윈도우를 생성합니다

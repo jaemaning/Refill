@@ -68,18 +68,25 @@ const ModifyDoctor: React.FC<ModifyModal> = ({
     });
   };
 
+  // 이미지 처리 blob 으로 저장 해보기
   const [inputImage, setInputImage] = useState<InputImageState>({
-    profileImg: null,
+    profileImg: profile ? stringToFile(profile, "profile.jpg") : null,
   });
+
+  function stringToFile(content: string, filename: string): File {
+    const blob = new Blob([content], { type: "image/jpeg" });
+    return new File([blob], filename);
+  }
 
   const handleImgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null; // 선택한 파일을 가져옵니다. 없으면 null로 설정합니다.
 
-    setInputImage((prevInputImage) => ({
-      ...prevInputImage,
-      [e.target.name]: file,
-    }));
     if (file) {
+      setInputImage((prevInputImage) => ({
+        ...prevInputImage,
+        [e.target.name]: file,
+      }));
+      setIsImageChanged(true); // 이미지가 변경되었음을 표시
       if (e.target.name === "profileImg") {
         (document.getElementById("profilename") as HTMLInputElement).value =
           file.name;
@@ -93,13 +100,9 @@ const ModifyDoctor: React.FC<ModifyModal> = ({
     onModify(temp);
   };
 
-  function stringToFile(content: string, filename: string): File {
-    const blob = new Blob([content], { type: "image/jpeg" });
-    return new File([blob], filename);
-  }
-
   const [eString, seteString] = useState("");
   const [mString, setmString] = useState("");
+  const [isImageChanged, setIsImageChanged] = useState(false);
 
   useEffect(() => {
     const educationString: string = inputData.educationBackgrounds.join(",");
@@ -120,30 +123,28 @@ const ModifyDoctor: React.FC<ModifyModal> = ({
   const FinalModify = () => {
     const tempEdu: string[] = eString.split(",");
     const tempMaj: string[] = mString.split(",");
-
+  
     const doctorUpdateRequest = {
       description: inputData.description,
       educationBackgrounds: tempEdu,
       majorAreas: tempMaj,
     };
-
+  
     const json = JSON.stringify(doctorUpdateRequest);
     const jsonBlob = new Blob([json], { type: "application/json" });
     const formData = new FormData();
-
+  
     formData.append("doctorUpdateRequest", jsonBlob);
-    if (inputImage.profileImg) {
-      formData.append(
-        "profileImg",
-        `https://ssafyfinal.s3.ap-northeast-2.amazonaws.com/${inputImage.profileImg}`,
-      );
-    } else {
+  
+    if (isImageChanged && inputImage.profileImg) {
+      // 사용자가 새로운 이미지를 업로드한 경우
+      formData.append("profileImg", inputImage.profileImg);
+    } else if (profile) {
+      // 사용자가 이미지를 업로드하지 않고 기존 이미지를 사용하는 경우
       const filename = `${profile}`;
-      console.log(filename);
       const test = stringToFile(profile, filename);
       formData.append("profileImg", test);
     }
-    console.log(1);
     return formData;
   };
 

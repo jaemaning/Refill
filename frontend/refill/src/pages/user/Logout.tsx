@@ -12,7 +12,6 @@ const Logout: React.FC = () => {
   const token = useSelector((state: RootState) => state.login.token);
 
   useEffect(() => {
-    console.log(token);
     const fetchLogout = async () => {
       try {
         const response = await axios.get("api/v1/account/logout", {
@@ -20,7 +19,7 @@ const Logout: React.FC = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log(response);
+        console.log("ok");
         dispatch(loginFail());
         removeCookie("refresh-token");
         navigate("/");
@@ -30,7 +29,7 @@ const Logout: React.FC = () => {
     };
 
     fetchLogout();
-  }, [dispatch, navigate]); // 이 부분에 필요한 의존성을 명시해주세요
+  }, [dispatch, navigate, token]); // 이 부분에 필요한 의존성을 명시해주세요
 
   return <div></div>;
 };

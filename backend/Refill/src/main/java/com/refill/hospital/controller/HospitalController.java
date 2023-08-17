@@ -2,15 +2,20 @@ package com.refill.hospital.controller;
 
 import com.refill.doctor.dto.request.DoctorJoinRequest;
 import com.refill.doctor.dto.request.DoctorUpdateRequest;
+import com.refill.doctor.dto.response.DoctorResponse;
 import com.refill.hospital.dto.request.HospitalInfoUpdateRequest;
-import com.refill.hospital.dto.request.HospitalOperatingHoursRequest;
 import com.refill.hospital.dto.request.HospitalLocationRequest;
+import com.refill.hospital.dto.request.HospitalOperatingHoursRequest;
 import com.refill.hospital.dto.response.HospitalDetailResponse;
 import com.refill.hospital.dto.response.HospitalOperatingHourResponse;
+import com.refill.hospital.dto.response.HospitalOperatingHoursCache;
 import com.refill.hospital.dto.response.HospitalResponse;
 import com.refill.hospital.dto.response.HospitalSearchByLocationResponse;
+import com.refill.hospital.entity.Hospital;
 import com.refill.hospital.service.HospitalOperatingHourService;
 import com.refill.hospital.service.HospitalService;
+import com.refill.review.dto.response.ReviewResponse;
+import com.refill.review.service.ReviewService;
 import com.refill.security.util.LoginInfo;
 import java.util.List;
 import javax.validation.Valid;
@@ -39,7 +44,7 @@ public class HospitalController {
 
     private final HospitalService hospitalService;
     private final HospitalOperatingHourService hospitalOperatingHourService;
-
+    private final ReviewService reviewService;
     @GetMapping("/")
     public ResponseEntity<List<HospitalResponse>> getAllHospitals(){
         List<HospitalResponse> hospitalResponses = hospitalService.findAllHospitals();
@@ -74,12 +79,22 @@ public class HospitalController {
     }
 
     /* 병원 상세 조회 */
+    // @Cacheable
     @GetMapping("/{hospitalId}")
     public ResponseEntity<HospitalDetailResponse> getHospitalDetail(@PathVariable Long hospitalId)
     {
         log.debug("hospitalId: {}", hospitalId);
-        HospitalDetailResponse hospitalDetailResponse = hospitalOperatingHourService.getDetailHospitalInfo(hospitalId);
+        //HospitalDetailResponse hospitalDetailResponse = hospitalOperatingHourService.getDetailHospitalInfo(hospitalId);
 
+        Hospital hospital = hospitalService.findByIdUsingCache(hospitalId); // 캐시 적용
+        List<DoctorResponse> doctorResponseList = hospitalService.getDoctorByHospital(hospital); // 캐시 적용
+        List<ReviewResponse> reviewResponseList = reviewService.findAllByHospital(hospital); // 캐시 미적용
+
+        HospitalResponse hospitalResponse = new HospitalResponse(hospital, reviewService.generateAverageScore(hospital));
+
+        HospitalOperatingHoursCache operatingHoursCache = hospitalOperatingHourService.getOperatingHoursUsingCache(hospitalId); // 캐시 적용
+
+        HospitalDetailResponse hospitalDetailResponse = new HospitalDetailResponse(hospitalResponse, doctorResponseList, reviewResponseList, operatingHoursCache);
 
         return ResponseEntity.ok()
                              .body(hospitalDetailResponse);

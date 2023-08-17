@@ -135,7 +135,6 @@ const Mypage: React.FC = () => {
           console.log("ok");
           setuserData(response.data);
           setReservationList(response.data.reservationList);
-          console.log(response);
           if (userData.profileImg !== null) {
             setCheckimg(true);
           }
@@ -213,8 +212,6 @@ const Mypage: React.FC = () => {
   };
 
   const ModifyDoc = async (formData: any) => {
-    console.log(formData);
-    console.log(1);
     axios
       .put(`api/v1/member/mypage`, formData, {
         headers: {
@@ -225,12 +222,10 @@ const Mypage: React.FC = () => {
 
       .then((response) => {
         console.log("ok");
-        console.log(response);
         handleMMClose();
       })
 
       .catch((error) => {
-        console.log(1);
         console.log(error);
         handleMMClose();
       });
@@ -389,7 +384,7 @@ const Mypage: React.FC = () => {
             </Common>
             <span className="text-xl font-bold mt-10 mb-3">나의 상담 기록</span>
             <Common
-              style={{ width: "700px", height: "240px" }}
+              style={{ width: "700px", height: "290px" }}
               className="mt-3 mb-6"
             >
               <ConsultingList loginId={loginId} />
@@ -398,7 +393,7 @@ const Mypage: React.FC = () => {
               나의 AI 자가진단 기록
             </span>
             <Common
-              style={{ width: "700px", height: "240px" }}
+              style={{ width: "700px", height: "290px" }}
               className="mt-3 mb-6"
             >
               <AiDiagnosisList memberId={memberId} />
