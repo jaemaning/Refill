@@ -12,7 +12,6 @@ const Logout: React.FC = () => {
   const token = useSelector((state: RootState) => state.login.token);
 
   useEffect(() => {
-    console.log(token);
     const fetchLogout = async () => {
       try {
         const response = await axios.get("api/v1/account/logout", {
@@ -20,7 +19,7 @@ const Logout: React.FC = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log(response);
+        console.log("ok");
         dispatch(loginFail());
         removeCookie("refresh-token");
         navigate("/");

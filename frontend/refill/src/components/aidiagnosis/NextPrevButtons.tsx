@@ -12,6 +12,7 @@ interface LinkProps {
   arrayString?: string;
   imgFile?: File | null;
   isResult?: boolean;
+  setOpenError?: boolean;
 }
 
 const NextPrevButtons: React.FC<LinkProps> = ({
@@ -60,7 +61,6 @@ const NextPrevButtons: React.FC<LinkProps> = ({
 
       const newFileName = convertToEnglishName(imgFile.name);
       const newFile = new File([imgFile], newFileName, { type: imgFile.type });
-      console.log(newFile);
       formData.append("hairImg", newFile);
     }
     axios

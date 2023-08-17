@@ -58,7 +58,6 @@ const MyReservationReport: React.FC<MyReservationReportProps> = ({
 
   // 2. 현재 날짜 및 시간에서 31분을 빼서 경계 시간을 계산합니다.
   const thirtyOneMinutesAgo = new Date(now.getTime() - 31 * 60 * 1000);
-  console.log(thirtyOneMinutesAgo);
   const sortedList = reservationList
     ?.filter(
       (reservation) =>

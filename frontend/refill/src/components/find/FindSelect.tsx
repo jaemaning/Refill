@@ -11,7 +11,6 @@ const FindSelect: React.FC<checkSelect> = ({ isfindid, handdleSelect }) => {
 
   const handleCheck = () => {
     setIsChecked(!ischeck);
-    console.log(ischeck);
     handdleSelect();
   };
 

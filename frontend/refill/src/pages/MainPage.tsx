@@ -43,7 +43,6 @@ const MainApp: React.FC = () => {
     if (navbarRef.current) {
       const navH = navbarRef.current.getBoundingClientRect().height;
       setNavbarHeight(navH);
-      console.log(navbarHeight, navH);
       window.scrollTo(0, navH);
     }
 

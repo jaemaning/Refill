@@ -139,11 +139,9 @@ const ModifyDoctor: React.FC<ModifyModal> = ({
       );
     } else {
       const filename = `${profile}`;
-      console.log(filename);
       const test = stringToFile(profile, filename);
       formData.append("profileImg", test);
     }
-    console.log(1);
     return formData;
   };
 

@@ -36,8 +36,6 @@ const loginSlice = createSlice({
       state.loginId = loginId;
       state.pk = pk;
       state.exp = exp;
-      console.log(state.islogin);
-      console.log(state.token);
     },
     loginMember: (state) => {
       state.ismember = true;
@@ -46,9 +44,7 @@ const loginSlice = createSlice({
     },
     loginHospital: (state, action: PayloadAction<Hosstate>) => {
       const { hosid } = action.payload;
-      console.log(hosid);
       state.hosid = hosid;
-      console.log(state.hosid);
       state.ismember = false;
       state.ishospital = true;
       state.isadmin = false;

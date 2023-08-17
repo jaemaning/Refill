@@ -12,10 +12,14 @@ const DeleteModal: React.FC<DeleteModalProps> = ({
   deleteReservation,
   resId,
 }) => {
-  const clickWantDelete = () => {
-    setOpenModal(false);
-
-    // window.location.reload(); // 페이지 새로고침
+  const clickWantDelete = async () => {
+    try {
+      await deleteReservation(resId);
+      await setOpenModal(false);
+      window.location.reload(); // 페이지 새로고침
+    } catch (error) {
+      console.error("Error deleting reservation:", error);
+    }
   };
 
   const clickReturn = () => {

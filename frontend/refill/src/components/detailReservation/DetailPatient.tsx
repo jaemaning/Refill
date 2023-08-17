@@ -105,7 +105,7 @@ const DetailPatient: React.FC<DetailPatientProps> = ({
           },
         },
       );
-      console.log(response.data);
+      console.log("ok");
       setMyJoinToken((prev) => [...prev, response.data]);
       if (response.data.sessionId) {
         setCanJoin(true);

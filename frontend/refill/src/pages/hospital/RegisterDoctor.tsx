@@ -97,7 +97,6 @@ const RegisterDoctor: React.FC<RegisterModal> = ({
       licenseNumber: inputData.licenseNumber,
     };
 
-    console.log(doctorJoinRequest);
     const json = JSON.stringify(doctorJoinRequest);
     const jsonBlob = new Blob([json], { type: "application/json" });
     const formData = new FormData();
@@ -110,7 +109,6 @@ const RegisterDoctor: React.FC<RegisterModal> = ({
     if (inputImage.licenseImg) {
       formData.append("licenseImg", inputImage.licenseImg);
     }
-    console.log(formData);
     return formData;
   };
 
