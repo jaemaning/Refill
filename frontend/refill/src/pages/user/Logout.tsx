@@ -30,7 +30,7 @@ const Logout: React.FC = () => {
     };
 
     fetchLogout();
-  }, [dispatch, navigate]); // 이 부분에 필요한 의존성을 명시해주세요
+  }, [dispatch, navigate, token]); // 이 부분에 필요한 의존성을 명시해주세요
 
   return <div></div>;
 };
