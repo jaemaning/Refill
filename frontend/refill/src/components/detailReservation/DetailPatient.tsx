@@ -97,7 +97,7 @@ const DetailPatient: React.FC<DetailPatientProps> = ({
   const getToken = async (reservationId: number) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/v1/consulting/connection/${reservationId}`,
+        `https://i9c201.p.ssafy.io/api/v1/consulting/connection/${reservationId}`,
         {
           headers: {
             "Content-Type": "application/json",
