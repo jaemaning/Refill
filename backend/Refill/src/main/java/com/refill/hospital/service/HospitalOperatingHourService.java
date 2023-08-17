@@ -15,6 +15,7 @@ import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +42,7 @@ public class HospitalOperatingHourService {
 
     }
 
+    @Cacheable(value = "hospitalHoursInfo", key = "#id")
     @Transactional(readOnly = true)
     public List<HospitalOperatingHourResponse> getOperatingHours(Long id) {
 

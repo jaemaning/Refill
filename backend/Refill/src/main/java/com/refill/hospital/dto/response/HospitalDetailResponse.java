@@ -1,5 +1,6 @@
 package com.refill.hospital.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.refill.doctor.dto.response.DoctorResponse;
 import com.refill.hospital.entity.Hospital;
 import com.refill.review.dto.response.ReviewResponse;
@@ -11,7 +12,7 @@ public record HospitalDetailResponse(
     @NotNull HospitalResponse hospitalResponse,
     @NotNull List<DoctorResponse> doctorResponses,
     @NotNull List<ReviewResponse> reviewResponses,
-    @NotNull List<HospitalOperatingHourResponse> operatingHourResponses
+    @NotNull @JsonProperty("HospitalOperatingHourResponse") List<HospitalOperatingHourResponse> operatingHourResponses
 ) {
 
     public HospitalDetailResponse(Hospital hospital) {
