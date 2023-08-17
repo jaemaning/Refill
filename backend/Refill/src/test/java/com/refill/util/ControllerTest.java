@@ -7,6 +7,7 @@ import com.refill.admin.controller.AdminController;
 import com.refill.admin.service.AdminService;
 import com.refill.aidiagnosis.controller.AiDiagnosisController;
 import com.refill.aidiagnosis.service.AiDiagnosisService;
+import com.refill.consulting.service.ConsultingService;
 import com.refill.hospital.controller.HospitalController;
 import com.refill.hospital.repository.HospitalRepository;
 import com.refill.hospital.service.HospitalOperatingHourService;
@@ -18,6 +19,7 @@ import com.refill.reservation.controller.ReservationController;
 import com.refill.reservation.service.ReservationService;
 import com.refill.review.controller.ReviewController;
 import com.refill.review.service.ReviewService;
+import com.refill.security.service.UserDetailServiceImpl;
 import com.refill.security.util.JwtProvider;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -25,7 +27,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import org.mockito.Mock;
+import javax.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -69,10 +71,13 @@ public class ControllerTest {
     @MockBean protected ReservationService reservationService;
     @MockBean protected HospitalOperatingHourService hospitalOperatingHourService;
     @MockBean protected ReviewService reviewService;
+    @MockBean protected ConsultingService consultingService;
+    @MockBean protected UserDetailServiceImpl userDetailService;
 
     // Repository
     @MockBean protected MemberRepository memberRepository;
     @MockBean protected HospitalRepository hospitalRepository;
+    @MockBean EntityManagerFactory managerFactory;
 
     protected String createToken(String loginId, String secretKey) {
 
