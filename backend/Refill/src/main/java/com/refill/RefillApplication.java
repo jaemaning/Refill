@@ -7,7 +7,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-@EnableCaching
+@EnableCaching // 캐싱 활성화
 @EnableJpaAuditing
 @SpringBootApplication
 @EnableScheduling // 스케줄링 활성화
