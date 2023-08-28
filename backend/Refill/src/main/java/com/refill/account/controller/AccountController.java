@@ -142,6 +142,11 @@ public class AccountController {
         return ResponseEntity.ok().body(message);
     }
 
+    @GetMapping
+    public ResponseEntity<Void> justTesting(@AuthenticationPrincipal LoginInfo user) {
+        return ResponseEntity.noContent().build();
+    }
+
 
 
 
