@@ -183,7 +183,7 @@ class AccountControllerTest extends ControllerTest {
         MemberLoginRequest memberLoginRequest = new MemberLoginRequest("loginId", "loginPassword");
 
         TokenResponse tokenResponse = new TokenResponse(1L, "accessToken", "refreshToken");
-        when(accountService.memberLogin(any())).thenReturn(tokenResponse);
+        when(accountService.login(any(), any())).thenReturn(tokenResponse);
 
         mockMvc.perform(
                    post(baseUrl + "/member/login")
@@ -200,6 +200,7 @@ class AccountControllerTest extends ControllerTest {
                            fieldWithPath("loginPassword").description("로그인 패스워드")
                        ),
                        responseFields(
+                           fieldWithPath("id").description("USER PK"),
                            fieldWithPath("accessToken").description("엑세스 토큰"),
                            fieldWithPath("refreshToken").description("리프레시 토큰")
                        ))
@@ -214,7 +215,7 @@ class AccountControllerTest extends ControllerTest {
             "loginPassword");
 
         TokenResponse tokenResponse = new TokenResponse(1L, "accessToken", "refreshToken");
-        when(accountService.hospitalLogin(any())).thenReturn(tokenResponse);
+        when(accountService.login(any(), any())).thenReturn(tokenResponse);
 
         mockMvc.perform(
                    post(baseUrl + "/hospital/login")
@@ -231,6 +232,7 @@ class AccountControllerTest extends ControllerTest {
                            fieldWithPath("loginPassword").description("로그인 패스워드")
                        ),
                        responseFields(
+                           fieldWithPath("id").description("USER PK"),
                            fieldWithPath("accessToken").description("엑세스 토큰"),
                            fieldWithPath("refreshToken").description("리프레시 토큰")
                        ))
@@ -259,8 +261,7 @@ class AccountControllerTest extends ControllerTest {
         가 찾아본 해결책인데, 이도 동작하지 않음.. 그래서 강제로 error를 return하게함.
         postman으로 위의 method 실행 시 정상적으로 에러를 반환하고 있음
          */
-        when(accountService.hospitalLogin(any())).thenThrow(
-            new MemberException(ErrorCode.OUTSTANDING_AUTHORIZATION));
+        when(accountService.login(any(), any())).thenThrow(new MemberException(ErrorCode.OUTSTANDING_AUTHORIZATION));
 
         mockMvc.perform(
                    post(baseUrl + "/hospital/login")
@@ -282,9 +283,8 @@ class AccountControllerTest extends ControllerTest {
 
         Member mockMember = mock(Member.class);
         when(memberService.findByEmail(any())).thenReturn(mockMember);
-        doNothing().when(amazonSESService)
-                   .sendLoginId(any(String.class), any(String.class));
-        when(accountService.findMemberLoginId(any())).thenReturn(
+        doNothing().when(amazonSESService).sendLoginId(any(String.class), any(String.class));
+        when(accountService.findLoginId(any(), any())).thenReturn(
             "{\"message\":\"%s\"}".formatted(Message.FIND_LOGIN_ID.getMessage()));
 
         mockMvc.perform(
@@ -318,9 +318,8 @@ class AccountControllerTest extends ControllerTest {
 
         Hospital mockHospital = mock(Hospital.class);
         when(hospitalService.findByEmail(any())).thenReturn(mockHospital);
-        doNothing().when(amazonSESService)
-                   .sendLoginId(any(), any());
-        when(accountService.findHospitalLoginId(any())).thenReturn(
+        doNothing().when(amazonSESService).sendLoginId(any(), any());
+        when(accountService.findLoginId(any(), any())).thenReturn(
             "{\"message\":\"%s\"}".formatted(Message.FIND_LOGIN_ID.getMessage()));
 
         mockMvc.perform(
@@ -352,9 +351,8 @@ class AccountControllerTest extends ControllerTest {
 
         LoginPasswordRequest loginPasswordRequest = new LoginPasswordRequest("loginId", "email");
 
-        doNothing().when(amazonSESService)
-                   .sendTempPassword(any(), any());
-        when(accountService.findMemberPassword(any())).thenReturn(
+        doNothing().when(amazonSESService).sendTempPassword(any(), any());
+        when(accountService.findPassword(any(), any())).thenReturn(
             "{\"message\":\"%s\"}".formatted(Message.FIND_PASSWORD.getMessage()));
 
         mockMvc.perform(
@@ -387,7 +385,7 @@ class AccountControllerTest extends ControllerTest {
 
         doNothing().when(amazonSESService)
                    .sendTempPassword(any(), any());
-        when(accountService.findHospitalPassword(any())).thenReturn(
+        when(accountService.findPassword(any(), any())).thenReturn(
             "{\"message\":\"%s\"}".formatted(Message.FIND_PASSWORD.getMessage()));
 
         mockMvc.perform(

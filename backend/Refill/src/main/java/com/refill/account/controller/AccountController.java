@@ -2,15 +2,15 @@ package com.refill.account.controller;
 
 import com.refill.account.dto.request.EmailVerifyRequest;
 import com.refill.account.dto.request.HospitalJoinRequest;
-import com.refill.account.dto.request.HospitalLoginRequest;
 import com.refill.account.dto.request.LoginIdFindRequest;
 import com.refill.account.dto.request.LoginPasswordRequest;
+import com.refill.account.dto.request.LoginRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
-import com.refill.account.dto.request.MemberLoginRequest;
 import com.refill.account.dto.request.RefreshRequest;
 import com.refill.account.dto.response.EmailVerifyResponse;
 import com.refill.account.dto.response.RefreshResponse;
 import com.refill.account.dto.response.TokenResponse;
+import com.refill.account.entity.ClientType;
 import com.refill.account.service.AccountService;
 import com.refill.security.util.LoginInfo;
 import javax.validation.Valid;
@@ -54,56 +54,28 @@ public class AccountController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/member/login")
-    public ResponseEntity<TokenResponse> loginMember(@RequestBody @Valid final MemberLoginRequest memberLoginRequest) {
+    @PostMapping("/{clientType}/login")
+    public ResponseEntity<TokenResponse> login(@PathVariable("clientType") ClientType clientType, @RequestBody @Valid final LoginRequest loginRequest) {
 
-        log.debug("'{}' member request login", memberLoginRequest.loginId());
-        TokenResponse tokenResponse = accountService.memberLogin(memberLoginRequest);
-
+        log.debug("'{}' member request login", loginRequest.loginId());
+        TokenResponse tokenResponse = accountService.login(clientType, loginRequest);
         return ResponseEntity.ok().body(tokenResponse);
     }
 
-    @PostMapping("/hospital/login")
-    public ResponseEntity<TokenResponse> loginHospital(@RequestBody @Valid final HospitalLoginRequest hospitalLoginRequest) {
-
-        log.debug("'{}' member request login", hospitalLoginRequest.loginId());
-        TokenResponse tokenResponse = accountService.hospitalLogin(hospitalLoginRequest);
-
-        return ResponseEntity.ok().body(tokenResponse);
-    }
-
-    @PostMapping("/member/find/id")
-    public ResponseEntity<String> findMemberLoginId(@RequestBody @Valid final LoginIdFindRequest loginIdFindRequest) {
+    @PostMapping("/{clientType}/find/id")
+    public ResponseEntity<String> findLoginId(@PathVariable ClientType clientType, @RequestBody @Valid final LoginIdFindRequest loginIdFindRequest) {
 
         log.debug("'{}' email request find loginId", loginIdFindRequest.email());
-        String message = accountService.findMemberLoginId(loginIdFindRequest);
+        String message = accountService.findLoginId(clientType, loginIdFindRequest);
 
         return ResponseEntity.ok().body(message);
     }
 
-    @PostMapping("/hospital/find/id")
-    public ResponseEntity<String> findHospitalLoginId(@RequestBody @Valid final LoginIdFindRequest loginIdFindRequest) {
-
-        log.debug("'{}' email request find loginId", loginIdFindRequest.email());
-        String message = accountService.findHospitalLoginId(loginIdFindRequest);
-
-        return ResponseEntity.ok().body(message);
-    }
-
-    @PostMapping("/member/find/password")
-    public ResponseEntity<String> findMemberPassword(@RequestBody @Valid final LoginPasswordRequest loginPasswordRequest) {
+    @PostMapping("/{clientType}/find/password")
+    public ResponseEntity<String> findPassword(@PathVariable ClientType clientType, @RequestBody @Valid final LoginPasswordRequest loginPasswordRequest) {
 
         log.debug("'{}' member request reset password", loginPasswordRequest.loginId());
-        String message = accountService.findMemberPassword(loginPasswordRequest);
-
-        return ResponseEntity.ok().body(message);
-    }
-
-    @PostMapping("/hospital/find/password")
-    public ResponseEntity<String> findHospitalPassword(@RequestBody @Valid final LoginPasswordRequest loginPasswordRequest) {
-
-        log.debug("'{}' member request reset password", loginPasswordRequest.loginId());
-        String message = accountService.findHospitalPassword(loginPasswordRequest);
+        String message = accountService.findPassword(clientType, loginPasswordRequest);
 
         return ResponseEntity.ok().body(message);
     }

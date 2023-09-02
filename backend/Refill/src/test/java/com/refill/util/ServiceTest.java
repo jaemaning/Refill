@@ -1,6 +1,9 @@
 package com.refill.util;
 
+import com.refill.account.client.AccountClientComposite;
 import com.refill.account.service.AccountService;
+import com.refill.account.client.HospitalClient;
+import com.refill.account.client.MemberClient;
 import com.refill.aidiagnosis.service.AiDiagnosisService;
 import com.refill.consulting.service.ConsultingService;
 import com.refill.doctor.entity.Doctor;
@@ -53,6 +56,12 @@ public class ServiceTest {
     protected DoctorService doctorService;
     @Autowired
     protected ConsultingService consultingService;
+    @Autowired
+    protected AccountClientComposite accountClientComposite;
+    @Autowired
+    protected HospitalClient hospitalClient;
+    @Autowired
+    protected MemberClient memberClient;
 
     @Autowired
     protected MajorAreaRepository majorAreaRepository;

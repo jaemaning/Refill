@@ -2,7 +2,10 @@ package com.refill.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.refill.account.controller.AccountController;
+import com.refill.account.client.AccountClientComposite;
 import com.refill.account.service.AccountService;
+import com.refill.account.client.HospitalClient;
+import com.refill.account.client.MemberClient;
 import com.refill.admin.controller.AdminController;
 import com.refill.admin.service.AdminService;
 import com.refill.aidiagnosis.controller.AiDiagnosisController;
@@ -73,6 +76,9 @@ public class ControllerTest {
     @MockBean protected ReviewService reviewService;
     @MockBean protected ConsultingService consultingService;
     @MockBean protected UserDetailServiceImpl userDetailService;
+    @MockBean protected AccountClientComposite accountClientComposite;
+    @MockBean protected MemberClient memberClient;
+    @MockBean protected HospitalClient hospitalClient;
 
     // Repository
     @MockBean protected MemberRepository memberRepository;
