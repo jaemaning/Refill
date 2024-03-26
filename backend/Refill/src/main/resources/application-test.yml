@@ -28,6 +28,7 @@ cloud:
       secret-key: test
     region:
       static: ap-northeast-2
+      email: us-east-1
       auto: false
     s3:
       bucket: test
