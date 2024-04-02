@@ -10,12 +10,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.refill.account.dto.request.HospitalJoinRequest;
-import com.refill.account.dto.request.HospitalLoginRequest;
 import com.refill.account.dto.request.LoginIdFindRequest;
 import com.refill.account.dto.request.LoginPasswordRequest;
+import com.refill.account.dto.request.LoginRequest;
 import com.refill.account.dto.request.MemberJoinRequest;
-import com.refill.account.dto.request.MemberLoginRequest;
 import com.refill.account.dto.response.TokenResponse;
+import com.refill.account.entity.ClientType;
 import com.refill.global.entity.Message;
 import com.refill.global.entity.Role;
 import com.refill.global.exception.ErrorCode;
@@ -102,8 +102,8 @@ class AccountServiceTest extends ServiceTest {
         accountService.memberJoin(memberJoinRequest, null);
 
         // when
-        MemberLoginRequest memberLoginRequest = new MemberLoginRequest("member01", "pass01");
-        TokenResponse token = accountService.memberLogin(memberLoginRequest);
+        LoginRequest loginRequest = new LoginRequest("member01", "pass01");
+        TokenResponse token = accountService.login(ClientType.MEMBER, loginRequest);
 
         assertNotNull(token);
 
@@ -120,9 +120,9 @@ class AccountServiceTest extends ServiceTest {
         accountService.memberJoin(memberJoinRequest, null);
 
         // when
-        MemberLoginRequest memberLoginRequest = new MemberLoginRequest("member02", "pass01");
+        LoginRequest loginRequest = new LoginRequest("member02", "pass01");
 
-        MemberException exception = assertThrows(MemberException.class, () -> accountService.memberLogin(memberLoginRequest));
+        MemberException exception = assertThrows(MemberException.class, () -> accountService.login(ClientType.MEMBER, loginRequest));
 
         assertEquals(exception.getErrorCode(), ErrorCode.USERNAME_NOT_FOUND);
 
@@ -139,9 +139,9 @@ class AccountServiceTest extends ServiceTest {
         accountService.memberJoin(memberJoinRequest, null);
 
         // when
-        MemberLoginRequest memberLoginRequest = new MemberLoginRequest("member01", "pass02");
+        LoginRequest loginRequest = new LoginRequest("member01", "pass02");
 
-        MemberException exception = assertThrows(MemberException.class, () -> accountService.memberLogin(memberLoginRequest));
+        MemberException exception = assertThrows(MemberException.class, () -> accountService.login(ClientType.MEMBER, loginRequest));
 
         assertEquals(exception.getErrorCode(), ErrorCode.INVALID_PASSWORD);
 
@@ -162,9 +162,9 @@ class AccountServiceTest extends ServiceTest {
         accountService.hospitalJoin(hospitalJoinRequest, profileImg1, regImg1);
 
         // when
-        HospitalLoginRequest hospitalLoginRequest = new HospitalLoginRequest("hospital01", "pass01");
+        LoginRequest loginRequest = new LoginRequest("hospital01", "pass01");
 
-        MemberException exception = assertThrows(MemberException.class, () -> accountService.hospitalLogin(hospitalLoginRequest));
+        MemberException exception = assertThrows(MemberException.class, () -> accountService.login(ClientType.HOSPITAL, loginRequest));
 
         assertEquals(exception.getErrorCode(), ErrorCode.OUTSTANDING_AUTHORIZATION);
 
@@ -187,7 +187,7 @@ class AccountServiceTest extends ServiceTest {
 
         LoginIdFindRequest loginIdFindRequest = new LoginIdFindRequest(member.getEmail());
 
-        String msg = accountService.findMemberLoginId(loginIdFindRequest);
+        String msg = accountService.findLoginId(ClientType.MEMBER, loginIdFindRequest);
         verify(amazonSESService, times(1)).sendLoginId(any(String.class), any(String.class));
         assertEquals(msg, Message.FIND_LOGIN_ID.getMessage());
     }
@@ -209,7 +209,7 @@ class AccountServiceTest extends ServiceTest {
 
         LoginPasswordRequest loginIdFindRequest = new LoginPasswordRequest(member.getLoginId(), member.getEmail());
 
-        String msg = accountService.findMemberPassword(loginIdFindRequest);
+        String msg = accountService.findPassword(ClientType.MEMBER, loginIdFindRequest);
 
         verify(amazonSESService, times(1)).sendTempPassword(any(String.class), any(String.class));
         assertEquals(msg, Message.FIND_PASSWORD.getMessage());
